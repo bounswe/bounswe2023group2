@@ -19,7 +19,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
       <div>
         <a href="google.com"><img src="" width=150></a>
       </div>
-      <a href="google.com"> Name </a>
+      <a href="https://github.com/bgmrsln/learn-repo/blob/main/myPhoto.jpeg"> Begüm Arslan </a>
     </td>
      <td>
       <div>
