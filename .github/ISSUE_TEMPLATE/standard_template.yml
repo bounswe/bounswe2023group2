@@ -1,0 +1,72 @@
+name: Standard Template
+description: This template will be used as standard template.
+assignees: []
+labels: []
+body:
+  - type: textarea
+    id: issue-description
+    attributes:
+      placeholder: "Following #22, re-run the analysis on Research Cloud to see if that improves performance. Document necessary code changes to implement our updated code and potential bottlenecks. In the long term, we want to migrate all of our model computations to Research Cloud."
+      label: Issue Description
+      description: "Please describe the issue with 2-3 clear sentences. What is the motivation, what is the steps for completing this issue? "
+    validations:
+      required: true
+  - type: checkboxes
+    id: researcher-checkboxes
+    attributes:
+      label: Researchers
+      description: "Please use the checkbox below to track the researchers and their progress statuses. You can remove the people who will not perform any research."
+      options:
+        - label: Bahrican Yesil
+        - label: Egemen Atik
+        - label: Altay Acar
+        - label: Ezgi Aysel Batı
+        - label: Muhammed Enes Sürmeli
+        - label: Onur Kömürcü
+        - label: Mehmet Batuhan Çelik
+        - label: Hasan Can Erol
+        - label: Koray Tekin
+        - label: Mehmet Gökay Yıldız
+        - label: Ecenur Sezer
+  - type: input
+    id: due date
+    attributes:
+      label: Deadline of the Issue
+      description: "Please provide a deadline for the issue."
+      placeholder: "19.03.2022"
+    validations:
+      required: true
+  - type: dropdown
+    id: reviewer
+    attributes:
+      label: Reviewer
+      description: "Who will review this issue? Please select the reviewer from the list below."
+      options:
+        - Begüm Arslan
+        - Merve Gürbüz
+        - Cahid Enes Keleş
+        - Aras Güngöre
+        - Ersel Çanakçılı
+        - Egecan Serbester
+        - Mehmet Emin İpekdal
+        - Halil İbrahim Gürbüz
+        - Ömer Şahin Albayram
+        - Hasan Bingölbali
+        - Ramazan Burak Sarıtaş
+        - Mehmet Kuzulugil
+  - type: markdown
+    attributes:
+      value: |
+        --- 
+        
+        ⚠️ Do Not Forget These While Managing the Issue! ⚠️
+        
+        * The title and the description of the issue should be clear and long enough to be descriptive.
+        * Please try to no assign the issue more than 2 people unless there is an exceptional situation.
+        * You should add the progress changes, updates, etc. to the issue as comments.
+        * You should track the suggestions, comments under the issue and respond to them if necessary.
+        * The person who will close an issue should put a final comment before closing it.
+        * Dependent issues should be linked by writing #{issue_number}. With the help of this notation, issues will have reference info under themselves to the other related ones.
+
+        ---
+    
