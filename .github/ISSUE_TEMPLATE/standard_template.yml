@@ -11,23 +11,6 @@ body:
       description: "Please describe the issue with 2-3 clear sentences. What is the motivation, what is the steps for completing this issue? "
     validations:
       required: true
-  - type: checkboxes
-    id: researcher-checkboxes
-    attributes:
-      label: Researchers
-      description: "Please use the checkbox below to track the researchers and their progress statuses. You can remove the people who will not perform any research."
-      options:
-        - label: Bahrican Yesil
-        - label: Egemen Atik
-        - label: Altay Acar
-        - label: Ezgi Aysel Batı
-        - label: Muhammed Enes Sürmeli
-        - label: Onur Kömürcü
-        - label: Mehmet Batuhan Çelik
-        - label: Hasan Can Erol
-        - label: Koray Tekin
-        - label: Mehmet Gökay Yıldız
-        - label: Ecenur Sezer
   - type: input
     id: due-date
     attributes:
