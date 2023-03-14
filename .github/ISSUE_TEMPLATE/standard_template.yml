@@ -29,7 +29,7 @@ body:
         - label: Mehmet Gökay Yıldız
         - label: Ecenur Sezer
   - type: input
-    id: due date
+    id: due-date
     attributes:
       label: Deadline of the Issue
       description: "Please provide a deadline for the issue."
