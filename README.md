@@ -38,9 +38,9 @@ Unfortunately, every year many people suffer from disasters. One recent example 
     </td>
      <td>
       <div>
-        <a href="google.com"><img src="" width=150></a>
+        <a href="https://github.com/rburaksaritas"><img src="https://avatars.githubusercontent.com/u/86561984?v=4" width=150></a>
       </div>
-      <a href="google.com"> Name </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Ramazan-Burak-Sar%C4%B1ta%C5%9F"> Ramazan Burak Sarıtaş </a>
     </td>
      <td>
       <div>
