@@ -60,7 +60,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
       <div>
         <a href="https://github.com/bounswe/bounswe2023group2/wiki/Egecan-Serbester"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
-      <a href="google.com"> Egecan Serbester </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Hasan-Bing%C3%B6lbali"> Egecan Serbester </a>
     </td>
      <td>
       <div>
@@ -70,15 +70,15 @@ Unfortunately, every year many people suffer from disasters. One recent example 
     </td>
      <td>
       <div>
-        <a href="google.com"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Mehmet-Emin-%C4%B0pekdal"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
-      <a href="google.com"> Mehmet Emin İpekdal </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Mehmet-Emin-%C4%B0pekdal"> Mehmet Emin İpekdal </a>
     </td>
      <td>
       <div>
-        <a href="google.com"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Halil-%C4%B0brahim-G%C3%BCrb%C3%BCz"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
-      <a href="google.com"> Halil İbrahim Gürbüz </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Halil-%C4%B0brahim-G%C3%BCrb%C3%BCz"> Halil İbrahim Gürbüz </a>
     </td>
      <td>
       <div>
