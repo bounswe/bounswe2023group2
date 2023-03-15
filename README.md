@@ -60,7 +60,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
       <div>
         <a href="https://github.com/bounswe/bounswe2023group2/wiki/Egecan-Serbester"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
-      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Hasan-Bing%C3%B6lbali"> Egecan Serbester </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Egecan-Serbester"> Egecan Serbester </a>
     </td>
      <td>
       <div>
