@@ -52,11 +52,11 @@ Unfortunately, every year many people suffer from disasters. One recent example 
   <tr>
     <td>
       <div>
-        <a href="google.com"><img src="" width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Aras-Güngöre"><img src="https://user-images.githubusercontent.com/59939304/225309838-aaee9aaf-c721-4f01-8a8f-ba99d91122f8.jpg" width=150></a>
       </div>
-      <a href="google.com"> Name </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Aras-Güngöre"> Aras Güngöre </a>
     </td>
-     <td>
+    <td>
       <div>
         <a href="google.com"><img src="" width=150></a>
       </div>
