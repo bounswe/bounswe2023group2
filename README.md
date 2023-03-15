@@ -44,7 +44,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
     </td>
      <td>
       <div>
-        <a href="google.com"><img src="" width=150></a>
+        <a href="google.com"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
       <a href="google.com"> Name </a>
     </td>    
