@@ -46,7 +46,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
       <div>
         <a href="google.com"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
-      <a href="google.com"> Name </a>
+      <a href="google.com"> Ersel Çanakçılı </a>
     </td>    
   </tr>
   <tr>
@@ -58,27 +58,27 @@ Unfortunately, every year many people suffer from disasters. One recent example 
     </td>
     <td>
       <div>
-        <a href="google.com"><img src="" width=150></a>
+        <a href="google.com"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
-      <a href="google.com"> Name </a>
+      <a href="google.com"> Egecan Serbester </a>
     </td>
      <td>
       <div>
-        <a href="google.com"><img src="" width=150></a>
+        <a href="google.com"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
-      <a href="google.com"> Name </a>
+      <a href="google.com"> Hasan Bingölbaşı </a>
     </td>
      <td>
       <div>
-        <a href="google.com"><img src="" width=150></a>
+        <a href="google.com"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
-      <a href="google.com"> Name </a>
+      <a href="google.com"> Mehmet Emin İpekdal </a>
     </td>
      <td>
       <div>
-        <a href="google.com"><img src="" width=150></a>
+        <a href="google.com"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
       </div>
-      <a href="google.com"> Name </a>
+      <a href="google.com"> Halil İbrahim Gürbüz </a>
     </td>
      <td>
       <div>
