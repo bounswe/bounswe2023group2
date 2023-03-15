@@ -82,7 +82,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
     </td>
      <td>
       <div>
-         <a href="google.com"><img src="https://avatars.githubusercontent.com/u/46297916?v=4" width=150></a>
+         <a href="https://github.com/mehmetkuzu"><img src="https://avatars.githubusercontent.com/u/46297916?v=4" width=150></a>
       </div>
       <a href="https://github.com/mehmetkuzu"> Mehmet Kuzulugil </a>
     </td>    
