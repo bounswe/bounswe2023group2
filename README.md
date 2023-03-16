@@ -19,7 +19,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
       <div>
         <a href="https://github.com/bounswe/bounswe2023group2/wiki/Beg%C3%BCm-Arslan"><img src="https://github.com/bgmrsln/learn-repo/blob/main/myPhoto.jpeg" width=150></a>
       </div>
-      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Beg%C3%BCm-Arslan"> Begüm Arslan </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Beg%C3%BCm-Arslan"><br> Begüm Arslan </a>
     </td>
      <td>
       <div>
