@@ -58,7 +58,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
     </td>
     <td>
       <div>
-        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Egecan-Serbester"><img src="https://user-images.githubusercontent.com/87999176/225514747-c2264f3e-275a-4a25-9f2c-12150e8b1ad7.jpeg" height=150 width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Egecan-Serbester"><img src="https://user-images.githubusercontent.com/87999176/225514747-c2264f3e-275a-4a25-9f2c-12150e8b1ad7.jpeg" width=150></a>
       </div>
       <a href="https://github.com/bounswe/bounswe2023group2/wiki/Egecan-Serbester"> Egecan Serbester </a>
     </td>
