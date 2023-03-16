@@ -70,7 +70,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
     </td>
      <td>
       <div>
-        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Mehmet-Emin-%C4%B0pekdal"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Mehmet-Emin-%C4%B0pekdal"><img src="https://user-images.githubusercontent.com/57192244/225567069-24bda1f0-dcf3-4284-93c7-53eb240d488c.jpg" width=150></a>
       </div>
       <a href="https://github.com/bounswe/bounswe2023group2/wiki/Mehmet-Emin-%C4%B0pekdal"> Mehmet Emin İpekdal </a>
     </td>
