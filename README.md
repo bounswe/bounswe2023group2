@@ -76,15 +76,15 @@ Unfortunately, every year many people suffer from disasters. One recent example 
     </td>
      <td>
       <div>
-        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Halil-%C4%B0brahim-G%C3%BCrb%C3%BCz"><img src="https://avatars.githubusercontent.com/u/12631296?s=400&u=db24c60dd46701b56f81397ca2d3fc3e242d19f7&v=4" width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Halil-%C4%B0brahim-G%C3%BCrb%C3%BCz"><img src="https://avatars.githubusercontent.com/u/12631296?v=4" width=150></a>
       </div>
-      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Halil-%C4%B0brahim-G%C3%BCrb%C3%BCz"> Halil İbrahim Gürbüz </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Halil-%C4%B0brahim-G%C3%BCrb%C3%BCz"> Halil <br>İbrahim Gürbüz </a>
     </td>
      <td>
       <div>
          <a href="https://github.com/bounswe/bounswe2023group2/wiki/Mehmet-Kuzulugil"><img src="https://avatars.githubusercontent.com/u/46297916?v=4" width=150></a>
       </div>
-      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Mehmet-Kuzulugil"> Mehmet Kuzulugil </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Mehmet-Kuzulugil"> Mehmet <br>Kuzulugil </a>
     </td>    
   </tr>
 </table>
