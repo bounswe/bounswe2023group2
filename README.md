@@ -24,7 +24,7 @@ Unfortunately, every year many people suffer from disasters. One recent example 
      <td>
       <div>
         <a href="https://github.com/bounswe/bounswe2023group2/wiki/merve-Gürbüz"> 
-       <img src="https://user-images.githubusercontent.com/64017121/224938119-36eaa2b9-3d75-4ac8-8ac5-c88f566be399.jpeg" width=100></a>
+       <img src="https://user-images.githubusercontent.com/64017121/224938119-36eaa2b9-3d75-4ac8-8ac5-c88f566be399.jpeg" width=150></a>
       </div>
       <a href="https://github.com/bounswe/bounswe2023group2/wiki/merve-Gürbüz"> Merve Gürbüz </a>
     </td>    
