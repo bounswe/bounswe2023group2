@@ -11,15 +11,15 @@ Unfortunately, every year many people suffer from disasters. One recent example 
     <td>
       <div>
         <a href="https://github.com/bounswe/bounswe2023group2/wiki/%C3%96mer-%C5%9Eahin-Albayram"><img src="https://user-images.githubusercontent.com/94677441/224304915-8f3cc278-95a6-455b-8180-4b6ffd00f58b.png"
-        width=150></a>
+        width=150 height=150></a>
       </div>
       <a href="https://github.com/bounswe/bounswe2023group2/wiki/%C3%96mer-%C5%9Eahin-Albayram"> Ömer Şahin Albayram </a>
     </td>
      <td>
       <div>
-        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Beg%C3%BCm-Arslan"><img src="https://github.com/bgmrsln/learn-repo/blob/main/myPhoto.jpeg" width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Beg%C3%BCm-Arslan"><img src="https://github.com/bgmrsln/learn-repo/blob/main/myPhoto.jpeg" width=150 height=150></a>
       </div>
-      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Beg%C3%BCm-Arslan"><br> Begüm Arslan </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/Beg%C3%BCm-Arslan"> Begüm <br>Arslan </a>
     </td>
      <td>
       <div>
