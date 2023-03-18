@@ -67,7 +67,7 @@ To address this issue, we are developing a platform to facilitate the organizati
     </td>
      <td>
       <div>
-        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Hasan-Bing%C3%B6lbali"><img src="https://avatars.githubusercontent.com/u/12229719?s=200&v=4" width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Hasan-Bing%C3%B6lbali"><img src="https://user-images.githubusercontent.com/74209102/226142955-9f2688cd-a958-4bf9-a360-36ff93a772e3.jpg" width=150></a>
       </div>
       <a href="https://github.com/bounswe/bounswe2023group2/wiki/Hasan-Bing%C3%B6lbali"> Hasan <br>Bingölbali </a>
     </td>
