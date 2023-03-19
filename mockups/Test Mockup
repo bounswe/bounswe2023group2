@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-19T08:41:57.371Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="0j1kfSy0UM5ayb-zBsvT" version="21.0.6" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-03-19T08:48:33.938Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="UnA6MqV6DOE64HcCw16O" version="21.0.6" type="github" pages="3">
   <diagram name="Page-1" id="2cc2dc42-3aac-f2a9-1cec-7a8b7cbee084">
     <mxGraphModel dx="724" dy="473" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
@@ -408,18 +408,13 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-32" value="BD" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
-          <mxGeometry width="200" height="25" relative="1" as="geometry">
+          <mxGeometry width="200" height="60" relative="1" as="geometry">
             <mxPoint x="10" y="60" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-33" value="Address Line 2" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.anchor;fontSize=12;fontColor=#666666;align=left;resizeWidth=1;spacingLeft=0;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
+        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-33" value="" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.anchor;fontSize=12;fontColor=#666666;align=left;resizeWidth=1;spacingLeft=0;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
           <mxGeometry width="115" height="20" relative="1" as="geometry">
             <mxPoint x="10" y="89" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-34" value="Mexico University/Law School" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
-          <mxGeometry width="200" height="25" relative="1" as="geometry">
-            <mxPoint x="10" y="109" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-35" value="" style="shape=line;strokeColor=#ddeeff;strokeWidth=2;html=1;resizeWidth=1;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
@@ -435,23 +430,38 @@
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-37" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.navigation.pageControl;fillColor=#999999;strokeColor=#ddeeff;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
           <mxGeometry x="110" y="6.774193548387097" width="101" height="16.258064516129032" as="geometry" />
         </mxCell>
+        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-50" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-128.png" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
+          <mxGeometry x="19" y="273" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-51" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn3.iconfinder.com/data/icons/2018-social-media-logotypes/1000/2018_social_media_popular_app_logo_twitter-128.png" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
+          <mxGeometry x="19" y="301" width="20" height="20" as="geometry" />
+        </mxCell>
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-40" value="City/Province" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.anchor;fontSize=12;fontColor=#666666;align=left;resizeWidth=1;spacingLeft=0;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-27">
-          <mxGeometry x="10" y="139" width="115" height="20" as="geometry" />
+          <mxGeometry x="10" y="123" width="115" height="20" as="geometry" />
         </mxCell>
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-41" value="Çankırı Devlet Konservatuvarı" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;container=0;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-27">
-          <mxGeometry x="10" y="160" width="200" height="25" as="geometry" />
+          <mxGeometry x="10" y="143" width="200" height="25" as="geometry" />
         </mxCell>
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-42" value="Phone" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.anchor;fontSize=12;fontColor=#666666;align=left;resizeWidth=1;spacingLeft=0;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-27">
-          <mxGeometry x="10" y="191" width="115" height="20" as="geometry" />
+          <mxGeometry x="10" y="172" width="115" height="20" as="geometry" />
         </mxCell>
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-43" value="+90 (555) 191 7191" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-27">
-          <mxGeometry x="10" y="211" width="200" height="25" as="geometry" />
+          <mxGeometry x="10" y="192" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-53" value="carlossantana" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-27">
+          <mxGeometry x="42" y="301" width="166" height="25" as="geometry" />
         </mxCell>
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-48" value="E-mail" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.anchor;fontSize=12;fontColor=#666666;align=left;resizeWidth=1;spacingLeft=0;" vertex="1" parent="1">
-          <mxGeometry x="551" y="277" width="115" height="20" as="geometry" />
+          <mxGeometry x="551" y="258" width="115" height="20" as="geometry" />
         </mxCell>
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-49" value="carlos@santana.net" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="1">
-          <mxGeometry x="551" y="297" width="200" height="25" as="geometry" />
+          <mxGeometry x="551" y="278" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-52" value="carlossantana" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="584" y="308" width="166" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-54" value="https://github.com/santana" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="583" y="374" width="166" height="25" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
