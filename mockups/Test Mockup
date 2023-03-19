@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-19T10:13:02.284Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="hrZ9OKMd0suuAKYiogG1" version="21.0.6" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-03-19T10:14:55.417Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="sPm_41cgXx-a1MyDppO9" version="21.0.6" type="github" pages="3">
   <diagram name="Page-1" id="2cc2dc42-3aac-f2a9-1cec-7a8b7cbee084">
     <mxGraphModel dx="724" dy="473" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
@@ -410,7 +410,7 @@
             <mxPoint x="10" y="40" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-32" value="BD" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
+        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-32" value="Çankırı Birinci Etap TOKİ Konutları&lt;br&gt;Sardunya Sitesi No: 23/1&lt;br&gt;Çankırı Merkez" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-28">
           <mxGeometry width="200" height="60" relative="1" as="geometry">
             <mxPoint x="10" y="60" as="offset" />
           </mxGeometry>
@@ -445,7 +445,7 @@
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-40" value="City/Province" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.anchor;fontSize=12;fontColor=#666666;align=left;resizeWidth=1;spacingLeft=0;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-27">
           <mxGeometry x="10" y="123" width="115" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-41" value="Çankırı Devlet Konservatuvarı" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;container=0;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-27">
+        <mxCell id="WPDHK9gRWD_xJ7NX8NHw-41" value="Çankırı" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;container=0;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-27">
           <mxGeometry x="10" y="143" width="200" height="25" as="geometry" />
         </mxCell>
         <mxCell id="WPDHK9gRWD_xJ7NX8NHw-42" value="Phone" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.anchor;fontSize=12;fontColor=#666666;align=left;resizeWidth=1;spacingLeft=0;" vertex="1" parent="WPDHK9gRWD_xJ7NX8NHw-27">
@@ -1021,7 +1021,7 @@
             <mxPoint x="10" y="40" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="94EQrZvST1ZVdFW9n0YX-186" value="BD" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="94EQrZvST1ZVdFW9n0YX-182">
+        <mxCell id="94EQrZvST1ZVdFW9n0YX-186" value="Çankırı Birinci Etap TOKİ Konutları&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;Sardunya Sitesi No: 23/1&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;Çankırı Merkez" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;" vertex="1" parent="94EQrZvST1ZVdFW9n0YX-182">
           <mxGeometry width="200" height="60" relative="1" as="geometry">
             <mxPoint x="10" y="60" as="offset" />
           </mxGeometry>
@@ -1056,7 +1056,7 @@
         <mxCell id="94EQrZvST1ZVdFW9n0YX-194" value="City/Province" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.anchor;fontSize=12;fontColor=#666666;align=left;resizeWidth=1;spacingLeft=0;" vertex="1" parent="94EQrZvST1ZVdFW9n0YX-181">
           <mxGeometry x="10" y="123" width="115" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="94EQrZvST1ZVdFW9n0YX-195" value="Çankırı Devlet Konservatuvarı" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;container=0;" vertex="1" parent="94EQrZvST1ZVdFW9n0YX-181">
+        <mxCell id="94EQrZvST1ZVdFW9n0YX-195" value="Çankırı" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;strokeColor=#999999;fontColor=#666666;align=left;spacingLeft=5;resizeWidth=1;container=0;" vertex="1" parent="94EQrZvST1ZVdFW9n0YX-181">
           <mxGeometry x="10" y="143" width="200" height="25" as="geometry" />
         </mxCell>
         <mxCell id="94EQrZvST1ZVdFW9n0YX-196" value="Phone" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.anchor;fontSize=12;fontColor=#666666;align=left;resizeWidth=1;spacingLeft=0;" vertex="1" parent="94EQrZvST1ZVdFW9n0YX-181">
