@@ -74,7 +74,7 @@ To address this issue, we are developing a platform to facilitate the organizati
         <a href="https://github.com/bounswe/bounswe2023group2/wiki/merve-Gürbüz">
        <img  src="https://user-images.githubusercontent.com/64017121/226322951-76b0ee3f-b73e-4fd8-839b-92f1f1daf4e5.png" width=150></a>
       </div>
-      <a href="https://github.com/bounswe/bounswe2023group2/wiki/merve-Gürbüz"> Merve <br>Gürbüz </a>
+      <a href="https://github.com/bounswe/bounswe2023group2/wiki/merve-Gürbüz"> Merve Gürbüz </a>
     </td> 
     <td>
       <div>
