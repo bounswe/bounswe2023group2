@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-21T08:32:01.402Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15" etag="fgehKB9l1PNYdmnnaEUU" version="21.0.8" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2023-03-21T08:33:18.499Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15" etag="GxReLl80m5zqlFXVQWyf" version="21.0.8" type="github" pages="6">
   <diagram name="Account" id="2cc2dc42-3aac-f2a9-1cec-7a8b7cbee084">
     <mxGraphModel dx="2394" dy="1468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
@@ -911,7 +911,7 @@
             <mxRectangle width="57" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="jzESUFeBk8UOIq-fNBtY-42" value="Kahramanmaraş" style="connectable=0;recursiveResize=0;strokeColor=inherit;fillColor=inherit;whiteSpace=wrap;html=1;fontSize=8;fontColor=#0066CC;" parent="jzESUFeBk8UOIq-fNBtY-1" vertex="1">
+        <mxCell id="jzESUFeBk8UOIq-fNBtY-42" value="Kahramanmaraş" style="connectable=0;recursiveResize=0;strokeColor=#82b366;fillColor=#d5e8d4;whiteSpace=wrap;html=1;fontSize=8;" parent="jzESUFeBk8UOIq-fNBtY-1" vertex="1">
           <mxGeometry x="170" y="220" width="50" height="20" as="geometry">
             <mxRectangle width="57" height="20" as="alternateBounds" />
           </mxGeometry>
@@ -921,7 +921,7 @@
             <mxRectangle width="57" height="20" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="jzESUFeBk8UOIq-fNBtY-44" value="" style="connectable=0;recursiveResize=0;strokeColor=inherit;fillColor=inherit;whiteSpace=wrap;html=1;" parent="jzESUFeBk8UOIq-fNBtY-1" vertex="1">
+        <mxCell id="jzESUFeBk8UOIq-fNBtY-44" value="" style="connectable=0;recursiveResize=0;strokeColor=#82b366;fillColor=#d5e8d4;whiteSpace=wrap;html=1;" parent="jzESUFeBk8UOIq-fNBtY-1" vertex="1">
           <mxGeometry x="170" y="260" width="50" height="18" as="geometry">
             <mxRectangle width="57" height="18" as="alternateBounds" />
           </mxGeometry>
