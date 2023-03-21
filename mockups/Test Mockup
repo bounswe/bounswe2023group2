@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-03-20T22:10:56.504Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15" etag="qu3oKahrvR6GkVwY7akt" version="21.0.8" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2023-03-21T08:22:48.756Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15" etag="8pMoU0aP4qTUMRYcPPVE" version="21.0.8" type="github" pages="6">
   <diagram name="Account" id="2cc2dc42-3aac-f2a9-1cec-7a8b7cbee084">
-    <mxGraphModel dx="1297" dy="1104" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+    <mxGraphModel dx="2394" dy="1468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -226,7 +226,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="wrB70wjv8cGYxuPnbt74" name="Main page">
-    <mxGraphModel dx="1297" dy="1104" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2394" dy="1468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -543,7 +543,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="JrIC2gm3q0TiLOs9_otb" name="User Actions">
-    <mxGraphModel dx="1297" dy="1104" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1995" dy="1223" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -857,7 +857,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="Gqesy7eMqT7WNDzF1VEM" name="Resource">
-    <mxGraphModel dx="1297" dy="1104" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1368" dy="839" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1143,6 +1143,38 @@
         </mxCell>
         <mxCell id="jzESUFeBk8UOIq-fNBtY-81" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.user;" parent="1" vertex="1">
           <mxGeometry x="452" y="24" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="450" width="220" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.997;entryY=0.577;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="jzESUFeBk8UOIq-fNBtY-129" target="0Wg2CrjtPuvpFY5N_6zz-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-3" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="55" y="480" width="190" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-5" value="Food" style="rounded=1;fillColor=#0050ef;strokeColor=#001DBC;html=1;whiteSpace=wrap;fontColor=#ffffff;align=center;verticalAlign=middle;fontStyle=0;fontSize=10;sketch=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="510" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-14" value="Quantity:50" style="rounded=1;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontStyle=0;fontSize=12;sketch=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="550" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-15" value="Extra Information: Please call before coming" style="rounded=1;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontStyle=0;fontSize=8;sketch=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="590" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-16" value="(if logger is not authenticated user)&lt;br&gt;name, surname, phone number" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="640" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-17" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.misc.map;" vertex="1" parent="1">
+          <mxGeometry x="190" y="555" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-19" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/general/Globe_Warning.svg;" vertex="1" parent="1">
+          <mxGeometry x="210" y="740" width="30.55" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-20" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/unicons-line-vol-6/24/thumbs-up-128.png" vertex="1" parent="1">
+          <mxGeometry x="160" y="738" width="38" height="38" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
