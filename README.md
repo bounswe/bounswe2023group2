@@ -41,7 +41,7 @@ To address this issue, we are developing a platform to facilitate the organizati
     </td>
      <td>
       <div>
-        <a href="https://github.com/rburaksaritas"><img src="https://avatars.githubusercontent.com/u/86561984?v=4" width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Ramazan-Burak-Sar%C4%B1ta%C5%9F"><img src="https://avatars.githubusercontent.com/u/86561984?v=4" width=150></a>
       </div>
       <a href="https://github.com/bounswe/bounswe2023group2/wiki/Ramazan-Burak-Sar%C4%B1ta%C5%9F"> Ramazan Burak Sarıtaş </a>
     </td>
