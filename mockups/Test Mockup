@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-03-21T08:30:33.152Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44" etag="WbAbeSsYeRD1z9yZIB3q" version="21.0.8" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2023-03-21T08:32:01.402Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15" etag="fgehKB9l1PNYdmnnaEUU" version="21.0.8" type="github" pages="6">
   <diagram name="Account" id="2cc2dc42-3aac-f2a9-1cec-7a8b7cbee084">
-    <mxGraphModel dx="897" dy="517" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+    <mxGraphModel dx="2394" dy="1468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -206,7 +206,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="R_fcqanq5aU6d5REa-vC" name="Map">
-    <mxGraphModel dx="1794" dy="1034" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -220,7 +220,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="wrB70wjv8cGYxuPnbt74" name="Main page">
-    <mxGraphModel dx="1380" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2394" dy="1468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -414,7 +414,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="JFJ9GqwiRXFDPNCKY3ml" name="Admin">
-    <mxGraphModel dx="1196" dy="684" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2394" dy="1468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -422,7 +422,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="JrIC2gm3q0TiLOs9_otb" name="User Actions">
-    <mxGraphModel dx="2243" dy="1283" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1995" dy="1223" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -736,7 +736,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="Gqesy7eMqT7WNDzF1VEM" name="Resource">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1368" dy="839" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1052,20 +1052,17 @@
         <mxCell id="0Wg2CrjtPuvpFY5N_6zz-17" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;strokeWidth=1;shape=mxgraph.mockup.misc.map;" vertex="1" parent="1">
           <mxGeometry x="160" y="550" width="60" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-19" value="" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/general/Globe_Warning.svg;" vertex="1" parent="1">
-          <mxGeometry x="210" y="740" width="30.55" height="36" as="geometry" />
-        </mxCell>
         <mxCell id="0Wg2CrjtPuvpFY5N_6zz-20" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/unicons-line-vol-6/24/thumbs-up-128.png" vertex="1" parent="1">
-          <mxGeometry x="160" y="738" width="38" height="38" as="geometry" />
+          <mxGeometry x="161" y="746" width="38" height="38" as="geometry" />
         </mxCell>
         <mxCell id="0Wg2CrjtPuvpFY5N_6zz-72" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.user;" vertex="1" parent="1">
           <mxGeometry x="210" y="457" width="30" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-74" value="Barbaros St. Pazarcık Kahra" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="140" y="610" width="110" height="20" as="geometry" />
+        </mxCell>
         <mxCell id="0Wg2CrjtPuvpFY5N_6zz-73" value="bread" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.rrect;rSize=0;fontSize=11;fontColor=#666666;align=left;spacingLeft=5;fillColor=#ddeeff;strokeColor=none;resizeWidth=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="150" y="510" width="60" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="0Wg2CrjtPuvpFY5N_6zz-74" value="Hastane önü" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="160" y="610" width="80" height="20" as="geometry" />
         </mxCell>
         <mxCell id="0Wg2CrjtPuvpFY5N_6zz-75" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="520" y="20" width="220" height="410" as="geometry" />
@@ -1159,6 +1156,9 @@
         </mxCell>
         <mxCell id="AizTfZ6X6RVPhynYAsN8-7" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.map;" vertex="1" parent="1">
           <mxGeometry x="706" y="242.5" width="31" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="-O0-zbI81vLcGpPMfYHj-1" value="" style="shape=mxgraph.mockup.markup.redX;fillColor=#ff0000;html=1;shadow=0;whiteSpace=wrap;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="215" y="746" width="30" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
