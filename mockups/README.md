@@ -1,6 +1,8 @@
 # Mockup Directory
 Mockups in diagrams.net are saved here.
+
 ## Links to design files
+
 ### Link to edit Main Mockup File
 Our [Main Mockup](https://app.diagrams.net/?src=about#Hbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FMainOperationsMockup.drawio) can be edited in diagrams.net.
 
