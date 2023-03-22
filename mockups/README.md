@@ -11,6 +11,7 @@ Our [Mockup for Account related issues](https://app.diagrams.net/?src=about#Hbou
 
 ### Link to edit Mockup file for Profile related 
 Our [Mockup for Profile related issues](https://app.diagrams.net/?src=about#Hbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FProfileMockup.drawio) can be edited in diagrams.net.
+A viewer by diagrams.net is also available for [Profile mockups](https://viewer.diagrams.net/?highlight=0000ff&nav=1&page-id=UiV434TyMnL8IexqwZSg&title=ProfileMockup.drawio#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FProfileMockup.drawio)
 
 ## Links to exported images in png format
 Exported files for the mockup designs can be found at [Images](images) folder. Please **note** these are not the original design/working copies and updated in a non-regular basis.
