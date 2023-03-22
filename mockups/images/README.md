@@ -1,2 +1,3 @@
 # Exported images for the mockups
-Please note, these are not the design/working files and might not be up to date.
+Please note, the live staging of the mockups are in diagrams.net.
+This folder is empty as the final versions of the mockup designs will be staged as exported images.
