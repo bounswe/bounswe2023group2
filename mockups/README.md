@@ -1,6 +1,6 @@
 # Mockup Directory
 Mockups in diagrams.net are saved here.
-
+_Please consider not to click on the links directly if you want to open them in a new tab or window. Currently markdown does not support target:_blank attributes in links_
 ## Links to design files
 
 ### Link to edit Main Mockup File
