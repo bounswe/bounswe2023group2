@@ -9,3 +9,4 @@ https://app.diagrams.net/?src=about#Hbounswe%2Fbounswe2023group2%2Fmain%2Fmockup
 
 ## Link to edit Mockup file for Profile related 
 https://app.diagrams.net/?src=about#Hbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FProfileMockup.drawio
+https://viewer.diagrams.net/?highlight=0000ff&nav=1&page-id=UiV434TyMnL8IexqwZSg&title=ProfileMockup.drawio#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FProfileMockup.drawio
