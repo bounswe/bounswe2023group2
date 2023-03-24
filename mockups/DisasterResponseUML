@@ -1,6 +1,22 @@
-<mxfile host="app.diagrams.net" modified="2023-03-23T16:02:33.003Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="vTaQLNxrto_OoxnJ3bAo" version="21.0.6" type="github" pages="2">
-  <diagram id="ZkRWEliOL2XdgvrtoMou" name="Bizim UML">
-    <mxGraphModel dx="724" dy="473" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+<mxfile host="app.diagrams.net" modified="2023-03-24T11:58:45.104Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="y-QubDc7WNm0oKW3eESu" version="21.0.6" type="github" pages="4">
+  <diagram id="ZkRWEliOL2XdgvrtoMou" name="Context Model diagram">
+    <mxGraphModel dx="724" dy="472" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="BYzD3MFwf9BdRqlY15Yz" name="Use Cases">
+    <mxGraphModel dx="724" dy="472" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="GzdYC2_hihR7xkYYOEbC" name="Class diagrams">
+    <mxGraphModel dx="724" dy="472" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
