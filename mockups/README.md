@@ -20,8 +20,8 @@ Our [Mockup for Profile related issues](https://app.diagrams.net/?src=about#Hbou
 
 A viewer by diagrams.net is also available for [Profile mockups](https://viewer.diagrams.net/?highlight=0000ff&nav=1&page-id=UiV434TyMnL8IexqwZSg&title=ProfileMockup.drawio#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FProfileMockup.drawio).
 
-### NEW - Link to edit draft UML diagram
-[UML design](https://app.diagrams.net/?src=about#Hbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FDisasterResponseUML) work is initiated. Can be edited in diagrams.net
+### NEW - Link to edit draft UML diagrams
+[UML Diagrams are now moved to a seperate folder](https://github.com/bounswe/bounswe2023group2/tree/main/UMLDiagrams) in github. Links to edit in diagrams.net can be found there.
 
 ## Links to exported images in png format
 Exported files for the mockup designs will be staged in [Images](images) folder at the final stage. Right now **folder is empty.**
