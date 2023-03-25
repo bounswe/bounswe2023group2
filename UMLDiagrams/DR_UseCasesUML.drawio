@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-25T12:17:51.650Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="n_BY94_gv66ZCHPi25xs" version="21.0.6" type="github" pages="5">
+<mxfile host="app.diagrams.net" modified="2023-03-25T12:21:00.733Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="wd2MyWKsKHs_D6Nf7pwc" version="21.0.6" type="github" pages="5">
   <diagram id="pdiULxgELQt_7dRJayev" name="UC - System Model">
     <mxGraphModel dx="1511" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -149,24 +149,66 @@
     </mxGraphModel>
   </diagram>
   <diagram id="BYzD3MFwf9BdRqlY15Yz" name="UC 1 - Food Resource Declared">
-    <mxGraphModel dx="1511" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1511" dy="1895" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="YwiwoOE4lkUkywlC8R9_-1" value="Verbal definition" style="text;strokeColor=none;fillColor=none;html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" parent="1" vertex="1">
-          <mxGeometry x="70" y="10" width="100" height="40" as="geometry" />
+          <mxGeometry x="65" y="-950" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="YwiwoOE4lkUkywlC8R9_-2" value="&lt;div&gt;A volunteer wants to give away some clothes and food.&lt;/div&gt;&lt;ul&gt;&lt;li&gt;100 kgs of rice&lt;/li&gt;&lt;li&gt;200 blankets - waterproof&lt;/li&gt;&lt;li&gt;100 sports shoes&lt;/li&gt;&lt;li&gt;100 boots - waterproof&lt;/li&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;" parent="1" vertex="1">
-          <mxGeometry x="42" y="40" width="270" height="110" as="geometry" />
+          <mxGeometry x="37" y="-920" width="270" height="110" as="geometry" />
         </mxCell>
         <mxCell id="YwiwoOE4lkUkywlC8R9_-3" value="&lt;div&gt;Situation:&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Volunteer has internet connection&lt;/li&gt;&lt;li&gt;Has our app&amp;nbsp;&lt;/li&gt;&lt;li&gt;Is a self registered (unverified) user&lt;/li&gt;&lt;li&gt;These information are provided by the v.&lt;/li&gt;&lt;ul&gt;&lt;li&gt;Phone number&lt;/li&gt;&lt;li&gt;Address&lt;/li&gt;&lt;li&gt;Address of the goods (al same place)&lt;/li&gt;&lt;li&gt;ASKED: Take away these before certain date.&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;" parent="1" vertex="1">
-          <mxGeometry x="30" y="140" width="270" height="180" as="geometry" />
+          <mxGeometry x="25" y="-820" width="270" height="180" as="geometry" />
         </mxCell>
         <mxCell id="YwiwoOE4lkUkywlC8R9_-4" value="&lt;div&gt;Situation2:&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Volunteer has internet connection&lt;/li&gt;&lt;li&gt;Has our app&amp;nbsp;&lt;/li&gt;&lt;li&gt;Is a verified user&lt;/li&gt;&lt;li&gt;These information are provided by the v.&lt;/li&gt;&lt;ul&gt;&lt;li&gt;Phone number&lt;/li&gt;&lt;li&gt;Address&lt;/li&gt;&lt;li&gt;Address of the goods (al same place)&lt;/li&gt;&lt;li&gt;ASKED: Take away these before certain date.&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;" parent="1" vertex="1">
-          <mxGeometry x="312" y="140" width="270" height="180" as="geometry" />
+          <mxGeometry x="307" y="-820" width="270" height="180" as="geometry" />
         </mxCell>
         <mxCell id="YwiwoOE4lkUkywlC8R9_-5" value="&lt;div&gt;Situation3:&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Volunteer has internet connection&lt;/li&gt;&lt;li&gt;Has our app&amp;nbsp;&lt;/li&gt;&lt;li&gt;Is a verified user&lt;/li&gt;&lt;li&gt;These information are provided by the v.&lt;/li&gt;&lt;ul&gt;&lt;li&gt;Phone number&lt;/li&gt;&lt;li&gt;Address&lt;/li&gt;&lt;li&gt;Address of the goods (al same place)&lt;/li&gt;&lt;li&gt;ASKED: Take away these before certain date.&lt;/li&gt;&lt;/ul&gt;&lt;li&gt;Boots, shoes and blankets are packed together.&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;" parent="1" vertex="1">
-          <mxGeometry x="560" y="140" width="270" height="220" as="geometry" />
+          <mxGeometry x="555" y="-820" width="270" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-1" value="Ledger" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;strokeColor=default;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="25" y="-1080" width="250" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-2" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=16;" vertex="1" parent="YiVmr3stLEZtGJJjjHfg-1">
+          <mxGeometry y="30" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-3" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;overflow=hidden;pointerEvents=1;strokeColor=inherit;fontSize=16;" vertex="1" parent="YiVmr3stLEZtGJJjjHfg-2">
+          <mxGeometry width="56" height="30" as="geometry">
+            <mxRectangle width="56" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-4" value="Version: 0.0" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=inherit;fontSize=16;" vertex="1" parent="YiVmr3stLEZtGJJjjHfg-2">
+          <mxGeometry x="56" width="194" height="30" as="geometry">
+            <mxRectangle width="194" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-5" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=16;" vertex="1" parent="YiVmr3stLEZtGJJjjHfg-1">
+          <mxGeometry y="60" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-6" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;overflow=hidden;strokeColor=inherit;fontSize=16;" vertex="1" parent="YiVmr3stLEZtGJJjjHfg-5">
+          <mxGeometry width="56" height="30" as="geometry">
+            <mxRectangle width="56" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-7" value="Draft" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=inherit;fontSize=16;" vertex="1" parent="YiVmr3stLEZtGJJjjHfg-5">
+          <mxGeometry x="56" width="194" height="30" as="geometry">
+            <mxRectangle width="194" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-8" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=16;" vertex="1" parent="YiVmr3stLEZtGJJjjHfg-1">
+          <mxGeometry y="90" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-9" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;overflow=hidden;strokeColor=inherit;fontSize=16;" vertex="1" parent="YiVmr3stLEZtGJJjjHfg-8">
+          <mxGeometry width="56" height="30" as="geometry">
+            <mxRectangle width="56" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YiVmr3stLEZtGJJjjHfg-10" value="Use Case for volunteer" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=inherit;fontSize=16;" vertex="1" parent="YiVmr3stLEZtGJJjjHfg-8">
+          <mxGeometry x="56" width="194" height="30" as="geometry">
+            <mxRectangle width="194" height="30" as="alternateBounds" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
