@@ -91,3 +91,8 @@ To address this issue, we are developing a platform to facilitate the organizati
     </td>   
   </tr>
 </table>
+
+### Working files in the repository:
+[Mockups](https://github.com/bounswe/bounswe2023group2/tree/main/mockups) are stored and indexed [here](https://github.com/bounswe/bounswe2023group2/tree/main/mockups).
+
+[UML Diagram](https://github.com/bounswe/bounswe2023group2/tree/main/UMLDiagrams) are stored and indexed [here](https://github.com/bounswe/bounswe2023group2/tree/main/UMLDiagrams).
