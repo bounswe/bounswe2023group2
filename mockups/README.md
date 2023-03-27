@@ -11,7 +11,7 @@ Our [Main Mockup](https://app.diagrams.net/?src=about#Hbounswe%2Fbounswe2023grou
 A viewer by diagrams.net is also available for [Main mockup designs](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&layers=1&nav=1&title=MainOperationsMockup.drawio#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FMainOperationsMockup.drawio).
 
 ### Link to edit Admin Page Mockup
-Our [Main Mockup](https://app.diagrams.net/?src=about#Hbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FAdminPageMockup.drawio) can be edited in diagrams.net.
+Our [Admin Mockup](https://app.diagrams.net/?src=about#Hbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FAdminPageMockup.drawio) can be edited in diagrams.net.
 
 ### Link to edit Mockup file for Account
 Our [Mockup for Account related issues](https://app.diagrams.net/?src=about#Hbounswe%2Fbounswe2023group2%2Fmain%2Fmockups%2FAccount%20Mockups.drawio) can be edited in diagrams.net
