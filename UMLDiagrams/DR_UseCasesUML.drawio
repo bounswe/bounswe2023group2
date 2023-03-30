@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-03-27T21:56:46.259Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15" etag="zJqOd0ih1BJlGJimV9RN" version="21.1.1" type="github" pages="6">
+<mxfile host="app.diagrams.net" modified="2023-03-30T07:22:02.428Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="7iBKP2a9PKXWaYR5ogdC" version="21.1.1" type="github" pages="3">
   <diagram id="pdiULxgELQt_7dRJayev" name="UC - System Model">
-    <mxGraphModel dx="1236" dy="1304" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="823" dy="470" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -149,96 +149,126 @@
     </mxGraphModel>
   </diagram>
   <diagram id="BYzD3MFwf9BdRqlY15Yz" name="UC 1 - Food Resource Declared">
-    <mxGraphModel dx="1210" dy="2187" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1314" dy="1811" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="YwiwoOE4lkUkywlC8R9_-1" value="Verbal definition" style="text;strokeColor=none;fillColor=none;html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" parent="1" vertex="1">
-          <mxGeometry x="65" y="-950" width="100" height="40" as="geometry" />
+        <mxCell id="PmXzG9OOrk73IwEh_yhz-4" value="Disaster Response System" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="200" y="-720" width="410" height="390" as="geometry" />
         </mxCell>
-        <mxCell id="YwiwoOE4lkUkywlC8R9_-2" value="&lt;div&gt;A volunteer wants to give away some clothes and food.&lt;/div&gt;&lt;ul&gt;&lt;li&gt;100 kgs of rice&lt;/li&gt;&lt;li&gt;200 blankets - waterproof&lt;/li&gt;&lt;li&gt;100 sports shoes&lt;/li&gt;&lt;li&gt;100 boots - waterproof&lt;/li&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;" parent="1" vertex="1">
-          <mxGeometry x="37" y="-920" width="270" height="110" as="geometry" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-1" value="UC #1 - Resource declared" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=0;strokeColor=default;fontSize=12;fillColor=#007FFF;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="40" y="-1090" width="540" height="310" as="geometry" />
         </mxCell>
-        <mxCell id="YwiwoOE4lkUkywlC8R9_-3" value="&lt;div&gt;Situation:&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Volunteer has internet connection&lt;/li&gt;&lt;li&gt;Has our app&amp;nbsp;&lt;/li&gt;&lt;li&gt;Is a self registered (unverified) user&lt;/li&gt;&lt;li&gt;These information are provided by the v.&lt;/li&gt;&lt;ul&gt;&lt;li&gt;Phone number&lt;/li&gt;&lt;li&gt;Address&lt;/li&gt;&lt;li&gt;Address of the goods (al same place)&lt;/li&gt;&lt;li&gt;ASKED: Take away these before certain date.&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;" parent="1" vertex="1">
-          <mxGeometry x="25" y="-820" width="270" height="180" as="geometry" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-2" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-1">
+          <mxGeometry y="30" width="540" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="YwiwoOE4lkUkywlC8R9_-4" value="&lt;div&gt;Situation2:&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Volunteer has internet connection&lt;/li&gt;&lt;li&gt;Has our app&amp;nbsp;&lt;/li&gt;&lt;li&gt;Is a verified user&lt;/li&gt;&lt;li&gt;These information are provided by the v.&lt;/li&gt;&lt;ul&gt;&lt;li&gt;Phone number&lt;/li&gt;&lt;li&gt;Address&lt;/li&gt;&lt;li&gt;Address of the goods (al same place)&lt;/li&gt;&lt;li&gt;ASKED: Take away these before certain date.&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;" parent="1" vertex="1">
-          <mxGeometry x="307" y="-820" width="270" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="YwiwoOE4lkUkywlC8R9_-5" value="&lt;div&gt;Situation3:&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Volunteer has internet connection&lt;/li&gt;&lt;li&gt;Has our app&amp;nbsp;&lt;/li&gt;&lt;li&gt;Is a verified user&lt;/li&gt;&lt;li&gt;These information are provided by the v.&lt;/li&gt;&lt;ul&gt;&lt;li&gt;Phone number&lt;/li&gt;&lt;li&gt;Address&lt;/li&gt;&lt;li&gt;Address of the goods (al same place)&lt;/li&gt;&lt;li&gt;ASKED: Take away these before certain date.&lt;/li&gt;&lt;/ul&gt;&lt;li&gt;Boots, shoes and blankets are packed together.&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;" parent="1" vertex="1">
-          <mxGeometry x="555" y="-820" width="270" height="220" as="geometry" />
-        </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-1" value="Ledger" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;strokeColor=default;fontSize=18;" parent="1" vertex="1">
-          <mxGeometry x="25" y="-1080" width="250" height="120" as="geometry" />
-        </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-2" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=16;" parent="YiVmr3stLEZtGJJjjHfg-1" vertex="1">
-          <mxGeometry y="30" width="250" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-3" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;overflow=hidden;pointerEvents=1;strokeColor=inherit;fontSize=16;" parent="YiVmr3stLEZtGJJjjHfg-2" vertex="1">
-          <mxGeometry width="56" height="30" as="geometry">
-            <mxRectangle width="56" height="30" as="alternateBounds" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-3" value="Actor" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#dae8fc;top=0;left=0;bottom=0;right=0;overflow=hidden;pointerEvents=1;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-2">
+          <mxGeometry width="169" height="30" as="geometry">
+            <mxRectangle width="169" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-4" value="Version: 0.0" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=inherit;fontSize=16;" parent="YiVmr3stLEZtGJJjjHfg-2" vertex="1">
-          <mxGeometry x="56" width="194" height="30" as="geometry">
-            <mxRectangle width="194" height="30" as="alternateBounds" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-4" value="Registered user" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#dae8fc;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-2">
+          <mxGeometry x="169" width="371" height="30" as="geometry">
+            <mxRectangle width="371" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-5" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=16;" parent="YiVmr3stLEZtGJJjjHfg-1" vertex="1">
-          <mxGeometry y="60" width="250" height="30" as="geometry" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-5" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-1">
+          <mxGeometry y="60" width="540" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-6" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;overflow=hidden;strokeColor=inherit;fontSize=16;" parent="YiVmr3stLEZtGJJjjHfg-5" vertex="1">
-          <mxGeometry width="56" height="30" as="geometry">
-            <mxRectangle width="56" height="30" as="alternateBounds" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-6" value="Description" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;top=0;left=0;bottom=0;right=0;overflow=hidden;fontSize=12;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-5">
+          <mxGeometry width="169" height="50" as="geometry">
+            <mxRectangle width="169" height="50" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-7" value="Draft" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=inherit;fontSize=16;" parent="YiVmr3stLEZtGJJjjHfg-5" vertex="1">
-          <mxGeometry x="56" width="194" height="30" as="geometry">
-            <mxRectangle width="194" height="30" as="alternateBounds" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-7" value="A registered user runs the app on his/her mobile. Wants to give away some food, some clothes." style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;fontSize=12;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-5">
+          <mxGeometry x="169" width="371" height="50" as="geometry">
+            <mxRectangle width="371" height="50" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-8" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=16;" parent="YiVmr3stLEZtGJJjjHfg-1" vertex="1">
-          <mxGeometry y="90" width="250" height="30" as="geometry" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-8" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-1">
+          <mxGeometry y="110" width="540" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-9" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;overflow=hidden;strokeColor=inherit;fontSize=16;" parent="YiVmr3stLEZtGJJjjHfg-8" vertex="1">
-          <mxGeometry width="56" height="30" as="geometry">
-            <mxRectangle width="56" height="30" as="alternateBounds" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-9" value="Data" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#dae8fc;top=0;left=0;bottom=0;right=0;overflow=hidden;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-8">
+          <mxGeometry width="169" height="50" as="geometry">
+            <mxRectangle width="169" height="50" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="YiVmr3stLEZtGJJjjHfg-10" value="Use Case for volunteer" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=inherit;fontSize=16;" parent="YiVmr3stLEZtGJJjjHfg-8" vertex="1">
-          <mxGeometry x="56" width="194" height="30" as="geometry">
-            <mxRectangle width="194" height="30" as="alternateBounds" />
+        <mxCell id="ZCzHJ0anV2rDInj6d1yG-10" value="Type and quality of food and clothes, quantity of food and clothes" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#dae8fc;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-8">
+          <mxGeometry x="169" width="371" height="50" as="geometry">
+            <mxRectangle width="371" height="50" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="zCCO1cx8Dha1Tv80fUOR" name="UC 2 - Vehicle Resource Declared">
-    <mxGraphModel dx="1452" dy="1304" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="jKrg6bk0fOhfqyU5LiU9" name="UC 3 - Food Demand">
-    <mxGraphModel dx="724" dy="472" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="pGB40jZsvaYnVns1NooZ" name="UC 4 - Rescue Team prepared">
-    <mxGraphModel dx="724" dy="472" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
+        <mxCell id="b_iGBAlgBfkVmsSIkKbX-1" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-1">
+          <mxGeometry y="160" width="540" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b_iGBAlgBfkVmsSIkKbX-2" value="Stimulus" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#f5f5f5;top=0;left=0;bottom=0;right=0;overflow=hidden;strokeColor=#666666;fontSize=12;fontColor=#333333;" vertex="1" parent="b_iGBAlgBfkVmsSIkKbX-1">
+          <mxGeometry width="169" height="50" as="geometry">
+            <mxRectangle width="169" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b_iGBAlgBfkVmsSIkKbX-3" value="User selects the menu to volunteer for resources" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#f5f5f5;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=#666666;fontSize=12;fontColor=#333333;" vertex="1" parent="b_iGBAlgBfkVmsSIkKbX-1">
+          <mxGeometry x="169" width="371" height="50" as="geometry">
+            <mxRectangle width="371" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b_iGBAlgBfkVmsSIkKbX-4" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-1">
+          <mxGeometry y="210" width="540" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b_iGBAlgBfkVmsSIkKbX-5" value="Response" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#dae8fc;top=0;left=0;bottom=0;right=0;overflow=hidden;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="b_iGBAlgBfkVmsSIkKbX-4">
+          <mxGeometry width="169" height="50" as="geometry">
+            <mxRectangle width="169" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b_iGBAlgBfkVmsSIkKbX-6" value="The resources he volunteered to give away are now registered in the systems available resources list" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#dae8fc;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="b_iGBAlgBfkVmsSIkKbX-4">
+          <mxGeometry x="169" width="371" height="50" as="geometry">
+            <mxRectangle width="371" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b_iGBAlgBfkVmsSIkKbX-7" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;strokeColor=inherit;fontSize=12;" vertex="1" parent="ZCzHJ0anV2rDInj6d1yG-1">
+          <mxGeometry y="260" width="540" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b_iGBAlgBfkVmsSIkKbX-8" value="Comments" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#f5f5f5;top=0;left=0;bottom=0;right=0;overflow=hidden;strokeColor=#666666;fontSize=12;fontColor=#333333;" vertex="1" parent="b_iGBAlgBfkVmsSIkKbX-7">
+          <mxGeometry width="169" height="50" as="geometry">
+            <mxRectangle width="169" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b_iGBAlgBfkVmsSIkKbX-9" value="The user must be logged in." style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;fillColor=#f5f5f5;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;strokeColor=#666666;fontSize=12;fontColor=#333333;" vertex="1" parent="b_iGBAlgBfkVmsSIkKbX-7">
+          <mxGeometry x="169" width="371" height="50" as="geometry">
+            <mxRectangle width="371" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PmXzG9OOrk73IwEh_yhz-11" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PmXzG9OOrk73IwEh_yhz-1" target="PmXzG9OOrk73IwEh_yhz-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PmXzG9OOrk73IwEh_yhz-1" value="Registered User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="-540" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PmXzG9OOrk73IwEh_yhz-5" value="Declare resource" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="-610" width="70" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="PmXzG9OOrk73IwEh_yhz-6" value="Fetch matching definition from wiki data" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="-700" width="100" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="PmXzG9OOrk73IwEh_yhz-7" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;entryX=0.05;entryY=0.718;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="PmXzG9OOrk73IwEh_yhz-5" target="PmXzG9OOrk73IwEh_yhz-6">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="410" y="-650" as="sourcePoint" />
+            <mxPoint x="570" y="-650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PmXzG9OOrk73IwEh_yhz-8" value="Fetch address of user" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="-610" width="100" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="PmXzG9OOrk73IwEh_yhz-9" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" edge="1" parent="1" source="PmXzG9OOrk73IwEh_yhz-5" target="PmXzG9OOrk73IwEh_yhz-8">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="296" y="-586" as="sourcePoint" />
+            <mxPoint x="445" y="-640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram id="8nzJQvF8wECfYopGmsis" name="BegumDraft">
-    <mxGraphModel dx="1236" dy="1304" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="823" dy="470" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -414,7 +444,7 @@
         <mxCell id="XrKiWLTo0YQvNzpuEDqD-48" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;- ID:Int&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;- name: String&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;- adress: String&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;- phoneNumber: Int&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="XrKiWLTo0YQvNzpuEDqD-45" vertex="1">
           <mxGeometry x="10" y="20" width="180" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="R_sXSsZ53aoGCTaN52zD-1" value="Text" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="R_sXSsZ53aoGCTaN52zD-1" value="Text" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="1070" y="710" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
