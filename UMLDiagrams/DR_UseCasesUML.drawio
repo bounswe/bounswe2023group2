@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-03-30T07:31:47.473Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="PYmw07YVxz4OJaMsthe2" version="21.1.1" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-03-30T07:34:14.656Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="hmVh0zbsHCbWk9Yq2c1n" version="21.1.1" type="github" pages="3">
   <diagram id="BYzD3MFwf9BdRqlY15Yz" name="UC 1 - Food Resource Declared">
     <mxGraphModel dx="1314" dy="1811" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -132,6 +132,18 @@
         </mxCell>
         <mxCell id="Tl8_rdHkJAMkWdvxcSMy-3" value="Declare vehicle availability" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="430" y="-370" width="100" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl8_rdHkJAMkWdvxcSMy-7" value="Disaster Response System" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="200" y="-200" width="410" height="470" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl8_rdHkJAMkWdvxcSMy-8" value="Declare human force resource" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="-40" width="80" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl8_rdHkJAMkWdvxcSMy-10" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Tl8_rdHkJAMkWdvxcSMy-9" target="Tl8_rdHkJAMkWdvxcSMy-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tl8_rdHkJAMkWdvxcSMy-9" value="Registered User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="-30" width="30" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
