@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-03-30T15:38:30.199Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="yUEKJgeygpwfQfQEu7r8" version="21.1.1" type="github" pages="3">
-  <diagram id="BYzD3MFwf9BdRqlY15Yz" name="UC 1 - Food Resource Declared">
-    <mxGraphModel dx="1114" dy="1713" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+<mxfile host="app.diagrams.net" modified="2023-03-31T07:53:36.244Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="0UsfYA_U-QFPvzf4Gb3D" version="21.1.1" type="github" pages="3">
+  <diagram id="BYzD3MFwf9BdRqlY15Yz" name="UC 1 - Resource Declared">
+    <mxGraphModel dx="1114" dy="1649" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
