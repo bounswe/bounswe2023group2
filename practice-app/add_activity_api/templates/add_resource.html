@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Add Resource</title>
+		<style>
+			.button {
+				  align-items: center;
+  appearance: none;
+  background-color: #fff;
+  border-radius: 24px;
+  border-style: none;
+  box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+  box-sizing: border-box;
+  color: #3c4043;
+  cursor: pointer;
+  display: inline-flex;
+  fill: currentcolor;
+  font-family: "Google Sans",Roboto,Arial,sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  height: 48px;
+  justify-content: center;
+  letter-spacing: .25px;
+  line-height: normal;
+  max-width: 100%;
+  overflow: visible;
+  padding: 2px 24px;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: auto;
+  will-change: transform,opacity;
+  z-index: 0;
+
+			}
+			.form {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				float: left;
+				width: 45%;
+				padding: 1%;
+				margin: 1%;
+				border: 3px solid black;
+			}
+			.form h1 {
+				font-size: 50px;
+				font-family: 'Roboto', sans-serif;
+			}
+			.label {
+				padding: 2%;
+				margin: 2%;
+				border: 3px solid black;
+				font-size: 30px;
+				font-family: 'Roboto', sans-serif;
+			}
+			.genis {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+			.labelinput {
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="genis">
+		<form id="add-resource" class="form">
+			<div class="labelinput">
+				<label>Type:</label>
+				<input type="text" name="type">
+			</div>
+			<div class="labelinput">
+				<label>Location:</label>
+				<input type="text" name="location">
+			</div>
+			<div class="labelinput">
+				<label>Notes:</label>
+				<input type="text" name="notes">
+			</div>
+			<div class="labelinput">
+				<label>Updated At:</label>
+				<input type="text" name="updated_at">
+			</div>
+			<div class="labelinput">
+				<label>Is Active:</label>
+				<input type="text" name="is_active">
+			</div>
+			<div class="labelinput">
+				<label>Upvotes:</label>
+				<input type="text" name="upvotes">
+			</div>
+			<div class="labelinput">
+				<label>Downvotes:</label>
+				<input type="text" name="downvotes">
+			</div>
+			<div class="labelinput">
+				<label>Creator Id:</label>
+				<input type="text" name="creator_id">
+			</div>
+			<div class="labelinput">
+				<label>Creating Date:</label>
+				<input type="text" name="creation_date">
+			</div>
+			<div class="labelinput">
+				<label>Condition:</label>
+				<input type="text" name="condition">
+			</div>
+			<div class="labelinput">
+				<label>Quantity:</label>
+				<input type="text" name="quantity">
+			</div>
+			<button type="submit" class="button">Add Resource</button>
+		</form>
+		<div id="label" class="label"></div>
+		</div>
+	</body>
+	<script>
+		const form = document.getElementById('add-resource');
+		form.addEventListener('submit', function(event) {
+			event.preventDefault();
+			const data = new FormData(form);
+			const object = {};
+			data.forEach(function(value, key) {
+				object[key] = value;
+			});
+			const json = JSON.stringify(object);
+			fetch('/add/resource', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: json
+			})
+			.then(function(response) {
+				if (response.status !== 200) {
+					label.innerHTML = 'Failed: ' + response.status + ' ' + response.statusText;
+					label.style.color = 'red';
+					return;
+				}
+				form.reset();
+				label.style.color = 'green';
+				return response.json();
+			})
+			.then(function(json) {
+				if (json === undefined) {
+					return;
+				}
+				label.innerHTML = 'Resource added<br>ID: ' + json;
+				console.log(json);
+			});
+		});
+	</script>
+</html>
