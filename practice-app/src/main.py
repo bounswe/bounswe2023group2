@@ -22,7 +22,7 @@ def home():
         # print the results
         for row in cur:
             for i in row:
-                osman += str(i)
+                hasan += str(i)
 
         cur.close()
         conn.close()
