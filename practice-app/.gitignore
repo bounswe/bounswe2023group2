@@ -1,0 +1,7 @@
+
+node_modules/
+.next/
+.env
+myenv/
+.DS_Store
+client/node_modules/
