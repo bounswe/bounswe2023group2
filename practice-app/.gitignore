@@ -5,3 +5,4 @@
 myenv/
 **/.DS_Store
 client/node_modules/
+**/__pycache__
