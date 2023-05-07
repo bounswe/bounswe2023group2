@@ -1,7 +1,7 @@
 
-node_modules/
+**/node_modules/
 .next/
-.env
+**/.env
 myenv/
-.DS_Store
+**/.DS_Store
 client/node_modules/
