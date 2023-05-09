@@ -10,6 +10,9 @@ source myenv/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+- To run code you should do
+    uvicorn main:app --reload
+    
 - We are writing by fastAPI you can find the manual from [fastAPI](https://fastapi.tiangolo.com/).
 - __init__.py files are for package initializition.
 - We have `main.py` which stands for general application configurations and server init.
