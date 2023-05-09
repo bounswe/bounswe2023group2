@@ -1,11 +1,15 @@
+import json
 from fastapi import APIRouter
-
+from database.mongo import MongoDB
+from database.baseSchema import BaseSchema
 router = APIRouter()
 
-
+db = MongoDB.getInstance()
 @router.get("/", )
 async def read_users():
-    return [{"username": "Rick"}, {"username": "Morty"}]
+    userDb = db.get_collection("user")
+    users = [BaseSchema.dump(x) for x in list(userDb.find({}))]
+    return users
 
 
 @router.get("/me", )
