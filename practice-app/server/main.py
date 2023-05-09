@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import  user
+from routers import user
+from routers import notifications
 
 app = FastAPI()
 
@@ -18,6 +19,11 @@ app.include_router(
     tags=["user"],
 )
 
+app.include_router(
+    notifications.router,
+    prefix="/notifications",
+    tags=["notifications"],
+)
 
 @app.get("/")
 async def root():
