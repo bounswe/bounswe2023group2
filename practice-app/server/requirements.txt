@@ -21,4 +21,3 @@ uvicorn==0.21.1
 uvloop==0.17.0
 watchfiles==0.19.0
 websockets==11.0.2
-psycopg2_binary==2.9.6
