@@ -22,3 +22,13 @@ app.include_router(
 @app.get("/")
 async def root():
     return {"message": "Hello Bigger Applications, check!"}
+
+@app.get("/dbtest")
+async def dbtest():
+    hasan = []
+    cur = db.conn.cursor()
+    cur.execute("SELECT username FROM user_details")
+    for row in cur:
+        for i in row:
+            hasan.append(i)
+    return{"message": hasan}
