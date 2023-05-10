@@ -8,6 +8,69 @@ CREATE TABLE IF NOT EXISTS user_details (
   status int DEFAULT NULL
 );
 
+CREATE TABLE IF NOT EXISTS Resources(
+    id CHAR(36) PRIMARY KEY,
+    type VARCHAR(20),
+    location VARCHAR(20),
+    notes VARCHAR(200),
+    updated_at VARCHAR(20),
+    is_active BOOLEAN,
+    upvotes INT,
+    downvotes INT,
+    creator_id VARCHAR(40),
+    creation_date VARCHAR(20),
+    condition VARCHAR(20),
+    quantity INT
+);
+
+CREATE TABLE IF NOT EXISTS Events(
+    id CHAR(36) PRIMARY KEY,
+    type VARCHAR(20),
+    location VARCHAR(20),
+    notes VARCHAR(200),
+    updated_at VARCHAR(20),
+    is_active BOOLEAN,
+    upvotes INT,
+    downvotes INT,
+    creator_id VARCHAR(40),
+    creation_date VARCHAR(20),
+    duration INT
+);
+
+CREATE TABLE IF NOT EXISTS Needs(
+    id CHAR(36) PRIMARY KEY,
+    type VARCHAR(20),
+    location VARCHAR(20),
+    notes VARCHAR(200),
+    updated_at VARCHAR(20),
+    is_active BOOLEAN,
+    upvotes INT,
+    downvotes INT,
+    creator_id VARCHAR(40),
+    creation_date VARCHAR(20),
+    urgency INT,
+    quantity INT
+);
+
+CREATE TABLE IF NOT EXISTS Actions(
+    id CHAR(36) PRIMARY KEY,
+    notes VARCHAR(200),
+    updated_at VARCHAR(20),
+    is_active BOOLEAN,
+    upvotes INT,
+    downvotes INT,
+    creator_id VARCHAR(40),
+    creation_date VARCHAR(20),
+    start_location VARCHAR(20),
+    end_location VARCHAR(20),
+    status VARCHAR(20),
+    used_resources VARCHAR(200),
+    created_resources VARCHAR(200),
+    fulfilled_needs VARCHAR(200),
+    emerged_needs VARCHAR(200),
+    related_events VARCHAR(200)
+);
+
 --
 -- Dumping data for table 'user_details'
 --

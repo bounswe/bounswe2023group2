@@ -2,7 +2,10 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import  user
 import db
+from add_activity_api.main import app as add_activity_app
+
 app = FastAPI()
+app.include_router(add_activity_app)
 
 app.add_middleware(
     CORSMiddleware,
