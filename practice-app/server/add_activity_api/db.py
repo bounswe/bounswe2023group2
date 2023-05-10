@@ -1,5 +1,4 @@
-# This file simulates a database for the application.
-# Later this will be replaced by a real database.
+# This file is not in use. This was the temporary database before the real one. Currently db2.py is in use.
 
 import json
 import os
