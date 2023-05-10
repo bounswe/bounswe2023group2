@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Add Need</title>
+		<title>Add Event</title>
 		<style>
 			.button {
 				  align-items: center;
-  appearance: none;
-  background-color: #fff;
-  border-radius: 24px;
-  border-style: none;
-  box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
-  box-sizing: border-box;
-  color: #3c4043;
-  cursor: pointer;
-  display: inline-flex;
-  fill: currentcolor;
-  font-family: "Google Sans",Roboto,Arial,sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  height: 48px;
-  justify-content: center;
-  letter-spacing: .25px;
-  line-height: normal;
-  max-width: 100%;
-  overflow: visible;
-  padding: 2px 24px;
-  position: relative;
-  text-align: center;
-  text-transform: none;
-  transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: auto;
-  will-change: transform,opacity;
-  z-index: 0;
+				  appearance: none;
+				  background-color: #fff;
+				  border-radius: 24px;
+				  border-style: none;
+				  box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+				  box-sizing: border-box;
+				  color: #3c4043;
+				  cursor: pointer;
+				  display: inline-flex;
+				  fill: currentcolor;
+				  font-family: "Google Sans",Roboto,Arial,sans-serif;
+				  font-size: 14px;
+				  font-weight: 500;
+				  height: 48px;
+				  justify-content: center;
+				  letter-spacing: .25px;
+				  line-height: normal;
+				  max-width: 100%;
+				  overflow: visible;
+				  padding: 2px 24px;
+				  position: relative;
+				  text-align: center;
+				  text-transform: none;
+				  transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
+				  user-select: none;
+				  -webkit-user-select: none;
+				  touch-action: manipulation;
+				  width: auto;
+				  will-change: transform,opacity;
+				  z-index: 0;
 
 			}
 			.form {
@@ -72,7 +72,7 @@
 	</head>
 	<body>
 		<div class="genis">
-		<form id="add-need" class="form">
+		<form id="add-event" class="form">
 			<div class="labelinput">
 				<label>Type:</label>
 				<input type="text" name="type">
@@ -110,20 +110,16 @@
 				<input type="text" name="creation_date">
 			</div>
 			<div class="labelinput">
-				<label>Urgency:</label>
-				<input type="text" name="urgency">
+				<label>Duration:</label>
+				<input type="text" name="duration">
 			</div>
-			<div class="labelinput">
-				<label>Quantity:</label>
-				<input type="text" name="quantity">
-			</div>
-			<button type="submit" class="button">Add Need</button>
+			<button type="submit" class="button">Add Event</button>
 		</form>
 		<div id="label" class="label"></div>
 		</div>
 	</body>
 	<script>
-		const form = document.getElementById('add-need');
+		const form = document.getElementById('add-event');
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			const data = new FormData(form);
@@ -132,7 +128,7 @@
 				object[key] = value;
 			});
 			const json = JSON.stringify(object);
-			fetch('/add/need', {
+			fetch('/addel/add/event', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -153,7 +149,7 @@
 				if (json === undefined) {
 					return;
 				}
-				label.innerHTML = 'Need added<br>ID: ' + json;
+				label.innerHTML = 'Event added<br>ID: ' + json;
 				console.log(json);
 			});
 		});
