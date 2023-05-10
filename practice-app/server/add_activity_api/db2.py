@@ -3,7 +3,7 @@ import os
 from const import *
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from add_activity_api.secrets import *
+from db import conn
 
 conn = psycopg2.connect(database=db_name,
                         host='172.18.0.2',
