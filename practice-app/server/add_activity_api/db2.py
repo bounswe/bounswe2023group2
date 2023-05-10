@@ -1,6 +1,3 @@
-# This file simulates a database for the application.
-# Later this will be replaced by a real database.
-
 import json
 import os
 from const import *
