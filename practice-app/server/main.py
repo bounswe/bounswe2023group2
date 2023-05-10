@@ -23,6 +23,10 @@ app.include_router(
 async def root():
     return {"message": "Hello Bigger Applications, check!"}
 
+@app.get("/ping")
+async def root():
+    return {"message": "pong"}
+
 @app.get("/dbtest")
 async def dbtest():
     hasan = []
