@@ -3,11 +3,12 @@ import os
 from const import *
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from add_activity_api.secrets import *
 
-conn = psycopg2.connect(database='postgres',
+conn = psycopg2.connect(database=db_name, # postgres
                         host='localhost',
-                        user='postgres',
-                        password='postgres',
+                        user=db_user, # postgres
+                        password=db_password, # postgres
                         port=5432)
 
 cursor = conn.cursor(cursor_factory=RealDictCursor)
