@@ -5,12 +5,6 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from db import conn
 
-conn = psycopg2.connect(database=db_name,
-                        host='172.18.0.2',
-                        user=db_user,
-                        password=db_password,
-                        port=5432)
-
 cursor = conn.cursor(cursor_factory=RealDictCursor)
 
 def add_resource(uuid, type, location, notes, updated_at, is_active, upvotes, downvotes, creator_id, creation_date, condition, quantity):
