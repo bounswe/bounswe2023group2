@@ -1,10 +1,10 @@
-# Add, Get, and Remove Activities API
+# Add, Get, and Remove Activities API (Page by Cahid)
 
 This API can basically add, query, and delete new resources, needs, events, and actions.
 
 ![image](https://user-images.githubusercontent.com/25232403/236641177-7085cd19-6f69-4fe7-a48c-32b010c2d06c.png)
 
-The UI can be accessible through [here](http://13.49.41.10:8000/)
+The UI can be accessible through [here](http://13.49.41.10:8000/) (this is a separate server from my team, I initially thought we should make the dockerization and deployment phase on our own, and I did it.)
 
 ## Documentation
 
@@ -32,3 +32,5 @@ Though these documentations are pretty nice, here is also clean API endpoints (e
 The Docker can be compiled and run using `run.sh`
 
 While running the docker, adding `test` to the end of the command runs the tests.
+
+Note: in the main project, all the endpoints that I have written start with `/addel` and the rest is the same.
