@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import  user
-
+import db
 app = FastAPI()
 
 app.add_middleware(
