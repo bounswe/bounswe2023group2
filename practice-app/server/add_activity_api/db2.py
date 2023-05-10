@@ -6,7 +6,7 @@ from psycopg2.extras import RealDictCursor
 from add_activity_api.secrets import *
 
 conn = psycopg2.connect(database=db_name, # postgres
-                        host='localhost',
+                        host='172.18.0.2',
                         user=db_user, # postgres
                         password=db_password, # postgres
                         port=5432)
