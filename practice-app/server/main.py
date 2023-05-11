@@ -4,6 +4,8 @@ from routers import  user
 import db
 from add_activity_api.main import app as add_activity_app
 
+# For Docker
+
 app = FastAPI()
 app.include_router(add_activity_app)
 
