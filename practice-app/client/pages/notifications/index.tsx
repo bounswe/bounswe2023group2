@@ -132,8 +132,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 //   }
 // };
 
-
-
 export default function Home() {
   const [result, setResult] = useState(null);
   
@@ -144,9 +142,6 @@ export default function Home() {
       onMessage(messaging, (payload) => {
         console.log('Message received. ', payload);
         new Notification(payload.notification?.title);
-      
- 
-      
       });
       try {
         const notificationData = {
@@ -200,16 +195,37 @@ export default function Home() {
         console.log(response);
         setResult("Unsubscribed successfully from"+ event.target.topic.value+":(")
       }
-      
-      
+      getSubscriptions()
     } catch (error) {
       console.error(error);
       setResult(response)
-    }
-   
+    }  
   };
-  let clientToken;
+  const getSubscriptions=async ()=>{
+    try {
+      if(!token) return
+      const response = await axios.get(`http://127.0.0.1:8000/notifications/cancan/${token}`, {
+      headers: {
+        'content-type': 'application/json'
+      }
+      });
+      console.log(response);
+      response.data
+      setSubscriptions(response.data)
+      
+    } catch (error) {
+      console.error(error);
+      
+    } 
+    
+  }
   const [token, setToken] = useState(null);
+  const [subscriptions, setSubscriptions] = useState([]);
+  useEffect(()=>{
+    getSubscriptions()
+    console.log("token degııstıııı");
+    
+  },[token])
   useEffect(() => {
     if (typeof window !== 'undefined' && 'Notification' in window) {
       if (Notification.permission !== 'granted') {
@@ -241,6 +257,9 @@ export default function Home() {
         // Send the token to your server and update the UI if necessary
         console.log( "token:",currentToken);
         setToken(currentToken)
+
+        
+
       } else {
         console.log('No registration token available. Request permission to generate one.');
       }
@@ -252,14 +271,15 @@ export default function Home() {
       // Clean up or perform any necessary actions when the component unmounts
     };
   }, []);
-  
-  
- 
-  
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      
-      
+    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      {result && (
+        <div className="mb-8"> {/* Add margin-top of 8 units */}
+          <div className="inline-block relative w-64 mr-10">
+            <pre>{JSON.stringify(result, null, 2)}</pre>
+          </div>
+        </div>
+      )}
       <div className="flex  flex-row items-center justify-between ">
         <form onSubmit={ (e) => {
           handleSubmit(e)
@@ -290,11 +310,8 @@ export default function Home() {
               <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
             </div>
           </div>
-          <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "> Subscribe Topic</button>
-          
+          <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "> Subscribe Topic</button>        
         </form>
-        
-
         <form onSubmit={ (e) => {
           handleSubscribe(e, "Unsubscribe", token)
         }}>
@@ -312,15 +329,15 @@ export default function Home() {
         </form>
 
       </div>
-      {result && (
-            <div className="inline-block relative w-64 mr-10">
-              
-              <pre>{JSON.stringify(result, null, 2)}</pre>
-            </div>
-          )}
-
       
-      
+      <div>
+      <h1 className="text-2xl font-bold mt-8">Subscriptions</h1>
+      <ul className="list-disc">
+        {subscriptions.map((subscription, index) => (
+          <li key={index} className="mb-2">{subscription}</li>
+        ))}
+      </ul>
+    </div>
 
     </main>
   );

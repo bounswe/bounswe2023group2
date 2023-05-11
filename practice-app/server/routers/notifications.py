@@ -54,29 +54,33 @@ async def unsubscription(subscription: Subscription):
     print(response.success_count, 'tokens were unsubscribed successfully')
 
 
-@router.get("/subscriptions")
-async def get_subscriptions():
-    subscriptionDb = db.get_collection("subscription")
-    subscriptions = [BaseSchema.dump(x) for x in list(subscriptionDb.find({}))]
-    return {"subscriptions": subscriptions}
+# @router.get("/subscriptions")
+# async def get_subscriptions():
+#     subscriptionDb = db.get_collection("subscription")
+#     subscriptions = [BaseSchema.dump(x) for x in list(subscriptionDb.find({}))]
+#     return {"subscriptions": subscriptions}
 
 @router.get("/topics")
 async def get_topics():
     # Retrieve subscriptions from Firebase
     return {"topic": "Food"}, {"topic": "Driver"}
 
-@router.get("/client/{device_token}", summary="DeviceInfo")
-async def get_client_info(device_token: str = Path()):
+@router.get("/cancan/{device_token}", summary="DeviceInfo")
+async def get_client_info(device_token: str):
         # Retrieve subscriptions from Firebase
-    url = "https://iid.googleapis.com/iid/info/{device_token}?details=true"
+    url = f"https://iid.googleapis.com/iid/info/{device_token}?details=true"
+    print(url)
     payload = {}
     headers = {
     'Authorization': Config.FCM_AUTHORIZATION_KEY
     }
     response = requests.get(url, headers=headers, data=payload)
-
-    print(response.text)
-    return response
+    if('rel' not in response.json()):
+        return []
+    
+    topics = response.json()['rel']['topics']
+    print(topics.keys())
+    return list(topics.keys())
 
 
 # Simulating event creation
