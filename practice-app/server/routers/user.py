@@ -14,6 +14,8 @@ async def read_users():
 
 @router.get("/me", )
 async def read_user_me():
+    userDb = db.get_collection("user")
+    userDb.insert_one({"username": "fakecurrentuser"})
     return {"username": "fakecurrentuser"}
 
 
