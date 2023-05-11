@@ -8,10 +8,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import Config
 from google.oauth2 import service_account
 import google.auth.transport.requests
+from database.mongo import MongoDB
+from database.baseSchema import BaseSchema
 
 router = APIRouter()
 cred= credentials.Certificate(Config.FCM_CREDENTIALS)
 firebase_admin.initialize_app(cred)
+db = MongoDB.getInstance()
 
 class Subscription(BaseModel):
     token: str
@@ -38,24 +41,23 @@ async def read_users():
 @router.post("/subscriptions")
 async def create_subscription(subscription: Subscription):
     # Save subscription to Firebase
-    print(subscription.token)
     response = messaging.subscribe_to_topic(subscription.token, subscription.topic)
-    
+    subscriptionDb = db.get_collection("subscription")
+    subscriptionDb.insert_one({"token": subscription.token, "topic": subscription.topic})
     print(response.success_count , 'tokens were subscribed successfully')
 
 @router.post("/unsubscribe")
 async def unsubscription(subscription: Subscription):
-
     response = messaging.unsubscribe_from_topic(subscription.token, subscription.topic)
-
+    subscriptionDb = db.get_collection("subscription")
+    subscriptionDb.delete_many({"token": subscription.token, "topic": subscription.topic})
     print(response.success_count, 'tokens were unsubscribed successfully')
 
 
-
-
-@router.get("/subscriptions/{user_id}")
-async def get_subscriptions(user_id: str):
-
+@router.get("/subscriptions")
+async def get_subscriptions():
+    subscriptionDb = db.get_collection("subscription")
+    subscriptions = [BaseSchema.dump(x) for x in list(subscriptionDb.find({}))]
     return {"subscriptions": subscriptions}
 
 @router.get("/topics")
@@ -66,7 +68,7 @@ async def get_topics():
 @router.get("/client/{device_token}", summary="DeviceInfo")
 async def get_client_info(device_token: str = Path()):
         # Retrieve subscriptions from Firebase
-    url = "https://iid.googleapis.com/iid/info/cEbBEPEeA-azup7T4MDjcv:APA91bHUedv4Li2zvbaz-ZUNerZS3CHtRkwUhZ4IVQ6l6V8zDWGJ8cu50OUvtlhe4cJKQs63nLZr5W68QcGq3U7lJlSHIpW6QlfqjTjRSXezXNsVkll-om_G-YzMvyc643nyzQkUSpeQ"
+    url = "https://iid.googleapis.com/iid/info/{device_token}?details=true"
     payload = {}
     headers = {
     'Authorization': Config.FCM_AUTHORIZATION_KEY

@@ -2,7 +2,7 @@ import sys
 sys.path.insert(0, "add_activity_api")
 from fastapi import FastAPI, Request, APIRouter
 import requests
-import db2 as db
+# import db2 as db
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from models import Resource, Need, Event, Action
@@ -10,7 +10,7 @@ from const import *
 
 app = APIRouter(prefix=api_prefix)
 
-templates = Jinja2Templates(directory=root_path+"templates")
+# templates = Jinja2Templates(directory=root_path+"templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
