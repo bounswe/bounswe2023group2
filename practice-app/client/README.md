@@ -2,6 +2,13 @@
 ## Getting Started
 
 node version: 16
+- for macos download:
+  brew install node@16
+  https://nodejs.org/dist/v16.16.0/node-v16.16.0.pkg
+- install yarn
+```bash
+npm install --global yarn
+```
 
 - First, install the dependencies:
 ```bash
