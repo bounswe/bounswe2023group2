@@ -3,10 +3,10 @@ import psycopg2.pool
 from contextlib import contextmanager
 
 conn = psycopg2.connect(
-    host="172.18.0.2",
-    database="postgres",
-    user="postgres",
-    password="postgres",
+    host="localhost",
+    database="group2",
+    user="grp2",
+    password="grp2pass",
     port="5432"
 )
 
