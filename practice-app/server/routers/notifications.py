@@ -82,8 +82,6 @@ async def get_client_info(device_token: str = Path()):
 async def send_notif(notification:Notification):
     print(notification)
     url = "https://fcm.googleapis.com/fcm/send"
-    
-    
     payload = json.dumps({
         "to": Config.MY_FCM_KEY ,
         "notification": {
@@ -98,12 +96,12 @@ async def send_notif(notification:Notification):
     'Content-Type': 'application/json',
     'Authorization': Config.FCM_AUTHORIZATION_KEY
     }
-
     response = requests.request("POST", url, headers=headers, data=payload)
-
     print(response.text)
     return response
 
+
+topic_notif_responses=[]
 # Simulating event creation
 @router.post("/create_event")
 async def create_event(notification:Notification):
@@ -128,9 +126,13 @@ async def create_event(notification:Notification):
     headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {}'.format(bearer_token)
-    }
-    
+    }  
     response = requests.request("POST", url, headers=headers, data=payload)
+    topic_notif_responses.append(response.text)
     print(response.text)
-    
     return response.text
+
+@router.get("/create_event")
+async def send_notif():
+    json_list = [json.loads(item) for item in topic_notif_responses]
+    return json_list
