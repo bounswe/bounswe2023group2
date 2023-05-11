@@ -80,7 +80,7 @@ async def get_client_info(device_token: str = Path()):
 
 
 # Simulating event creation
-@router.post("/send_notification")
+@router.post("/send_notification_to_one")
 async def send_notif(notification:Notification):
     print(notification)
     url = "https://fcm.googleapis.com/fcm/send"
@@ -103,9 +103,8 @@ async def send_notif(notification:Notification):
     return response
 
 
-topic_notif_responses=[]
 # Simulating event creation
-@router.post("/create_event")
+@router.post("/send_notification")
 async def create_event(notification:Notification):
     print("before")
     url = "https://fcm.googleapis.com//v1/projects/{}/messages:send".format(Config.FCM_PROJECT_ID)
@@ -130,11 +129,15 @@ async def create_event(notification:Notification):
         'Authorization': 'Bearer {}'.format(bearer_token)
     }  
     response = requests.request("POST", url, headers=headers, data=payload)
-    topic_notif_responses.append(response.text)
+   
+    notificationDb = db.get_collection("notification")
+    notificationDb.insert_one({"notif": response.text, "topic": notification.topic, "message:": notification.body })
     print(response.text)
     return response.text
+  
 
-@router.get("/create_event")
+@router.get("/send_notification")
 async def send_notif():
-    json_list = [json.loads(item) for item in topic_notif_responses]
-    return json_list
+    notificationDb = db.get_collection("notification")
+    notifications = [BaseSchema.dump(x) for x in list(notificationDb.find({}))]
+    return notifications

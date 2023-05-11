@@ -5,31 +5,31 @@ importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js');
 
 // Initialize the Firebase app in the service worker by passing the generated config
 
-// self.addEventListener('notificationclick', function (event) {
-//   const msg = event?.notification?.data?.FCM_MSG;
-//   if (!msg) return;
+self.addEventListener('notificationclick', function (event) {
+  const msg = event?.notification?.data?.FCM_MSG;
+  if (!msg) return;
 
-//   let url = 'https://b645-193-140-194-16.ngrok-free.app/notifications';
+  let url = 'https://b771-2a02-ff0-208-4ae0-adca-5ee4-ce6b-9b6b.ngrok-free.app/notifications';
  
 
-//   event.notification.close(); // Android needs explicit close.
-//   event.waitUntil(
-//     clients.matchAll({ type: 'window' }).then((windowClients) => {
-//       // Check if there is already a window/tab open with the target URL
-//       for (var i = 0; i < windowClients.length; i++) {
-//         var client = windowClients[i];
-//         // If so, just focus it.
-//         if (client.url === url && 'focus' in client) {
-//           return client.focus();
-//         }
-//       }
-//       // If not, then open the target URL in a new window/tab.
-//       if (clients.openWindow) {
-//         return clients.openWindow(url);
-//       }
-//     }),
-//   );
-// });
+  event.notification.close(); // Android needs explicit close.
+  event.waitUntil(
+    clients.matchAll({ type: 'window' }).then((windowClients) => {
+      // Check if there is already a window/tab open with the target URL
+      for (var i = 0; i < windowClients.length; i++) {
+        var client = windowClients[i];
+        // If so, just focus it.
+        if (client.url === url && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // If not, then open the target URL in a new window/tab.
+      if (clients.openWindow) {
+        return clients.openWindow(url);
+      }
+    }),
+  );
+});
 
 const firebaseConfig = {
     apiKey: "AIzaSyAN1pGfWXeLnZ77kNU7nhOoaQN0tN1BsLU",

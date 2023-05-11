@@ -80,7 +80,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 //         //link: "https://ef7c-193-140-194-56.ngrok-free.app/notifications"
 //     };
 //     console.log("hey");
-//     const response = await axios.post('http://127.0.0.1:8000/notifications/create_event', JSON.stringify(notificationData), {
+//     const response = await axios.post('http://127.0.0.1:8000/notifications/send_notification', JSON.stringify(notificationData), {
 //       headers: {
 //         'content-type': 'application/json'
 //       }
@@ -143,7 +143,10 @@ export default function Home() {
     const messaging = getMessaging(firebaseApp);
       onMessage(messaging, (payload) => {
         console.log('Message received. ', payload);
-        // ...
+        new Notification(payload.notification?.title);
+      
+ 
+      
       });
       try {
         const notificationData = {
@@ -153,7 +156,7 @@ export default function Home() {
             
         };
         
-        const response = await axios.post('http://127.0.0.1:8000/notifications/create_event', JSON.stringify(notificationData), {
+        const response = await axios.post('http://127.0.0.1:8000/notifications/send_notification', JSON.stringify(notificationData), {
           headers: {
             'content-type': 'application/json'
           }
@@ -195,7 +198,7 @@ export default function Home() {
           }
         });
         console.log(response);
-        setResult("Unsubscribed successfully from"+ event.target.topic.value+":)")
+        setResult("Unsubscribed successfully from"+ event.target.topic.value+":(")
       }
       
       
