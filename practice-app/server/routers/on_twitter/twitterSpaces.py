@@ -1,7 +1,7 @@
 from .returncodes import *
 from TwitterAPI import TwitterAPI
 
-from .secrets import *
+from .TWAPISECRETS import *
 class TwitterSpace():
     spacesID: str
     def __init__(self, spacesID):
