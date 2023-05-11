@@ -3,26 +3,26 @@ import { Inter } from 'next/font/google';
 import axios from 'axios';
 import { initializeApp } from "firebase/app";
 import { getMessaging,onMessage, getToken } from "firebase/messaging";
+import { subscribe } from 'diagnostics_channel';
+
 
 const inter = Inter({ subsets: ['latin'] });
 const firebaseConfig = {
-  apiKey: "AIzaSyAN1pGfWXeLnZ77kNU7nhOoaQN0tN1BsLU",
-  authDomain: "dpr-project-5e1a8.firebaseapp.com",
-  projectId: "dpr-project-5e1a8",
-  storageBucket: "dpr-project-5e1a8.appspot.com",
-  messagingSenderId: "593061627004",
-  appId: "1:593061627004:web:cd066c526ae27f8c0575f9",
-  measurementId: "G-FDMHJ53604"
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID
 };
 
-
-
+const firebaseApp = initializeApp(firebaseConfig);
 const CreateEvent = ({text}) => {
   const [responseData, setResponseData] = useState(null);
   const handleClick = () => {
     // Send a POST request to your API
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging(app);
+    const messaging = getMessaging(firebaseApp);
     onMessage(messaging, (payload) => {
       console.log('Message received. ', payload);
       // ...
@@ -50,53 +50,14 @@ const CreateEvent = ({text}) => {
   );
 };
 
-
-
-
-const Subscribe = ({text}) => {
-  const [responseData, setResponseData] = useState(null);
+const SubscriptionButton = ({text, clientToken, functionality}) => {
+  
   const handleClick = () => {
-    // Send a POST request to your API
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging();
-    getToken(messaging, { vapidKey: 'BM2SKWurNY8H7fjxKLPF0Sqn9wPPr-QFz7SxgDkdNTuYPR5u-ewM7kdGyHcL5td1ze9WtvH8AFEw1msYlUFdnS4' }).then((currentToken) => {
-      if (currentToken) {
-        // Send the token to your server and update the UI if necessary
-        console.log( "token:",currentToken, text)
-        subscribeTopic(currentToken, text)
-      } else {
-        console.log('No registration token available. Request permission to generate one.');
-      }
-    }).catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-    });
-  }; 
-  return (
-    <div>
-      <button onClick={handleClick}>{text}</button>
-      
-    </div>
-  );
-};
-
-
-const UnSubscribe = ({text}) => {
-  const [responseData, setResponseData] = useState(null);
-  const handleClick = () => {
-    // Send a POST request to your API
-    const app = initializeApp(firebaseConfig);
-    const messaging = getMessaging();
-    getToken(messaging, { vapidKey: 'BM2SKWurNY8H7fjxKLPF0Sqn9wPPr-QFz7SxgDkdNTuYPR5u-ewM7kdGyHcL5td1ze9WtvH8AFEw1msYlUFdnS4' }).then((currentToken) => {
-      if (currentToken) {
-        // Send the token to your server and update the UI if necessary
-        console.log( "token:",currentToken, text)
-        unsubscribeTopic(currentToken, text)
-      } else {
-        console.log('No registration token available. Request permission to generate one.');
-      }
-    }).catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-    });
+    if(functionality === 'subscribe'){
+      unsubscribeTopic(clientToken, text)
+    }else{
+      subscribeTopic(clientToken, text)
+    }
   }; 
   return (
     <div>
@@ -184,7 +145,44 @@ const unsubscribeTopic = async (token: String, topic: String) => {
   }
 };
 
+
 export default function Home() {
+  let clientToken;
+  useEffect(() => {
+    const firebaseConfig = {
+      apiKey: process.env.NEXT_PUBLIC_API_KEY,
+      authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+      projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+      storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+      messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+      appId: process.env.NEXT_PUBLIC_APP_ID,
+      measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID
+    };
+
+    const firebaseApp = initializeApp(firebaseConfig);
+    const messaging = getMessaging(firebaseApp);
+
+    // You can use the `messaging` instance here or pass it as a prop to child components
+    getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY }).then((currentToken) => {
+      if (currentToken) {
+        // Send the token to your server and update the UI if necessary
+        console.log( "token:",currentToken);
+        clientToken=currentToken;
+      } else {
+        console.log('No registration token available. Request permission to generate one.');
+      }
+    }).catch((err) => {
+      console.log('An error occurred while retrieving token. ', err);
+    });
+
+    return () => {
+      // Clean up or perform any necessary actions when the component unmounts
+    };
+  }, []);
+  
+  
+ 
+  
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div>Burasi notifications</div>
@@ -197,13 +195,13 @@ export default function Home() {
       </div>
       <div>
         Subscribe to a topic
-        <Subscribe text="Food"/>
-        <Subscribe text="Clothes"/>
+        <SubscriptionButton text="Food" clientToken={clientToken} functionality="subscribe"/>
+        <SubscriptionButton text="Clothes" clientToken={clientToken} functionality="subscribe"/>
       </div>
       <div>
         UnSubscribe to a topic
-        <UnSubscribe text="Food"/>
-        <UnSubscribe text="Clothes"/>
+        <SubscriptionButton text="Food" clientToken={clientToken} functionality="unsubscribe"/>
+        <SubscriptionButton text="Clothes" clientToken={clientToken} functionality="unsubscribe"/>
       </div>
       </div>
     </main>
