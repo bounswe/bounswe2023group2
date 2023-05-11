@@ -19,7 +19,7 @@ const Map = () => {
     <div>
       <div style={{textAlign:"center" }}>MAP</div>
     <MapContainer center={[37,37]} zoom={5
-    } scrollWheelZoom={true} style={{height: 800, width: "100%"}}>
+    } scrollWheelZoom={false} style={{height: 800, width: "100%"}}>
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
