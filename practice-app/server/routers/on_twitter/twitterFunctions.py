@@ -1,7 +1,7 @@
 from requests_oauthlib import OAuth1Session
 
 from .returncodes import *
-from config import *
+from .TWAPISECRETS import *
 from database.mongo import MongoDB
 EVENTS_COLLECTION = 'events_twapi'
 class TwitterFunc():
@@ -67,10 +67,10 @@ class TwitterFunc():
 
 def getTwitterSession():
     oauth = OAuth1Session(
-        Config.CONSUMER_KEY,
-        client_secret=Config.CONSUMER_SECRET,
-        resource_owner_key=Config.ACCESS_TOKEN,
-        resource_owner_secret=Config.ACCESS_TOKEN_SECRET,
+        CONSUMER_KEY,
+        client_secret=CONSUMER_SECRET,
+        resource_owner_key=ACCESS_TOKEN,
+        resource_owner_secret=ACCESS_TOKEN_SECRET,
     )
     return oauth
 

@@ -7,8 +7,6 @@ class UserSchema(BaseSchema):
 			"username": str,
 			"email": str,
 			"password": str,
-			"x_coord": float,
-			"y_coord": float
 			}
 
 	@staticmethod
