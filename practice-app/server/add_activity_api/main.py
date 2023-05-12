@@ -10,7 +10,7 @@ from const import *
 
 app = APIRouter(prefix=api_prefix)
 
-# templates = Jinja2Templates(directory=root_path+"templates")
+templates = Jinja2Templates(directory=root_path+"templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
