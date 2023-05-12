@@ -45,4 +45,3 @@ async def insert_coord(coord_list:ItemList):
 
     return items
 
-

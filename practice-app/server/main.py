@@ -8,16 +8,15 @@ from routers import filtersort
 
 from routers import location
 from routers import wordAnalysis
-
-# import db
-# from add_activity_api.main import app as add_activity_app
+from routers import login, registration, dummyhome
+import db
+from add_activity_api.main import app as add_activity_app
 from routers.on_twitter import api_on_twitter
 
 
 
-
 app = FastAPI()
-# app.include_router(add_activity_app)
+app.include_router(add_activity_app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,12 +26,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(
     user.router,
     prefix="/user",
     tags=["user"],
 )
+
 app.include_router(
     wordAnalysis.router,
     prefix="/word",
@@ -61,7 +60,23 @@ app.include_router(
     tags=["location"],
 )
 
+app.include_router(
+    registration.router,
+    prefix="/registration",
+    tags=["registration"],
+)
 
+app.include_router(
+    login.router,
+    prefix="/login",
+    tags=["login"],
+)
+
+app.include_router(
+    dummyhome.router,
+    prefix="/dummyhome",
+    tags=["dummyhome"],
+)
 @app.get("/")
 async def root():
     return {"message": "Hello Bigger Applications, check!"}
@@ -69,7 +84,6 @@ async def root():
 @app.get("/ping")
 async def root():
     return {"message": "pong"}
-
 
 @app.get("/dbtest")
 async def dbtest():

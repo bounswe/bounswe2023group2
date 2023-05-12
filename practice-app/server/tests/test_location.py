@@ -21,4 +21,3 @@ def test_locations_insert():
     assert response.json() == [
         {'x_coord': '38.64261790634527', 'y_coord': '37.27661132812501'}
         ]
-
