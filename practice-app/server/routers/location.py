@@ -3,9 +3,9 @@ from fastapi import APIRouter
 from database.mongo import MongoDB
 from database.baseSchema import BaseSchema
 router = APIRouter()
-
 db =MongoDB.getInstance()
-@router.get("/location",)
+
+@router.get("/", )
 async def get_coord():
     userDb = db.get_collection("user")
     users = list(userDb.find({}))
