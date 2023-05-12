@@ -67,25 +67,17 @@ const Map = () => {
     const handleClick = () => {
 
       // Send a POST request to your API
-      axios.post('http://127.0.0.1:8000/location/insert',MarkerArr)
-        .then(response => {
-          // Handle the response from the API
-          console.log('API response:', response.data);
-          setResponseData(response.data);
-          
-        })
-        .catch(error => {
-          // Handle any error that occurred during the request
-          console.error('Error:', error);
-        });
+      console.log(MarkerArr)
+      axios.post('http://127.0.0.1:8000/location/insert',JSON.stringify(MarkerArr));
+        
     };
 
     return (
       <div>
-        <button onClick={handleClick}>Collect Data</button>
+        <button onClick={handleClick}>Insert Data</button>
         {responseData && (
           <div>
-            jamiryo
+            Success!
           </div>
         )}
       </div>
@@ -125,6 +117,7 @@ const Map = () => {
       <script>collectData();</script>
       <div style={{ textAlign: "center" }}>MAP</div>
       <MyFetchButton />
+      <MyInsertButton />
       
       <MapContainer center={[37, 37]} zoom={7
       } scrollWheelZoom={false} style={{ height: 800, width: "100%" }}>

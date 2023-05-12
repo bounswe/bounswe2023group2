@@ -12,7 +12,7 @@ class Item(BaseModel):
 
 
 class ItemList(BaseModel):
-    items: List[Item]
+    items: list[Item]
 
 
 
@@ -29,7 +29,6 @@ async def get_coord():
 
 @router.post("/insert," )
 async def insert_coord(coord_list:ItemList):
-
     userDb = db.get_collection("user")
     items = coord_list.items
     for dict in items:
