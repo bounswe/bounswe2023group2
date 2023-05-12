@@ -10,14 +10,13 @@ from timezonefinder import TimezoneFinder
 router = APIRouter()
 
 # connect to MongoDB
-client = pymongo.MongoClient(Config.MONGODB_URL)
+client = pymongo.MongoClient(Config.MONGO_URI)
 db = client.get_default_database()
 conversions = db["conversions"]
 
 # get timezone data from Timezone DB API
 tz_data = requests.get(
-    f'http://api.timezonedb.com/v2.1/list-time-zone?key={Config.TIMEZONE_API_KEY}'
-).json()
+    f'http://api.timezonedb.com/v2.1/list-time-zone?key={Config.TIMEZONE_API_KEY}&format=json').json()
 
 
 @router.get("/list_timezones")
