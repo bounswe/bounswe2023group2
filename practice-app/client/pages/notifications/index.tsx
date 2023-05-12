@@ -185,7 +185,7 @@ export default function Home() {
         }
         });
         console.log(response);
-        setResult("Subscribed successfully to"+ event.target.topic.value+":)")
+        setResult("Subscribed successfully to "+ event.target.topic.value+" :)")
       }else{
         const response = await axios.post('http://127.0.0.1:8000/notifications/unsubscribe', JSON.stringify(subscriptionData), {
           headers: {
@@ -193,12 +193,12 @@ export default function Home() {
           }
         });
         console.log(response);
-        setResult("Unsubscribed successfully from"+ event.target.topic.value+":(")
+        setResult("Unsubscribed from "+ event.target.topic.value+" :(")
       }
       getSubscriptions()
     } catch (error) {
       console.error(error);
-      setResult(response)
+      //setResult(response)
     }  
   };
   const getSubscriptions=async ()=>{
