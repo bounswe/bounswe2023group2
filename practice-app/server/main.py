@@ -6,11 +6,13 @@ from routers import news
 from routers import notifications
 from routers import filtersort
 
+from routers import location
 from routers import wordAnalysis
 
 # import db
 # from add_activity_api.main import app as add_activity_app
-# from routers.on_twitter import api_on_twitter
+from routers.on_twitter import api_on_twitter
+
 
 
 
@@ -24,6 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 app.include_router(
     user.router,
@@ -53,6 +56,11 @@ app.include_router(
     prefix="/news",
     tags=["news"],    
 )
+app.include_router(
+    location.router,
+    prefix="/location",
+    tags=["location"],
+)
 
 app.include_router(
     registration.router,
@@ -80,6 +88,7 @@ async def root():
 @app.get("/ping")
 async def root():
     return {"message": "pong"}
+
 
 @app.get("/dbtest")
 async def dbtest():
