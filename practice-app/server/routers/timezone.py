@@ -17,6 +17,7 @@ async def get_timezone(location: Location):
     """
     Convert latitude and longitude data to timezone and date.
     """
+    print(location.lat, location.lng)
     api_key = Config.TIMEZONE_API_KEY
     url = f'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=position&lat={location.lat}&lng={location.lng}'
     response = requests.get(url).json()
