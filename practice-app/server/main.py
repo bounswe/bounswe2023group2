@@ -5,15 +5,17 @@ from routers import user
 from routers import news
 from routers import notifications
 from routers import filtersort
+
 from routers import wordAnalysis
 
-import db
-from add_activity_api.main import app as add_activity_app
-from routers.on_twitter import api_on_twitter
+# import db
+# from add_activity_api.main import app as add_activity_app
+# from routers.on_twitter import api_on_twitter
+
 
 
 app = FastAPI()
-app.include_router(add_activity_app)
+# app.include_router(add_activity_app)
 
 app.add_middleware(
     CORSMiddleware,

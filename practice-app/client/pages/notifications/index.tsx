@@ -80,7 +80,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 //         //link: "https://ef7c-193-140-194-56.ngrok-free.app/notifications"
 //     };
 //     console.log("hey");
-//     const response = await axios.post('http://127.0.0.1:8000/notifications/send_notification', JSON.stringify(notificationData), {
+//     const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/notifications/send_notification', JSON.stringify(notificationData), {
 //       headers: {
 //         'content-type': 'application/json'
 //       }
@@ -101,7 +101,7 @@ const firebaseApp = initializeApp(firebaseConfig);
         
 //     };
 //     console.log("subscribe:"+subscriptionData.token, subscriptionData.topic)
-//     const response = await axios.post('http://127.0.0.1:8000/notifications/subscriptions', JSON.stringify(subscriptionData), {
+//     const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/notifications/subscriptions', JSON.stringify(subscriptionData), {
 //       headers: {
 //         'content-type': 'application/json'
 //       }
@@ -121,7 +121,7 @@ const firebaseApp = initializeApp(firebaseConfig);
         
 //     };
 //     console.log(subscriptionData.token, subscriptionData.topic)
-//     const response = await axios.post('http://127.0.0.1:8000/notifications/unsubscribe', JSON.stringify(subscriptionData), {
+//     const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/notifications/unsubscribe', JSON.stringify(subscriptionData), {
 //       headers: {
 //         'content-type': 'application/json'
 //       }
@@ -151,7 +151,7 @@ export default function Home() {
             
         };
         
-        const response = await axios.post('http://127.0.0.1:8000/notifications/send_notification', JSON.stringify(notificationData), {
+        const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/notifications/send_notification', JSON.stringify(notificationData), {
           headers: {
             'content-type': 'application/json'
           }
@@ -179,7 +179,7 @@ export default function Home() {
       };
       console.log("subscribe:"+subscriptionData.token, subscriptionData.topic)
       if(type==='Subscribe'){
-        const response = await axios.post('http://127.0.0.1:8000/notifications/subscriptions', JSON.stringify(subscriptionData), {
+        const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/notifications/subscriptions', JSON.stringify(subscriptionData), {
         headers: {
           'content-type': 'application/json'
         }
@@ -187,7 +187,7 @@ export default function Home() {
         console.log(response);
         setResult("Subscribed successfully to "+ event.target.topic.value+" :)")
       }else{
-        const response = await axios.post('http://127.0.0.1:8000/notifications/unsubscribe', JSON.stringify(subscriptionData), {
+        const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/notifications/unsubscribe', JSON.stringify(subscriptionData), {
           headers: {
             'content-type': 'application/json'
           }
