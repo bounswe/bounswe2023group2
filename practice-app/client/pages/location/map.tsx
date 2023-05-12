@@ -45,7 +45,7 @@ const Map = () => {
         })
         .catch(error => {
           // Handle any error that occurred during the request
-          console.error('Error:', error);
+          console.error('Errror:', error);
         });
     };
 
@@ -129,8 +129,8 @@ const Map = () => {
     <div>
       <script>collectData();</script>
       <div style={{ textAlign: "center" }}>MAP</div>
-      <div class = "box-content w-32 p-1 border-2 float-left"><MyFetchButton /></div>
-      <div class = "box-content w-32 p-1 border-2 float-right"><MyInsertButton /></div>
+      <div className = "box-content w-32 p-1 border-2 float-left"><MyFetchButton /></div>
+      <div className = "box-content w-32 p-1 border-2 float-right"><MyInsertButton /></div>
       
       <MapContainer center={[37, 37]} zoom={7
       } scrollWheelZoom={false} style={{ height: 800, width: "100%" }}>
