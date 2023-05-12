@@ -1,4 +1,3 @@
-"""
 import json
 import os
 from const import *
@@ -101,4 +100,3 @@ def delete_action(id):
         return "Action not found"
     else:
         return "Successfully deleted"
-"""
