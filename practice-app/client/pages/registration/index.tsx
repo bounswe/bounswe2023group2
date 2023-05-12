@@ -23,7 +23,7 @@ export default function Home() {
         const headers = {
           'Content-Type': 'application/json',
         };
-        const response = await axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+"/registration",data,headers); //this is the place where we pass the data to api
+        const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+"/registration",data,headers); //this is the place where we pass the data to api
         const result = await JSON.stringify(response.data);
         console.log(result)
         try {

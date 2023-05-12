@@ -12,7 +12,7 @@ export default function dummyHome() {
     const headers = {
       'Content-Type': 'application/json',
     };
-    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL+"/dummyhome?username="+data.username,headers);
+    const response = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+"/dummyhome?username="+data.username,headers);
     const result = await JSON.stringify(response.data);
     console.log(result)
     try {
