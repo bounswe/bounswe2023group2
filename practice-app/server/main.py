@@ -1,10 +1,13 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from routers import user
+from routers import news
 from routers import notifications
 from routers import filtersort
 import db
 from add_activity_api.main import app as add_activity_app
+
 
 app = FastAPI()
 app.include_router(add_activity_app)
@@ -27,13 +30,19 @@ app.include_router(
     notifications.router,
     prefix="/notifications",
     tags=["notifications"],
-    
 )
 app.include_router(
+
     filtersort.router,
     prefix="/filtersort",
     tags=["filtersort"],
 )
+app.include_router(
+    news.router,
+    prefix="/news",
+    tags=["news"],    
+)
+
 
 @app.get("/")
 async def root():
