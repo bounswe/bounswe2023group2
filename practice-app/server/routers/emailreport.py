@@ -11,7 +11,7 @@ db = MongoDB.getInstance()
 
 @router.get("/", )
 def send_mail(reporter: str, activity: str, reason: str, details: str):
-
+    
     message = Mail(
         from_email = 'halil.gurbuz@boun.edu.tr',
         to_emails = 'halil.gurbuz@boun.edu.tr',
@@ -28,7 +28,9 @@ def send_mail(reporter: str, activity: str, reason: str, details: str):
         style="background-color:#ffbe00; color:#000000; display:inline-block; padding:12px 40px 12px 40px; text-align:center; text-decoration:none;" \
         target="_blank">Review Report</a></p></center></body></html>')
     try:
-
+        reportDB = db.get_collection("reports")
+        reports = [BaseSchema.dump(x) for x in list(reportDB.find({}))]
+        reportDB.insert_one({"reporter": reporter, "activity": activity, "reason": reason, "details": details})
         sg = SendGridAPIClient(api_key = os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(message)
         print(response.status_code)
