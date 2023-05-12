@@ -204,7 +204,7 @@ export default function Home() {
   const getSubscriptions=async ()=>{
     try {
       if(!token) return
-      const response = await axios.get(`http://127.0.0.1:8000/notifications/cancan/${token}`, {
+      const response = await axios.get(`http://127.0.0.1:8000/notifications/subscriptions/${token}`, {
       headers: {
         'content-type': 'application/json'
       }
@@ -223,7 +223,7 @@ export default function Home() {
   const [subscriptions, setSubscriptions] = useState([]);
   useEffect(()=>{
     getSubscriptions()
-    console.log("token degııstıııı");
+    console.log("token has changed");
     
   },[token])
   useEffect(() => {

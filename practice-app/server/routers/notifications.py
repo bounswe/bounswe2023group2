@@ -54,18 +54,18 @@ async def unsubscription(subscription: Subscription):
     print(response.success_count, 'tokens were unsubscribed successfully')
 
 
-# @router.get("/subscriptions")
-# async def get_subscriptions():
-#     subscriptionDb = db.get_collection("subscription")
-#     subscriptions = [BaseSchema.dump(x) for x in list(subscriptionDb.find({}))]
-#     return {"subscriptions": subscriptions}
+@router.get("/subscriptions")
+async def get_subscriptions():
+    subscriptionDb = db.get_collection("subscription")
+    subscriptions = [BaseSchema.dump(x) for x in list(subscriptionDb.find({}))]
+    return {"subscriptions": subscriptions}
 
 @router.get("/topics")
 async def get_topics():
     # Retrieve subscriptions from Firebase
     return {"topic": "Food"}, {"topic": "Driver"}
 
-@router.get("/cancan/{device_token}", summary="DeviceInfo")
+@router.get("/subscriptions/{device_token}", summary="DeviceInfo")
 async def get_client_info(device_token: str):
         # Retrieve subscriptions from Firebase
     url = f"https://iid.googleapis.com/iid/info/{device_token}?details=true"
