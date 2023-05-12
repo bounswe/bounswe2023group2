@@ -6,3 +6,4 @@ myenv/
 **/.DS_Store
 client/node_modules/
 **/__pycache__
+server/config.py
