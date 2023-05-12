@@ -13,6 +13,7 @@ from routers import wordAnalysis
 # from routers.on_twitter import api_on_twitter
 
 
+
 app = FastAPI()
 # app.include_router(add_activity_app)
 
@@ -28,6 +29,11 @@ app.include_router(
     user.router,
     prefix="/user",
     tags=["user"],
+)
+app.include_router(
+    wordAnalysis.router,
+    prefix="/word",
+    tags=["word"],
 )
 
 app.include_router(
@@ -65,3 +71,9 @@ async def dbtest():
         for i in row:
             hasan.append(i)
     return{"message": hasan}
+
+app.include_router(
+    api_on_twitter.router,
+    prefix="/on-twitter",
+    tags=["on-twitter"],
+)
