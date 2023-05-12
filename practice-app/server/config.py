@@ -3,5 +3,7 @@ class Config:
     MONGO_PASSWORD = ""
     MONGO_HOST = "localhost"
     MONGO_PORT = 27017
+    MONGO_URL = "mongodb://" + MONGO_HOST + ":" + "27017"
     GOOGLE_MAPS_API_KEY="AIzaSyBVGLYY6Q0tXc6YUkRrA6bZ0BqYXe0vhHY"
     TIMEZONE_API_KEY="FWS4F4NP7SXU"
+    BACKEND_URL="http://127.0.0.1:8000"

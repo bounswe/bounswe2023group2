@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import  user, timezone
+from routers import user, timezone, tz_conversion
 import db
 from add_activity_api.main import app as add_activity_app
 
@@ -25,6 +25,12 @@ app.include_router(
 
 app.include_router(
     timezone.router,
+    prefix="/timezone",
+    tags=["timezone"],
+)
+
+app.include_router(
+    tz_conversion.router,
     prefix="/timezone",
     tags=["timezone"],
 )

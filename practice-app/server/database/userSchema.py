@@ -1,7 +1,6 @@
 
 from database.baseSchema import BaseSchema
 
-
 class UserSchema(BaseSchema):
 	fields = {
 			"username": str,
@@ -14,4 +13,3 @@ class UserSchema(BaseSchema):
 	@staticmethod
 	def create_object(data, **kwargs):
 		return data
-	
