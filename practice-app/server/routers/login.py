@@ -12,5 +12,5 @@ async def login(loginUser: LoginUser): #from frontend api posts username and pas
     currentUser: RegisteredUser = userDb.find_one({"username":loginUser.username}) #document çünkü böyle geliyor datalar
     if (currentUser != None): #if there is a user with given username
         if ((currentUser["username"] == loginUser.username) & (currentUser["password"] == loginUser.password)): #if its password and username is correct
-            return {"credentials_not_ok":False}
-    return {"credentials_not_ok":True}
+            return {"credentials_not_ok":False,"username":loginUser.username}
+    return {"credentials_not_ok":True,"username":None}

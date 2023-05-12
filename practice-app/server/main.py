@@ -4,6 +4,16 @@ from routers import  user, registration, login, dummyhome
 #import db
 #from add_activity_api.main import app as add_activity_app
 
+from routers import user
+from routers import news
+from routers import notifications
+from routers import filtersort
+
+import db
+#from add_activity_api.main import app as add_activity_app
+#from routers.on_twitter import api_on_twitter
+
+
 app = FastAPI()
 #app.include_router(add_activity_app)
 
@@ -22,6 +32,23 @@ app.include_router(
 )
 
 app.include_router(
+    notifications.router,
+    prefix="/notifications",
+    tags=["notifications"],
+)
+app.include_router(
+
+    filtersort.router,
+    prefix="/filtersort",
+    tags=["filtersort"],
+)
+app.include_router(
+    news.router,
+    prefix="/news",
+    tags=["news"],    
+)
+
+app.include_router(
     registration.router,
     prefix="/registration",
     tags=["registration"],
@@ -34,7 +61,7 @@ app.include_router(
 )
 
 app.include_router(
-    login.router,
+    dummyhome.router,
     prefix="/dummyhome",
     tags=["dummyhome"],
 )
@@ -57,3 +84,10 @@ async def dbtest():
         for i in row:
             hasan.append(i)
     return{"message": hasan}
+"""
+app.include_router(
+    api_on_twitter.router,
+    prefix="/on-twitter",
+    tags=["on-twitter"],
+)
+"""

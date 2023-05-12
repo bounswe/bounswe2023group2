@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import urllib 
 from config import Config
 
+
 def get_authentication_for_db() -> str:
     username = Config.MONGO_USERNAME
     password = Config.MONGO_PASSWORD
@@ -13,7 +14,7 @@ class MongoDB(object):
     __instance = None
 
     @staticmethod
-    def getInstance(address="localhost", port=27017, username=None, password=None):
+    def getInstance(address=Config.MONGO_HOST, port=Config.MONGO_PORT, username=None, password=None):
         """ Static access method. """
         if MongoDB.__instance == None:
             if username is None or password is None:

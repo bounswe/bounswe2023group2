@@ -1,3 +1,4 @@
+"""
 import psycopg2
 import psycopg2.pool
 from contextlib import contextmanager
@@ -11,6 +12,7 @@ conn = psycopg2.connect(
 )
 
 cur = conn.cursor()
+cur.execute("ROLLBACK")
 fd = open("database.sql", 'r')
 sqlFile = fd.read()
 fd.close()
@@ -28,3 +30,4 @@ for command in sqlCommands:
     except Exception as e:
         print("Command skipped: ", str(e))
 cur.close()
+"""

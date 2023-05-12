@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 export default function Home() {
     const [credential_not_ok, getPW] = useState(null);
+    const [username, getUsername] = useState(null);
     const router = useRouter(); //this is a router to direct another page
 
     const handleSubmit = async (event) => {
@@ -22,11 +23,16 @@ export default function Home() {
         try {
             const api_result = JSON.parse(result) //I parse the result to arrange it
             getPW(api_result.credentials_not_ok) // setData method which initializes the credential_ok from api's response
+            getUsername(api_result.username) //get username from result
           } catch (error) {
             
           }
           if (!credential_not_ok) {
-            router.push("http://localhost:3000/dummyhome"); // Navigate to another page
+            try {
+            router.push("http://localhost:3000/dummyhome?username="+JSON.parse(result).username); // Navigate to another page
+            } catch (error) {
+                
+            }
           } else {
             // Do something else if the state is not OK
           }
