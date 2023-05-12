@@ -1,0 +1,6 @@
+class Config:
+    MONGO_USERNAME = ""
+    MONGO_PASSWORD = ""
+    MONGO_HOST = "localhost"
+    MONGO_PORT = 27017
+    LOCATIONS_API_KEY="AIzaSyBVGLYY6Q0tXc6YUkRrA6bZ0BqYXe0vhHY"
