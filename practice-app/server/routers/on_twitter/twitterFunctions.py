@@ -75,13 +75,16 @@ def getTwitterSession():
     return oauth
 
 def checkConnection():
-    mydb = MongoDB.getInstance()
-    if not mydb:
-        return False
-    events = mydb.get_collection(EVENTS_COLLECTION)
-    for event in list(events.find()):
-        return True
+    try:
+        mydb = MongoDB.getInstance()
+        if not mydb:
+            return False
+        events = mydb.get_collection(EVENTS_COLLECTION)
+        for event in list(events.find()):
+            return True
 
-    return False
+        return False
+    except:
+        return False
 
 tw_session = getTwitterSession()
