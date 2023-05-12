@@ -16,6 +16,7 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
+
 export default function Home() {
   const [result, setResult] = useState(null);
   const handleSubmit = async (event) => {
@@ -31,7 +32,9 @@ export default function Home() {
             topic: event.target.topic.value,
             title: "New activity in your subscribed topic: Need-"+ event.target.topic.value
         };
+
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/notifications/send_notification`, JSON.stringify(notificationData), {
+
           headers: {
             'content-type': 'application/json'
           }
@@ -54,8 +57,10 @@ export default function Home() {
       };
       console.log("subscribe:"+subscriptionData.token, subscriptionData.topic)
       if(type==='Subscribe'){
+
         
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/notifications/subscriptions`, JSON.stringify(subscriptionData), {
+
         headers: {
           'content-type': 'application/json'
         }
@@ -63,7 +68,9 @@ export default function Home() {
         console.log(response);
         setResult("Subscribed successfully to "+ event.target.topic.value+" :)")
       }else{
+
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/notifications/unsubscribe`, JSON.stringify(subscriptionData), {
+
           headers: {
             'content-type': 'application/json'
           }
