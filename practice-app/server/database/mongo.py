@@ -1,7 +1,7 @@
-from pymongo import MongoClient
 import pymongo
 import urllib 
 from config import Config
+from pymongo import MongoClient
 
 def get_authentication_for_db() -> str:
     username = Config.MONGO_USERNAME
