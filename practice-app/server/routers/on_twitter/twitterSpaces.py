@@ -1,6 +1,8 @@
-from .returncodes import *
-from TwitterAPI import TwitterAPI
+import oauth2
+import json
+import requests
 
+from .returncodes import *
 from .TWAPISECRETS import *
 class TwitterSpace():
     spacesID: str
@@ -11,23 +13,30 @@ class TwitterSpace():
             return self.fetchFromTwitter()
 
     def fetchFromTwitter(self):
-        r = twitter_api.request('spaces', {'id': self.spacesID})
-        print(self.spacesID)
-        return r
-    def tatava(self):
-        json_data = {'Kod': KOD_OK }
-        return json_data
-def createTwitterAPI():
-    api = TwitterAPI(CONSUMER_KEY,
-                     CONSUMER_SECRET,
-                     ACCESS_TOKEN,
-                     ACCESS_TOKEN_SECRET)
-    if api is None:
-        print("API error")
-        return None
-    print("API created")
-    return api
+        args = {"ids": "1278747501642657792"}
 
-twitter_api = createTwitterAPI()
+        #url = 'https://api.twitter.com/2/tweets'
+        url = f'https://api.twitter.com/2/spaces/{self.spacesID}'
+        url ='https://api.twitter.com/2/tweets?ids=1228393702244134912,1227640996038684673,1199786642791452673&tweet.fields=created_at&expansions=author_id&user.fields=created_at'
+        print(url)
+        client = getAuthedClientForTwitter()
+        response, data = client.request(uri=url)
+        print(response)
+        print(data)
+        return data
 
+def bearer_oauth(r):
+    """
+    Method required by bearer token authentication.
+    """
 
+    r.headers["Authorization"] = f"Bearer {TWITTER_TOKEN}"
+    r.headers["User-Agent"] = "v2Group2CMPE"
+    return r
+
+def getAuthedClientForTwitter():
+    consumer = oauth2.Consumer(key=CONSUMER_KEY, secret=CONSUMER_SECRET)
+    access_token = oauth2.Token(key=ACCESS_TOKEN, secret=ACCESS_TOKEN_SECRET)
+    client = oauth2.Client(consumer,access_token)
+    print (client.connections.values())
+    return client
