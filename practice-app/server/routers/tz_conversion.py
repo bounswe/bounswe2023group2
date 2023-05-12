@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from pytz import timezone
 from datetime import datetime
 from typing import List, Dict
@@ -27,16 +28,22 @@ async def list_timezones() -> List[str]:
     return [tz["zoneName"] for tz in tz_data["zones"]]
 
 
+
+class Location(BaseModel):
+    time: str
+    from_tz: str
+    to_tz: str
+
 @router.post("/convert_time")
 async def convert_time(
-    time: str, from_tz: str, to_tz: str
+    location:Location
 ) -> Dict[str, str]:
     """
     Convert a given time from one timezone to another.
     """
     tf = TimezoneFinder()
-    from_lat, from_lon = tf.timezone_at(place=from_tz)
-    to_lat, to_lon = tf.timezone_at(place=to_tz)
+    from_lat, from_lon = tf.timezone_at(place=location.from_tz)
+    to_lat, to_lon = tf.timezone_at(place=location.to_tz)
     if not all([from_lat, from_lon, to_lat, to_lon]):
         raise HTTPException(status_code=400, detail="Invalid timezone(s)")
 
@@ -44,14 +51,14 @@ async def convert_time(
     to_tz = timezone(tf.timezone_at(lng=to_lon, lat=to_lat))
     try:
         converted_time = from_tz.localize(
-            datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+            datetime.strptime(location.time, "%Y-%m-%d %H:%M:%S")
         ).astimezone(to_tz)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid time")
 
     # save the conversion in the MongoDB database
     conversion = {
-        "original_time": time,
+        "original_time": location.time,
         "converted_time": converted_time.strftime("%Y-%m-%d %H:%M:%S"),
         "from_tz": from_tz.zone,
         "to_tz": to_tz.zone,
@@ -60,7 +67,7 @@ async def convert_time(
     conversions.insert_one(conversion)
 
     return {
-        "original_time": time,
+        "original_time": location.time,
         "converted_time": converted_time.strftime("%Y-%m-%d %H:%M:%S"),
         "from_tz": from_tz.zone,
         "to_tz": to_tz.zone,
@@ -75,12 +82,15 @@ async def saved_conversions() -> List[Dict[str, str]]:
     return [conv for conv in conversions.find()]
 
 
+class Conversion(BaseModel):
+    conversion_name:str
+
 @router.post("/delete_conversion")
-async def delete_conversion(conversion_name: str) -> Dict[str, str]:
+async def delete_conversion(conversion:Conversion) -> Dict[str, str]:
     """
     Delete a saved time conversion from the MongoDB database.
     """
-    result = conversions.delete_one({"conversion_name": conversion_name})
+    result = conversions.delete_one({"conversion_name": conversion.conversion_name})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Conversion not found")
     return {"message": f"Deleted {result.deleted_count} conversion(s)"}

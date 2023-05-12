@@ -8,17 +8,17 @@ router = APIRouter()
 
 
 class Location(BaseModel):
-    lat: float
-    lng: float
+    latitude: float
+    longitude: float
 
 
 @router.post('/get_timezone')
-async def get_timezone(latitude: str, longitude: str):
+async def get_timezone(location: Location):
     """
     Convert latitude and longitude data to timezone and date.
     """
     api_key = Config.TIMEZONE_API_KEY
-    url = f'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=position&lat={latitude}&lng={longitude}'
+    url = f'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=position&lat={location.latitude}&lng={location.longitude}'
     response = requests.get(url).json()
 
     if response['status'] == 'OK':
