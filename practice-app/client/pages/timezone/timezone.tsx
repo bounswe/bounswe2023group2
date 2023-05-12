@@ -18,8 +18,8 @@ const TimeZone = () => {
     event.preventDefault();
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/timezone/get_timezone`, {
-        latitude,
-        longitude,
+        latitude: latitude,
+        longitude: longitude,
       });
       setTimezone(res.data.timezone);
       setCurrentTime(res.data.date);
@@ -38,9 +38,6 @@ const TimeZone = () => {
       });
       setToTime(res.data.converted_time)
       const conversionName = res.data.conversion_name;
-      await axios.post(`${process.env.BACKEND_URL}/tz_conversion/save_conversion`, {
-        conversion_name: conversionName,
-      });
       setSavedConversions([...savedConversions, conversionName]);
     } catch (error) {
       console.error('Error:', error);
