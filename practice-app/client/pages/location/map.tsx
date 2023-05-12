@@ -127,7 +127,7 @@ const Map = () => {
 
   return (
     <div>
-      <script>collectData();</script>
+
       <div style={{ textAlign: "center" }}>MAP</div>
       <div className = "box-content w-32 p-1 border-2 float-left"><MyFetchButton /></div>
       <div className = "box-content w-32 p-1 border-2 float-right"><MyInsertButton /></div>
