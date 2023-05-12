@@ -1,7 +1,7 @@
 from requests_oauthlib import OAuth1Session
 
 from .returncodes import *
-from .TWAPISECRETS import *
+from config import *
 from database.mongo import MongoDB
 EVENTS_COLLECTION = 'events_twapi'
 class TwitterFunc():
