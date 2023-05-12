@@ -2,7 +2,6 @@ import psycopg2
 import psycopg2.pool
 from contextlib import contextmanager
 
-# Docker update edersin allahin varsa
 conn = psycopg2.connect(
     host="172.18.0.2",
     database="postgres",
