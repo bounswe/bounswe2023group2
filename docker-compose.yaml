@@ -1,9 +1,39 @@
 version: "3.4"
 services:
-  python:
+  backend:
     build:
-      context: .
-    container_name: fast
-    image: hasannaber123/fast:1.0.0 
+      context: ./server
+    container_name: backend
+    hostname: backend
     ports:
-      - "5000:5000"
+      - "8000:8000"
+    depends_on:
+      - mongo
+    networks:
+      - practice-network
+    restart: always
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - ./mongo/data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - practice-network
+    restart: always
+  
+
+  client:
+    build:
+      context: ./client
+    container_name: client
+    hostname: client
+    ports:
+      - "80:3000"
+    restart: always
+
+networks:
+  practice-network:
+    
