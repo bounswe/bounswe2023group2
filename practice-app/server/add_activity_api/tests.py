@@ -1176,7 +1176,7 @@ class ZZZCleanup(unittest.TestCase):
                 r = requests.get(f'http://0.0.0.0:8000{api_prefix}/delete/event/?id={activity["id"]}')
 
 
-class ResourceTests(unittest.TestCase):
+class TimezoneTests(unittest.TestCase):
     def test_get_timezone(self):
         r = requests.post(f'http://0.0.0.0:8000{api_prefix}/timezone/get_timezone', json={
             "latitude": "122",

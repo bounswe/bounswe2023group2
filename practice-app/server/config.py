@@ -4,6 +4,5 @@ class Config:
     MONGO_HOST = "localhost"
     MONGO_PORT = 27017
     MONGO_URI = "mongodb://" + MONGO_HOST + ":" + str(MONGO_PORT) + "/my_database"
-    GOOGLE_MAPS_API_KEY="AIzaSyBVGLYY6Q0tXc6YUkRrA6bZ0BqYXe0vhHY"
     TIMEZONE_API_KEY="FWS4F4NP7SXU"
     BACKEND_URL="http://127.0.0.1:8000"
