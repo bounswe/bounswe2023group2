@@ -6,16 +6,17 @@ from routers import news
 from routers import notifications
 from routers import filtersort
 
+from routers import location
 from routers import wordAnalysis
-
-# import db
-# from add_activity_api.main import app as add_activity_app
-# from routers.on_twitter import api_on_twitter
+from routers import login, registration, dummyhome
+import db
+from add_activity_api.main import app as add_activity_app
+from routers.on_twitter import api_on_twitter
 
 
 
 app = FastAPI()
-# app.include_router(add_activity_app)
+app.include_router(add_activity_app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -53,6 +54,11 @@ app.include_router(
     prefix="/news",
     tags=["news"],    
 )
+app.include_router(
+    location.router,
+    prefix="/location",
+    tags=["location"],
+)
 
 app.include_router(
     registration.router,
@@ -71,8 +77,6 @@ app.include_router(
     prefix="/dummyhome",
     tags=["dummyhome"],
 )
-
-
 @app.get("/")
 async def root():
     return {"message": "Hello Bigger Applications, check!"}
@@ -96,3 +100,4 @@ app.include_router(
     prefix="/on-twitter",
     tags=["on-twitter"],
 )
+
