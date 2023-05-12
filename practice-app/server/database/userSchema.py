@@ -7,7 +7,8 @@ class UserSchema(BaseSchema):
 			"username": str,
 			"email": str,
 			"password": str,
-			"timezone": str
+			"timezone": str,
+			"date": str
 			}
 
 	@staticmethod
