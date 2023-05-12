@@ -2,8 +2,19 @@ import json
 from fastapi import APIRouter
 from database.mongo import MongoDB
 from database.baseSchema import BaseSchema
+from pydantic import BaseModel
 router = APIRouter()
 db =MongoDB.getInstance()
+
+class Item(BaseModel):
+    x_coord: float
+    y_coord: float
+
+
+class ItemList(BaseModel):
+    items: List[Item]
+
+
 
 @router.get("/", )
 async def get_coord():
@@ -17,9 +28,12 @@ async def get_coord():
     return users
 
 @router.post("/insert," )
-async def insert_coord(x:float, y:float):
+async def insert_coord(coord_list:ItemList):
+
     userDb = db.get_collection("user")
-    userDb.insert_one({"x_coord":x,"y_coord":y})
-    return {"x_coord":x,"y_coord":y}
+    items = coord_list.items
+    for dict in items:
+        userDb.insert_one({"x_coord":dict.x_coord,"y_coord":dict.y_coord})
+    return dict
 
 

@@ -72,9 +72,7 @@ const Map = () => {
           // Handle the response from the API
           console.log('API response:', response.data);
           setResponseData(response.data);
-          const MarkerCLust = () => {
-
-          };
+          
         })
         .catch(error => {
           // Handle any error that occurred during the request
