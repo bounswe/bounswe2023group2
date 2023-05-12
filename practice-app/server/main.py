@@ -33,6 +33,7 @@ app.include_router(
     prefix="/user",
     tags=["user"],
 )
+
 app.include_router(
     wordAnalysis.router,
     prefix="/word",
@@ -61,6 +62,24 @@ app.include_router(
     tags=["location"],
 )
 
+app.include_router(
+    registration.router,
+    prefix="/registration",
+    tags=["registration"],
+)
+
+app.include_router(
+    login.router,
+    prefix="/login",
+    tags=["login"],
+)
+
+app.include_router(
+    dummyhome.router,
+    prefix="/dummyhome",
+    tags=["dummyhome"],
+)
+
 
 @app.get("/")
 async def root():
@@ -86,4 +105,3 @@ app.include_router(
     prefix="/on-twitter",
     tags=["on-twitter"],
 )
-
