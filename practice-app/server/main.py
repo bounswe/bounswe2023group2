@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import  user
+from routers import  user,wordAnalysis
 import db
 from add_activity_api.main import app as add_activity_app
 
@@ -21,6 +21,11 @@ app.include_router(
     user.router,
     prefix="/user",
     tags=["user"],
+)
+app.include_router(
+    wordAnalysis.router,
+    prefix="/word",
+    tags=["word"],
 )
 
 
