@@ -1,10 +1,11 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import  user
+
+from routers import filtersort
+
 import db
 from add_activity_api.main import app as add_activity_app
-
-# For Docker
 
 app = FastAPI()
 app.include_router(add_activity_app)
@@ -23,6 +24,11 @@ app.include_router(
     tags=["user"],
 )
 
+app.include_router(
+    filtersort.router,
+    prefix="/filtersort",
+    tags=["filtersort"],
+)
 
 @app.get("/")
 async def root():
