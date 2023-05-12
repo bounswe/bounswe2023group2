@@ -31,8 +31,8 @@ app.include_router(
 
 app.include_router(
     tz_conversion.router,
-    prefix="/timezone",
-    tags=["timezone"],
+    prefix="/tz_conversion",
+    tags=["tz_conversion"],
 )
 
 @app.get("/")

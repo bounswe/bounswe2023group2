@@ -17,9 +17,9 @@ const TimeZone = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/get_timezone`, {
-        "lat":latitude,
-        "lng":longitude,
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/timezone/get_timezone`, {
+        latitude,
+        longitude,
       });
       setTimezone(res.data.timezone);
       setCurrentTime(res.data.date);
@@ -31,14 +31,14 @@ const TimeZone = () => {
   const handleSaveConversion = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/convert_time`, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tz_conversion/convert_time`, {
         time: fromTime,
         from_tz: fromTimezone,
         to_tz: toTimezone,
       });
       setToTime(res.data.converted_time)
       const conversionName = res.data.conversion_name;
-      await axios.post(`${process.env.BACKEND_URL}/save_conversion`, {
+      await axios.post(`${process.env.BACKEND_URL}/tz_conversion/save_conversion`, {
         conversion_name: conversionName,
       });
       setSavedConversions([...savedConversions, conversionName]);
@@ -50,7 +50,7 @@ const TimeZone = () => {
   const handleDeleteConversion = async (event, conversionName) => {
     event.preventDefault();
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/delete_conversion`, {
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tz_conversion/delete_conversion`, {
         conversion_name: conversionName,
       });
       const updatedConversions = savedConversions.filter((conv) => conv !== conversionName);
@@ -63,7 +63,7 @@ const TimeZone = () => {
   const handleGetSavedConversions = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/saved_conversions`);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tz_conversion/saved_conversions`);
       setSavedConversions(res.data.map((conv) => conv.conversion_name));
     } catch (error) {
       console.error('Error:', error);

@@ -68,7 +68,7 @@ async def convert_time(
 
 
 @router.get("/saved_conversions")
-async def get_saved_conversions() -> List[Dict[str, str]]:
+async def saved_conversions() -> List[Dict[str, str]]:
     """
     Retrieve a list of saved time conversions from the MongoDB database.
     """

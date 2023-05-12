@@ -8,13 +8,13 @@ from app.main import app
 
 class ResourceTests(unittest.TestCase):
     def testItReturns200(self):
-        r = requests.post(f'{Config.BACKEND_URL}/timezone', json={
+        r = requests.post(f'{Config.BACKEND_URL}/timezone/get_timezone', json={
             "notes": "Merhaba"
         })
         self.assertEqual(r.status_code, 200)
 
     def testItRequiresCorrectParameters(self):
-        r = requests.post(f'{Config.BACKEND_URL}/timezone', json={
+        r = requests.post(f'{Config.BACKEND_URL}/timezone/get_timezone', json={
             "nothing": "nothing"
         })
         self.assertNotEqual(r.status_code, 200)
@@ -27,7 +27,7 @@ client = TestClient(app)
     [(200)],
 )
 def test_list_timezones(expected_status_code):
-    response = client.get("/list_timezones")
+    response = client.get("/tz_conversion/list_timezones")
     assert response.status_code == expected_status_code
 
 
@@ -42,7 +42,7 @@ def test_list_timezones(expected_status_code):
 )
 def test_convert_time(time, from_tz, to_tz, expected_status_code):
     response = client.post(
-        "/convert_time", json={"time": time, "from_tz": from_tz, "to_tz": to_tz}
+        "/tz_conversion/convert_time", json={"time": time, "from_tz": from_tz, "to_tz": to_tz}
     )
     assert response.status_code == expected_status_code
 
@@ -52,7 +52,7 @@ def test_convert_time(time, from_tz, to_tz, expected_status_code):
     [(200)],
 )
 def test_get_saved_conversions(expected_status_code):
-    response = client.get("/saved_conversions")
+    response = client.get("/tz_conversion/saved_conversions")
     assert response.status_code == expected_status_code
 
 
@@ -63,5 +63,6 @@ def test_get_saved_conversions(expected_status_code):
     ],
 )
 def test_delete_conversion(conversion_name, expected_status_code):
-    response = client.post("/delete_conversion", json={"conversion_name": conversion_name})
+    response = client.post("/tz_conversion/delete_conversion",
+                           json={"conversion_name": conversion_name})
     assert response.status_code == expected_status_code
