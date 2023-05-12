@@ -1,5 +1,5 @@
 import json
-from fastapi import APIRouter, Path
+from fastapi import APIRouter, HTTPException, Path
 import firebase_admin
 from firebase_admin import initialize_app, credentials, firestore, messaging
 from pydantic import BaseModel
@@ -34,8 +34,7 @@ def _get_access_token():
 
 @router.get("/", )
 async def read_users():
-    return [{"message": "This is notifications"}]
-
+    return {"message": "This is notifications"}
 
 # API Endpoints
 @router.post("/subscriptions")
@@ -44,26 +43,33 @@ async def create_subscription(subscription: Subscription):
     response = messaging.subscribe_to_topic(subscription.token, subscription.topic)
     subscriptionDb = db.get_collection("subscription")
     subscriptionDb.insert_one({"token": subscription.token, "topic": subscription.topic})
-    print(response.success_count , 'tokens were subscribed successfully')
+    response = {
+        "success_count": response.success_count,
+        "message": "Tokens were subscribed successfully"
+    }
+    return response
 
 @router.post("/unsubscribe")
 async def unsubscription(subscription: Subscription):
     response = messaging.unsubscribe_from_topic(subscription.token, subscription.topic)
     subscriptionDb = db.get_collection("subscription")
     subscriptionDb.delete_many({"token": subscription.token, "topic": subscription.topic})
-    print(response.success_count, 'tokens were unsubscribed successfully')
+    response = {
+        "success_count": response.success_count,
+        "message": "Tokens were unsubscribed successfully"
+    }
+    return response
 
 
-@router.get("/subscriptions")
+
+@router.get("/subscriptions", include_in_schema=True)
 async def get_subscriptions():
-    subscriptionDb = db.get_collection("subscription")
-    subscriptions = [BaseSchema.dump(x) for x in list(subscriptionDb.find({}))]
-    return {"subscriptions": subscriptions}
-
-@router.get("/topics")
-async def get_topics():
-    # Retrieve subscriptions from Firebase
-    return {"topic": "Food"}, {"topic": "Driver"}
+    try:
+        subscriptionDb = db.get_collection("subscription")
+        subscriptions = [BaseSchema.dump(x) for x in list(subscriptionDb.find({}))]    
+        return {"subscriptions": subscriptions}
+    except Exception:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @router.get("/subscriptions/{device_token}", summary="DeviceInfo")
 async def get_client_info(device_token: str):
@@ -103,8 +109,12 @@ async def send_notif(notification:Notification):
     'Authorization': Config.FCM_AUTHORIZATION_KEY
     }
     response = requests.request("POST", url, headers=headers, data=payload)
-    print(response.text)
-    return response
+    myresponse = {
+        "notification": notification.body,
+        "message": "Notification is sended"
+    }
+    
+    return myresponse
 
 
 # Simulating event creation
@@ -123,7 +133,7 @@ async def create_event(notification:Notification):
         },
         "webpush": {
         "fcm_options": {
-            "link": "https://b645-193-140-194-16.ngrok-free.app/notifications"
+            "link": "https://b771-2a02-ff0-208-4ae0-adca-5ee4-ce6b-9b6b.ngrok-free.app/notifications"
         }
         }
     }
@@ -136,12 +146,17 @@ async def create_event(notification:Notification):
    
     notificationDb = db.get_collection("notification")
     notificationDb.insert_one({"notif": response.text, "topic": notification.topic, "message:": notification.body })
-    print(response.text)
-    return response.text
+    myresponse = {
+        "notification": notification.body,
+        "message": "Notification is sended"
+    }
+    if response.status_code >= 400:
+        raise Exception(f"Failed to send notifications {response.status_code}.")
+    return myresponse
   
 
 @router.get("/send_notification")
-async def send_notif():
+async def get_notif():
     notificationDb = db.get_collection("notification")
     notifications = [BaseSchema.dump(x) for x in list(notificationDb.find({}))]
     return notifications
