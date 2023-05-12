@@ -2,10 +2,19 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import  user
 from routers import  emailreport
+from routers import user
+from routers import news
+from routers import notifications
+from routers import filtersort
+
+from routers import location
+from routers import wordAnalysis
+from routers import login, registration, dummyhome
 import db
 from add_activity_api.main import app as add_activity_app
+from routers.on_twitter import api_on_twitter
 
-# For Docker
+
 
 app = FastAPI()
 app.include_router(add_activity_app)
@@ -25,12 +34,58 @@ app.include_router(
 )
 
 app.include_router(
+
     emailreport.router,
     prefix="/emailreport",
     tags=["emailreport"],
 )
 
 
+app.include_router(
+    wordAnalysis.router,
+    prefix="/word",
+    tags=["word"],
+)
+
+app.include_router(
+    notifications.router,
+    prefix="/notifications",
+    tags=["notifications"],
+)
+app.include_router(
+
+    filtersort.router,
+    prefix="/filtersort",
+    tags=["filtersort"],
+)
+app.include_router(
+    news.router,
+    prefix="/news",
+    tags=["news"],    
+)
+app.include_router(
+    location.router,
+    prefix="/location",
+    tags=["location"],
+)
+
+app.include_router(
+    registration.router,
+    prefix="/registration",
+    tags=["registration"],
+)
+
+app.include_router(
+    login.router,
+    prefix="/login",
+    tags=["login"],
+)
+
+app.include_router(
+    dummyhome.router,
+    prefix="/dummyhome",
+    tags=["dummyhome"],
+)
 @app.get("/")
 async def root():
     return {"message": "Hello Bigger Applications, check!"}
@@ -48,3 +103,10 @@ async def dbtest():
         for i in row:
             hasan.append(i)
     return{"message": hasan}
+
+app.include_router(
+    api_on_twitter.router,
+    prefix="/on-twitter",
+    tags=["on-twitter"],
+)
+
