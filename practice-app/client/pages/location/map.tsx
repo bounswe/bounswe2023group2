@@ -36,7 +36,7 @@ const Map = () => {
     const handleClickFetch = () => {
 
       // Send a POST request to your API
-      axios.get('http://127.0.0.1:8000/location/')
+      axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'location')
         .then(response => {
           // Handle the response from the API
           console.log('API response:', response.data);
@@ -66,14 +66,14 @@ const Map = () => {
       MarkerArr[0].y_coord = selectedPosition.y_coord;
       
 
-      axios.post('http://127.0.0.1:8000/location/insert',JSON.stringify({items: MarkerArr}),{
+      axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'location/insert' ,JSON.stringify({items: MarkerArr}),{
         headers: {
           'content-type': 'application/json'
         }
       });
       setMarkerArr([]);
       setSelectedPosition({x_coord: "" ,y_coord:""});
-      axios.get('http://127.0.0.1:8000/location/')
+      axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'location')
         .then(response => {
           // Handle the response from the API
           console.log('API response:', response.data);
