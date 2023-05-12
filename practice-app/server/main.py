@@ -1,11 +1,11 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import  user
-import db
-from add_activity_api.main import app as add_activity_app
+from routers import  user, registration, login, dummyhome
+#import db
+#from add_activity_api.main import app as add_activity_app
 
 app = FastAPI()
-app.include_router(add_activity_app)
+#app.include_router(add_activity_app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,6 +19,24 @@ app.include_router(
     user.router,
     prefix="/user",
     tags=["user"],
+)
+
+app.include_router(
+    registration.router,
+    prefix="/registration",
+    tags=["registration"],
+)
+
+app.include_router(
+    login.router,
+    prefix="/login",
+    tags=["login"],
+)
+
+app.include_router(
+    login.router,
+    prefix="/dummyhome",
+    tags=["dummyhome"],
 )
 
 
