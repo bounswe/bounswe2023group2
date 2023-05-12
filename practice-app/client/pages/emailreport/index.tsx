@@ -14,7 +14,7 @@ const emailReport = () => {
 
   const handleSubmit = () => {
     // Send a POST request to your API
-    axios.get('http://127.0.0.1:8000/emailreport/')
+    axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "/emailreport/")
     .then(response => {
       // Handle the response from the API
       console.log('API response:', response.data);

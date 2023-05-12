@@ -10,7 +10,7 @@ router = APIRouter()
 db = MongoDB.getInstance()
 
 @router.get("/", )
-def send_mail(reporter: str, activity: str, reason: str, details: str):
+def emailreport(reporter: str, activity: str, reason: str, details: str):
     
     message = Mail(
         from_email = 'halil.gurbuz@boun.edu.tr',
@@ -31,7 +31,7 @@ def send_mail(reporter: str, activity: str, reason: str, details: str):
         reportDB = db.get_collection("reports")
         reports = [BaseSchema.dump(x) for x in list(reportDB.find({}))]
         reportDB.insert_one({"reporter": reporter, "activity": activity, "reason": reason, "details": details})
-        sg = SendGridAPIClient(api_key = os.environ.get('SENDGRID_API_KEY'))
+        sg = SendGridAPIClient(os.environ.get("SENDGRID_API_KEY"))
         response = sg.send(message)
         print(response.status_code)
         print(response.body)
