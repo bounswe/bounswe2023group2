@@ -1,14 +1,23 @@
 import psycopg2
 import psycopg2.pool
 from contextlib import contextmanager
+try:
+    conn = psycopg2.connect(
+        host="172.18.0.2",
+        database="postgres",
+        user="postgres",
+        password="postgres",
+        port="5432"
+    )
+except:
+    conn = psycopg2.connect(
+        host="localhost",
+        database="group2",
+        user="grp2",
+        password="grp2pass",
+        port="5432"
+    )
 
-conn = psycopg2.connect(
-    host="172.18.0.2",
-    database="postgres",
-    user="postgres",
-    password="postgres",
-    port="5432"
-)
 
 cur = conn.cursor()
 cur.execute("ROLLBACK")
