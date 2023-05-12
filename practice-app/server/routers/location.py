@@ -7,8 +7,8 @@ router = APIRouter()
 db =MongoDB.getInstance()
 
 class Item(BaseModel):
-    x_coord: float
-    y_coord: float
+    x_coord: str
+    y_coord: str
 
 
 class ItemList(BaseModel):
@@ -27,12 +27,15 @@ async def get_coord():
     # coord = [x_coord,y_coord,usernames]
     return users
 
-@router.post("/insert," )
+@router.post("/insert", )
 async def insert_coord(coord_list:ItemList):
+    print(coord_list)
     userDb = db.get_collection("user")
     items = coord_list.items
     for dict in items:
+        print(dict)
         userDb.insert_one({"x_coord":dict.x_coord,"y_coord":dict.y_coord})
-    return dict
+    
+    return items
 
 

@@ -29,7 +29,7 @@ var redIcon = new L.Icon({
 const Map = () => {
   const [MarkerArr, setMarkerArr] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState({x_coord: "" ,y_coord:""});
-
+  //{x_coord: "" ,y_coord:""}
   const [responseData, setResponseData] = useState(null);
   const MyFetchButton = () => {
 
@@ -68,8 +68,12 @@ const Map = () => {
 
       // Send a POST request to your API
       console.log(MarkerArr)
-      axios.post('http://127.0.0.1:8000/location/insert',JSON.stringify(MarkerArr));
-        
+      axios.post('http://127.0.0.1:8000/location/insert',JSON.stringify({items: MarkerArr}),{
+        headers: {
+          'content-type': 'application/json'
+        }
+      });
+        //JSON.stringify(MarkerArr)
     };
 
     return (

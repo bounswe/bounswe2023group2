@@ -13,8 +13,9 @@ import db
 from add_activity_api.main import app as add_activity_app
 
 
+
 app = FastAPI()
-app.include_router(add_activity_app)
+#app.include_router(add_activity_app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,6 +24,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 app.include_router(
     user.router,
@@ -66,12 +68,12 @@ async def root():
 async def root():
     return {"message": "pong"}
 
-@app.get("/dbtest")
-async def dbtest():
-    hasan = []
-    cur = db.conn.cursor()
-    cur.execute("SELECT username FROM user_details")
-    for row in cur:
-        for i in row:
-            hasan.append(i)
-    return{"message": hasan}
+# @app.get("/dbtest")
+# async def dbtest():
+#     hasan = []
+#     cur = db.conn.cursor()
+#     cur.execute("SELECT username FROM user_details")
+#     for row in cur:
+#         for i in row:
+#             hasan.append(i)
+#     return{"message": hasan}
