@@ -59,3 +59,4 @@ class Action(BaseModel):
     fulfilled_needs: Optional[str]
     emerged_needs: Optional[str]
     related_events: Optional[str]
+
