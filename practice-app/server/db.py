@@ -2,6 +2,7 @@ import psycopg2
 import psycopg2.pool
 from contextlib import contextmanager
 
+# Docker update edersin allahin varsa
 conn = psycopg2.connect(
     host="localhost",
     database="group2",

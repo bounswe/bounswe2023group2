@@ -5,6 +5,8 @@ import db
 from add_activity_api.main import app as add_activity_app
 from routers.on_twitter import api_on_twitter
 
+# For Docker
+
 app = FastAPI()
 app.include_router(add_activity_app)
 
