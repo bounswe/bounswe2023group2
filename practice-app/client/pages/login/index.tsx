@@ -17,7 +17,7 @@ export default function Home() {
         const headers = {
           'Content-Type': 'application/json',
         };
-        const response = await axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+"/login",data,headers);
+        const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+"/login",data,headers);
         const result = await JSON.stringify(response.data);
         console.log(result)
         try {
