@@ -12,6 +12,7 @@ conn = psycopg2.connect(
 )
 
 cur = conn.cursor()
+cur.execute("ROLLBACK")
 fd = open("database.sql", 'r')
 sqlFile = fd.read()
 fd.close()
