@@ -29,7 +29,7 @@ export default function Home() {
           }
           if (!credential_not_ok) {
             try {
-            router.push("http://localhost:3000/dummyhome?username="+JSON.parse(result).username); // Navigate to another page
+            router.push(process.env.NEXT_PUBLIC_BACKEND_URL+"/dummyhome?username="+JSON.parse(result).username); // Navigate to another page
             } catch (error) {
                 
             }
@@ -73,7 +73,7 @@ export default function Home() {
                                 </button>
                             </div>
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                Don’t have an account yet? <a href="http://localhost:3000/registration" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                                Don’t have an account yet? <a href={process.env.NEXT_PUBLIC_BACKEND_URL+"/registration"} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
                             </p>
                         </form>
                     </div>
