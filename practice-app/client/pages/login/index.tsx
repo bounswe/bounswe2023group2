@@ -17,7 +17,7 @@ export default function Home() {
         const headers = {
           'Content-Type': 'application/json',
         };
-        const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+"/login",data,headers);
+        const response = await axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+"/login",data,headers);
         const result = await JSON.stringify(response.data);
         console.log(result)
         try {
@@ -29,7 +29,7 @@ export default function Home() {
           }
           if (!credential_not_ok) {
             try {
-            router.push(process.env.NEXT_PUBLIC_BACKEND_URL+"/dummyhome?username="+JSON.parse(result).username); // Navigate to another page
+            router.push(process.env.NEXT_PUBLIC_FRONTEND_URL+"/dummyhome?username="+JSON.parse(result).username); // Navigate to another page
             } catch (error) {
                 
             }
@@ -73,7 +73,7 @@ export default function Home() {
                                 </button>
                             </div>
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                Don’t have an account yet? <a href={process.env.NEXT_PUBLIC_BACKEND_URL+"/registration"} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                                Don’t have an account yet? <a href={process.env.NEXT_PUBLIC_FRONTEND_URL+"/registration"} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
                             </p>
                         </form>
                     </div>

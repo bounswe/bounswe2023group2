@@ -12,7 +12,7 @@ export default function dummyHome() {
     const headers = {
       'Content-Type': 'application/json',
     };
-    const response = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+"/dummyhome?username="+data.username,headers);
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL+"/dummyhome?username="+data.username,headers);
     const result = await JSON.stringify(response.data);
     console.log(result)
     try {
@@ -29,7 +29,7 @@ export default function dummyHome() {
     <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6" action="#">
       <div> Welcome to our system, you logged in succesfully! </div>
       <button type='submit' className="bg-red-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-        <a href= {process.env.NEXT_PUBLIC_BACKEND_URL+"/login"}> Logout </a>    
+        <a href= {process.env.NEXT_PUBLIC_FRONTEND_URL+"/login"}> Logout </a>    
         </button>
         </form>
     </main>
