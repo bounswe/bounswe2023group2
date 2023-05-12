@@ -1,27 +1,27 @@
 from fastapi import APIRouter
-from .twitterFunctions import TwitterFunc
-
+from routers.on_twitter.twitterFunctions import TwitterFunc
+from routers.on_twitter.twitterFunctions import checkConnection
 router = APIRouter()
-
 
 # Sample space 1LyGBqAPMQYKN
 @router.get("/alive", )
-async def waitingSpaces():
+async def showAlive():
     return {"Alive": "Yes"}
 
-@router.get("/waiting/{spacesId}", )
-async def waitingSpaceWithId(spacesId: str):
-    twitterSpace = TwitterFunc(spacesId)
-    return {"spacesId": twitterSpace.systemUser}
-
-@router.get("/process/{user_id}", )
-async def getTwitterSpace(user_id):
-    twitterSpace = TwitterFunc(user_id)
-    json_data = twitterSpace.processEventForTweet()
-    return json_data
-
-@router.post("/processEvent/{eventId}", )
+@router.get("/check", )
+async def showCheck():
+    if checkConnection():
+        return {"Check": "OK"}
+    else:
+        return {"Check": "Failed"}
+@router.post("/publishTweets/{eventId}", )
 async def processTwitterSpace(eventId):
     twitterSpace = TwitterFunc('DRaRUser')
-    json_data = twitterSpace.processEventForTweet(eventId)
+    json_data = twitterSpace.processEventForTweet(int(eventId))
+    return json_data
+
+@router.get("/getPublishedTweets/{eventId}", )
+async def test(eventId):
+    twitterSpace = TwitterFunc('DRaRUser')
+    json_data = twitterSpace.getPublishedTweets(eventId)
     return json_data
