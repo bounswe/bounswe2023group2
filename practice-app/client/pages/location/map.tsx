@@ -33,7 +33,7 @@ const Map = () => {
   const [responseData, setResponseData] = useState(null);
   const MyFetchButton = () => {
 
-    const handleClick = () => {
+    const handleClickFetch = () => {
 
       // Send a POST request to your API
       axios.get('http://127.0.0.1:8000/location/')
@@ -41,9 +41,7 @@ const Map = () => {
           // Handle the response from the API
           console.log('API response:', response.data);
           setResponseData(response.data);
-          const MarkerCLust = () => {
-
-          };
+          
         })
         .catch(error => {
           // Handle any error that occurred during the request
@@ -53,37 +51,49 @@ const Map = () => {
 
     return (
       <div>
-        <button onClick={handleClick}>Collect Data</button>
-        {responseData && (
-          <div>
-            jamiryo
-          </div>
-        )}
+        <button onClick={handleClickFetch}>Collect Data</button>
+        
       </div>
     );
   };
   const MyInsertButton = () => {
   
-    const handleClick = () => {
+    const handleClickInsert = () => {
 
       // Send a POST request to your API
       console.log(MarkerArr)
+      MarkerArr[0].x_coord = selectedPosition.x_coord;
+      MarkerArr[0].y_coord = selectedPosition.y_coord;
+      
+
       axios.post('http://127.0.0.1:8000/location/insert',JSON.stringify({items: MarkerArr}),{
         headers: {
           'content-type': 'application/json'
         }
       });
+      setMarkerArr([]);
+      setSelectedPosition({x_coord: "" ,y_coord:""});
+      axios.get('http://127.0.0.1:8000/location/')
+        .then(response => {
+          // Handle the response from the API
+          console.log('API response:', response.data);
+          setResponseData(response.data);
+          
+        })
+        .catch(error => {
+          // Handle any error that occurred during the request
+          console.error('Error:', error);
+        });
+            //setMarkerArr(MarkerArr => [...MarkerArr, selectedPosition]);
+            console.log(MarkerArr);
+
         //JSON.stringify(MarkerArr)
     };
 
     return (
       <div>
-        <button onClick={handleClick}>Insert Data</button>
-        {responseData && (
-          <div>
-            Success!
-          </div>
-        )}
+        <button onClick={handleClickInsert}>Insert Data</button>
+        
       </div>
     );
   };
@@ -101,8 +111,7 @@ const Map = () => {
             });
             console.log(MarkerArr);
             setMarkerArr(MarkerArr => [...MarkerArr, selectedPosition]);
-            //setMarkerArr(MarkerArr => [...MarkerArr, selectedPosition]);
-            console.log(MarkerArr);               
+                           
         },            
     })
 
@@ -120,8 +129,8 @@ const Map = () => {
     <div>
       <script>collectData();</script>
       <div style={{ textAlign: "center" }}>MAP</div>
-      <MyFetchButton />
-      <MyInsertButton />
+      <div class = "box-content w-32 p-1 border-2 float-left"><MyFetchButton /></div>
+      <div class = "box-content w-32 p-1 border-2 float-right"><MyInsertButton /></div>
       
       <MapContainer center={[37, 37]} zoom={7
       } scrollWheelZoom={false} style={{ height: 800, width: "100%" }}>

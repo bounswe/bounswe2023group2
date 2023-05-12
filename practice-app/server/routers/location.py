@@ -27,6 +27,7 @@ async def get_coord():
     # coord = [x_coord,y_coord,usernames]
     return users
 
+
 @router.post("/insert", )
 async def insert_coord(coord_list:ItemList):
     print(coord_list)
