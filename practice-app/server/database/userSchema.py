@@ -43,4 +43,3 @@ class TopicSchema(BaseSchema):
 	@staticmethod
 	def create_object(data, **kwargs):
 		return data
-	

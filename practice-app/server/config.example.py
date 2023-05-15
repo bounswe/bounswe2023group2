@@ -3,6 +3,10 @@ class Config:
     MONGO_PASSWORD = ""
     MONGO_HOST = "mongo"
     MONGO_PORT = 27017
+    MONGO_URI = "mongodb://" + MONGO_HOST + \
+        ":" + str(MONGO_PORT) + "/my_database"
+    TIMEZONE_API_KEY = ""
+    BACKEND_URL = "https://practice-app.online/api"
     FCM_CREDENTIALS="" 
     FCM_AUTHORIZATION_KEY=""
     MY_FCM_KEY=""
