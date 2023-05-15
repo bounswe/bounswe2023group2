@@ -110,7 +110,7 @@ const TimeZone = () => {
                      className="form-control"
                      placeholder="Enter from time"
                      value={fromTime}
-                     onChange={(event) => setFromTime(event.targetvalue)}
+                     onChange={(event) => setFromTime(event.target.value)}
                   />
                </div>
                <div className="form-group">
@@ -120,7 +120,7 @@ const TimeZone = () => {
                      className="form-control"
                      placeholder="Enter from timezone"
                      value={fromTimezone}
-                     onChange={(event) => setFromTimezone(event.targetvalue)}
+                     onChange={(event) => setFromTimezone(event.target.value)}
                   />
                </div>
                <div className="form-group">
