@@ -133,7 +133,7 @@ async def create_event(notification:Notification):
         },
         "webpush": {
         "fcm_options": {
-            "link": "https://b771-2a02-ff0-208-4ae0-adca-5ee4-ce6b-9b6b.ngrok-free.app/notifications"
+            "link": "https://practice-app.online/notifications"
         }
         }
     }
