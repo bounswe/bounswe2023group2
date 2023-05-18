@@ -1,8 +1,11 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from routers import  user
 from routers import  emailreport
 from routers import user
+from routers import timezone, tz_conversion
+
 from routers import news
 from routers import notifications
 from routers import filtersort
@@ -35,6 +38,7 @@ app.include_router(
 
 app.include_router(
 
+
     emailreport.router,
     prefix="/emailreport",
     tags=["emailreport"],
@@ -42,9 +46,21 @@ app.include_router(
 
 
 app.include_router(
+    timezone.router,
+    prefix="/timezone",
+    tags=["timezone"],
+)
+
+app.include_router(
     wordAnalysis.router,
     prefix="/word",
     tags=["word"],
+)
+app.include_router(
+    tz_conversion.router,
+    prefix="/tz_conversion",
+    tags=["tz_conversion"],
+
 )
 
 app.include_router(

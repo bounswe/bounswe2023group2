@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import NewPop from './newPop';
 
 export default function Home() {
   const [news, setNews] = useState(null);
+  const [open, setOpen] = useState(false);
 
 
   const NewsCard = (newItem) => {
@@ -23,23 +25,33 @@ export default function Home() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = {
-      subject: event.target.subject.value,
-      language: event.target.language.value,
-      sortBy: event.target.sortBy.value,
-    };
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/news/?subject=${data.subject}&sortBy=${data.sortBy}&language=${data.language}`, headers);
-    const result = await JSON.stringify(response.data);
-    const newsObject = JSON.parse(result)
-    console.log(newsObject.payload.articles)
-    setNews(newsObject.payload.articles)
+    try{
+
+      const data = {
+        subject: event.target.subject.value,
+        language: event.target.language.value,
+        sortBy: event.target.sortBy.value,
+      };
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/news/?subject=${data.subject}&sortBy=${data.sortBy}&language=${data.language}`, headers);
+      const result = await JSON.stringify(response.data);
+      const newsObject = JSON.parse(result)
+      console.log(newsObject.payload.articles)
+      setNews(newsObject.payload.articles)
+    }
+    catch{
+      window.alert("Error occured while fetching news")
+    }
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <button onClick={(e)=>{setOpen(true)}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "> Add new</button>
+       { open && <NewPop  open={open} setOpen={setOpen}/>}
       <div className="flex  flex-row items-center justify-between ">
+
+      
         <form onSubmit={handleSubmit}>
           <div className="inline-block relative w-64 mr-10">
             <select id='language' className="block appearance-none w-full border border-gray-400 text-black hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline">
@@ -67,9 +79,9 @@ export default function Home() {
           <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "> Get News</button>
         </form>
       </div>
-    
+
       <div className="flex flex-row justify-center flex-wrap pt-20">
-        {news == null ? <>loading</> :
+        {news == null ? <></> :
           news.map((newItem, index) => {
             return (
               <NewsCard key={index} newItem={newItem} ></NewsCard>
