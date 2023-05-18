@@ -9,7 +9,7 @@ self.addEventListener('notificationclick', function (event) {
   const msg = event?.notification?.data?.FCM_MSG;
   if (!msg) return;
 
-  let url = 'https://b771-2a02-ff0-208-4ae0-adca-5ee4-ce6b-9b6b.ngrok-free.app/notifications';
+  let url = 'https://practice-app.online/notifications';
  
 
   event.notification.close(); // Android needs explicit close.
