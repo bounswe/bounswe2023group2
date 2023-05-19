@@ -14,7 +14,7 @@ const emailReport = () => {
 
   const handleSubmit = () => {
     // Send a POST request to your API
-    axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "/emailreport/")
+    axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "/emailreport")
     .then(response => {
       // Handle the response from the API
       console.log('API response:', response.data);
@@ -28,38 +28,40 @@ const emailReport = () => {
 
 
   return (
-  <div>
-    <h1>Report an Activity</h1>
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Reporter</label>
+  <div className="h_form">
+    <form onSubmit={handleSubmit} className="h_container">
+      <h1>Report an Activity</h1>
+      <div className="h_block">
+        <label>Reporter (who clicked the button)</label>
         <input
           type="text"
           name="reporter"
-          value="John Doe"
-          onChange={(event) => setReporter(event.target.value)}/>
+          value="halil.gurbuz@boun.edu.tr"
+          onChange={(event) => setReporter(event.target.value)}
+          />
       </div>
 
-      <div>
-        <label>Activity ID</label>
+      <div className="h_block">
+        <label>Activity ID (where was the button clicked) </label>
         <input
           type="text"
           name="activity"
           value="NEED352"
-          onChange={(event) => setActivity(event.target.value)}/>
+          onChange={(event) => setActivity(event.target.value)}
+          />
       </div>
 
-      <div>
+      <div className="h_block">
         <label>Reason</label>
         <div>
-          <select id="reason" name="reason" required>
+          <select className="h_selector" id="reason" name="reason" required>
             <option value="Misinformation">Misinformation</option>
             <option value="Spam">Spam</option>
           </select>
         </div>
       </div>
 
-      <div>
+      <div className="h_message h_block">
         <label>More Details</label>
         <div>
           <textarea
@@ -69,8 +71,10 @@ const emailReport = () => {
           </textarea>
         </div>
       </div>  
-
-      <button type="submit">Send Report</button>
+      <div className="h_button h_block">
+        <button type="submit">Send Report</button>
+      </div>
+      
     </form>
   </div>
   );
