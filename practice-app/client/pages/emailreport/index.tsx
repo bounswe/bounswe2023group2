@@ -7,23 +7,41 @@ const emailReport = () => {
   // track form states
   const [reporter, setReporter] = useState("");
   const [activity, setActivity] = useState("");
+  const [reason, setReason] = useState("");
   const [details, setDetails] = useState("");
 
   // state to show the result after submitting
   const [responseData, setResponseData] = useState(null);
 
-  const handleSubmit = () => {
-    // Send a POST request to your API
-    axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "/emailreport")
-    .then(response => {
-      // Handle the response from the API
-      console.log('API response:', response.data);
-      setResponseData(response.data);
-    })
-    .catch(error => {
-      // Handle any error that occurred during the request
-      console.error('Error:', error);
-    });
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const data = {
+      reporter: event.target.reporter.value,
+      activity: event.target.activity.value,
+      reason: event.target.reason.value,
+      details: event.target.details.value,
+    };
+
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/emailreport`, data, headers);
+    const result = await JSON.stringify(response.data);
+    console.log(result)
+    try{
+      const api_result = JSON.parse(result) //I parse the result to arrange it
+      setReporter(reporter)
+      setActivity(activity)
+      setReason(reason)
+      setDetails(details)
+      window.alert("Your report has been sent")
+    }
+    catch{
+      window.alert("An error occured")
+    }
   };
 
 
@@ -36,8 +54,8 @@ const emailReport = () => {
         <input
           type="text"
           name="reporter"
-          value="halil.gurbuz@boun.edu.tr"
-          onChange={(event) => setReporter(event.target.value)}
+          placeholder="John Doe"
+          onChange={(event) => setReporter(event.target.value)} required
           />
       </div>
 
@@ -46,17 +64,20 @@ const emailReport = () => {
         <input
           type="text"
           name="activity"
-          value="NEED352"
-          onChange={(event) => setActivity(event.target.value)}
+          placeholder="NEED352"
+          onChange={(event) => setActivity(event.target.value)} required
           />
       </div>
 
       <div className="h_block">
         <label>Reason</label>
         <div>
-          <select className="h_selector" id="reason" name="reason" required>
-            <option value="Misinformation">Misinformation</option>
-            <option value="Spam">Spam</option>
+          <select
+            className="h_selector" 
+            name="reason" 
+            onChange={(event) => setReason(event.target.value)} required>
+              <option value="Misinformation">Misinformation</option>
+              <option value="Spam">Spam</option>
           </select>
         </div>
       </div>
