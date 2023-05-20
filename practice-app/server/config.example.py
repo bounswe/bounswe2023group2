@@ -17,3 +17,4 @@ class Config:
     CONSUMER_SECRET = ''
     ACCESS_TOKEN = ''
     ACCESS_TOKEN_SECRET = ''
+    SENDGRID_API_KEY =  ''
