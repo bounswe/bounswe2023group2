@@ -25,3 +25,8 @@ async def test(eventId):
     twitterSpace = TwitterFunc('DRaRUser')
     json_data = twitterSpace.getPublishedTweets(eventId)
     return json_data
+@router.get("/deletePublishedTweets/{eventId}", )
+async def deletePublished(eventId):
+    twitterSpace = TwitterFunc('DRaRUser')
+    json_data = twitterSpace.deletePublishedTweets(eventId)
+    return json_data
