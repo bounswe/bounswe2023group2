@@ -15,12 +15,9 @@ class TwitterFunc():
     def createTweets(self, event_id:int):
         mydb = MongoDB.getInstance()
         events = mydb.get_collection(EVENTS_COLLECTION)
-        print(events)
         qry = { "event_id": int(event_id) }
-        print(f"\nqry={qry}\n")
         myevents = list(events.find(qry))
 
-        print(myevents)
         in_reply_tweet = ""
         related_tweets = []
         for ev in myevents:
@@ -46,7 +43,7 @@ class TwitterFunc():
                         in_reply_tweet = twid
                         related_tweets.append(twid)
                     else:
-                        return {"URL": "https://twitter.com/", "ERROR": f"{response.status_code}"}
+                        return {"URL": "https://twitter.com/", "ERROR: Retreiving related tweets"}
                 except Exception as e:
                     print(e.with_traceback(None))
                     print(e.args)
