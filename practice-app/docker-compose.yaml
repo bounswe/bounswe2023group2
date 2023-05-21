@@ -1,5 +1,22 @@
 version: "3.4"
 services:
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    hostname: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - client
+    networks:
+      - practice-network
+    volumes: 
+      # - ~/static:/static
+      - ~/staticFiles:/root/staticFiles
+    restart: always
+
   backend:
     build:
       context: ./server
@@ -14,7 +31,6 @@ services:
     networks:
       - practice-network
     restart: always
-
   mongo:
     container_name: mongo
     image: mongo:latest
@@ -25,18 +41,16 @@ services:
     networks:
       - practice-network
     restart: always
-  
-
   client:
     build:
       context: ./client
     container_name: client
     hostname: client
+    networks:
+      - practice-network
     ports:
-      - "80:3000"
-      - "443:3000"
+      - "3000:3000"
     restart: always
-
   db:
     image: postgres
     restart: always
