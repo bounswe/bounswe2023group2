@@ -43,7 +43,7 @@ class TwitterFunc():
                         in_reply_tweet = twid
                         related_tweets.append(twid)
                     else:
-                        return {"URL": "https://twitter.com/", "ERROR: Retreiving related tweets"}
+                        return {"URL": "https://twitter.com/", "ERROR:": "Retreiving related tweets"}
                 except Exception as e:
                     print(e.with_traceback(None))
                     print(e.args)
