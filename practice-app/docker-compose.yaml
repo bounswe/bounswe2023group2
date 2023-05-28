@@ -12,11 +12,7 @@ services:
       - client
     networks:
       - practice-network
-    volumes: 
-      # - ~/static:/static
-      - ~/staticFiles:/root/staticFiles
     restart: always
-
   backend:
     build:
       context: ./server
