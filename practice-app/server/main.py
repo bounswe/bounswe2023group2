@@ -21,6 +21,14 @@ from routers.on_twitter import api_on_twitter
 
 app = FastAPI()
 app.include_router(add_activity_app)
+@app.get("/docs", include_in_schema=False)
+async def custom_swagger_ui_html(req):
+    root_path = req.scope.get("root_path", "").rstrip("/")
+    openapi_url = root_path+ 'api/' + app.openapi_url
+    return get_swagger_ui_html(
+        openapi_url=openapi_url,
+        title="API",
+    )
 
 app.add_middleware(
     CORSMiddleware,
