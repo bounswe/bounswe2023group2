@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, Response,status
 from requests_oauthlib import OAuth1Session
 from .returncodes import *
 
@@ -10,10 +10,10 @@ class TwitterFunc():
     systemUser: str
     def __init__(self, systemUser):
         self.systemUser = systemUser
-    def processEventForTweet(self, event_id:int):
-            return self.createTweets(event_id)
+    def processEventForTweet(self, event_id:int, response:Response):
+            return self.createTweets(event_id, response)
 
-    def createTweets(self, event_id:int):
+    def createTweets(self, event_id:int, response:Response):
         mydb = MongoDB.getInstance()
         events = mydb.get_collection(EVENTS_COLLECTION)
         qry = { "event_id": int(event_id) }
@@ -24,10 +24,13 @@ class TwitterFunc():
         for ev in myevents:
             twits = ev['related_twits']
             for twit in twits:
-                return {"URL": "https://twitter.com/", "ERROR": "Related tweets exist already"}
+                response.status_code = status.HTTP_418_IM_A_TEAPOT
+                return None
             summs = ev['event_summary']
             evdate = ev['event_date']
+            eventFound = False
             for summ in summs:
+                eventFound = True
                 print(summ)
 
                 tweet_text = f'{summ}\n#{event_id}\n#BOUNCMPE352-DRR [{evdate}]'
@@ -37,19 +40,24 @@ class TwitterFunc():
                         params = {"text": tweet_text, "reply": {"in_reply_to_tweet_id": f"{in_reply_tweet}"}}
                     else:
                         params = {"text": tweet_text}
-                    response = tw_session.post('https://api.twitter.com/2/tweets', json=params)
-                    if response.status_code == 200 or response.status_code == 201:
-                        json_response = response.json()
+                    myResponse = tw_session.post('https://api.twitter.com/2/tweets', json=params)
+                    if myResponse.status_code == 200 or myResponse.status_code == 201:
+                        json_response = myResponse.json()
                         twid = json_response['data']['id']
                         in_reply_tweet = twid
                         related_tweets.append(twid)
                     else:
-                        return {"URL": "https://twitter.com/", "ERROR:": "Retreiving related tweets"}
+                        response.status_code = status.HTTP_418_IM_A_TEAPOT
+                        return None
                 except Exception as e:
                     print(e.with_traceback(None))
                     print(e.args)
-                    return {"URL": "https://twitter.com/", "ERROR": f"{e}"}
+                    response.status_code = status.HTTP_418_IM_A_TEAPOT
+                    return None
             events.update_one(qry,{"$set" : {"related_twits": related_tweets }})
+        if not eventFound:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return None
         return {'URL': f'https://twitter.com/user/status/{in_reply_tweet}'}
 
     def getPublishedTweets(self, event_id:int):
@@ -64,6 +72,36 @@ class TwitterFunc():
                 ret_value.append(f'https://twitter.com/user/status/{twit}')
             return {"URLs": ret_value}
         return {"URL": "https://twitter.com/", "ERROR": "Not twitted"}
+
+    def getEvents(self):
+        mydb = MongoDB.getInstance()
+        events = mydb.get_collection(EVENTS_COLLECTION)
+        myevents = list(events.find())
+        ret_value = []
+        key = 1
+        for ev in myevents:
+            event_date = ev['event_date']
+            verified = ev['verified']
+            event_id = ev['event_id']
+            event_summary_list = ev['event_summary']
+            event_summary = ""
+            for event_summ in event_summary_list:
+                event_summary = f'{event_summary}{event_summ}\n'
+
+            related_twits_list = ev['related_twits']
+            related_twits = ""
+            for related_tw in related_twits_list:
+                related_twits = f'{related_twits}{related_tw}\n'
+
+            ret_value.append({'key':key,
+                              'event_date': event_date,
+                              'event_summary': event_summary,
+                              'related_twits': related_twits,
+                              'verified': verified,
+                              'event_id': event_id
+                              })
+            key = key + 1
+        return {'Events' : ret_value}
 
     def deletePublishedTweets(self, event_id:int):
         mydb = MongoDB.getInstance()
