@@ -1,10 +1,11 @@
 from fastapi import HTTPException
 from requests_oauthlib import OAuth1Session
-
 from .returncodes import *
+
 from config import *
 from database.mongo import MongoDB
 EVENTS_COLLECTION = 'events_twapi'
+
 class TwitterFunc():
     systemUser: str
     def __init__(self, systemUser):
@@ -23,7 +24,7 @@ class TwitterFunc():
         for ev in myevents:
             twits = ev['related_twits']
             for twit in twits:
-                return {"URL": "https://twitter.com/", "ERROR": f"{response.status_code}"}
+                return {"URL": "https://twitter.com/", "ERROR": "Related tweets exist already"}
             summs = ev['event_summary']
             evdate = ev['event_date']
             for summ in summs:
@@ -65,7 +66,6 @@ class TwitterFunc():
         return {"URL": "https://twitter.com/", "ERROR": "Not twitted"}
 
     def deletePublishedTweets(self, event_id:int):
-        print("db öncesi")
         mydb = MongoDB.getInstance()
         events = mydb.get_collection(EVENTS_COLLECTION)
         qry = { "event_id": int(event_id) }
@@ -73,10 +73,8 @@ class TwitterFunc():
         ret_value_success = []
         ret_value_error = []
         for ev in myevents:
-            print("girdi")
             twits = ev['related_twits']
             for twit in twits:
-                print(twit)
                 response = tw_session.delete(f"https://api.twitter.com/2/tweets/{twit}")
                 if response.status_code == 200 or response.status_code == 201:
                     json_response = response.json()
@@ -89,7 +87,6 @@ class TwitterFunc():
                 else:
                     ret_value_error.append(f'https://twitter.com/user/status/{twit}')
                     continue
-            print("preupdate")
             events.update_one({"event_id" : int(event_id)}, { "$set": {"related_twits": []}} );
             return [{"Deleted": ret_value_success}, {"Not successfull": ret_value_error}]
 

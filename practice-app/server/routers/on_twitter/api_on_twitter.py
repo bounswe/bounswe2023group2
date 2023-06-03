@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from routers.on_twitter.twitterFunctions import TwitterFunc
 from routers.on_twitter.twitterFunctions import checkConnection
+
 router = APIRouter()
 
 # Sample space 1LyGBqAPMQYKN
