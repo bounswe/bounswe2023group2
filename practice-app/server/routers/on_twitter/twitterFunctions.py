@@ -21,16 +21,16 @@ class TwitterFunc():
 
         in_reply_tweet = ""
         related_tweets = []
+        eventFound = False
         for ev in myevents:
+            eventFound = True
             twits = ev['related_twits']
             for twit in twits:
                 response.status_code = status.HTTP_418_IM_A_TEAPOT
                 return None
             summs = ev['event_summary']
             evdate = ev['event_date']
-            eventFound = False
             for summ in summs:
-                eventFound = True
                 print(summ)
 
                 tweet_text = f'{summ}\n#{event_id}\n#BOUNCMPE352-DRR [{evdate}]'

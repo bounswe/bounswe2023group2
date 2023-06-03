@@ -9,6 +9,7 @@ class TestOnTwitter(unittest.TestCase):
         assert response.status_code == 200
         assert response.json() == {'Alive': 'Yes'}
 
+
     def test_check(self):
         response = self.client.get("/on-twitter/check")
         assert response.status_code == 200
