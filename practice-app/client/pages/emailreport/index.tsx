@@ -27,21 +27,19 @@ const emailReport = () => {
     const headers = {
       'Content-Type': 'application/json',
     };
-
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/emailreport`, data, headers);
-    const result = await JSON.stringify(response.data);
-    console.log(result)
-    try{
-      const api_result = JSON.parse(result) //I parse the result to arrange it
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/emailreport`, data, headers);
+      const result = await JSON.stringify(response.data);
+      console.log(result)
       setReporter(reporter)
       setActivity(activity)
       setReason(reason)
       setDetails(details)
       window.alert("Your report has been sent")
+      } catch (error) {
+        window.alert(error)
     }
-    catch{
-      window.alert("An error occured")
-    }
+    
   };
 
 
