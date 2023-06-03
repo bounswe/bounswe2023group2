@@ -22,9 +22,9 @@ async def processTwitterSpace(eventId, response:Response):
     return json_data
 
 @router.get("/getPublishedTweets/{eventId}", )
-async def getPublishedTweets(eventId):
+async def getPublishedTweets(eventId, response:Response):
     twitterSpace = TwitterFunc('DRaRUser')
-    json_data = twitterSpace.getPublishedTweets(eventId)
+    json_data = twitterSpace.getPublishedTweets(eventId, response)
     return json_data
 
 @router.get("/getEvents", )
@@ -34,7 +34,7 @@ async def getEvents():
     return json_data
 
 @router.get("/deletePublishedTweets/{eventId}", )
-async def deletePublished(eventId):
+async def deletePublished(eventId, response:Response):
     twitterSpace = TwitterFunc('DRaRUser')
-    json_data = twitterSpace.deletePublishedTweets(eventId)
+    json_data = twitterSpace.deletePublishedTweets(eventId,response)
     return json_data

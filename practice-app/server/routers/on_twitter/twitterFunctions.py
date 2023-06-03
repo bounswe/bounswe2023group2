@@ -60,7 +60,7 @@ class TwitterFunc():
             return None
         return {'URL': f'https://twitter.com/user/status/{in_reply_tweet}'}
 
-    def getPublishedTweets(self, event_id:int):
+    def getPublishedTweets(self, event_id:int, response:Response):
         mydb = MongoDB.getInstance()
         events = mydb.get_collection(EVENTS_COLLECTION)
         qry = { "event_id": int(event_id) }
@@ -70,7 +70,9 @@ class TwitterFunc():
             twits = ev['related_twits']
             for twit in twits:
                 ret_value.append(f'https://twitter.com/user/status/{twit}')
+            response.status_code = status.HTTP_200_OK
             return {"URLs": ret_value}
+        response.status_code=status.HTTP_404_NOT_FOUND
         return {"URL": "https://twitter.com/", "ERROR": "Not twitted"}
 
     def getEvents(self):
@@ -103,7 +105,7 @@ class TwitterFunc():
             key = key + 1
         return {'Events' : ret_value}
 
-    def deletePublishedTweets(self, event_id:int):
+    def deletePublishedTweets(self, event_id:int, response:Response):
         mydb = MongoDB.getInstance()
         events = mydb.get_collection(EVENTS_COLLECTION)
         qry = { "event_id": int(event_id) }
@@ -127,8 +129,8 @@ class TwitterFunc():
                     continue
             events.update_one({"event_id" : int(event_id)}, { "$set": {"related_twits": []}} );
             return [{"Deleted": ret_value_success}, {"Not successfull": ret_value_error}]
-
-        raise HTTPException(404)
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return [{"Deleted":[]}]
 def getTwitterSession():
     oauth = OAuth1Session(
         Config.CONSUMER_KEY,
