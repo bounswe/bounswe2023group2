@@ -96,8 +96,8 @@ class TwitterFunc():
                 related_twits = f'{related_twits}{related_tw}\n'
 
             ret_value.append({'key':key,
-                              'event_date': event_date,
-                              'event_summary': event_summary,
+                              'event_date': event_date.strftime("%m/%d/%Y %H:%M"),
+                              'event_summary': event_summary_list,
                               'related_twits': related_twits_list,
                               'verified': verified,
                               'event_id': event_id

@@ -99,7 +99,7 @@ body {
 }
 
 tr:nth-child(even) {
-  background-color: lightcyan;
+  background-color: aliceblue;
 }
 
 tr:nth-child(odd) {

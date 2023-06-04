@@ -160,8 +160,22 @@ const ListAllTweets: NextPage = () => {
                 retValAll.push(<div><a href={retval}>{eachTwit}</a></div>);
             }
             return retValAll;
-        }
-        else {
+        } else if (columnKey == "event_summary") {
+                let arrSummaries = item[columnKey];
+                let retValAll = [];
+                let firstLine = true;
+                for (const summ of arrSummaries) {
+                    let retval = summ;
+                    if (firstLine) {
+                        firstLine = false;
+                    } else {
+                        retval = "-> " + retval;
+                    }
+
+                    retValAll.push(<div>{retval}</div>);
+                }
+                return retValAll;
+        } else {
             return item[columnKey];
         }
     }
@@ -178,7 +192,7 @@ const ListAllTweets: NextPage = () => {
                 css={{
                     height: "auto",
                     minWidth: "100%",
-                    whiteSpace: "normal",
+                    //whiteSpace: "normal",
                 }}
             >
                 <Table.Header columns={columns}>
@@ -192,7 +206,7 @@ const ListAllTweets: NextPage = () => {
                             {(columnKey) => <Table.Cell css={{
                                 height: "auto",
                                 minWidth: "100%",
-                                whiteSpace: "break-spaces",
+                                //whiteSpace: "break-spaces",
                             }}
                             >{insertLinkIfNeeded(columnKey,item)}</Table.Cell>}
                         </Table.Row>
