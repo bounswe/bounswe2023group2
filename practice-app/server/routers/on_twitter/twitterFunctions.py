@@ -98,7 +98,7 @@ class TwitterFunc():
             ret_value.append({'key':key,
                               'event_date': event_date,
                               'event_summary': event_summary,
-                              'related_twits': related_twits,
+                              'related_twits': related_twits_list,
                               'verified': verified,
                               'event_id': event_id
                               })

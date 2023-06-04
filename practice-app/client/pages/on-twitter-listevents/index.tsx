@@ -15,6 +15,7 @@ import {hydrateRoot} from "react-dom/client";
 import {hydrate} from "next/client";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
 
 const ListAllTweets: NextPage = () => {
     const [message, setMessage] = useState(''); // This will be used to show a message if the submission is successful
@@ -150,6 +151,21 @@ const ListAllTweets: NextPage = () => {
         }
     };
 
+    const insertLinkIfNeeded = (columnKey:any, item:any) => {
+        if (columnKey == "related_twits") {
+            let arrTwits = item[columnKey];
+            let retValAll = [];
+            for (const eachTwit of arrTwits) {
+                let retval = "https://twitter.com/user/status/" + eachTwit;
+                retValAll.push(<div><a href={retval}>{eachTwit}</a></div>);
+            }
+            return retValAll;
+        }
+        else {
+            return item[columnKey];
+        }
+    }
+
     return (
         <div className="vh-100 d-flex flex-column justify-content-center align-items-center">
             <div hidden={!submitted} className="alert alert-primary" role="alert">
@@ -178,7 +194,7 @@ const ListAllTweets: NextPage = () => {
                                 minWidth: "100%",
                                 whiteSpace: "break-spaces",
                             }}
-                            >{item[columnKey]}</Table.Cell>}
+                            >{insertLinkIfNeeded(columnKey,item)}</Table.Cell>}
                         </Table.Row>
                     )}
                 </Table.Body>
