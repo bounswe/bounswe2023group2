@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,Response,status
 from routers.on_twitter.twitterFunctions import TwitterFunc
 from routers.on_twitter.twitterFunctions import checkConnection
+
 router = APIRouter()
 
 # Sample space 1LyGBqAPMQYKN
@@ -15,18 +16,25 @@ async def showCheck():
     else:
         return {"Check": "Failed"}
 @router.post("/publishTweets/{eventId}", )
-async def processTwitterSpace(eventId):
+async def processTwitterSpace(eventId, response:Response):
     twitterSpace = TwitterFunc('DRaRUser')
-    json_data = twitterSpace.processEventForTweet(int(eventId))
+    json_data = twitterSpace.processEventForTweet(int(eventId), response)
     return json_data
 
 @router.get("/getPublishedTweets/{eventId}", )
-async def test(eventId):
+async def getPublishedTweets(eventId, response:Response):
     twitterSpace = TwitterFunc('DRaRUser')
-    json_data = twitterSpace.getPublishedTweets(eventId)
+    json_data = twitterSpace.getPublishedTweets(eventId, response)
     return json_data
-@router.get("/deletePublishedTweets/{eventId}", )
-async def deletePublished(eventId):
+
+@router.get("/getEvents", )
+async def getEvents():
     twitterSpace = TwitterFunc('DRaRUser')
-    json_data = twitterSpace.deletePublishedTweets(eventId)
+    json_data = twitterSpace.getEvents()
+    return json_data
+
+@router.get("/deletePublishedTweets/{eventId}", )
+async def deletePublished(eventId, response:Response):
+    twitterSpace = TwitterFunc('DRaRUser')
+    json_data = twitterSpace.deletePublishedTweets(eventId,response)
     return json_data

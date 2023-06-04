@@ -97,3 +97,11 @@ body {
   color: #e2e2e2;
   border-radius: 5px;
 }
+
+tr:nth-child(even) {
+  background-color: aliceblue;
+}
+
+tr:nth-child(odd) {
+  background-color: lightyellow;
+}
