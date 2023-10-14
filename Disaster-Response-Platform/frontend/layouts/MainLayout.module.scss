@@ -1,0 +1,63 @@
+@import "../styles/variables.scss";
+
+.icon {
+    padding: 1rem;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    border-bottom: 1px solid #3C4043;
+    background-color: #1C9BEF;
+    min-width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    nav {
+        
+        div {
+            cursor: pointer;
+        }
+        
+
+    }
+
+}
+
+.icon {
+    svg {
+        width:30px !important;
+        height:30px !important;
+     }
+
+}
+.selected {
+    border-left: 3px solid $base-color;
+    pointer-events: none;
+
+}
+
+.body {
+    background-color: $bg-color;
+    min-height: 100vh;
+    padding: 2rem;
+
+}
+
+.nav {
+    padding: 1em;
+    width: 100%;
+    text-align: center;
+    height: 3.5em;
+   
+
+}
+.rightbar {
+    display: flex;
+    flex-direction: row;
+}
+
+
