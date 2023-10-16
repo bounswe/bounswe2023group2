@@ -6,17 +6,17 @@ import MainLayout from '@/layouts/MainLayout'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function home() {
+export default function profile() {
   return (
     <>
       <main >
         <div >
-          Welcome to DaRP
+          deneme deneme
         </div>
       </main>
     </>
   )
 }
-home.getLayout = function getLayout(page) {
+profile.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
