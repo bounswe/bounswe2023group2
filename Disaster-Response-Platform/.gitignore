@@ -1,0 +1,6 @@
+**/node_modules/
+.next/
+**/.env
+myenv/
+**/.DS_Store
+**/__pycache__
