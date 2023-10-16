@@ -22,5 +22,5 @@ pip3 freeze > requirements.txt
 - We are writing by fastAPI you can find the manual from [fastAPI](https://fastapi.tiangolo.com/).
 - __init__.py files are for package initializition.
 - We have `main.py` which stands for general application configurations and server init.
-- We include the routes(endpoints) in main file. I have added `user` route as an example
-- You should create your own file inside `routes` folder. You can check example user.py.
+- We include the routes(endpoints) in main file. 
+- The API service functions will be placed in files under `Services` folder.
