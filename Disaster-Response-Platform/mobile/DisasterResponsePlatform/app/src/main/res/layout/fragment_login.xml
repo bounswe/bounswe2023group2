@@ -15,7 +15,7 @@
         android:layout_margin="20dp"
         android:layout_weight="4"
         android:gravity="center_vertical"
-        android:text="Sign In"
+        android:text="@string/sign_in_camel"
         android:textSize="50sp"
         android:textStyle="bold" />
 
@@ -26,7 +26,7 @@
         android:layout_margin="10dp"
         android:layout_weight="2"
         android:ems="10"
-        android:hint="Username"
+        android:hint="@string/username"
         android:inputType="text" />
 
     <EditText
@@ -36,9 +36,8 @@
         android:layout_margin="10dp"
         android:layout_weight="2"
         android:ems="10"
-        android:hint="Password"
-        android:inputType="text"
-        android:password="true" />
+        android:hint="@string/password"
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/forgot_password_button"
@@ -46,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Forgot Password?"
+        android:text="@string/forgot_password"
         android:textAlignment="textEnd"
         android:textSize="12sp" />
 
@@ -61,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_weight="2"
-        android:text="SIGN IN" />
+        android:text="@string/sign_in" />
 
     <View
         android:id="@+id/divider"
@@ -76,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_weight="2"
-        android:text="SIGN UP"
+        android:text="@string/sign_up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
