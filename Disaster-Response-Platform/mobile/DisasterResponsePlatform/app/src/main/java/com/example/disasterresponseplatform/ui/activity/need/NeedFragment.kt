@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.ui.registration
+package com.example.disasterresponseplatform.ui.activity.need
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,28 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.databinding.FragmentForgotPasswordBinding
+import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 
+class NeedFragment : Fragment() {
 
-class ForgotPasswordFragment : Fragment() {
-
-    private lateinit var binding: FragmentForgotPasswordBinding
-    private val changePasswordFragment = ChangePasswordFragment()
-
+    private lateinit var binding: FragmentNeedBinding
+    private val addNeedFragment = AddNeedFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentForgotPasswordBinding.inflate(inflater,container,false)
-        // Inflate the layout for this fragment
+        binding = FragmentNeedBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.sendCode.setOnClickListener {
-            addFragment(changePasswordFragment)
+        binding.btAddNeed.setOnClickListener {
+            addFragment(addNeedFragment)
         }
     }
 
@@ -38,5 +35,4 @@ class ForgotPasswordFragment : Fragment() {
         ft.addToBackStack(null)
         ft.commit()
     }
-
 }

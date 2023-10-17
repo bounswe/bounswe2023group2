@@ -48,12 +48,26 @@
         app:layout_constraintTop_toBottomOf="@+id/tvMain" />
 
     <Button
-        android:id="@+id/btAction"
+        android:id="@+id/btActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/action"
+        android:text="@string/activity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btNetwork"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btProfile" />
+        app:layout_constraintTop_toBottomOf="@+id/btProfile"
+        app:layout_constraintVertical_bias="0.514" />
+
+    <Button
+        android:id="@+id/btNetwork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/network"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btActivity"
+        app:layout_constraintTop_toBottomOf="@+id/btMap" />
 </androidx.constraintlayout.widget.ConstraintLayout>

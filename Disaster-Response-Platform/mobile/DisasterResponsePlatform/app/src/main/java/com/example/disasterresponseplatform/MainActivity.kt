@@ -10,12 +10,13 @@ import com.example.disasterresponseplatform.ui.HomePageFragment
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var homePageFragment = HomePageFragment()
+    private lateinit var homePageFragment: HomePageFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         //instead setContentView(R.layout.activity_main) doing that with binding
         setContentView(binding.root)
+        homePageFragment = HomePageFragment(this)
         replaceFragment(homePageFragment)
     }
 

@@ -6,17 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
+import com.example.disasterresponseplatform.MainActivity
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentHomePageBinding
 import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 import com.example.disasterresponseplatform.ui.map.MapFragment
+import com.example.disasterresponseplatform.ui.network.NetworkFragment
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
-import com.example.disasterresponseplatform.ui.registration.LoginFragment
+import com.example.disasterresponseplatform.ui.authentication.LoginFragment
 
 
-class HomePageFragment : Fragment() {
+class HomePageFragment(val mainActivity: MainActivity) : Fragment() {
 
     private lateinit var binding: FragmentHomePageBinding
+    private lateinit var networkFragment: NetworkFragment
+
     private val loginFragment = LoginFragment()
     private val mapFragment = MapFragment()
     private val activityFragment = ActivityFragment()
@@ -53,11 +57,15 @@ class HomePageFragment : Fragment() {
         binding.btMap.setOnClickListener {
             addFragment(mapFragment)
         }
-        binding.btAction.setOnClickListener {
+        binding.btActivity.setOnClickListener {
             addFragment(activityFragment)
         }
         binding.btProfile.setOnClickListener {
             addFragment(profileFragment)
+        }
+        binding.btNetwork.setOnClickListener {
+            networkFragment = NetworkFragment(mainActivity)
+            addFragment(networkFragment)
         }
     }
 

@@ -1,29 +1,34 @@
-package com.example.disasterresponseplatform.ui.profile
+package com.example.disasterresponseplatform.ui.authentication
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.databinding.FragmentProfileBinding
-import com.example.disasterresponseplatform.ui.profile.notification.SubscribeNotificationFragment
-import com.example.disasterresponseplatform.ui.profile.pastUserActions.PastUserActionsFragment
+import com.example.disasterresponseplatform.databinding.FragmentLoginBinding
 
 
-class ProfileFragment : Fragment() {
+class LoginFragment : Fragment() {
 
-    private lateinit var binding: FragmentProfileBinding
-    private val pastUserActionsFragment = PastUserActionsFragment()
-    private val subscribeNotificationFragment = SubscribeNotificationFragment()
+    private lateinit var binding: FragmentLoginBinding
+    val registrationFragment = RegistrationFragment()
+    val forgotPasswordFragment = ForgotPasswordFragment()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileBinding.inflate(inflater,container,false)
         // Inflate the layout for this fragment
+        binding = FragmentLoginBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -33,12 +38,16 @@ class ProfileFragment : Fragment() {
     }
 
     private fun clickButtons(){
-        binding.btUserActivities.setOnClickListener {
-            addFragment(pastUserActionsFragment)
+        binding.signUpButton.setOnClickListener {
+            addFragment(registrationFragment)
         }
-        binding.btSubscribedNotification.setOnClickListener {
-            addFragment(subscribeNotificationFragment)
+        binding.forgotPasswordButton.setOnClickListener {
+            addFragment(forgotPasswordFragment)
         }
+        binding.signInButton.setOnClickListener {
+            Toast.makeText(context,"Signing in...",Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun addFragment(fragment: Fragment) {
@@ -47,5 +56,6 @@ class ProfileFragment : Fragment() {
         ft.addToBackStack(null)
         ft.commit()
     }
+
 
 }

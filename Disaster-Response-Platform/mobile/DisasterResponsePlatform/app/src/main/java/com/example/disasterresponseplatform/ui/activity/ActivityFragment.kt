@@ -8,12 +8,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentActivityBinding
+import com.example.disasterresponseplatform.ui.activity.action.ActionFragment
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyFragment
+import com.example.disasterresponseplatform.ui.activity.event.EventFragment
+import com.example.disasterresponseplatform.ui.activity.need.NeedFragment
+import com.example.disasterresponseplatform.ui.activity.resource.ResourceFragment
 
 class ActivityFragment : Fragment() {
 
     private lateinit var binding: FragmentActivityBinding
     private val emergencyFragment = EmergencyFragment()
+    private val actionFragment = ActionFragment()
+    private val eventFragment = EventFragment()
+    private val needFragment = NeedFragment()
+    private val resourceFragment = ResourceFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,6 +35,18 @@ class ActivityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btEmergency.setOnClickListener {
             addFragment(emergencyFragment)
+        }
+        binding.btAction.setOnClickListener {
+            addFragment(actionFragment)
+        }
+        binding.btEvent.setOnClickListener {
+            addFragment(eventFragment)
+        }
+        binding.btNeed.setOnClickListener {
+            addFragment(needFragment)
+        }
+        binding.btResource.setOnClickListener {
+            addFragment(resourceFragment)
         }
     }
 

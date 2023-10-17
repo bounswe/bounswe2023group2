@@ -4,17 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.emergency.AddEmergencyFragment">
+    tools:context=".ui.activity.event.EventFragment">
 
-
-    <TextView
-        android:id="@+id/tvAddEmergency"
+    <Button
+        android:id="@+id/btAddEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_emergency_page"
+        android:text="@string/add_event"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEventList" />
+
+    <TextView
+        android:id="@+id/tvEventList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/event_list"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

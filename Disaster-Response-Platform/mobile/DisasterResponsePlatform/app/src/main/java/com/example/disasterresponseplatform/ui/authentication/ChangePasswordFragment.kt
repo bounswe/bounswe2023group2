@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.ui.registration
+package com.example.disasterresponseplatform.ui.authentication
 
 import android.os.Bundle
 import android.view.LayoutInflater
