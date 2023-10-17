@@ -1,0 +1,38 @@
+version: "3.4"
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    hostname: backend
+    ports:
+      - "8443:8000"
+      - "8000:8000"
+    depends_on:
+      - mongo
+    networks:
+      - practice-network
+    restart: on-failure
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - ./mongo/data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - practice-network
+    restart: on-failure
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    hostname: frontend
+    networks:
+      - practice-network
+    ports:
+      - "3000:3000"
+    restart: always
+
+networks:
+  practice-network:
