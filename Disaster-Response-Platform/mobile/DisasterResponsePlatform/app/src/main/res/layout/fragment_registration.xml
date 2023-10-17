@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/clRegistration"
     android:orientation="vertical"
-    tools:context=".ui.registration.RegistrationFragment">
+    tools:context=".ui.authentication.RegistrationFragment">
 
     <TextView
         android:id="@+id/sign_up_top_label"
