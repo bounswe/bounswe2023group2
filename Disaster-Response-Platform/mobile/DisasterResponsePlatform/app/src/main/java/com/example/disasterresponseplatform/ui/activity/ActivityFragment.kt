@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.ui.action.emergency
+package com.example.disasterresponseplatform.ui.activity
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,25 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.databinding.FragmentEmergencyBinding
+import com.example.disasterresponseplatform.databinding.FragmentActivityBinding
+import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyFragment
 
-class EmergencyFragment : Fragment() {
+class ActivityFragment : Fragment() {
 
-    private lateinit var binding: FragmentEmergencyBinding
-    private val addEmergencyFragment = AddEmergencyFragment()
+    private lateinit var binding: FragmentActivityBinding
+    private val emergencyFragment = EmergencyFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentEmergencyBinding.inflate(inflater,container,false)
+        binding = FragmentActivityBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btAddEmergency.setOnClickListener {
-            addFragment(addEmergencyFragment)
+        binding.btEmergency.setOnClickListener {
+            addFragment(emergencyFragment)
         }
     }
 

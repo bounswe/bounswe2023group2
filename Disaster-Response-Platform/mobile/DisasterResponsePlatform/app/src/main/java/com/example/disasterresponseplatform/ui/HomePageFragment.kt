@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentHomePageBinding
-import com.example.disasterresponseplatform.ui.action.ActionFragment
+import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 import com.example.disasterresponseplatform.ui.map.MapFragment
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import com.example.disasterresponseplatform.ui.registration.LoginFragment
@@ -19,7 +19,7 @@ class HomePageFragment : Fragment() {
     private lateinit var binding: FragmentHomePageBinding
     private val loginFragment = LoginFragment()
     private val mapFragment = MapFragment()
-    private val actionFragment = ActionFragment()
+    private val activityFragment = ActivityFragment()
     private val profileFragment = ProfileFragment()
 
     /**
@@ -54,7 +54,7 @@ class HomePageFragment : Fragment() {
             addFragment(mapFragment)
         }
         binding.btAction.setOnClickListener {
-            addFragment(actionFragment)
+            addFragment(activityFragment)
         }
         binding.btProfile.setOnClickListener {
             addFragment(profileFragment)

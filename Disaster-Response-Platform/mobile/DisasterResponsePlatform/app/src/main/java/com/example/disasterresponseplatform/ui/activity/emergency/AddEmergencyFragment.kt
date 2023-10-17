@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.ui.action.emergency
+package com.example.disasterresponseplatform.ui.activity.emergency
 
 import androidx.fragment.app.Fragment
 import com.example.disasterresponseplatform.R
