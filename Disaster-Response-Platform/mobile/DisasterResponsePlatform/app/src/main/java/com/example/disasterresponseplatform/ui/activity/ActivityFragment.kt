@@ -10,12 +10,14 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentActivityBinding
 import com.example.disasterresponseplatform.ui.activity.action.ActionFragment
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyFragment
+import com.example.disasterresponseplatform.ui.activity.event.EventFragment
 
 class ActivityFragment : Fragment() {
 
     private lateinit var binding: FragmentActivityBinding
     private val emergencyFragment = EmergencyFragment()
     private val actionFragment = ActionFragment()
+    private val eventFragment = EventFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +34,9 @@ class ActivityFragment : Fragment() {
         }
         binding.btAction.setOnClickListener {
             addFragment(actionFragment)
+        }
+        binding.btEvent.setOnClickListener {
+            addFragment(eventFragment)
         }
     }
 
