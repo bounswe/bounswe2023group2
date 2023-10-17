@@ -9,7 +9,7 @@
         android:id="@+id/tvAddNeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Need Page"
+        android:text="@string/add_need_page"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

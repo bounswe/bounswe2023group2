@@ -4,15 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.authentication.ChangePasswordFragment">
+    tools:context=".ui.profile.notification.SubscribeNotificationFragment">
 
 
-    <TextView
-        android:id="@+id/tvChangePassword"
+    <Button
+        android:id="@+id/btAddNotification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/add_notification"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubscribeNotification" />
+
+    <TextView
+        android:id="@+id/tvSubscribeNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/subscribe_notification_page"
         android:textSize="24sp"
-        android:text="@string/change_password_page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

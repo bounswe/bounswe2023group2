@@ -1,5 +1,6 @@
-package com.example.disasterresponseplatform.ui.registration
+package com.example.disasterresponseplatform.ui.authentication
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,28 +8,38 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.databinding.FragmentForgotPasswordBinding
+import com.example.disasterresponseplatform.databinding.FragmentLoginBinding
 
 
-class ForgotPasswordFragment : Fragment() {
+class LoginFragment : Fragment() {
 
-    private lateinit var binding: FragmentForgotPasswordBinding
-    private val changePasswordFragment = ChangePasswordFragment()
+    private lateinit var binding: FragmentLoginBinding
+    val registrationFragment = RegistrationFragment()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentForgotPasswordBinding.inflate(inflater,container,false)
         // Inflate the layout for this fragment
+        binding = FragmentLoginBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btchangePassword.setOnClickListener {
-            addFragment(changePasswordFragment)
+        binding.clLogin.setBackgroundColor(Color.DKGRAY)
+        binding.tvLogin.setTextColor(Color.WHITE)
+        clickButtons()
+    }
+
+    private fun clickButtons(){
+        binding.registrationButton.setOnClickListener {
+            addFragment(registrationFragment)
         }
     }
 

@@ -1,34 +1,34 @@
-package com.example.disasterresponseplatform.ui.registration
+package com.example.disasterresponseplatform.ui.authentication
 
-import android.graphics.Color
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.databinding.FragmentRegistrationBinding
+import com.example.disasterresponseplatform.databinding.FragmentForgotPasswordBinding
 
-class RegistrationFragment : Fragment() {
 
-    private lateinit var binding: FragmentRegistrationBinding
-    private val forgotPasswordFragment = ForgotPasswordFragment()
+class ForgotPasswordFragment : Fragment() {
+
+    private lateinit var binding: FragmentForgotPasswordBinding
+    private val changePasswordFragment = ChangePasswordFragment()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        binding = FragmentForgotPasswordBinding.inflate(inflater,container,false)
         // Inflate the layout for this fragment
-        binding = FragmentRegistrationBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.clRegistration.setBackgroundColor(Color.GRAY)
-        binding.btForgotPassword.setOnClickListener {
-            addFragment(forgotPasswordFragment)
+        binding.btchangePassword.setOnClickListener {
+            addFragment(changePasswordFragment)
         }
     }
 

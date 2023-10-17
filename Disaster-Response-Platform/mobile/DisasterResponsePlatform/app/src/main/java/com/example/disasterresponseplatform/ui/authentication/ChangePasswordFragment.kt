@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.ui.registration
+package com.example.disasterresponseplatform.ui.authentication
 
 import androidx.fragment.app.Fragment
 import com.example.disasterresponseplatform.R
