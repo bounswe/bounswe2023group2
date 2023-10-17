@@ -3,14 +3,25 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login_page">Login Page</string>
+    <string name="main_page">Main Page</string>
+    <string name="profile_page">Profile Page</string>
+    <string name="activity_page">Activity Page</string>
+    <string name="action_page">Action Page</string>
+    <string name="emergency_page">Emergency Page</string>
+    <string name="need_page">Need Page</string>
+    <string name="event_page">Event Page</string>
+    <string name="resource_page">Resource Page</string>
     <string name="registration_page">Registration Page</string>
     <string name="forgot_password_page">Forgot Password Page</string>
     <string name="change_password_page">Change Password Page</string>
     <string name="change_password">Change Password</string>
     <string name="login">Login</string>
-    <string name="main_page">Main Page</string>
     <string name="map">Map</string>
     <string name="profile">Profile</string>
+    <string name="activity">Activity</string>
     <string name="action">Action</string>
-    <string name="profile_page">Profile Page</string>
+    <string name="emergency">Emergency</string>
+    <string name="need">Need</string>
+    <string name="event">Event</string>
+    <string name="resource">Resource</string>
 </resources>

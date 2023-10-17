@@ -53,7 +53,7 @@ class HomePageFragment : Fragment() {
         binding.btMap.setOnClickListener {
             addFragment(mapFragment)
         }
-        binding.btAction.setOnClickListener {
+        binding.btActivity.setOnClickListener {
             addFragment(activityFragment)
         }
         binding.btProfile.setOnClickListener {

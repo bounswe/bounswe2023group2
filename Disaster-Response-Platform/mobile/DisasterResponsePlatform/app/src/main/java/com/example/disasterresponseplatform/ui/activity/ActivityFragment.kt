@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentActivityBinding
+import com.example.disasterresponseplatform.ui.activity.action.ActionFragment
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyFragment
 
 class ActivityFragment : Fragment() {
 
     private lateinit var binding: FragmentActivityBinding
     private val emergencyFragment = EmergencyFragment()
+    private val actionFragment = ActionFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,6 +29,9 @@ class ActivityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btEmergency.setOnClickListener {
             addFragment(emergencyFragment)
+        }
+        binding.btAction.setOnClickListener {
+            addFragment(actionFragment)
         }
     }
 
