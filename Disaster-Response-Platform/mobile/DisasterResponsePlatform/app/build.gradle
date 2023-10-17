@@ -6,6 +6,11 @@ plugins {
 android {
     namespace 'com.example.disasterresponseplatform'
     compileSdk 34
+    // These are for binding
+    buildFeatures {
+        viewBinding = true
+        dataBinding true
+    }
 
     defaultConfig {
         applicationId "com.example.disasterresponseplatform"
@@ -44,4 +49,5 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
 }
