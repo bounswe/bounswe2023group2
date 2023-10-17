@@ -27,7 +27,7 @@ class ForgotPasswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btchangePassword.setOnClickListener {
+        binding.sendCode.setOnClickListener {
             addFragment(changePasswordFragment)
         }
     }
