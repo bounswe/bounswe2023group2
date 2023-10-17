@@ -1,92 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/clRegistration"
-    android:orientation="vertical"
-    tools:context=".ui.registration.RegistrationFragment">
+    tools:context=".ui.RegistrationFragment">
+
 
     <TextView
-        android:id="@+id/sign_up_top_label"
-        android:layout_width="match_parent"
+        android:id="@+id/tvRegistration"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_weight="4"
-        android:gravity="center_vertical"
-        android:text="Sign Up"
-        android:textSize="50sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/fullname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="2"
-        android:ems="10"
-        android:hint="Full Name"
-        android:inputType="text" />
-
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="2"
-        android:ems="10"
-        android:hint="E-mail"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="2"
-        android:ems="10"
-        android:hint="Username"
-        android:inputType="textPassword" />
-
-    <EditText
-        android:id="@+id/password_confirm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="2"
-        android:ems="10"
-        android:hint="Confirm Password"
-        android:inputType="textPassword"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:textSize="24sp"
+        android:text="@string/registration_page"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/sign_up_button"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="match_parent"
+        android:id="@+id/btForgotPassword"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="2"
-        android:text="SIGN UP" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-    <Button
-        android:id="@+id/sign_in_button"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="2"
-        android:text="SIGN IN" />
-
-
-</LinearLayout>
+        android:text="Forgot Password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRegistration" />
+</androidx.constraintlayout.widget.ConstraintLayout>
