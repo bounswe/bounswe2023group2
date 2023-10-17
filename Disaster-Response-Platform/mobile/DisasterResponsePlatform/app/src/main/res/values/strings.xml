@@ -7,4 +7,10 @@
     <string name="forgot_password_page">Forgot Password Page</string>
     <string name="change_password_page">Change Password Page</string>
     <string name="change_password">Change Password</string>
+    <string name="login">Login</string>
+    <string name="main_page">Main Page</string>
+    <string name="map">Map</string>
+    <string name="profile">Profile</string>
+    <string name="action">Action</string>
+    <string name="profile_page">Profile Page</string>
 </resources>
