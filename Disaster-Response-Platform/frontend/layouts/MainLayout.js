@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import styles from "./MainLayout.module.scss";
 import {FaMapMarkedAlt} from "react-icons/fa";
 import {BsSearch} from "react-icons/bs";
+import {Button} from "@nextui-org/react";
 import {CgProfile} from "react-icons/cg";
 function MainLayout({ children }) {
     const router = useRouter();
@@ -37,6 +38,11 @@ function MainLayout({ children }) {
                     <Link href={`/profile`}>
                       <CgProfile size={30} />
                     </Link>
+                </nav>
+                <nav>
+                <Button color="primary" className={styles.button}>
+                    Acil Durum
+                  </Button>
                 </nav>
               </div>
                 
