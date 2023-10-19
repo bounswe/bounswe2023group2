@@ -8,6 +8,22 @@ def define_user_password_hash(username:str, password:str):
     hash = postgres_context.hash(password, user=username)
     return hash
 
+def delete_user(username):
+    query = {"username": username}
+    user_session_file = db.get_collection("user_sessions")
+    update_result = user_session_file.delete_many(query)
+
+    # if (update_result.deleted_count > 0):
+    #TODO A user with an open session deleted. Decisions?
+
+
+
+    query = {"username": username}
+    user_file = db.get_collection("users")
+    update_result = user_file.delete_one(query)
+
+    return (update_result.deleted_count>0)
+
 def update_user_password(username, password):
     hash = define_user_password_hash(username,password)
     query = {"username": username}
