@@ -1,6 +1,10 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from Controllers import athentication_service
+
+from Controllers import authentication_controller
+from fastapi.responses import JSONResponse
+from http import HTTPStatus
+from Services.build_API_returns import *
 
 app = FastAPI()
 
@@ -12,11 +16,47 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def check_authorization(request: Request, call_next):
+    if (not request.url.components.path.startswith("/api/")):
+        response = await call_next(request)
+        return response
+
+    if (request.url.components.path.startswith("/api/authenticate/login")):
+        response = await call_next(request)
+        return response
+
+#Temporary code
+    if (request.url.components.path.startswith("/api/authenticate/create-user")):
+        response = await call_next(request)
+        return response
+
+    valid_header = False
+    auth_header_value = request.headers.get('Authorization', None)
+    bearer_token=""
+    if auth_header_value:
+        parts = auth_header_value.split()
+        if (parts[0].lower() == 'bearer'):
+            if (len(parts) == 2):
+                valid_header = True
+                bearer_token = parts[1]
+    if (valid_header):
+        response = await call_next(request)
+        return response
+    else:
+        #TODO API calls not requesting authorization will be handled different
+        content = create_json_for_error("Unauthorized  access", "Authorization not supplied in the API call")
+        response = JSONResponse(status_code=HTTPStatus.UNAUTHORIZED,
+                                content=content
+                                )
+        return response
+
 app.include_router(
-    athentication_service.router,
-    prefix="/authenticate",
+    authentication_controller.router,
+    prefix="/api/authenticate",
     tags=["login"],
 )
+
 
 @app.get("/")
 async def root(request: Request):
