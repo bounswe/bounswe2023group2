@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
+import Services.authentication
 from Controllers import authentication_controller
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
@@ -37,15 +38,19 @@ async def check_authorization(request: Request, call_next):
     if auth_header_value:
         parts = auth_header_value.split()
         if (parts[0].lower() == 'bearer'):
-            if (len(parts) == 2):
-                valid_header = True
+            if (len(parts) == 4):
                 bearer_token = parts[1]
+                if (parts[2].lower() == 'username'):
+                    user_name = parts[3]
+                    if (Services.authentication.verify_user_session(user_name, bearer_token)):
+                        valid_header = True
+
     if (valid_header):
         response = await call_next(request)
         return response
     else:
         #TODO API calls not requesting authorization will be handled different
-        content = create_json_for_error("Unauthorized  access", "Authorization not supplied in the API call")
+        content = create_json_for_error("Unauthorized  access", "No valid authorization in the API call")
         response = JSONResponse(status_code=HTTPStatus.UNAUTHORIZED,
                                 content=content
                                 )
