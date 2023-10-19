@@ -17,13 +17,14 @@ def test_login():
 def test_create_user():
     token = test_login()
     url_params = {"username":"deprembaba", "password":"CMPE451"}
-    response = client.post("/api/authenticate/create-user",json = url_params, headers = {"Authorization": f"Bearer {token}"})
+    response = client.post("/api/authenticate/create-user",json =
+            url_params, headers = {"Authorization": f"Bearer {token} username mehmetk"})
 
     assert response.status_code == 200
 
     url_params = {"username": "deprembaba"}
     response = client.delete("/api/authenticate/delete-user", params=url_params,
-                           headers={"Authorization": f"Bearer {token}"})
+                           headers={"Authorization": f"Bearer {token} username mehmetk"})
     assert response.status_code == 200
     return token
 

@@ -1,8 +1,10 @@
 from passlib.apps import postgres_context
 from Database.mongo import MongoDB
+from datetime import *
 import pymongo
 
 db = MongoDB.getInstance()
+session_alive_minutes = 720 #half a day
 
 def define_user_password_hash(username:str, password:str):
     hash = postgres_context.hash(password, user=username)
@@ -54,3 +56,18 @@ def verify_user_password(username:str, password_plain:str):
     user_cursor = user_file.find(query)
     user = user_cursor.next()
     return postgres_context.verify(password_plain, user["password"], user=username)
+
+def verify_user_session(username:str, token:str):
+    query = {"username": username, "token": token}
+    user_session_file = db.get_collection("user_sessions")
+    user_cursor = user_session_file.find(query)
+    user_session = user_cursor.next()
+    if (user_session):
+        session_date = user_session["start_date"]
+        current_time = datetime.now()
+        delta = current_time - session_date
+        if (delta.seconds < session_alive_minutes*60):
+            return True
+
+    return False
+
