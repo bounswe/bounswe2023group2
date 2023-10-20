@@ -3,8 +3,9 @@ from main import app
 
 client = TestClient(app)
 
+
 def test_login():
-    url_params = {"username":"mehmetk", "password":"CMPE451"}
+    url_params = {"username": "mehmetk", "password": "CMPE451"}
     response = client.get("/api/authenticate/login", params=url_params)
 
     assert response.status_code == 200
@@ -14,18 +15,20 @@ def test_login():
     assert token is not None
     return token
 
-def test_create_user():
+
+def test_create_user() -> str:
     token = test_login()
-    url_params = {"username":"deprembaba", "password":"CMPE451"}
-    response = client.post("/api/authenticate/create-user",json =
-            url_params, headers = {"Authorization": f"Bearer {token} username mehmetk"})
+    url_params = {"username": "deprembaba", "password": "CMPE451"}
+    response = client.post("/api/authenticate/create-user", json=
+    url_params, headers={"Authorization": f"Bearer {token} username mehmetk"})
 
     assert response.status_code == 200
 
     url_params = {"username": "deprembaba"}
     response = client.delete("/api/authenticate/delete-user", params=url_params,
-                           headers={"Authorization": f"Bearer {token} username mehmetk"})
+                             headers={"Authorization": f"Bearer {token} username mehmetk"})
     assert response.status_code == 200
     return token
+
 
 test_create_user()
