@@ -44,7 +44,7 @@ async def check_authorization(request: Request, call_next):
                 bearer_token = parts[1]
                 if (parts[2].lower() == 'username'):
                     user_name = parts[3]
-                    if (Services.authentication.verify_user_session(user_name, bearer_token)):
+                    if (Services.authentication_service.verify_user_session(user_name, bearer_token)):
                         valid_header = True
 
     if (valid_header):
