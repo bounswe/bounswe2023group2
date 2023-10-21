@@ -1,8 +1,8 @@
-from pymongo import MongoClient
 from Models.resource_model import Resource
+from Database.mongo import MongoDB
 
-client = MongoClient('mongodb://localhost:27017/')
-db = client['DisasterResponseLocal.Resources'] 
+# Get the resources collection using the MongoDB class
+resources_collection = MongoDB.get_collection('resources')
 
 def create_resource(resource: Resource) -> str:
     result = resources_collection.insert_one(resource.dict())
@@ -19,4 +19,3 @@ def update_resource(resource_id: str, resource: Resource):
 
 def delete_resource(resource_id: str):
     resources_collection.delete_one({"_id": resource_id})
-

@@ -1,17 +1,14 @@
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-<<<<<<< HEAD
 from Controllers import resource_controller
-=======
 import Services.authentication
 from Controllers import authentication_controller
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
 from Services.build_API_returns import *
->>>>>>> 97417fa0ce6f77a32163553d7bb85dd80fb16fdd
 
-app = FastAPI(debug=True)
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,9 +18,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-<<<<<<< HEAD
-app.include_router(resource_controller.router)
-=======
 @app.middleware("http")
 async def check_authorization(request: Request, call_next):
     if (not request.url.components.path.startswith("/api/")):
@@ -63,13 +57,10 @@ async def check_authorization(request: Request, call_next):
                                 )
         return response
 
-app.include_router(
-    authentication_controller.router,
-    prefix="/api/authenticate",
-    tags=["login"],
-)
+# ROUTES
+app.include_router(authentication_controller.router, prefix="/api/authenticate", tags=["login"])
+app.include_router(resource_controller.router, tags=["resource"])
 
->>>>>>> 97417fa0ce6f77a32163553d7bb85dd80fb16fdd
 
 @app.get("/")
 async def root(request: Request):
