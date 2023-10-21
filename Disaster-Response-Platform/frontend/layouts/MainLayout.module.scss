@@ -1,4 +1,4 @@
-@import "../styles/variables.scss";
+@import "@/styles/variables.scss";
 
 .icon {
     padding: 1rem;
@@ -7,12 +7,14 @@
 .main {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+
+    
 }
 
 .navbar {
     border-bottom: 1px solid #3C4043;
     //background-color: #1C9BEF;
-    min-width: 100vw;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -21,10 +23,7 @@
         div {
             cursor: pointer;
         }
-        
-
     }
-
 }
 
 .icon {
@@ -37,13 +36,6 @@
 .selected {
     border-left: 3px solid $base-color;
     pointer-events: none;
-
-}
-
-.body {
-    background-color: $bg-color;
-    min-height: 100vh;
-    padding: 2rem;
 
 }
 
@@ -60,7 +52,6 @@
     flex-direction: row;
 }
 
-
 .button {
     overflow:hidden;
     border-radius: 1em;
@@ -74,5 +65,15 @@
     padding-top: 1em;
     padding-bottom: 1em;
     background-color: #e00000;
+}
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $bg-color;
+    color:#262626;
+    padding: 2rem;
+    // min-width: 600px;
+
 }
 

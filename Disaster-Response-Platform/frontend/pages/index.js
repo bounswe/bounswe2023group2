@@ -1,19 +1,21 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import MainLayout from '@/layouts/MainLayout'
+import dynamic from 'next/dynamic'
+import ActivityTable from '@/components/ActivityTable'
 
-const inter = Inter({ subsets: ['latin'] })
+const Map = dynamic(() => import('../components/Map'), {
+  ssr: false,
+})
 
 export default function home() {
   return (
     <>
-      <main >
-        <div >
-          Welcome to DaRP
-        </div>
-      </main>
+        <Map />
+        <ActivityTable />
+     
+     
+      <div className={styles.buttonContainer}>
+      </div>
     </>
   )
 }

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentLoginBinding
@@ -15,6 +16,7 @@ class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     val registrationFragment = RegistrationFragment()
+    val forgotPasswordFragment = ForgotPasswordFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,15 +34,20 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.clLogin.setBackgroundColor(Color.DKGRAY)
-        binding.tvLogin.setTextColor(Color.WHITE)
         clickButtons()
     }
 
     private fun clickButtons(){
-        binding.registrationButton.setOnClickListener {
+        binding.signUpButton.setOnClickListener {
             addFragment(registrationFragment)
         }
+        binding.forgotPasswordButton.setOnClickListener {
+            addFragment(forgotPasswordFragment)
+        }
+        binding.signInButton.setOnClickListener {
+            Toast.makeText(context,"Signing in...",Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun addFragment(fragment: Fragment) {
@@ -49,5 +56,6 @@ class LoginFragment : Fragment() {
         ft.addToBackStack(null)
         ft.commit()
     }
+
 
 }

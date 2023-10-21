@@ -7,10 +7,10 @@ import {FaMapMarkedAlt} from "react-icons/fa";
 import {BsSearch} from "react-icons/bs";
 import {Button} from "@nextui-org/react";
 import {CgProfile} from "react-icons/cg";
+
 function MainLayout({ children }) {
     const router = useRouter();
    
-  
     return (
         <main className={styles.main}>
             <div className={styles.navbar}>
@@ -50,6 +50,7 @@ function MainLayout({ children }) {
 
             <div className={styles.body}>{children}</div>
         </main>
+
     );
 }
 
