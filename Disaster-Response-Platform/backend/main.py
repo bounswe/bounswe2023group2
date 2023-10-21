@@ -1,7 +1,15 @@
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
+<<<<<<< HEAD
 from Controllers import resource_controller
+=======
+import Services.authentication
+from Controllers import authentication_controller
+from fastapi.responses import JSONResponse
+from http import HTTPStatus
+from Services.build_API_returns import *
+>>>>>>> 97417fa0ce6f77a32163553d7bb85dd80fb16fdd
 
 app = FastAPI(debug=True)
 
@@ -13,8 +21,66 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+<<<<<<< HEAD
 app.include_router(resource_controller.router)
+=======
+@app.middleware("http")
+async def check_authorization(request: Request, call_next):
+    if (not request.url.components.path.startswith("/api/")):
+        response = await call_next(request)
+        return response
+
+    if (request.url.components.path.startswith("/api/authenticate/login")):
+        response = await call_next(request)
+        return response
+
+#Temporary code
+    if (request.url.components.path.startswith("/api/authenticate/create-user")):
+        response = await call_next(request)
+        return response
+
+    valid_header = False
+    auth_header_value = request.headers.get('Authorization', None)
+    bearer_token=""
+    if auth_header_value:
+        parts = auth_header_value.split()
+        if (parts[0].lower() == 'bearer'):
+            if (len(parts) == 4):
+                bearer_token = parts[1]
+                if (parts[2].lower() == 'username'):
+                    user_name = parts[3]
+                    if (Services.authentication.verify_user_session(user_name, bearer_token)):
+                        valid_header = True
+
+    if (valid_header):
+        response = await call_next(request)
+        return response
+    else:
+        #TODO API calls not requesting authorization will be handled different
+        content = create_json_for_error("Unauthorized  access", "No valid authorization in the API call")
+        response = JSONResponse(status_code=HTTPStatus.UNAUTHORIZED,
+                                content=content
+                                )
+        return response
+
+app.include_router(
+    authentication_controller.router,
+    prefix="/api/authenticate",
+    tags=["login"],
+)
+
+>>>>>>> 97417fa0ce6f77a32163553d7bb85dd80fb16fdd
 
 @app.get("/")
-async def root():
-    return {"message": "Hello Bigger Applications, check!"}
+async def root(request: Request):
+    smarty = False
+    auth_header_value = request.headers.get('Authorization', None)
+    if auth_header_value:
+        parts = auth_header_value.split()
+        if (parts[0].lower() == 'bearer'):
+            if (len(parts) == 2):
+                smarty = True
+    if smarty:
+        return {"message": "Hey. Smart with authorization ha"}
+    else:
+        return {"message": "Hello Bigger Applications, check!"}
