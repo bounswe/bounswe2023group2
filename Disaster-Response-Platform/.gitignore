@@ -5,3 +5,4 @@ myenv/
 **/.DS_Store
 **/__pycache__
 **/mongo/
+package-lock.json
