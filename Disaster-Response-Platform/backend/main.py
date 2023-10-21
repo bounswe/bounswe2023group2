@@ -59,7 +59,7 @@ async def check_authorization(request: Request, call_next):
 
 # ROUTES
 app.include_router(authentication_controller.router, prefix="/api/authenticate", tags=["login"])
-app.include_router(resource_controller.router, tags=["resource"])
+app.include_router(resource_controller.router, prefix = "/resource", tags=["resource"])
 
 
 @app.get("/")
