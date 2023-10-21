@@ -49,4 +49,19 @@
     <string name="add_emergency_page">Add Emergency Page</string>
     <string name="add_action_page">Add Action Page</string>
     <string name="add_action">Add Action</string>
+    <string name="e_mail">E-mail</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="username">Username</string>
+    <string name="full_name">Full Name</string>
+    <string name="sign_up_camel">Sign Up</string>
+    <string name="enter_verification_code">Enter Verification Code</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="verify">VERIFY</string>
+    <string name="resend_code">RESEND CODE</string>
+    <string name="sign_in_camel">Sign In</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="send_verification_code">SEND VERIFICATION CODE</string>
 </resources>
