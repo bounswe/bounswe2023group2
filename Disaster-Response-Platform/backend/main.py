@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-import Services.authentication
+import Services.authentication_service
 from Controllers import authentication_controller, resource_controller
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
