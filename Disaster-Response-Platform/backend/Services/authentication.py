@@ -53,8 +53,9 @@ def create_user_with_password(username, password):
 def verify_user_password(username:str, password_plain:str):
     query = {"username": username}
     user_file = db.get_collection("users")
-    user_cursor = user_file.find(query)
-    user = user_cursor.next()
+    user = user_file.find(query)
+    if (user.explain()["executionStats"]["nReturned"] == 0):
+        return False
     return postgres_context.verify(password_plain, user["password"], user=username)
 
 def verify_user_session(username:str, token:str):

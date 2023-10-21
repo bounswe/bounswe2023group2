@@ -8,6 +8,7 @@ def test_login():
     url_params = {"username": "mehmetk", "password": "CMPE451"}
     response = client.get("/api/authenticate/login", params=url_params)
 
+    print(response.json())
     assert response.status_code == 200
 
     token = response.json()["SESSIONTOKEN"]
@@ -22,11 +23,14 @@ def test_create_user() -> str:
     response = client.post("/api/authenticate/create-user", json=
     url_params, headers={"Authorization": f"Bearer {token} username mehmetk"})
 
+    print(response.json())
     assert response.status_code == 200
 
     url_params = {"username": "deprembaba"}
     response = client.delete("/api/authenticate/delete-user", params=url_params,
                              headers={"Authorization": f"Bearer {token} username mehmetk"})
+
+    print(response.json())
     assert response.status_code == 200
     return token
 

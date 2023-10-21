@@ -28,6 +28,8 @@ async def check_authorization(request: Request, call_next):
         return response
 
 #Temporary code
+    # So that the programmers may create users while testing.
+    # Will be commented out later
     if (request.url.components.path.startswith("/api/authenticate/create-user")):
         response = await call_next(request)
         return response
