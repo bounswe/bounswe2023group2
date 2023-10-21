@@ -6,3 +6,4 @@ myenv/
 **/__pycache__
 **/mongo/
 package-lock.json
+backend/.idea/
