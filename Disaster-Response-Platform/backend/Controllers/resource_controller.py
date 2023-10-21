@@ -24,8 +24,10 @@ def get_all_resources():
 @router.put("/{resource_id}")
 def update_resource(resource_id: str, resource: Resource):
     updated_resource = resource_service.update_resource(resource_id, resource)
-    return {"status": "OK", "data": {"resources": [updated_resource]}}
-
+    if updated_resource:
+        return {"status": "OK", "data": {"resources": [updated_resource]}}
+    raise HTTPException(status_code=404, detail="Resource not found")
+    
 @router.delete("/{resource_id}")
 def delete_resource(resource_id: str):
     resource_service.delete_resource(resource_id)
