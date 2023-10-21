@@ -2,8 +2,7 @@ from pymongo import MongoClient
 from Models.resource_model import Resource
 
 client = MongoClient('mongodb://localhost:27017/')
-db = client['DisasterResponseLocal'] 
-resources_collection = db['resources'] 
+db = client['DisasterResponseLocal.Resources'] 
 
 def create_resource(resource: Resource) -> str:
     result = resources_collection.insert_one(resource.dict())
