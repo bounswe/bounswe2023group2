@@ -1,21 +1,20 @@
 from fastapi import APIRouter, HTTPException, Response
 from Models.resource_model import Resource
 import Services.resource_service as resource_service
-from bson.objectid import ObjectId
 
 router = APIRouter()
 
 @router.post("/", status_code=201)
 def create_resource(resource: Resource):
     resource_id = resource_service.create_resource(resource)
-    return {"status": "OK", "message": "Resource created", "data": [{"resourceId": resource_id}]}
+    return {"status": "OK", "data": [{"resourceId": resource_id}]}
 
 @router.get("/{resource_id}")
 def get_resource(resource_id: str):
     resource = resource_service.get_resource_by_id(resource_id)
     if resource:
         return {"status": "OK", "data": {"resources": [resource]}}
-    raise HTTPException(status_code=404, detail={"status": "Error", "ErrorMessage": "Resource not found", "ErrorDetails": f"Resource {resource_id} does not exist"})
+    raise HTTPException(status_code=404, detail={"status": "Error", "message": "Resource not found", "ErrorDetails": f"Resource {resource_id} does not exist"})
 
 @router.get("/")
 def get_all_resources():

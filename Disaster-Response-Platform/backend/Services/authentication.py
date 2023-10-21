@@ -53,9 +53,15 @@ def create_user_with_password(username, password):
 def verify_user_password(username:str, password_plain:str):
     query = {"username": username}
     user_file = db.get_collection("users")
+<<<<<<< HEAD
     user_cursor = user_file.find(query)
     user = user_cursor.next()
     return postgres_context.verify(password_plain, user["password"], user=username)
+=======
+    user = user_file.find_one(query)
+    if (user is not None):
+        return postgres_context.verify(password_plain, user["password"], user=username)
+>>>>>>> de31b6701804379ccfc443944a45699294b772e3
 
 def verify_user_session(username:str, token:str):
     query = {"username": username, "token": token}

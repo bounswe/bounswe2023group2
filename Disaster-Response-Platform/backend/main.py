@@ -1,9 +1,8 @@
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-from Controllers import resource_controller
 import Services.authentication
-from Controllers import authentication_controller
+from Controllers import authentication_controller, resource_controller
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
 from Services.build_API_returns import *
@@ -29,6 +28,8 @@ async def check_authorization(request: Request, call_next):
         return response
 
 #Temporary code
+    # So that the programmers may create users while testing.
+    # Will be commented out later
     if (request.url.components.path.startswith("/api/authenticate/create-user")):
         response = await call_next(request)
         return response
@@ -51,7 +52,7 @@ async def check_authorization(request: Request, call_next):
         return response
     else:
         #TODO API calls not requesting authorization will be handled different
-        content = create_json_for_error("Unauthorized  access", "No valid authorization in the API call")
+        content = json.loads(create_json_for_error("Unauthorized  access", "No valid authorization in the API call"))
         response = JSONResponse(status_code=HTTPStatus.UNAUTHORIZED,
                                 content=content
                                 )
@@ -60,6 +61,7 @@ async def check_authorization(request: Request, call_next):
 # ROUTES
 app.include_router(authentication_controller.router, prefix="/api/authenticate", tags=["login"])
 app.include_router(resource_controller.router, prefix = "/resource", tags=["resource"])
+
 
 
 @app.get("/")
