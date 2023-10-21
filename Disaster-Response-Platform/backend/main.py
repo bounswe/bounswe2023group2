@@ -52,7 +52,7 @@ async def check_authorization(request: Request, call_next):
         return response
     else:
         #TODO API calls not requesting authorization will be handled different
-        content = create_json_for_error("Unauthorized  access", "No valid authorization in the API call")
+        content = json.loads(create_json_for_error("Unauthorized  access", "No valid authorization in the API call"))
         response = JSONResponse(status_code=HTTPStatus.UNAUTHORIZED,
                                 content=content
                                 )
