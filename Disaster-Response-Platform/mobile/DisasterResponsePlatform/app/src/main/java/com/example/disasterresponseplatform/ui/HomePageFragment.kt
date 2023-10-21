@@ -16,7 +16,7 @@ import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
 
 
-class HomePageFragment(val mainActivity: MainActivity) : Fragment() {
+class HomePageFragment(private val mainActivity: MainActivity) : Fragment() {
 
     private lateinit var binding: FragmentHomePageBinding
     private lateinit var networkFragment: NetworkFragment
