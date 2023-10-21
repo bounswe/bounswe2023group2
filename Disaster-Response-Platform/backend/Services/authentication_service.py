@@ -60,9 +60,9 @@ def verify_user_password(username:str, password_plain:str):
 def verify_user_session(username:str, token:str):
     query = {"username": username, "token": token}
     user_session_file = db.get_collection("user_sessions")
-    user_cursor = user_session_file.find(query)
-    user_session = user_cursor.next()
-    if (user_session):
+    user_session = user_session_file.find_one(query)
+    
+    if (user_session is not None):
         session_date = user_session["start_date"]
         current_time = datetime.now()
         delta = current_time - session_date
