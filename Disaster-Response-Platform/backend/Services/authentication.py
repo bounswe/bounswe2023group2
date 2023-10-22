@@ -1,73 +1,74 @@
-from passlib.apps import postgres_context
+
 from Database.mongo import MongoDB
+from fastapi.security import OAuth2PasswordBearer
 from datetime import *
 import pymongo
+from fastapi import HTTPException, Depends, status
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from Models import user_model
+from typing import Annotated
 
 db = MongoDB.getInstance()
-session_alive_minutes = 720 #half a day
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+users_collection = MongoDB.get_collection('users')
 
-def define_user_password_hash(username:str, password:str):
-    hash = postgres_context.hash(password, user=username)
-    return hash
-
-def delete_user(username):
-    query = {"username": username}
-    user_session_file = db.get_collection("user_sessions")
-    update_result = user_session_file.delete_many(query)
-
-    # if (update_result.deleted_count > 0):
-    #TODO A user with an open session deleted. Decisions?
+SECRET_KEY = "your-secret-key" #todo: put it to config
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
+# Verify JWT token
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    user = get_user(users_collection, username=username)
+    if user is None:
+        raise credentials_exception
+    return user
 
-    query = {"username": username}
-    user_file = db.get_collection("users")
-    update_result = user_file.delete_one(query)
+# Create a JWT token
+def create_jwt_token(data: dict, expires_delta: timedelta):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + expires_delta
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
-    return (update_result.deleted_count>0)
 
-def update_user_password(username, password):
-    hash = define_user_password_hash(username,password)
-    query = {"username": username}
-    update_password = {"$set": {"password": hash}}
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
-    user_file = db.get_collection("users")
+def get_password_hash(password):
+    return pwd_context.hash(password)
 
-    update_result = user_file.update_one(query, update_password)
-    return update_result.upserted_id
+def get_user(db, username: str):
+    if username in users_collection:
+        user_dict = users_collection[username]
+        return user_model.UserInDB(**user_dict)
 
-def create_user_with_password(username, password):
-    hash = define_user_password_hash(username,password)
+def authenticate_user(users_collection, username: str, password: str):
+    user = get_user(users_collection, username)
+    if not user:
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
+    return user
 
-    user = {
-        "username": username,
-        "password": hash
-    }
-
-    user_file = db.get_collection("users")
-
-    user_id = user_file.insert_one(user)
-
-    return user_id
-
-def verify_user_password(username:str, password_plain:str):
-    query = {"username": username}
-    user_file = db.get_collection("users")
-    user = user_file.find_one(query)
-    if (user is not None):
-        return postgres_context.verify(password_plain, user["password"], user=username)
-
-def verify_user_session(username:str, token:str):
-    query = {"username": username, "token": token}
-    user_session_file = db.get_collection("user_sessions")
-    user_cursor = user_session_file.find(query)
-    user_session = user_cursor.next()
-    if (user_session):
-        session_date = user_session["start_date"]
-        current_time = datetime.now()
-        delta = current_time - session_date
-        if (delta.seconds < session_alive_minutes*60):
-            return True
-
-    return False
-
+async def get_current_active_user(
+    current_user: user_model.User= Depends(get_current_user)
+):
+    if current_user.disabled:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
