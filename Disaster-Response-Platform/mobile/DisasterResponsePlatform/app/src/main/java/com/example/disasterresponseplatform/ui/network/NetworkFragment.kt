@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.disasterresponseplatform.MainActivity
-import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.data.enums.Endpoint
+import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.databinding.FragmentNetworkBinding
 import com.example.disasterresponseplatform.managers.DataResponse
 import com.example.disasterresponseplatform.managers.NetworkManager
-import com.example.disasterresponseplatform.models.enums.Endpoint
-import com.example.disasterresponseplatform.models.enums.RequestType
 import retrofit2.Call
 import retrofit2.Response
 

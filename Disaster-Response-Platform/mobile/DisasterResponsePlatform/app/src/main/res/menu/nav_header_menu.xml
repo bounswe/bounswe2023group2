@@ -17,5 +17,9 @@
         android:id="@+id/miLogout"
         android:title="@string/logout"/>
 
+    <item
+        android:id="@+id/miAddNeed"
+        android:title="@string/add_need"/>
+
 
 </menu>

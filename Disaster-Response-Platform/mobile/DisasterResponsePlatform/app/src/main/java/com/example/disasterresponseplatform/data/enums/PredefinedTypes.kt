@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.data
+package com.example.disasterresponseplatform.data.enums
 
 enum class PredefinedTypes(val type: Int) {
     Clothes(1),
