@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import styles from "./MainLayout.module.scss";
+import styles from "./MapLayout.module.scss";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { BsSearch } from "react-icons/bs";
 import { Button } from "@nextui-org/react";

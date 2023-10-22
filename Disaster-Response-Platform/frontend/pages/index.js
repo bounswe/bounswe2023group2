@@ -3,7 +3,7 @@ import MainLayout from '@/layouts/MainLayout'
 import dynamic from 'next/dynamic'
 import ActivityTable from '@/components/ActivityTable'
 
-const Map = dynamic(() => import('../components/Map'), {
+const Map = dynamic(() => import('../components/Map/Map'), {
   ssr: false,
 })
 
