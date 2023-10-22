@@ -17,12 +17,31 @@ def create_resource(resource: Resource) -> str:
 def get_resource_by_id(resource_id: str) -> Resource:
     resource_data = resources_collection.find_one({"_id": ObjectId(resource_id)})
     if resource_data:
-        return Resource(**resource_data)
+        resource_dict = {
+            "_id": str(resource_data["_id"]),
+            "created_by": resource_data["created_by"],
+            "condition": resource_data["condition"],
+            "initialQuantity": resource_data["initialQuantity"],
+            "unsuppliedQuantity": resource_data["unsuppliedQuantity"],
+            "type": resource_data["type"],
+            "details": resource_data["details"]
+        }
+        return resource_dict
     return None
 
-def get_all_resources() -> list[Resource]:
+def get_all_resources() -> list[dict]:
     resources_data = resources_collection.find()
-    return [Resource(**resource) for resource in resources_data]
+    
+    return [{
+        "_id": str(resource_data["_id"]),
+        "created_by": resource_data["created_by"],
+        "condition": resource_data["condition"],
+        "initialQuantity": resource_data["initialQuantity"],
+        "unsuppliedQuantity": resource_data["unsuppliedQuantity"],
+        "type": resource_data["type"],
+        "details": resource_data["details"]
+    } for resource_data in resources_data]
+
     
 def update_resource(resource_id: str, resource: Resource) -> Resource:
     # Fetch the existing resource
