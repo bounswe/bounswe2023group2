@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
 import Services.authentication
-from Controllers import authentication_controller, resource_controller, user_profile_controller
+from Controllers import authentication_controller, resource_controller, user_controller
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
 from Services.build_API_returns import *
@@ -61,7 +61,7 @@ app.add_middleware(
 # ROUTES
 app.include_router(authentication_controller.router, prefix="/api/authenticate", tags=["login"])
 app.include_router(resource_controller.router, prefix = "/api/resource", tags=["resource"])
-app.include_router(user_profile_controller.router, prefix= "/api/profile", tags=["profile"])
+app.include_router(user_controller.router, prefix= "/api/users", tags=["users"])
 
 
 @app.get("/")

@@ -7,7 +7,7 @@ class MongoDB(object):
     __instance = None
 
     @staticmethod
-    def getInstance(address="localhost", port=27017, username=None, password=None):
+    def getInstance(address="mongo", port=27017, username=None, password=None):
         """ Static access method. """
         if MongoDB.__instance == None:
             db_url = f"mongodb://{address}:{port}/"
