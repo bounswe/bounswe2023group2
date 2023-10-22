@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform.adapter
 
 import android.content.Intent
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -12,6 +13,8 @@ import com.example.disasterresponseplatform.data.ActivityEnum
 import com.example.disasterresponseplatform.data.DummyActivity
 import com.example.disasterresponseplatform.data.PredefinedTypes
 import com.example.disasterresponseplatform.databinding.ActivityItemBinding
+import kotlinx.coroutines.delay
+import java.util.logging.Handler
 
 class ActivityAdapter(private val activityList: MutableList<DummyActivity>): RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder>() {
 
@@ -56,8 +59,12 @@ class ActivityAdapter(private val activityList: MutableList<DummyActivity>): Rec
         hb.tvReliabilityScale.text = currentActivity.reliabilityScale.toString()
 
         // for make them clickable
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnClickListener {view ->
+            view.isActivated = true // make it active, then its background color will change thanks to selector_item_background
             liveDataActivity.postValue(currentActivity)
+            android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+                view.isActivated = false // make it false to set its original color again
+            }, 50)
         }
     }
 
