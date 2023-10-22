@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
 import Services.authentication
-from Controllers import authentication_controller
+from Controllers import authentication_controller,need_controller
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
 from Services.build_API_returns import *
@@ -60,6 +60,11 @@ app.include_router(
     authentication_controller.router,
     prefix="/api/authenticate",
     tags=["login"],
+)
+app.include_router(
+    need_controller.router,
+    prefix="/api/need",
+    tags=["need"],
 )
 
 
