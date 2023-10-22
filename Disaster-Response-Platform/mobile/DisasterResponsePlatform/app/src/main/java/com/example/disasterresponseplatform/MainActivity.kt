@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.databinding.ActivityMainBinding
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.miNetwork -> replaceNavFragment(networkFragment)
                 R.id.miLogout -> Toast.makeText(this,"Logout",Toast.LENGTH_SHORT).show()
             }
+            binding.root.closeDrawer(GravityCompat.START) //whenever clicked item on drawer, closing it automatically
             true
         }
     }
