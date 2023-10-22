@@ -7,7 +7,7 @@ const Map = dynamic(() => import("@/components/Map/MainMap"), {
   ssr: false,
 });
 
-export default function home() {
+export default function mapPage() {
   return (
     <>
       <Map />
@@ -15,6 +15,6 @@ export default function home() {
     </>
   );
 }
-home.getLayout = function getLayout(page) {
+mapPage.getLayout = function getLayout(page) {
   return <MapLayout>{page}</MapLayout>;
 };
