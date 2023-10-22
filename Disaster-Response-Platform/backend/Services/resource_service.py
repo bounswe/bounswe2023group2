@@ -22,7 +22,7 @@ def get_resource_by_id(resource_id: str) -> Resource:
             "created_by": resource_data["created_by"],
             "condition": resource_data["condition"],
             "initialQuantity": resource_data["initialQuantity"],
-            "unsuppliedQuantity": resource_data["unsuppliedQuantity"],
+            "currentQuantity": resource_data["currentQuantity"],
             "type": resource_data["type"],
             "details": resource_data["details"]
         }
@@ -37,7 +37,7 @@ def get_all_resources() -> list[dict]:
         "created_by": resource_data["created_by"],
         "condition": resource_data["condition"],
         "initialQuantity": resource_data["initialQuantity"],
-        "unsuppliedQuantity": resource_data["unsuppliedQuantity"],
+        "currentQuantity": resource_data["currentQuantity"],
         "type": resource_data["type"],
         "details": resource_data["details"]
     } for resource_data in resources_data]
