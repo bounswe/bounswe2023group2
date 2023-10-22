@@ -1,7 +1,7 @@
 package com.example.disasterresponseplatform.managers
 
-import com.example.disasterresponseplatform.models.enums.Endpoint
-import com.example.disasterresponseplatform.models.enums.RequestType
+import com.example.disasterresponseplatform.data.enums.Endpoint
+import com.example.disasterresponseplatform.data.enums.RequestType
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Retrofit

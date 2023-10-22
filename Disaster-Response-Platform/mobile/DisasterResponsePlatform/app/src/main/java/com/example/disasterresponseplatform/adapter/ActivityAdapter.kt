@@ -1,6 +1,5 @@
 package com.example.disasterresponseplatform.adapter
 
-import android.content.Intent
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,12 +8,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.ActivityEnum
-import com.example.disasterresponseplatform.data.DummyActivity
-import com.example.disasterresponseplatform.data.PredefinedTypes
+import com.example.disasterresponseplatform.data.enums.ActivityEnum
+import com.example.disasterresponseplatform.data.models.DummyActivity
+import com.example.disasterresponseplatform.data.enums.PredefinedTypes
 import com.example.disasterresponseplatform.databinding.ActivityItemBinding
-import kotlinx.coroutines.delay
-import java.util.logging.Handler
 
 class ActivityAdapter(private val activityList: MutableList<DummyActivity>): RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder>() {
 

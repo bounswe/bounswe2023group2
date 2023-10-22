@@ -1,6 +1,5 @@
 package com.example.disasterresponseplatform.ui
 
-import android.icu.lang.UCharacter.VerticalOrientation
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,9 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.MainActivity
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ActivityAdapter
-import com.example.disasterresponseplatform.data.ActivityEnum
-import com.example.disasterresponseplatform.data.DummyActivity
-import com.example.disasterresponseplatform.data.PredefinedTypes
+import com.example.disasterresponseplatform.data.enums.ActivityEnum
+import com.example.disasterresponseplatform.data.models.DummyActivity
+import com.example.disasterresponseplatform.data.enums.PredefinedTypes
 import com.example.disasterresponseplatform.databinding.FragmentHomePageBinding
 import com.example.disasterresponseplatform.utils.DateUtil
 
@@ -64,12 +63,27 @@ class HomePageFragment(private val mainActivity: MainActivity) : Fragment() {
 
     private fun prepareDummyList(): MutableList<DummyActivity>{
         val list = mutableListOf<DummyActivity>()
-        list.add(DummyActivity(ActivityEnum.Need,PredefinedTypes.Food,"Gaziantep","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.89))
-        list.add(DummyActivity(ActivityEnum.Resource,PredefinedTypes.Food,"İstanbul","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.92))
-        list.add(DummyActivity(ActivityEnum.Resource,PredefinedTypes.Human,"Bursa","22.10.2023",0.88))
-        list.add(DummyActivity(ActivityEnum.Need,PredefinedTypes.Clothes,"Hatay","22.10.2023",0.53))
-        list.add(DummyActivity(ActivityEnum.Event,PredefinedTypes.Collapse,"Kahramanmaraş","20.10.2023",0.76))
-        list.add(DummyActivity(ActivityEnum.Emergency,PredefinedTypes.Debris,"Kahramanmaraş","21.10.2023",1.00))
+        list.add(
+            DummyActivity(ActivityEnum.Need,
+            PredefinedTypes.Food,"Gaziantep","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.89)
+        )
+        list.add(
+            DummyActivity(ActivityEnum.Resource,
+            PredefinedTypes.Food,"İstanbul","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.92)
+        )
+        list.add(
+            DummyActivity(ActivityEnum.Resource,
+            PredefinedTypes.Human,"Bursa","22.10.2023",0.88)
+        )
+        list.add(DummyActivity(ActivityEnum.Need, PredefinedTypes.Clothes,"Hatay","22.10.2023",0.53))
+        list.add(
+            DummyActivity(ActivityEnum.Event,
+            PredefinedTypes.Collapse,"Kahramanmaraş","20.10.2023",0.76)
+        )
+        list.add(
+            DummyActivity(ActivityEnum.Emergency,
+            PredefinedTypes.Debris,"Kahramanmaraş","21.10.2023",1.00)
+        )
         return list
     }
 
