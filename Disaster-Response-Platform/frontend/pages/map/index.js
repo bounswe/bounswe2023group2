@@ -1,22 +1,20 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-import MainLayout from '@/layouts/MainLayout'
+import styles from "@/styles/Home.module.css";
+import MapLayout from "@/layouts/MapLayout";
+import dynamic from "next/dynamic";
+import MapFilterMenu from "@/components/Map/MapFilterMenu";
 
-const inter = Inter({ subsets: ['latin'] })
+const Map = dynamic(() => import("@/components/Map/MainMap"), {
+  ssr: false,
+});
 
-export default function map() {
+export default function mapPage() {
   return (
     <>
-      <main >
-        <div >
-          deneme deneme
-        </div>
-      </main>
+      <Map />
+      <MapFilterMenu />
     </>
-  )
+  );
 }
-map.getLayout = function getLayout(page) {
-  return <MainLayout>{page}</MainLayout>;
+mapPage.getLayout = function getLayout(page) {
+  return <MapLayout>{page}</MapLayout>;
 };
