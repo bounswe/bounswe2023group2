@@ -1,30 +1,29 @@
 package com.example.disasterresponseplatform.ui
 
+import android.icu.lang.UCharacter.VerticalOrientation
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.MainActivity
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.adapter.ActivityAdapter
+import com.example.disasterresponseplatform.data.ActivityEnum
+import com.example.disasterresponseplatform.data.DummyActivity
+import com.example.disasterresponseplatform.data.PredefinedTypes
 import com.example.disasterresponseplatform.databinding.FragmentHomePageBinding
-import com.example.disasterresponseplatform.ui.activity.ActivityFragment
-import com.example.disasterresponseplatform.ui.map.MapFragment
-import com.example.disasterresponseplatform.ui.network.NetworkFragment
-import com.example.disasterresponseplatform.ui.profile.ProfileFragment
-import com.example.disasterresponseplatform.ui.authentication.LoginFragment
+import com.example.disasterresponseplatform.utils.DateUtil
 
 
-class HomePageFragment(val mainActivity: MainActivity) : Fragment() {
+class HomePageFragment(private val mainActivity: MainActivity) : Fragment() {
 
     private lateinit var binding: FragmentHomePageBinding
-    private lateinit var networkFragment: NetworkFragment
-
-    private val loginFragment = LoginFragment()
-    private val mapFragment = MapFragment()
-    private val activityFragment = ActivityFragment()
-    private val profileFragment = ProfileFragment()
+    private lateinit var searchView: SearchView
 
     /**
      * This defines the layout
@@ -43,29 +42,59 @@ class HomePageFragment(val mainActivity: MainActivity) : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        clickButtons()
+        arrangeSearchView()
+        arrangeRecyclerView()
     }
 
-    /**
-     * This defines what buttons will do when they are clicked, you can do that easily by observing it
-     * with setOnClickListener method.
-     */
-    private fun clickButtons(){
-        binding.btLogin.setOnClickListener {
-            addFragment(loginFragment)
+    private fun arrangeRecyclerView(){
+        val recyclerView = binding.recyclerViewActivities
+        val layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
+        val list = prepareDummyList()
+        val adapter = ActivityAdapter(list)
+        binding.adapter = adapter
+
+        // this observes getLiveIntent, whenever a value is posted it enters this function
+        adapter.getLiveIntent().observe(mainActivity){
+            val text = "Action: ${it.activityType}, Type: ${it.predefinedTypes}, Location: ${it.location}, " +
+                    "Date: ${it.date}, Reliability Scale: ${it.reliabilityScale},"
+            Toast.makeText(mainActivity, text, Toast.LENGTH_LONG).show()
         }
-        binding.btMap.setOnClickListener {
-            addFragment(mapFragment)
-        }
-        binding.btActivity.setOnClickListener {
-            addFragment(activityFragment)
-        }
-        binding.btProfile.setOnClickListener {
-            addFragment(profileFragment)
-        }
-        binding.btNetwork.setOnClickListener {
-            networkFragment = NetworkFragment(mainActivity)
-            addFragment(networkFragment)
+    }
+
+    private fun prepareDummyList(): MutableList<DummyActivity>{
+        val list = mutableListOf<DummyActivity>()
+        list.add(DummyActivity(ActivityEnum.Need,PredefinedTypes.Food,"Gaziantep","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.89))
+        list.add(DummyActivity(ActivityEnum.Resource,PredefinedTypes.Food,"İstanbul","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.92))
+        list.add(DummyActivity(ActivityEnum.Resource,PredefinedTypes.Human,"Bursa","22.10.2023",0.88))
+        list.add(DummyActivity(ActivityEnum.Need,PredefinedTypes.Clothes,"Hatay","22.10.2023",0.53))
+        list.add(DummyActivity(ActivityEnum.Event,PredefinedTypes.Collapse,"Kahramanmaraş","20.10.2023",0.76))
+        list.add(DummyActivity(ActivityEnum.Emergency,PredefinedTypes.Debris,"Kahramanmaraş","21.10.2023",1.00))
+        return list
+    }
+
+    private fun arrangeSearchView(){
+        searchView = binding.searchView
+        searchView.clearFocus() // if anything wrote before delete them
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            // when user click submit
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Handle the query submission (e.g., start a search)
+                //performSearch(query)
+                return true
+            }
+            // when text is changed on button
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Handle changes in the search query (e.g., filter a list)
+                //filterList(newText)
+                return true
+            }
+        })
+
+        searchView.setOnCloseListener {
+            // Handle the search view closing (e.g., clear search results)
+            //clearSearchResults()
+            false // Return true if you want to consume the event, otherwise return false
         }
     }
 
