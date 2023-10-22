@@ -1,4 +1,3 @@
-import { color } from "framer-motion";
 import styles from "./MapFilterMenu.module.scss";
 import { FaSearch } from "react-icons/fa";
 export default function MapFilterMenu() {
@@ -17,7 +16,7 @@ export default function MapFilterMenu() {
         </div>
       </div>
       <div className="CheckBox">
-        <div className={styles.header}>Aradıklarınız</div>
+        <div className={styles.header}>Filtreler</div>
         <hr
           style={{
             background: "gray",

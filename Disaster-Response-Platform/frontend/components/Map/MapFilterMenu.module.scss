@@ -7,7 +7,6 @@
     margin: 0;
     padding: 0.4rem;
 }
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
 
 
@@ -20,7 +19,7 @@
 .searchTerm {
     background-color: #ffffff;
   width: 100%;
-  border: 3px solid #00B4CC;
+  border: 3px solid #262626;
   border-right: none;
   padding: 0.5rem;
   height: 80%;
@@ -36,8 +35,8 @@
 .searchButton {
   width: 12%;
   //height: 100%;
-  border: 1px solid #00B4CC;
-  background: #00B4CC;
+  border: 1px solid #262626;
+  background: #262626;
   text-align: center;
   padding-left: 5px;
   padding-right: 5px;
