@@ -6,7 +6,7 @@ router = APIRouter()
 
 @router.post("/", status_code=201)
 def create_need(need: Need):
-    need_id = need_service.create_need(Need)
+    need_id = need_service.create_need(need)
     return {"status": "OK", "data": [{"needId": need_id}]}
 
 @router.get("/{need_id}")
@@ -26,7 +26,7 @@ def update_need(need_id: str, need: Need):
     updated_need = need_service.update_need(need_id, need)
     if updated_need:
         return {"status": "OK", "data": {"needs": [updated_need]}}
-    raise HTTPException(status_code=404, detail="need not found")
+    raise HTTPException(status_code=404, detail={"status": "Error", "message": "need not found", "ErrorDetails": f"need {need_id} does not exist"})
     
 @router.delete("/{need_id}")
 def delete_need(need_id: str):
