@@ -1,19 +1,19 @@
 package com.example.disasterresponseplatform.ui.network
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.disasterresponseplatform.MainActivity
-import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.data.enums.Endpoint
+import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.databinding.FragmentNetworkBinding
-import com.example.disasterresponseplatform.managers.DataResponse
 import com.example.disasterresponseplatform.managers.NetworkManager
-import com.example.disasterresponseplatform.models.enums.Endpoint
-import com.example.disasterresponseplatform.models.enums.RequestType
+import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 
@@ -47,12 +47,15 @@ class NetworkFragment(val mainActivity: MainActivity) : Fragment() {
                 endpoint = Endpoint.DATA,
                 requestType = RequestType.GET,  // Specify the type of request here
                 headers = headers,
-                callback = object : retrofit2.Callback<DataResponse> {
-                    override fun onFailure(call: Call<DataResponse>, t: Throwable) {
+                callback = object : Callback<Response<ResponseBody>> {
+                    override fun onFailure(call: Call<Response<ResponseBody>>, t: Throwable) {
                         Toast.makeText(mainActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
 
-                    override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
+                    override fun onResponse(
+                        call: Call<Response<ResponseBody>>,
+                        response: Response<Response<ResponseBody>>
+                    ) {
                         if (response.isSuccessful) {
                             Toast.makeText(mainActivity, "Status Code: ${response.code()}, Successful Response!", Toast.LENGTH_SHORT).show()
                         } else {

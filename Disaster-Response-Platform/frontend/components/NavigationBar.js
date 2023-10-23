@@ -13,7 +13,9 @@ export default function NavigationBar() {
             <div className={styles.navbar}>
               <div className={styles.leftbar}>
 
+
                 <nav className="p-4 h-14 w-full text-center hover:-translate-y-1 duration-300">
+
                     <Link href={`/`}>
                       <h1>DaRP   </h1>
                     </Link>
