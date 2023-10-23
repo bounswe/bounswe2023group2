@@ -4,7 +4,7 @@ from jose import JWTError, jwt
 from typing import Optional
 from datetime import datetime, timedelta
 from Services import authentication
-from fastapi.responses import JSONResponse,
+from fastapi.responses import JSONResponse
 
 import config
 from Database.mongo import MongoDB
@@ -74,6 +74,3 @@ async def read_users_me(current_user: user_model.User = Depends(authentication.g
 async def read_own_items(current_user: user_model.User = Depends(authentication.get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
 
-@router.exception_handler(HTTPException)
-async def http_exception_handler(request, exc):
-    return JSONResponse(status_code=exc.status_code, content={"error": exc.detail})
