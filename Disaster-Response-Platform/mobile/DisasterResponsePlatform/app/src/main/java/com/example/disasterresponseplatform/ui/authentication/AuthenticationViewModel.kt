@@ -92,11 +92,13 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
             email.isNullOrEmpty() || password.isNullOrEmpty() || confirmPassword.isNullOrEmpty()
         ) {
             _signUpValidation.value = 0
+            return
         }
 
         // Check if the password and confirm password match
         if (password != confirmPassword) {
             _signUpValidation.value = 1
+            return
         }
 
         // If all checks pass, mark the data as valid
