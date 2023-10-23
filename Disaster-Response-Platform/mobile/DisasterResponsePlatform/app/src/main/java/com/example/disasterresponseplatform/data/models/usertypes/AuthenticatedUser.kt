@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.models
+package com.example.disasterresponseplatform.data.models.usertypes
 
 import java.time.LocalDate
 import java.util.UUID
