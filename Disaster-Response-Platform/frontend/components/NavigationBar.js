@@ -4,7 +4,6 @@ import {BsSearch} from "react-icons/bs";
 import {Button} from "@nextui-org/react";
 import {CgProfile} from "react-icons/cg";
 import Link from "next/link";
-import gStyles from "@/styles/Home.module.css"
 
 
 
