@@ -44,9 +44,13 @@
     width: 100%;
     text-align: center;
     height: 3.5em;
+    //transition: 0.3s;
    
 
 }
+//.nav:hover{
+//    transform: translateY(-0.25em);
+//}
 .rightbar {
     display: flex;
     flex-direction: row;
@@ -65,6 +69,10 @@
     padding-top: 1em;
     padding-bottom: 1em;
     background-color: #e00000;
+//    transition: 0.2s;
+}
+.button:hover{
+    background-color: #b70202;
 }
 .body {
     display: flex;
