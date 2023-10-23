@@ -18,9 +18,10 @@ import androidx.core.net.toUri
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentProfileBinding
-import com.example.disasterresponseplatform.models.AuthenticatedUser
-import com.example.disasterresponseplatform.models.CredibleUser
-import com.example.disasterresponseplatform.models.RoleBasedUser
+import com.example.disasterresponseplatform.databinding.ProfileItemBinding
+import com.example.disasterresponseplatform.data.models.usertypes.AuthenticatedUser
+import com.example.disasterresponseplatform.data.models.usertypes.CredibleUser
+import com.example.disasterresponseplatform.data.models.usertypes.RoleBasedUser
 import com.example.disasterresponseplatform.ui.profile.notification.SubscribeNotificationFragment
 import com.example.disasterresponseplatform.ui.profile.pastUserActions.PastUserActionsFragment
 import com.squareup.picasso.Picasso
@@ -164,48 +165,48 @@ class ProfileFragment : Fragment() {
                 profileBloodType.text = user.bloodType
             }
 
-            var counter = 0;
+            var counter = 0
             for (socialMedia in user.socialMedia) {
-                val newView: View = LayoutInflater.from(requireContext()).inflate(R.layout.profile_item, null)
-                newView.findViewById<TextView>(R.id.profile_item_text).text = socialMedia.platformName
-                newView.findViewById<ImageView>(R.id.profile_item_link).visibility = View.VISIBLE
-                newView.findViewById<ImageView>(R.id.profile_item_link).setOnClickListener {
+                val profileItemBinding: ProfileItemBinding = ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
+                profileItemBinding.profileItemText.text = socialMedia.platformName
+                profileItemBinding.profileItemLink.visibility = View.VISIBLE
+                profileItemBinding.profileItemLink.setOnClickListener {
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(socialMedia.profileURL))
                     startActivity(browserIntent)
                 }
                 when (socialMedia.platformName.lowercase()) {
-                    "linkedin" -> newView.findViewById<ImageView>(R.id.profile_item_icon).setImageResource(R.drawable.linkedin_icon)
-                    "x" -> newView.findViewById<ImageView>(R.id.profile_item_icon).setImageResource(R.drawable.x_icon)
-                    "github" -> newView.findViewById<ImageView>(R.id.profile_item_icon).setImageResource(R.drawable.github_icon)
-                    "youtube" -> newView.findViewById<ImageView>(R.id.profile_item_icon).setImageResource(R.drawable.youtube_icon)
+                    "linkedin" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.linkedin_icon)
+                    "x" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.x_icon)
+                    "github" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.github_icon)
+                    "youtube" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.youtube_icon)
                 }
-                profileTopLayout.addView(newView, 16 + counter)
+                profileTopLayout.addView(profileItemBinding.root, 16 + counter)
                 counter++
             }
 
             for (skill in user.skills) {
-                val newView: View = LayoutInflater.from(requireContext()).inflate(R.layout.profile_item, null)
-                newView.findViewById<TextView>(R.id.profile_item_text).text = skill.definition + ": " + skill.level
-                newView.findViewById<ImageView>(R.id.profile_item_link).visibility = View.VISIBLE
-                newView.findViewById<ImageView>(R.id.profile_item_link).setOnClickListener {
+                val profileItemBinding: ProfileItemBinding = ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
+                profileItemBinding.profileItemText.text = skill.definition + ": " + skill.level
+                profileItemBinding.profileItemLink.visibility = View.VISIBLE
+                profileItemBinding.profileItemLink.setOnClickListener {
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(skill.document))
                     startActivity(browserIntent)
                 }
-                profileTopLayout.addView(newView, 18 + counter)
+                profileTopLayout.addView(profileItemBinding.root, 18 + counter)
                 counter++
             }
 
             for (language in user.languages) {
-                val newView: View = LayoutInflater.from(requireContext()).inflate(R.layout.profile_item, null)
-                newView.findViewById<TextView>(R.id.profile_item_text).text = language.language + ": " + language.level
-                profileTopLayout.addView(newView, 20 + counter)
+                val profileItemBinding: ProfileItemBinding = ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
+                profileItemBinding.profileItemText.text = language.language + ": " + language.level
+                profileTopLayout.addView(profileItemBinding.root, 20 + counter)
                 counter++
             }
 
             for (profession in user.professions) {
-                val newView: View = LayoutInflater.from(requireContext()).inflate(R.layout.profile_item, null)
-                newView.findViewById<TextView>(R.id.profile_item_text).text = profession.profession + ": " + profession.level
-                profileTopLayout.addView(newView, 22 + counter)
+                val profileItemBinding: ProfileItemBinding = ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
+                profileItemBinding.profileItemText.text = profession.profession + ": " + profession.level
+                profileTopLayout.addView(profileItemBinding.root, 22 + counter)
                 counter++
             }
         }
