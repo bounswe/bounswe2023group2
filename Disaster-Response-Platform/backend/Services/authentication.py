@@ -72,3 +72,22 @@ async def get_current_active_user(
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+def is_valid_phone_number(phone_number):
+   #can add more checks here
+    return len(phone_number) == 11 and phone_number.startswith("05")
+
+def is_valid_password(password):
+   #can add more checks here
+    if len(password) < 8:
+        return False
+    # if not any(char.isupper() for char in password):
+    #     return False
+
+    # if not any(char.islower() for char in password):
+    #     return False
+    if not any(char.isdigit() for char in password):
+        return False
+    return True
+    # if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+    #     return False

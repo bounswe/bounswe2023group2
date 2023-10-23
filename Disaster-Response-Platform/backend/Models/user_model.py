@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from enum import Enum
 
 
@@ -10,22 +10,26 @@ class TokenData(BaseModel):
     username: str | None = None
 
 class User(BaseModel):
-    username: str
-    email: str | None = None
+    username: str 
+    email: EmailStr | None = None
     disabled: bool | None = None
 
 class UserInDB(User):
     hashed_password: str
 
-
-
-class RegisteredUser(BaseModel):
+class RegisterUser(User):
     first_name: str
     last_name: str
     phone_number: str
     is_email_verified: bool = False
-    private_account: bool
-    username: str
-    email: str | None = None
-    disabled: bool | None = None
+    private_account: bool = False
+    password: str
+
+class RegisteredUser(UserInDB):
+    first_name: str
+    last_name: str
+    phone_number: str
+    is_email_verified: bool = False
+    private_account: bool = False
+
 

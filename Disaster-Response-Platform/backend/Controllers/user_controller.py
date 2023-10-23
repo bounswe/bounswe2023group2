@@ -21,20 +21,32 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 users_collection = MongoDB.get_collection('users')
 
-@router.post("/signup", response_model= user_model.RegisteredUser)
-async def signup(currentUser :user_model.RegisteredUser):
+@router.post("/signup")
+async def signup(currentUser :user_model.RegisterUser):
     try:
         userDb = db.get_collection("authenticated_user") 
         if (userDb.find_one({"username":currentUser.username}) !=None) : #if there is a user already existed with current username
             return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Username already taken")
-        elif (len(currentUser.password) < 8) : #if username is not existed in db but password contains less than 8 characters
+        if (userDb.find_one({"email":currentUser.email}) !=None):
+            return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Email already taken")
+        if (not authentication.is_valid_password(currentUser.password)) : #if username is not existed in db but password contains less than 8 characters
             return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Password cannot be less than 8 characters")
-        elif (len(currentUser.phone_number)!= 11 or currentUser.phone_number[:2]!= "05"): #if phone number is not valid
+        if (not authentication.is_valid_phone_number(currentUser.phone_number)): #if phone number is not valid
             return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Phone number format is wrong")
-        #if password has at least 8 characters and username isn't used by another user, insert it to db
-        userDb.insert_one({"username":currentUser.username, "first_name": currentUser.first_name, "last_name": currentUser.last_name, "email":currentUser.email, "phone_number":currentUser.phone_number, "password":currentUser.password})
-        print("+9"+currentUser.phone_number)
-        return currentUser
+        hash= authentication.get_password_hash(currentUser.password)
+       
+        insert_result = userDb.insert_one({
+            "username": currentUser.username,
+            "first_name": currentUser.first_name,
+            "last_name": currentUser.last_name,
+            "email": currentUser.email,
+            "phone_number": currentUser.phone_number,
+            "hashed_password": hash
+        })
+
+       #todo what should itreturn, my brain does not process anymore
+        return {"status": "OK"}
+  
     except Exception as e:
         # Handle any other unexpected exceptions here
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An unexpected error occurred")
