@@ -1,4 +1,78 @@
 {
-  "status": "OK",
-  "SESSIONTOKEN": "md5e9fd83fcd8e843e4b77c40266b67e89b"
+  'explainVersion': '1',
+  'queryPlanner': {
+    'namespace': 'DARP.users',
+    'indexFilterSet': False,
+    'parsedQuery': {
+      'username': {
+        '$eq': 'mongostarte'
+      }
+    },
+    'queryHash': '7D9BB680',
+    'planCacheKey': '7D9BB680',
+    'maxIndexedOrSolutionsReached': False,
+    'maxIndexedAndSolutionsReached': False,
+    'maxScansToExplodeReached': False,
+    'winningPlan': {
+      'stage': 'COLLSCAN',
+      'filter': {
+        'username': {
+          '$eq': 'mongostarte'
+        }
+      },
+      'direction': 'forward'
+    },
+    'rejectedPlans': []
+  },
+  'executionStats': {
+    'executionSuccess': True,
+    'nReturned': 0,
+    'executionTimeMillis': 0,
+    'totalKeysExamined': 0,
+    'totalDocsExamined': 1,
+    'executionStages': {
+      'stage': 'COLLSCAN',
+      'filter': {
+        'username': {
+          '$eq': 'mongostarte'
+        }
+      },
+      'nReturned': 0,
+      'executionTimeMillisEstimate': 0,
+      'works': 3,
+      'advanced': 0,
+      'needTime': 2,
+      'needYield': 0,
+      'saveState': 0,
+      'restoreState': 0,
+      'isEOF': 1,
+      'direction': 'forward',
+      'docsExamined': 1
+    },
+    'allPlansExecution': []
+  },
+  'command': {
+    'find': 'users',
+    'filter': {
+      'username': 'mongostarte'
+    },
+    '$db': 'DARP'
+  },
+  'serverInfo': {
+    'host': 'MKZMBAir.local',
+    'port': 27017,
+    'version': '6.0.5',
+    'gitVersion': 'c9a99c120371d4d4c52cbb15dac34a36ce8d3b1d'
+  },
+  'serverParameters': {
+    'internalQueryFacetBufferSizeBytes': 104857600,
+    'internalQueryFacetMaxOutputDocSizeBytes': 104857600,
+    'internalLookupStageIntermediateDocumentMaxSizeBytes': 104857600,
+    'internalDocumentSourceGroupMaxMemoryBytes': 104857600,
+    'internalQueryMaxBlockingSortMemoryUsageBytes': 104857600,
+    'internalQueryProhibitBlockingMergeOnMongoS': 0,
+    'internalQueryMaxAddToSetBytes': 104857600,
+    'internalDocumentSourceSetWindowFieldsMaxMemoryBytes': 104857600
+  },
+  'ok': 1.0
 }

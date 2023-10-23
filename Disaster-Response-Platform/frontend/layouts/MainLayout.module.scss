@@ -5,6 +5,10 @@
 }
 
 .main {
+    max-width: 70vw !important;
+    min-width: 600px;
+    margin: 0 auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;

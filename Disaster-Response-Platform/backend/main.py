@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-import Services.authentication
-from Controllers import authentication_controller,need_controller
+from Controllers import authentication_controller, resource_controller, need_controller
+import Services.authentication_service
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
 from Services.build_API_returns import *
@@ -28,6 +28,8 @@ async def check_authorization(request: Request, call_next):
         return response
 
 #Temporary code
+    # So that the programmers may create users while testing.
+    # Will be commented out later
     if (request.url.components.path.startswith("/api/authenticate/create-user")):
         response = await call_next(request)
         return response
@@ -42,7 +44,7 @@ async def check_authorization(request: Request, call_next):
                 bearer_token = parts[1]
                 if (parts[2].lower() == 'username'):
                     user_name = parts[3]
-                    if (Services.authentication.verify_user_session(user_name, bearer_token)):
+                    if (Services.authentication_service.verify_user_session(user_name, bearer_token)):
                         valid_header = True
 
     if (valid_header):
@@ -50,23 +52,16 @@ async def check_authorization(request: Request, call_next):
         return response
     else:
         #TODO API calls not requesting authorization will be handled different
-        content = create_json_for_error("Unauthorized  access", "No valid authorization in the API call")
+        content = json.loads(create_json_for_error("Unauthorized  access", "No valid authorization in the API call"))
         response = JSONResponse(status_code=HTTPStatus.UNAUTHORIZED,
                                 content=content
                                 )
         return response
 
-app.include_router(
-    authentication_controller.router,
-    prefix="/api/authenticate",
-    tags=["login"],
-)
-app.include_router(
-    need_controller.router,
-    prefix="/api/need",
-    tags=["need"],
-)
-
+# ROUTES
+app.include_router(authentication_controller.router, prefix="/api/authenticate", tags=["login"])
+app.include_router(resource_controller.router, prefix = "/api/resource", tags=["resource"])
+app.include_router(need_controller.router, prefix="/api/need", tags=["need"])
 
 @app.get("/")
 async def root(request: Request):
