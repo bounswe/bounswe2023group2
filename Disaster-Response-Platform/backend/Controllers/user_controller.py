@@ -18,13 +18,13 @@ SECRET_KEY = config.SECRET_KEY
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+userDb = MongoDB.get_collection('authenticated_user')
 
-users_collection = MongoDB.get_collection('users')
 
 @router.post("/signup")
 async def signup(currentUser :user_model.RegisterUser):
     try:
-        userDb = db.get_collection("authenticated_user") 
+         
         if (userDb.find_one({"username":currentUser.username}) !=None) : #if there is a user already existed with current username
             return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Username already taken")
         if (userDb.find_one({"email":currentUser.email}) !=None):
@@ -54,7 +54,7 @@ async def signup(currentUser :user_model.RegisterUser):
 # Login route
 @router.post("/token", response_model=user_model.Token)
 async def login_for_access_token(user: user_model.User): ##douıble check here
-    user = authentication.authenticate_user(users_collection, user.username, user.password)
+    user = authentication.authenticate_user(user.username, user.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

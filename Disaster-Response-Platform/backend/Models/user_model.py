@@ -13,8 +13,12 @@ class User(BaseModel):
     username: str 
     email: EmailStr | None = None
     disabled: bool | None = None
+    password:str
 
-class UserInDB(User):
+class UserInDB(BaseModel):
+    username: str 
+    email: EmailStr | None = None
+    disabled: bool | None = None
     hashed_password: str
 
 class RegisterUser(User):
@@ -23,7 +27,7 @@ class RegisterUser(User):
     phone_number: str
     is_email_verified: bool = False
     private_account: bool = False
-    password: str
+
 
 class RegisteredUser(UserInDB):
     first_name: str

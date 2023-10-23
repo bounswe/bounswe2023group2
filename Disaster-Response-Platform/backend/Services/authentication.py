@@ -11,14 +11,14 @@ from typing import Annotated
 
 db = MongoDB.getInstance()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-users_collection = MongoDB.get_collection('users')
+
 
 SECRET_KEY = "your-secret-key" #todo: put it to config
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-
+userDb = MongoDB.get_collection('authenticated_user')
 # Verify JWT token
 def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -33,7 +33,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = get_user(users_collection, username=username)
+    user = get_user(username=username)
     if user is None:
         raise credentials_exception
     return user
@@ -53,13 +53,14 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-def get_user(db, username: str):
-    if username in users_collection:
-        user_dict = users_collection[username]
-        return user_model.UserInDB(**user_dict)
+def get_user(username: str):
+    user_document = userDb.find_one({"username": username})
+    if user_document is not None:
+        
+        return user_model.UserInDB(**user_document)
 
-def authenticate_user(users_collection, username: str, password: str):
-    user = get_user(users_collection, username)
+def authenticate_user(username: str, password: str):
+    user = get_user(username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
