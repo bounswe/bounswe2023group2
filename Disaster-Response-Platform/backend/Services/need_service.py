@@ -35,7 +35,7 @@ def get_all_needs() -> list[dict]:
     return [{
         "_id": str(need_data["_id"]),
         "created_by": need_data["created_by"],
-        "condition": need_data["condition"],
+        "urgency": need_data["urgency"],
         "initialQuantity": need_data["initialQuantity"],
         "unsuppliedQuantity": need_data["unsuppliedQuantity"],
         "type": need_data["type"],
@@ -47,16 +47,19 @@ def update_need(need_id: str, need: Need) -> Need:
     # Fetch the existing need
     existing_need = needs_collection.find_one({"_id": ObjectId(need_id)})
 
-    # If details exist in the provided need and the database, merge them
-    if 'details' in need.dict(exclude_none=True) and 'details' in existing_need:
-        need.details = {**existing_need['details'], **need.dict(exclude_none=True)['details']}
+    if existing_need:
+        # If details exist in the provided need and the database, merge them
+        if 'details' in need.dict(exclude_none=True) and 'details' in existing_need:
+            need.details = {**existing_need['details'], **need.dict(exclude_none=True)['details']}
 
-    update_data = {k: v for k, v in need.dict(exclude_none=True).items()}
+        update_data = {k: v for k, v in need.dict(exclude_none=True).items()}
 
-    needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": update_data})
+        needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": update_data})
 
-    # updated_need_data = needs_collection.find_one({"_id": ObjectId(need_id)})
-    return Need(update_data)
+        updated_need_data = needs_collection.find_one({"_id": ObjectId(need_id)})
+        return Need(**updated_need_data)
+
+    return None
 
 
 
