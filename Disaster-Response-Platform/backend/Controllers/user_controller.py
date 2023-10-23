@@ -52,7 +52,14 @@ async def login_for_access_token(user: user_model.User): ##douıble check here
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = authentication.create_jwt_token(data={"sub": user.username}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
- 
+
+@router.post("/refresh-token", response_model=user_model.Token)
+async def refresh_access_token(token_data: user_model.Token = Depends(authentication.get_current_user)):
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = authentication.create_jwt_token(
+        data={"sub": token_data.username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
 # Protected route
 @router.get("/protected")
 async def protected_route(current_user: str = Depends(authentication.get_current_user)):
