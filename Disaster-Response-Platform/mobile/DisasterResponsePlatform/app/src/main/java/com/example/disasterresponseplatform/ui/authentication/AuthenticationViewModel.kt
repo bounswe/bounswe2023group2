@@ -7,13 +7,16 @@ import androidx.lifecycle.ViewModel
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.managers.NetworkManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
+import javax.inject.Inject
 
-class AuthenticationViewModel : ViewModel() {
+@HiltViewModel
+class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
     // Mutable LiveData for username and password
     private val _username = MutableLiveData<String>()

@@ -2,6 +2,7 @@ package com.example.disasterresponseplatform.dependencyInjection
 
 import com.example.disasterresponseplatform.data.repositories.NeedRepository
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
+import com.example.disasterresponseplatform.ui.authentication.AuthenticationViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +26,8 @@ class ViewModelModule {
     @ViewModelScoped
     fun provideNeedViewModel(repository: NeedRepository): NeedViewModel =
         NeedViewModel(repository)
+    @Provides
+    @ViewModelScoped
+    fun provideAuthenticationViewModel(): AuthenticationViewModel = AuthenticationViewModel()
 
 }
