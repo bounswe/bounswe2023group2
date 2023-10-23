@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/miNetwork"
+        android:title="@string/network_request"/>
+
+    <item
+        android:id="@+id/miLogin"
+        android:title="@string/login"/>
+
+    <item
+        android:id="@+id/miRegister"
+        android:title="@string/register"/>
+
+    <item
+        android:id="@+id/miLogout"
+        android:title="@string/logout"/>
+
+    <item
+        android:id="@+id/miAddNeed"
+        android:title="@string/add_need"/>
+
+
+</menu>

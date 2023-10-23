@@ -64,4 +64,14 @@
     <string name="sign_in_camel">Sign In</string>
     <string name="reset_password">Reset Password</string>
     <string name="send_verification_code">SEND VERIFICATION CODE</string>
+    <string name="network_request">Network Request</string>
+    <string name="logout">Logout</string>
+    <string name="register">Register</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="type">Type:</string>
+    <string name="location">Location:</string>
+    <string name="activity_item">Activity:</string>
+    <string name="clothes">Clothes</string>
+    <string name="date">Date:</string>
 </resources>

@@ -1,0 +1,79 @@
+@import "@/styles/variables.scss";
+
+.icon {
+    padding: 1rem;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    
+}
+
+.navbar {
+    border-bottom: 1px solid #3C4043;
+    //background-color: #1C9BEF;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    nav {
+        
+        div {
+            cursor: pointer;
+        }
+    }
+}
+
+.icon {
+    svg {
+        width:30px !important;
+        height:30px !important;
+     }
+
+}
+.selected {
+    border-left: 3px solid $base-color;
+    pointer-events: none;
+
+}
+
+.nav {
+    padding: 1em;
+    width: 100%;
+    text-align: center;
+    height: 3.5em;
+   
+
+}
+.rightbar {
+    display: flex;
+    flex-direction: row;
+}
+
+.button {
+    overflow:hidden;
+    border-radius: 1em;
+    white-space: nowrap;
+    border-style: none;
+    outline-offset: 0;
+    margin:0;
+    height:100%;
+    padding-left: 3em;
+    padding-right: 3em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background-color: #e00000;
+}
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $bg-color;
+    color:#262626;
+    padding: 2rem;
+    // min-width: 600px;
+
+}
+
