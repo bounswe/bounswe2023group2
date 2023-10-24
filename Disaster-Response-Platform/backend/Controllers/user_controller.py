@@ -67,10 +67,10 @@ async def login_for_access_token(user: user_model.User): ##douıble check here
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/refresh-token", response_model=user_model.Token)
-async def refresh_access_token(token_data: user_model.Token = Depends(authentication_service.get_current_user)):
+async def refresh_access_token(current_user: str  = Depends(authentication_service.get_current_user)):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = authentication_service.create_jwt_token(
-        data={"sub": token_data.username}, expires_delta=access_token_expires
+        data={"sub": current_user}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 # Protected route
