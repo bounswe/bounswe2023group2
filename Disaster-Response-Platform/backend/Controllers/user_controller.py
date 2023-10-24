@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from typing import Optional
 from datetime import datetime, timedelta
-from backend.Services import authentication_service
+from Services import authentication_service
 from fastapi.responses import JSONResponse
 
 import config
@@ -33,8 +33,9 @@ async def signup(currentUser :user_model.RegisterUser):
             return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Password cannot be less than 8 characters")
         if (not authentication_service.is_valid_phone_number(currentUser.phone_number)): #if phone number is not valid
             return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Phone number format is wrong")
+        print("hash created")
         hash= authentication_service.get_password_hash(currentUser.password)
-       
+        print("hash created")
         insert_result = userDb.insert_one({
             "username": currentUser.username,
             "first_name": currentUser.first_name,
@@ -44,15 +45,15 @@ async def signup(currentUser :user_model.RegisterUser):
             "hashed_password": hash
         })
 
-       #todo what should itreturn, my brain does not process anymore
+        #todo what should itreturn, my brain does not process anymore
         return {"status": "OK"}
-  
+
     except Exception as e:
         # Handle any other unexpected exceptions here
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An unexpected error occurred")
 
 # Login route
-@router.post("/token", response_model=user_model.Token)
+@router.post("/login", response_model=user_model.Token)
 async def login_for_access_token(user: user_model.User): ##douıble check here
     user = authentication_service.authenticate_user(user.username, user.password)
     if not user:

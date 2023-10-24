@@ -1,22 +1,21 @@
-
 from Database.mongo import MongoDB
 from fastapi.security import OAuth2PasswordBearer
 from datetime import *
-import pymongo
 from fastapi import HTTPException, Depends, status
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from Models import user_model
 from typing import Annotated
 import config
-db = MongoDB.getInstance()
+
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 SECRET_KEY = config.SECRET_KEY
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 userDb = MongoDB.get_collection('authenticated_user')
 # Verify JWT token
@@ -36,7 +35,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     user = get_user(username=username)
     if user is None:
         raise credentials_exception
-    return user
+    return user.username
 
 # Create a JWT token
 def create_jwt_token(data: dict, expires_delta: timedelta):
