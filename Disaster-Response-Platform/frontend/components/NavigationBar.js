@@ -14,7 +14,7 @@ export default function NavigationBar() {
               <div className={styles.leftbar}>
 
 
-                <nav className="p-4 h-14 w-full text-center hover:-translate-y-1 duration-300">
+                <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
 
                     <Link href={`/`}>
                       <h1>DaRP   </h1>
@@ -22,18 +22,18 @@ export default function NavigationBar() {
                 </nav>
               </div>
               <div className={styles.rightbar}>
-                <nav  class= " p-4 h-14 w-full text-center hover:-translate-y-1 duration-300">
+                <nav  class= " p-4 h-14  text-center hover:-translate-y-1 duration-300">
                     <Link href={`/map`}>
                       <FaMapMarkedAlt size={30} />
                    
                     </Link>
                 </nav>
-                <nav className="p-4 h-14 w-full text-center hover:-translate-y-1 duration-300" >
+                <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300" >
                     <Link href={`search`}>
                       <BsSearch size={25} />
                     </Link>
                 </nav>
-                <nav className="p-4 h-14 w-full text-center hover:-translate-y-1 duration-300">
+                <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
                     <Link href={`/profile`}>
                       <CgProfile size={30} />
                     </Link>
