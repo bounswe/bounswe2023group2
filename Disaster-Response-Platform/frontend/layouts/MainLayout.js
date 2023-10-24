@@ -8,11 +8,11 @@ import {BsSearch} from "react-icons/bs";
 import {Button} from "@nextui-org/react";
 import {CgProfile} from "react-icons/cg";
 
-function MainLayout({ children }) {
+function MainLayout({ children}) {
     const router = useRouter();
    
     return (
-        <main className={styles.main}>
+        <main  className={styles.main}>
             <div className={styles.navbar}>
               <div className={styles.leftbar}>
 
