@@ -59,8 +59,8 @@ In summary, the next week is about getting prepared to the Milestone 1 as comple
 
 ## Completed tasks that were not planned for the week
 
-| Description                                                                   | Issue                                                           | Assignee     | Due         | Actual Duration | Artifacts                                                                                                                      |
-| ----------------------------------------------------------------------------- | --------------------------------------------------------------- | ------------ | ----------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------ | --- |
+| Description | Issue | Assignee     | Due         | Actual Duration | Artifacts |
+| ----------------------------------------------------------------------------- | -------------------------- | ------------ | ----------- | --------------- | ---------------------------------------------------------------- |
 | Frontend - Organizing MainLayout and Creating MapLayout                       | [#360](https://github.com/bounswe/bounswe2023group2/issues/360) | Şahin        | 21.10.2023  | 2h              |                                                                                                                                |
 | Frontend - Adding Main CSS effects                                            | [#366](https://github.com/bounswe/bounswe2023group2/issues/366) | Şahin        | 24.10.2023  | 1h              |                                                                                                                                |
 | Frontend - More self-training on technologies                                 | [#287](https://github.com/bounswe/bounswe2023group2/issues/287) | Can Bora     | 22.10.2023  | 3h              |
