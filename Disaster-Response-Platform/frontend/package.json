@@ -11,6 +11,7 @@
   "dependencies": {
     "@nextui-org/react": "^2.1.13",
     "autoprefixer": "10.4.16",
+    "axios": "^1.5.1",
     "framer-motion": "^10.16.4",
     "iron-session": "^6.3.1",
     "next": "13.5.6",
