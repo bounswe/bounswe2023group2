@@ -8,12 +8,12 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from Models import user_model
 from typing import Annotated
-
+import config
 db = MongoDB.getInstance()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-SECRET_KEY = "your-secret-key" #todo: put it to config
+SECRET_KEY = config.SECRET_KEY
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
