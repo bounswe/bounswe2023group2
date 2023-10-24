@@ -1,9 +1,12 @@
 package com.example.disasterresponseplatform.managers
 
-import com.example.disasterresponseplatform.models.enums.Endpoint
-import com.example.disasterresponseplatform.models.enums.RequestType
+import android.util.Log
+import com.example.disasterresponseplatform.data.enums.Endpoint
+import com.example.disasterresponseplatform.data.enums.RequestType
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -57,36 +60,51 @@ class NetworkManager {
      * @param callback A Retrofit callback to handle the response or failure.
      * @param <T> The type of the response object.
      */
-    fun <T> makeRequest(
+    fun makeRequest(
         endpoint: Endpoint,
         requestType: RequestType,
         headers: Map<String, String>,
         requestBody: Any? = null,
-        callback: retrofit2.Callback<T>
+        callback: Callback<Response<ResponseBody>>
     ) {
         when (endpoint) {
             Endpoint.DATA -> {
                 when (requestType) {
                     RequestType.GET -> {
+                        Log.d("RESPONSE", callback.toString())
                         val call = api.getData(endpoint.path, headers)
-                        call.enqueue(callback as Callback<DataResponse>)
+                        call.enqueue(callback)
                     }
                     RequestType.POST -> {
-                        val call = api.postData(endpoint.path, headers, requestBody!!)
-                        call.enqueue(callback as Callback<DataResponse>)
+                        val call = api.postData(endpoint.path, headers, requestBody as Map<String, String>)
+                        Log.d("RESPONSE", callback.toString())
+                        call.enqueue(callback)
                     }
                     RequestType.PUT -> {
-                        val call = api.putData(endpoint.path, headers, requestBody!!)
-                        call.enqueue(callback as Callback<DataResponse>)
+                        val call = api.putData(endpoint.path, headers, requestBody as Map<String, String>)
+                        call.enqueue(callback)
                     }
                     RequestType.DELETE -> {
                         val call = api.deleteData(endpoint.path, headers)
-                        call.enqueue(callback as Callback<DataResponse>)
+                        call.enqueue(callback)
                     }
                 }
             }
             Endpoint.USER -> TODO()
             Endpoint.PRODUCTS -> TODO()
+            Endpoint.LOGIN -> {
+                when (requestType) {
+                    RequestType.GET -> {
+                        val call = api.getData(endpoint.path, headers)
+                        call.enqueue(callback)
+                    }
+                    RequestType.POST -> {
+                        val call = api.postData(endpoint.path, headers, requestBody as Map<String, String>)
+                        call.enqueue(callback)
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 
@@ -96,29 +114,26 @@ interface ApiService {
     @GET("{endpoint}")
     fun getData(
         @Path("endpoint") endpoint: String,
-        @HeaderMap headers: Map<String, String>
-    ): Call<DataResponse>
+        @HeaderMap headers: Map<String, String>,
+    ): Call<Response<ResponseBody>>
 
     @POST("{endpoint}")
-    fun <T> postData(
+    fun postData(
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
-        @Body requestBody: T
-    ): Call<DataResponse>
+        @Body requestBody: Map<String, String>,
+    ): Call<Response<ResponseBody>>
 
     @PUT("{endpoint}")
-    fun <T> putData(
+    fun putData(
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
-        @Body requestBody: T
-    ): Call<DataResponse>
+        @Body requestBody: Map<String, String>,
+    ): Call<Response<ResponseBody>>
 
     @DELETE("{endpoint}")
     fun deleteData(
         @Path("endpoint") endpoint: String,
-        @HeaderMap headers: Map<String, String>
-    ): Call<DataResponse>
+        @HeaderMap headers: Map<String, String>,
+    ): Call<Response<ResponseBody>>
 }
-
-data class DataResponse(val data: List<String>)
-data class DataRequest(val key: String, val value: String)

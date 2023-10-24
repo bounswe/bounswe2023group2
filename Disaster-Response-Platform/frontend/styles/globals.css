@@ -83,7 +83,6 @@
 
 html,
 body {
-  max-width: 70vw;
   min-width: 600px;
   margin: 0 auto;
   overflow-x: hidden;
