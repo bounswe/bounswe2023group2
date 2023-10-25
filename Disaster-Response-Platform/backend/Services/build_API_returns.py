@@ -4,7 +4,7 @@ from pymongo import MongoClient
 
 def create_json_for_cursor(data: pymongo.cursor, tag: str):
     reslist = list(data)
-    json_data = json.dumps(reslist)
+    json_data = json.dumps(reslist, default=str)
     list_string = f"\"{tag}\":" + str(json_data)
     return list_string
 def create_json_for_string(data: str, tag: str):

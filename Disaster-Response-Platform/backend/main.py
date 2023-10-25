@@ -4,8 +4,7 @@ import Services.authentication_service as authentication_service
 from Services import resource_service
 from Services.build_API_returns import *
 
-
-from Controllers import authentication_controller, resource_controller, user_controller
+from Controllers import resource_controller, user_controller, user_profile_controller
 
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
@@ -24,9 +23,9 @@ app.add_middleware(
 
 
 # ROUTES
-app.include_router(authentication_controller.router, prefix="/api/authenticate", tags=["login"])
 app.include_router(resource_controller.router, prefix = "/api/resource", tags=["resource"])
 app.include_router(user_controller.router, prefix= "/api/users", tags=["users"])
+app.include_router(user_profile_controller.router, prefix= "/api/profiles", tags=["user-profiles"])
 
 
 @app.get("/")

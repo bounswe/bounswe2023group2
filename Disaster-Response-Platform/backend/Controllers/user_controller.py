@@ -54,8 +54,8 @@ async def signup(currentUser :user_model.RegisterUser):
 
 # Login route
 @router.post("/login", response_model=user_model.Token)
-async def login_for_access_token(user: user_model.User): ##douıble check here
-    user = authentication_service.authenticate_user(user.username, user.password)
+async def login_for_access_token(username,password): ##douıble check here
+    user = authentication_service.authenticate_user(username, password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
