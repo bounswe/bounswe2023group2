@@ -12,22 +12,19 @@ def create_json_for_string(data: str, tag: str):
 
 def create_json_for_successful_data_fetch(data: pymongo.cursor, datatag: str):
     data_list = create_json_for_cursor(data, datatag)
-    status = create_json_for_string("OK", "status")
-    result_list = f"{status}, {data_list}"
+    result_list = f"{data_list}"
     result_list = "{" + result_list + "}"
     return result_list
 
 def create_json_for_simple(data: str, datatag: str):
-    status = create_json_for_string("OK", "status")
     data_result = create_json_for_string(data, datatag)
-    result_list = f"{status}, {data_result}"
+    result_list = f"{data_result}"
     result_list = "{" + result_list + "}"
     return result_list
 def create_json_for_error(error_message: str, error_detail: str):
-    status = create_json_for_string("Error", "status")
     error_m1 = create_json_for_string(error_message, "ErrorMessage")
     error_m2 = create_json_for_string(error_detail, "ErrorDetail")
-    result_list = f"{status}, {error_m1}, {error_m2}"
+    result_list = f"{error_m1}, {error_m2}"
     result_list = "{" + result_list + "}"
     return result_list
 
