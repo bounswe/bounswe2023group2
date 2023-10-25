@@ -7,3 +7,4 @@ myenv/
 **/mongo/
 package-lock.json
 backend/.idea/
+config.py

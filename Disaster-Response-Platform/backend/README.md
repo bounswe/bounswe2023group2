@@ -24,3 +24,7 @@ pip3 freeze > requirements.txt
 - We have `main.py` which stands for general application configurations and server init.
 - We include the routes(endpoints) in main file. 
 - The API service functions will be placed in files under `Services` folder.
+
+- To run the backend in docker:
+docker-compose up -d --build backend
+

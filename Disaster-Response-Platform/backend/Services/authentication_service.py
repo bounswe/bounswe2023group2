@@ -1,73 +1,93 @@
-from passlib.apps import postgres_context
 from Database.mongo import MongoDB
+from fastapi.security import OAuth2PasswordBearer
 from datetime import *
-import pymongo
-
-db = MongoDB.getInstance()
-session_alive_minutes = 720 #half a day
-
-def define_user_password_hash(username:str, password:str):
-    hash = postgres_context.hash(password, user=username)
-    return hash
-
-def delete_user(username):
-    query = {"username": username}
-    user_session_file = db.get_collection("user_sessions")
-    update_result = user_session_file.delete_many(query)
-
-    # if (update_result.deleted_count > 0):
-    #TODO A user with an open session deleted. Decisions?
+from fastapi import HTTPException, Depends, status
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from Models import user_model
+from typing import Annotated
+import config
 
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-    query = {"username": username}
-    user_file = db.get_collection("users")
-    update_result = user_file.delete_one(query)
 
-    return (update_result.deleted_count>0)
+SECRET_KEY = config.SECRET_KEY
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-def update_user_password(username, password):
-    hash = define_user_password_hash(username,password)
-    query = {"username": username}
-    update_password = {"$set": {"password": hash}}
+userDb = MongoDB.get_collection('authenticated_user')
+# Verify JWT token
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    user = get_user(username=username)
+    if user is None:
+        raise credentials_exception
+    return user.username
 
-    user_file = db.get_collection("users")
+# Create a JWT token
+def create_jwt_token(data: dict, expires_delta: timedelta):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + expires_delta
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
-    update_result = user_file.update_one(query, update_password)
-    return update_result.upserted_id
 
-def create_user_with_password(username, password):
-    hash = define_user_password_hash(username,password)
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
-    user = {
-        "username": username,
-        "password": hash
-    }
+def get_password_hash(password):
+    return pwd_context.hash(password)
 
-    user_file = db.get_collection("users")
+def get_user(username: str):
+    user_document = userDb.find_one({"username": username})
+    if user_document is not None:
+        
+        return user_model.UserInDB(**user_document)
 
-    user_id = user_file.insert_one(user)
+def authenticate_user(username: str, password: str):
+    user = get_user(username)
+    if not user:
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
+    return user
 
-    return user_id
+async def get_current_active_user(
+    current_user: user_model.User= Depends(get_current_user)
+):
+    if current_user.disabled:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
 
-def verify_user_password(username:str, password_plain:str):
-    query = {"username": username}
-    user_file = db.get_collection("users")
-    user = user_file.find_one(query)
-    if (user is not None):
-        return postgres_context.verify(password_plain, user["password"], user=username)
+def is_valid_phone_number(phone_number):
+   #can add more checks here
+    return len(phone_number) == 11 and phone_number.startswith("05")
 
-def verify_user_session(username:str, token:str):
-    query = {"username": username, "token": token}
-    user_session_file = db.get_collection("user_sessions")
-    user_session = user_session_file.find_one(query)
-    
-    if (user_session is not None):
-        session_date = user_session["start_date"]
-        current_time = datetime.now()
-        delta = current_time - session_date
-        if (delta.seconds < session_alive_minutes*60):
-            return True
+def is_valid_password(password):
+   #can add more checks here
+    if len(password) < 8:
+        return False
+    # if not any(char.isupper() for char in password):
+    #     return False
 
-    return False
-
+    # if not any(char.islower() for char in password):
+    #     return False
+    if not any(char.isdigit() for char in password):
+        return False
+    return True
+    # if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+    #     return False
