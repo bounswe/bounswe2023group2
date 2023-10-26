@@ -1,8 +1,11 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, Response
 from fastapi.middleware.cors import CORSMiddleware
+import Services.authentication_service as authentication_service
+from Services import resource_service
+from Services.build_API_returns import *
 
-from Controllers import authentication_controller, resource_controller, need_controller
-import Services.authentication_service
+from Controllers import resource_controller, user_controller, user_profile_controller
+
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
 from Services.build_API_returns import *
@@ -17,62 +20,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.middleware("http")
-async def check_authorization(request: Request, call_next):
-    if (not request.url.components.path.startswith("/api/")):
-        response = await call_next(request)
-        return response
 
-    if (request.url.components.path.startswith("/api/authenticate/login")):
-        response = await call_next(request)
-        return response
-
-#Temporary code
-    # So that the programmers may create users while testing.
-    # Will be commented out later
-    if (request.url.components.path.startswith("/api/authenticate/create-user")):
-        response = await call_next(request)
-        return response
-
-    valid_header = False
-    auth_header_value = request.headers.get('Authorization', None)
-    bearer_token=""
-    if auth_header_value:
-        parts = auth_header_value.split()
-        if (parts[0].lower() == 'bearer'):
-            if (len(parts) == 4):
-                bearer_token = parts[1]
-                if (parts[2].lower() == 'username'):
-                    user_name = parts[3]
-                    if (Services.authentication_service.verify_user_session(user_name, bearer_token)):
-                        valid_header = True
-
-    if (valid_header):
-        response = await call_next(request)
-        return response
-    else:
-        #TODO API calls not requesting authorization will be handled different
-        content = json.loads(create_json_for_error("Unauthorized  access", "No valid authorization in the API call"))
-        response = JSONResponse(status_code=HTTPStatus.UNAUTHORIZED,
-                                content=content
-                                )
-        return response
 
 # ROUTES
-app.include_router(authentication_controller.router, prefix="/api/authenticate", tags=["login"])
 app.include_router(resource_controller.router, prefix = "/api/resource", tags=["resource"])
 app.include_router(need_controller.router, prefix="/api/need", tags=["need"])
+app.include_router(user_controller.router, prefix= "/api/users", tags=["users"])
+app.include_router(user_profile_controller.router, prefix= "/api/profiles", tags=["user-profiles"])
+
 
 @app.get("/")
-async def root(request: Request):
-    smarty = False
-    auth_header_value = request.headers.get('Authorization', None)
-    if auth_header_value:
-        parts = auth_header_value.split()
-        if (parts[0].lower() == 'bearer'):
-            if (len(parts) == 2):
-                smarty = True
-    if smarty:
-        return {"message": "Hey. Smart with authorization ha"}
+async def root(some_parameter:str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+    if (some_parameter == "Err"):
+        response.status_code = HTTPStatus.NOT_ACCEPTABLE
+        err_json = create_json_for_error("Error is here", "You want err? We got it!")
+        return json.loads(err_json)
+    elif(some_parameter == "Simple"):
+        response.status_code = HTTPStatus.OK
+        simple_json = create_json_for_string("Simple input", "INPUTTYPE")
+        return json.loads(simple_json)
     else:
-        return {"message": "Hello Bigger Applications, check!"}
+        try:
+            resources = resource_service.get_resources("653942b132a6a932a869e411")
+            return json.loads(resources)
+        except ValueError as err:
+            err_json = create_json_for_error("Error", str(err))
+            response.status_code = HTTPStatus.NOT_FOUND
+            return json.loads(err_json)
+
+
+

@@ -74,4 +74,17 @@
     <string name="activity_item">Activity:</string>
     <string name="clothes">Clothes</string>
     <string name="date">Date:</string>
+
+    <string-array name="need_categories">
+        <item>Food</item>
+        <item>Clothes</item>
+        <item>Accomedation</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="need_food_types">
+        <item>Baby Food</item>
+        <item>Pasta</item>
+        <item>Other</item>
+    </string-array>
 </resources>
