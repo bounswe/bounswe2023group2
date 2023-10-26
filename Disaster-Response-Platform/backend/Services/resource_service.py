@@ -15,7 +15,7 @@ def create_resource(resource: Resource) -> str:
         raise ValueError("All fields are mandatory for creation.")
     insert_result = resources_collection.insert_one(resource.dict())
     if insert_result.inserted_id:
-        return "{\"resources\":[" + json.dumps(dict(resource)) + "]}"
+        return "{\"resources\":[" + json.dumps(dict(resource)) + "], \"inserted_id\": " + f"\"{insert_result.inserted_id}\"" + "}"
     else:
         raise ValueError("Resource could not be created")
 
