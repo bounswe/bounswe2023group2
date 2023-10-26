@@ -76,3 +76,15 @@
   },
   'ok': 1.0
 }
+{
+  resource: {
+    "created_by": "mehmetk",
+    "condition": "new",
+    "initialQuantity": 10,
+    "currentQuantity": 10,
+    "type": "Food",
+    "details": {
+      "SKT": "12-10-2023"
+    }
+  }
+}
