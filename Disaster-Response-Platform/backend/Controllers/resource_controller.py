@@ -12,6 +12,7 @@ router = APIRouter()
 @router.post("/", status_code=201)
 def create_resource(resource: Resource, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
     try:
+        resource.created_by = current_user
         resource_result = resource_service.create_resource(resource)
         response.status_code = HTTPStatus.OK
         return json.loads(resource_result)
