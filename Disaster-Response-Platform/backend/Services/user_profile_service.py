@@ -55,11 +55,19 @@ def set_user_optional_info(user_optional_info: UserOptionalInfo) -> str:
     if (info_from_db is None):
         eradicated_info = eradicate_optional_infO(user_optional_info)
         result = profile_optional_infos.insert_one(eradicated_info)
-        return result
+        if result.inserted_id:
+            eradicated_info["_id"] = str(eradicated_info["_id"])
+            return json.dumps(eradicated_info)
+        else:
+            raise ValueError("Unable to insert info")
     else:
         update_dict = eradicate_optional_infO(user_optional_info)
         set_Nones_to_old_values(update_dict, info_from_db)
         result = profile_optional_infos.update_one(query, {"$set": update_dict})
+        if result.modified_count > 0:
+            return json.dumps(update_dict)
+        else:
+            raise ValueError("Unable to update")
     #else: will be written
 
 def reset_user_optional_info(username:str, reset_field:str) -> str:
