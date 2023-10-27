@@ -29,7 +29,7 @@ class SkillLevel(str, Enum):
     expert = "expert"
 
 class UserOptionalInfo(BaseModel):
-    username: str
+    username: str = Field(default=None)
     date_of_birth: date = Field(default=None)
     nationality: str= Field(default=None)
     #profile_picture: bson = Field(default=None)
@@ -40,12 +40,12 @@ class UserOptionalInfo(BaseModel):
     Address: str= Field(default=None)
 
 class UserSocialMediaLinks(BaseModel):
-    username: str
+    username: str = Field(default=None)
     platform_name: str
     profile_URL: str
 
 class UserSkills(BaseModel):
-    username: str
+    username: str = Field(default=None)
     skill_definition: str
     skill_level: SkillLevel = Field(default=None)
     #skill_document: bson = Field(default=None)
