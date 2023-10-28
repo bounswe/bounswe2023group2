@@ -28,6 +28,7 @@ async def signup(currentUser : CreateUserRequest, response: Response):
     result= authentication_service.create_user(currentUser)
     if isinstance(result, HTTPException):
         response.status_code= result.status_code
+        return result
     return json.loads(result)
 
 @router.put("/update_user", status_code=200)
