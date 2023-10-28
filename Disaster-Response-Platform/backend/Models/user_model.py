@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, constr
 from enum import Enum
 
 
@@ -13,15 +13,26 @@ class User(BaseModel):
     username: str 
     email: EmailStr | None = None
     disabled: bool | None = None
-    password:str
+    password_hash:str
 
-class UserInDB(BaseModel):
-    username: str 
+class CreateUserRequest(BaseModel):
+    username: str
+    first_name: str
+    last_name: str
+    phone_number: constr(
+        min_length=11,
+        max_length=11,
+        regex=r"^\d{11}$"
+       
+    )
+    is_email_verified: bool = False
+    private_account: bool = False
     email: EmailStr | None = None
-    disabled: bool | None = None
-    hashed_password: str
+    password: constr(
+        min_length=8,
+    )
 
-class RegisterUser(User):
+class UserProfile(User):
     first_name: str
     last_name: str
     phone_number: str
@@ -29,11 +40,5 @@ class RegisterUser(User):
     private_account: bool = False
 
 
-class RegisteredUser(UserInDB):
-    first_name: str
-    last_name: str
-    phone_number: str
-    is_email_verified: bool = False
-    private_account: bool = False
 
 
