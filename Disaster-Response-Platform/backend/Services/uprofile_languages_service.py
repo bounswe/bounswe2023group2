@@ -33,8 +33,6 @@ def get_user_language(username:str = None, language:str = None) -> str:
             query = {}
 
     info_from_db = profile_languages.find(query, projection)
-    if (info_from_db.explain()["executionStats"]["nReturned"] == 0):
-        raise ValueError("User language does not exist")
     result = create_json_for_successful_data_fetch(info_from_db, "user_languages")
     return result
 

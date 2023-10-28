@@ -69,7 +69,8 @@ async def add_a_language_currentuser(user_language: UserLanguage, response: Resp
         return json.loads(result)
     except ValueError as err:
         response.status_code = HTTPStatus.NOT_FOUND
-        return create_json_for_error("User language not fetched", str(err))
+        err_json =  create_json_for_error("User language not updated", str(err))
+        return json.loads(err_json)
 
 @router.delete("/languages/delete-language", )
 async def delete_current_users_language(user_language: UserLanguage, response: Response, anyuser:str= None, current_username: str = Depends(authentication_service.get_current_user)):

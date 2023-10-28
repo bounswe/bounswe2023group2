@@ -26,8 +26,6 @@ def get_user_optional_info(username:str = None) -> str:
         query = {}
 
     info_from_db = profile_optional_infos.find(query, projection)
-    if (info_from_db.explain()["executionStats"]["nReturned"] == 0):
-        raise ValueError("User or optional info does not exist")
     result = create_json_for_successful_data_fetch(info_from_db, "user_optional_infos")
     return result
 
@@ -63,6 +61,7 @@ def set_user_optional_info(user_optional_info: UserOptionalInfo) -> str:
         result = profile_optional_infos.insert_one(eradicated_info)
         if result.inserted_id:
             eradicated_info["_id"] = str(eradicated_info["_id"])
+            eradicate_optional_infO(eradicated_info)
             return json.dumps(eradicated_info)
         else:
             raise ValueError("Unable to insert info")
