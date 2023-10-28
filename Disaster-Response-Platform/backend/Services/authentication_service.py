@@ -34,7 +34,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = get_user(username=username)
+    user = get_user(username)
     if user is None:
         raise credentials_exception
     return user.username
@@ -48,22 +48,23 @@ def create_jwt_token(data: dict, expires_delta: timedelta):
     return encoded_jwt
 
 def create_user(user: CreateUserRequest):
-        # Manual validation for required fields during creation
-    if not all([user.username, user.email,user.password, user.first_name, user.last_name, user.phone_number]):
-        raise ValueError("All fields are mandatory for user creation.")
+
+    if not (all([user.username,user.password, user.first_name, user.last_name] )) or not (user.phone_number or user.email) :
+        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,detail="Please fill all mandatory fields"  )
+       
     if (userDb.find_one({"username": user.username}) !=None) : #if there is a user already existed with current username
         return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Username already taken")
-    if (userDb.find_one({"email": user.email}) !=None):
+    
+    if (user.email and userDb.find_one({"email": user.email}) !=None):
         return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Email already taken")
     if (not is_valid_password(user.password)) : #if username is not existed in db but password contains less than 8 characters
         return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Password should include a digit")
-    if (not is_valid_phone_number(user.phone_number)): #if phone number is not valid
+    if (user.phone_number and not is_valid_phone_number(user.phone_number)): #if phone number is not valid
         return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Phone number must be 11 digits and start with '05'")
-
     hash= get_password_hash(user.password)
     user.password=hash
     insert_result = userDb.insert_one(user.dict())
-    print(user)
+    
     if insert_result.inserted_id:
         return "{\"Users\":[" + json.dumps(dict(user)) + "], \"inserted_id\": " + f"\"{insert_result.inserted_id}\"" + "}"
     else:
@@ -76,22 +77,29 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-def get_user(username: str):
-    user_document = userDb.find_one({"username": username})
+def get_user(username_or_email_or_phone: str):
+    #user_document = userDb.find_one({"username": username})
+    user_document = userDb.find_one({
+        "$or": [
+            {"username": username_or_email_or_phone},
+            {"email": username_or_email_or_phone},
+            {"phone_number": username_or_email_or_phone}
+        ]
+    })
     if user_document is not None:
-        
-        return User(**user_document)
+        return UserProfile(**user_document)
 
-def authenticate_user(username: str, password: str):
-    user = get_user(username)
+def authenticate_user(username_or_email_or_phone: str, password: str):
+    user = get_user(username_or_email_or_phone)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    
+    if not verify_password(password, user.password):
         return False
     return user
 
 async def get_current_active_user(
-    current_user: User= Depends(get_current_user)
+    current_user: LoginUserRequest= Depends(get_current_user)
 ):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")

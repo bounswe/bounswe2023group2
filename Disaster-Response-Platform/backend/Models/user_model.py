@@ -13,7 +13,13 @@ class User(BaseModel):
     username: str 
     email: EmailStr | None = None
     disabled: bool | None = None
-    password_hash:str
+    password:str
+    
+
+class LoginUserRequest(BaseModel):
+    username_or_email_or_phone: str
+    password:str
+   
 
 class CreateUserRequest(BaseModel):
     username: str
@@ -24,7 +30,7 @@ class CreateUserRequest(BaseModel):
         max_length=11,
         regex=r"^\d{11}$"
        
-    )
+    ) = None
     is_email_verified: bool = False
     private_account: bool = False
     email: EmailStr | None = None
@@ -35,7 +41,7 @@ class CreateUserRequest(BaseModel):
 class UserProfile(User):
     first_name: str
     last_name: str
-    phone_number: str
+    phone_number: str | None= None
     is_email_verified: bool = False
     private_account: bool = False
 
