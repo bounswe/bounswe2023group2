@@ -4,18 +4,20 @@ from bson.objectid import ObjectId
 
 from Services.build_API_returns import *
 
+
 # Get the resources collection using the MongoDB class
 resources_collection = MongoDB.get_collection('resources')
 
 def create_resource(resource: Resource) -> str:
     # Manual validation for required fields during creation
-    if not all([resource._id, resource.created_by, resource.condition, 
+    if not all([resource.created_by, resource.condition,
                 resource.initialQuantity, resource.currentQuantity,
                 resource.type, resource.details]):
         raise ValueError("All fields are mandatory for creation.")
     insert_result = resources_collection.insert_one(resource.dict())
+    #check the result to change from
     if insert_result.inserted_id:
-        return "{\"resources\":[" + json.dumps(dict(resource)) + "], \"inserted_id\": " + f"\"{insert_result.inserted_id}\"" + "}"
+        return "{\"resources\":[{\"_id\":" + f"\"{insert_result.inserted_id}\"" + "}]}"
     else:
         raise ValueError("Resource could not be created")
 
@@ -66,11 +68,12 @@ def update_resource(resource_id: str, resource: Resource) -> Resource:
         raise ValueError(f"Resource id {resource_id} not found")
 
 
-
+# Returning the deleted id would be nice
 def delete_resource(resource_id: str):
     try:
         d = resources_collection.delete_one({"_id": ObjectId(resource_id)})
         if d.deleted_count == 0:
             raise
+        return "{\"resources\":[{\"_id\":" + f"\"{resource_id}\"" + "}]}"
     except:
         raise ValueError(f"Resource {resource_id} cannot be deleted")

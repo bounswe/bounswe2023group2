@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Response, Depends
 from http import HTTPStatus
 from Models.user_profile_model import UserOptionalInfo
-import Services.user_profile_service as user_profile_service
+import Services.uprofile_optinfo_service as user_profile_service
 from Services.build_API_returns import *
 import Services.authentication_service as authentication_service
 
 router = APIRouter()
 
-def general_user_optional_info(response, username: str = Depends(authentication_service.get_current_user)) ->json:
+def general_user_optional_info(response, username:str) ->json:
     try:
         json_result = user_profile_service.get_user_optional_info(username)
         response.status_code = HTTPStatus.OK
@@ -24,17 +24,17 @@ async def get_user_optional_info(response: Response, username: str = Depends(aut
 
 @router.get("/all-user-optional-infos", )
 async def get_all_user_optional_info(response: Response, username: str = Depends(authentication_service.get_current_user)):
-    return general_user_optional_info(response=response)
+    return general_user_optional_info(response=response, username=None)
 
 
 @router.post("/set-user-optional-info", )
 async def set_user_optional_info(user_optional_info: UserOptionalInfo, response: Response, username: str = Depends(authentication_service.get_current_user)):
     try:
-        user_profile_service.set_user_optional_info(user_optional_info)
+        user_optional_info.username  = username
+        result = user_profile_service.set_user_optional_info(user_optional_info)
+        json_result = json.loads(result)
         response.status_code = HTTPStatus.OK
-        json_result = create_json_for_simple("Optional Info updated for user: " + user_optional_info.username,
-                                             "Info updated")
-        return json.loads(json_result)
+        return json_result
     except ValueError as val_error:
         response.status_code = HTTPStatus.NOT_FOUND
         json_result = create_json_for_error("Optional user info set failed", str(val_error))
