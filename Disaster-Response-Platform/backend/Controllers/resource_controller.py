@@ -10,7 +10,7 @@ from Services.build_API_returns import create_json_for_error
 router = APIRouter()
 
 @router.post("/", status_code=201)
-def create_resource(resource: Resource, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def create_resource(resource: Resource, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         resource.created_by = current_user
         resource_result = resource_service.create_resource(resource)
@@ -22,7 +22,7 @@ def create_resource(resource: Resource, response:Response, current_user: str = D
         return json.loads(err_json)
 
 @router.get("/{resource_id}")
-def get_resource(resource_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def get_resource(resource_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         resource = resource_service.get_resource_by_id(resource_id)
         response.status_code = HTTPStatus.OK
@@ -33,7 +33,7 @@ def get_resource(resource_id: str, response:Response, current_user: str = Depend
         return json.loads(err_json)
 
 @router.get("/")
-def get_all_resources(response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def get_all_resources(response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         resources = resource_service.get_resources()
         response.status_code = HTTPStatus.OK
@@ -44,7 +44,7 @@ def get_all_resources(response:Response, current_user: str = Depends(authenticat
         return json.loads(err_json)
 
 @router.put("/{resource_id}")
-def update_resource(resource_id: str, resource: Resource, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def update_resource(resource_id: str, resource: Resource, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         updated_resource = resource_service.update_resource(resource_id, resource)
         if updated_resource:
@@ -60,7 +60,7 @@ def update_resource(resource_id: str, resource: Resource, response:Response, cur
 
     
 @router.delete("/{resource_id}")
-def delete_resource(resource_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def delete_resource(resource_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         resource_service.delete_resource(resource_id)
         response.status_code=HTTPStatus.NO_CONTENT
