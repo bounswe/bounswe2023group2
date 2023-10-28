@@ -33,9 +33,15 @@ def get_user_optional_info(username:str = None) -> str:
 
 
 def eradicate_optional_infO(user_optional_info:UserOptionalInfo):
-    return_dict = user_optional_info.dict()
-    if return_dict["date_of_birth"] is not None:
-        return_dict["date_of_birth"] = datetime.datetime.strptime(str(return_dict["date_of_birth"]),  "%Y-%m-%d")
+    if type(user_optional_info) == UserOptionalInfo:
+        return_dict = user_optional_info.dict()
+        if return_dict["date_of_birth"] is not None:
+            return_dict["date_of_birth"] = datetime.datetime.strptime(str(return_dict["date_of_birth"]),  "%Y-%m-%d")
+    else:
+        return_dict = user_optional_info
+        if return_dict["date_of_birth"] is not None:
+            return_dict["date_of_birth"] = str(return_dict["date_of_birth"])
+
     return return_dict
 
 def set_user_optional_info(user_optional_info: UserOptionalInfo) -> str:
@@ -65,10 +71,10 @@ def set_user_optional_info(user_optional_info: UserOptionalInfo) -> str:
         set_Nones_to_old_values(update_dict, info_from_db)
         result = profile_optional_infos.update_one(query, {"$set": update_dict})
         if result.modified_count > 0:
+            eradicate_optional_infO(update_dict)
             return json.dumps(update_dict)
         else:
             raise ValueError("Unable to update")
-    #else: will be written
 
 def reset_user_optional_info(username:str, reset_field:str) -> str:
     query = {"username": username}
@@ -81,6 +87,7 @@ def reset_user_optional_info(username:str, reset_field:str) -> str:
     if reset_field in info_from_db.keys():
         info_from_db[reset_field] = None
         result = profile_optional_infos.update_one(query, {"$set": info_from_db})
+        return info_from_db
     else:
         raise ValueError("User or optional info does not exist")
 
@@ -93,4 +100,8 @@ def delete_user_optional_info(username:str) -> str:
         raise ValueError("User optional info does not exist")
 
     result = profile_optional_infos.delete_one(query)
-    return create_json_for_simple(username, "USEROPTIONALINFODELETED")
+    if result.deleted_count:
+        info_from_db["_id"] = str(info_from_db["_id"])
+        return json.dumps(info_from_db)
+    else:
+        raise ValueError("User optional cannot be deleted")
