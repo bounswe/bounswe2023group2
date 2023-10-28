@@ -46,5 +46,24 @@ class UserProfile(User):
     private_account: bool = False
 
 
+class UserInfo(BaseModel):
+    username: str 
+    email: EmailStr | None = None
+    first_name: str
+    last_name: str
+    phone_number: str | None= None
+    is_email_verified: bool = False
+    private_account: bool = False
 
 
+class UpdateUserRequest(BaseModel):
+    email: EmailStr | None = None
+    first_name: str
+    last_name: str
+    private_account: bool = False
+    phone_number: constr(
+        min_length=11,
+        max_length=11,
+        regex=r"^\d{11}$"
+       
+    ) = None

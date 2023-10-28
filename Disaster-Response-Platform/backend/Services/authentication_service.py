@@ -37,7 +37,50 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     user = get_user(username)
     if user is None:
         raise credentials_exception
-    return user.username
+    return user
+
+def get_current_username(current_user: LoginUserRequest= Depends(get_current_user)):
+    return current_user.username
+
+def update_user(username: str, updated_user: UpdateUserRequest):
+ 
+    
+    if updated_user.email != userDb[username]["email"] :
+        query = {"username": username}
+        update_operation = {"$set": {"is_email_verified": False}}
+        result = userDb.update_one(query, update_operation)
+    if updated_user.email is not None:
+        query = {"username": username}
+        update_operation = {"$set": {"email": updated_user.email}}
+        result = userDb.update_one(query, update_operation)
+    if updated_user.first_name is not None:
+        query = {"username": username}
+        update_operation = {"$set": {"first_name": updated_user.first_name}}
+        result = userDb.update_one(query, update_operation)
+    if updated_user.last_name is not None:
+        query = {"username": username}
+        update_operation = {"$set": {"last_name": updated_user.last_name}}
+        result = userDb.update_one(query, update_operation)
+    if updated_user.private_account is not None:
+        query = {"username": username}
+        update_operation = {"$set": {"private_account": updated_user.private_account}}
+        result = userDb.update_one(query, update_operation)
+    if updated_user.phone_number is not None:
+        query = {"username": username}
+        update_operation = {"$set": {"phone_number": updated_user.phone_number}}
+        result = userDb.update_one(query, update_operation)
+    user = get_user(username)
+    user_info= UserInfo(username=user.username,
+                        email=user.email,
+                        first_name=user.first_name,
+                        last_name=user.last_name,
+                        phone_number=user.phone_number,
+                        is_email_verified=user.is_email_verified,
+                        private_account=user.private_account)
+
+    return user_info
+
+
 
 # Create a JWT token
 def create_jwt_token(data: dict, expires_delta: timedelta):
@@ -97,6 +140,7 @@ def authenticate_user(username_or_email_or_phone: str, password: str):
     if not verify_password(password, user.password):
         return False
     return user
+
 
 async def get_current_active_user(
     current_user: LoginUserRequest= Depends(get_current_user)
