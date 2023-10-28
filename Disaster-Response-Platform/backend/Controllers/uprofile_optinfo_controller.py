@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response, Depends
 from http import HTTPStatus
 from Models.user_profile_model import UserOptionalInfo
-import Services.user_profile_service as user_profile_service
+import Services.uprofile_optinfo_service as user_profile_service
 from Services.build_API_returns import *
 import Services.authentication_service as authentication_service
 
@@ -24,7 +24,7 @@ async def get_user_optional_info(response: Response, username: str = Depends(aut
 
 @router.get("/all-user-optional-infos", )
 async def get_all_user_optional_info(response: Response, username: str = Depends(authentication_service.get_current_user)):
-    return general_user_optional_info(response=response)
+    return general_user_optional_info(response=response, username=None)
 
 
 @router.post("/set-user-optional-info", )
