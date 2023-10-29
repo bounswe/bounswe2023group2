@@ -6,8 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
+import com.example.disasterresponseplatform.data.models.authModels.RegisterRequestBody
+import com.example.disasterresponseplatform.data.models.authModels.SignInRequestBody
+import com.example.disasterresponseplatform.data.models.authModels.SignUpResponseBody
+import com.example.disasterresponseplatform.data.models.authModels.ValidationErrorResponse
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
-    // Mutable LiveData for username and password
+    private val _email = MutableLiveData<String>()
     private val _username = MutableLiveData<String>()
     private val _password = MutableLiveData<String>()
 
@@ -41,6 +50,18 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
     private val _signUpValidation = MutableLiveData<Int>()
     val signUpValidation: LiveData<Int> get() = _signUpValidation
+
+    private val _signUpError = MutableLiveData<String?>()
+    val signUpError: LiveData<String?> = _signUpError
+
+    private val _signUpSuccessful = MutableLiveData<Boolean>()
+    val signUpSuccessful: LiveData<Boolean> = _signUpSuccessful
+
+    private val _signInError = MutableLiveData<String?>()
+    val signInError: LiveData<String?> = _signInError
+
+    private val _signInSuccessful = MutableLiveData<Boolean>()
+    val signInSuccessful: LiveData<Boolean> = _signInSuccessful
 
     // Update username and password from the UI
     fun updateSignUpFullName(signUpFullName: String) {
@@ -65,6 +86,9 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
     fun updateUsername(username: String) {
         _username.value = username
+    }
+    fun updateEmail(email: String) {
+        _email.value = email
     }
 
     fun updatePassword(password: String) {
@@ -107,53 +131,77 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
     fun sendSignInRequest() {
         val headers = mapOf(
-            // Not needed for log in
-            //"Authorization" to "Bearer YOUR_ACCESS_TOKEN",
             "Content-Type" to "application/json"
         )
 
-        val requestBody: Map<String, Any> = mapOf(
-            "username" to _username.value!!,
-            "password" to _password.value!!,
-            // ... add as many key-value pairs as needed
-        )
+        val signInRequestBody = _username.value?.let {
+            _password.value?.let { it1 ->
+                _email.value?.let { it2 ->
+                    SignInRequestBody(
+                        username = it,
+                        email = it2,
+                        password = it1,
+                        disabled = true
+                    )
+                }
+            }
+        }
+
+        val gson = Gson()
+        val json = gson.toJson(signInRequestBody)
+        val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+
+        Log.d("requestBody", json.toString())
+
         networkManager.makeRequest(
-            endpoint = Endpoint.DATA,
-            requestType = RequestType.GET,
+            endpoint = Endpoint.LOGIN,
+            requestType = RequestType.POST,
             headers = headers,
-            callback = object : Callback<Response<ResponseBody>> {
+            requestBody = requestBody,
+            callback = object : Callback<ResponseBody> {
                 override fun onResponse(
-                    call: Call<Response<ResponseBody>>,
-                    response: Response<Response<ResponseBody>>
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
                 ) {
                     Log.d("ResponseInfo", "Status Code: ${response.code()}")
                     Log.d("ResponseInfo", "Headers: ${response.headers()}")
 
                     if (response.isSuccessful) {
-                        val responseBody = response.body()?.body() // Access the inner ResponseBody
-                        if (responseBody != null) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
                             try {
-                                val content = responseBody.string()
-
-                                Log.d("ResponseSuccess", "Body: $content")
+                                Log.d("ResponseSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val signUpResponse = gson.fromJson(rawJson, SignUpResponseBody::class.java)
+                                Log.d("Sign In Access Token", signUpResponse.accessToken + ".")
+                                DiskStorageManager.setKeyValue("token", signUpResponse.accessToken)
+                                _signInSuccessful.value = true
                             } catch (e: IOException) {
-                                // Handle IOException if reading the response body fails
                                 Log.e("ResponseError", "Error reading response body: ${e.message}")
                             }
                         } else {
                             Log.d("ResponseSuccess", "Body is null")
                         }
                     } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            try {
+                                val errorResponse = gson.fromJson(errorBody, ValidationErrorResponse::class.java)
+                                Log.d("Error Message", errorResponse.detail[0].message)
+                                _signInError.value = errorResponse.detail[0].message
+                            } catch (e: JsonSyntaxException) {
+                                Log.e("ResponseError", "Error parsing error body: ${e.message}")
+                            }
+                        }
                         Log.d("ResponseError", "Error Message: ${response.message()}")
                     }
                 }
 
-                override fun onFailure(call: Call<Response<ResponseBody>>, t: Throwable) {
-                    // Handle the failure case
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.e("ResponseError", "Request failed: ${t.message}")
                 }
             }
         )
-
     }
 
     fun sendSignUpRequest() {
@@ -163,34 +211,56 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
             "Content-Type" to "application/json"
         )
 
-        val requestBody: Map<String, Any> = mapOf(
-            "fullname" to _signUpFullName!!,
-            "username" to _signUpUsername,
-            "email" to _signUpEmail,
-            "password" to _signUpPassword,
-            "passwordConfirmed" to _signUpConfirmPassword,
+        // Safely unwrap the values
+        val username = _signUpUsername.value ?: "defaultUsername"
+        val email = _signUpEmail.value ?: "defaultEmail@example.com"
+        val password = _signUpPassword.value ?: "defaultPassword"
+        val fullName = _signUpFullName.value ?: "Default Name"
+        val phoneNumber = "05346710755" ?: "defaultPhoneNumber"
 
-            // ... add as many key-value pairs as needed
+        // Splitting the full name into first name and last name
+        val parts = fullName.split(" ", limit = 2)
+        val firstName = parts.getOrElse(0) { "" }
+        val lastName = parts.getOrElse(1) { "" }
+
+        val registerRequestBody = RegisterRequestBody(
+            username = username,
+            email = email,
+            disabled = true,
+            password = password,
+            firstName = firstName,
+            lastName = lastName,
+            phoneNumber = phoneNumber,
+            isEmailVerified = false,
+            privateAccount = false
         )
+        val gson = Gson()
+        val json = gson.toJson(registerRequestBody)
+        val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+
+        Log.d("requestBody", json.toString())
+
         networkManager.makeRequest(
-            endpoint = Endpoint.DATA,
+            endpoint = Endpoint.SIGNUP,
             requestType = RequestType.POST,
             headers = headers,
             requestBody = requestBody,
-            callback = object : Callback<Response<ResponseBody>> {
+            callback = object : Callback<ResponseBody> {
                 override fun onResponse(
-                    call: Call<Response<ResponseBody>>,
-                    response: Response<Response<ResponseBody>>
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
                 ) {
                     Log.d("ResponseInfo", "Status Code: ${response.code()}")
                     Log.d("ResponseInfo", "Headers: ${response.headers()}")
 
                     if (response.isSuccessful) {
-                        val responseBody = response.body()?.body() // Access the inner ResponseBody
-                        if (responseBody != null) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
                             try {
-                                val content = responseBody.string()
-                                Log.d("ResponseSuccess", "Body: $content")
+                                Log.d("ResponseSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val signUpResponse = gson.fromJson(rawJson, SignUpResponseBody::class.java)
+                                Log.d("Access Token", signUpResponse.accessToken + "asdas")
                             } catch (e: IOException) {
                                 // Handle IOException if reading the response body fails
                                 Log.e("ResponseError", "Error reading response body: ${e.message}")
@@ -199,11 +269,32 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                             Log.d("ResponseSuccess", "Body is null")
                         }
                     } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            try {
+                                val gson = Gson()
+                                val errorResponse = gson.fromJson(errorBody, ValidationErrorResponse::class.java)
+                                Log.d("Error Message", errorResponse.detail[0].message)
+                                _signUpError.value = errorResponse.detail[0].message
+                            } catch (e: JsonSyntaxException) {
+                                // Handle JSON parsing error
+                                Log.e("ResponseError", "Error parsing error body: ${e.message}")
+                            }
+                        }
+
+                        if (errorBody != null) {
+                            try {
+                                Log.d("ResponseSuccess", "Body: $errorBody")
+                            } catch (e: IOException) {
+                                // Handle IOException if reading the response body fails
+                                Log.e("ResponseError", "Error reading response body: ${e.message}")
+                            }
+                        }
                         Log.d("ResponseError", "Error Message: ${response.message()}")
                     }
                 }
 
-                override fun onFailure(call: Call<Response<ResponseBody>>, t: Throwable) {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     // Handle the failure case
                 }
             }
