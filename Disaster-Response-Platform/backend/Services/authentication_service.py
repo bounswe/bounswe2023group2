@@ -65,7 +65,11 @@ def update_user(username: str, updated_user: UpdateUserRequest):
         query = {"username": username}
         update_operation = {"$set": {"private_account": updated_user.private_account}}
         result = userDb.update_one(query, update_operation)
+
     if updated_user.phone_number is not None:
+        if (not is_valid_phone_number(updated_user.phone_number)): #if phone number is not valid
+            raise ValueError("Phone number must be 11 digits and start with '05'")
+        
         query = {"username": username}
         update_operation = {"$set": {"phone_number": updated_user.phone_number}}
         result = userDb.update_one(query, update_operation)
@@ -93,23 +97,30 @@ def create_jwt_token(data: dict, expires_delta: timedelta):
 def create_user(user: CreateUserRequest):
 
     if not (all([user.username,user.password, user.first_name, user.last_name] )) or not (user.phone_number or user.email) :
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,detail="Please fill all mandatory fields"  )
+        raise ValueError("Please fill all mandatory fields")     
        
     if (userDb.find_one({"username": user.username}) !=None) : #if there is a user already existed with current username
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Username already taken")
+        raise ValueError("Username already taken")
     
     if (user.email and userDb.find_one({"email": user.email}) !=None):
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Email already taken")
+        raise ValueError("Email already taken")
+       
     if (not is_valid_password(user.password)) : #if username is not existed in db but password contains less than 8 characters
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Password should include a digit")
+        raise ValueError("Password should include a digit")
+    
     if (user.phone_number and not is_valid_phone_number(user.phone_number)): #if phone number is not valid
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Phone number must be 11 digits and start with '05'")
+        raise ValueError("Phone number must be 11 digits and start with '05'")
+        
     hash= get_password_hash(user.password)
     user.password=hash
     insert_result = userDb.insert_one(user.dict())
     
     if insert_result.inserted_id:
-        return "{\"Users\":[" + json.dumps(dict(user)) + "], \"inserted_id\": " + f"\"{insert_result.inserted_id}\"" + "}"
+        success_response = SignUpSuccess(
+            user=dict(user),
+            inserted_id=str(insert_result.inserted_id)  # Assuming 'result' is the inserted_id
+        )
+        return success_response
     else:
         raise ValueError("User could not be created")
 

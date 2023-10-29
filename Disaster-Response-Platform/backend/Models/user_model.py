@@ -1,6 +1,6 @@
-from pydantic import BaseModel, EmailStr, constr
+from pydantic import BaseModel, EmailStr, constr, Field
 from enum import Enum
-
+from typing import Dict, Any
 
 class Token(BaseModel):
     access_token: str
@@ -19,7 +19,9 @@ class User(BaseModel):
 class LoginUserRequest(BaseModel):
     username_or_email_or_phone: str
     password:str
-   
+class Error(BaseModel):
+    ErrorMessage: str
+    ErrorDetail: str
 
 class CreateUserRequest(BaseModel):
     username: str
@@ -58,8 +60,8 @@ class UserInfo(BaseModel):
 
 class UpdateUserRequest(BaseModel):
     email: EmailStr | None = None
-    first_name: str
-    last_name: str
+    first_name: str | None =None
+    last_name: str  | None= None
     private_account: bool = False
     phone_number: constr(
         min_length=11,
@@ -67,3 +69,7 @@ class UpdateUserRequest(BaseModel):
         regex=r"^\d{11}$"
        
     ) = None
+
+class SignUpSuccess(BaseModel):
+    user: dict
+    inserted_id: str
