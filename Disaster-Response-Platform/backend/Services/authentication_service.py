@@ -65,7 +65,11 @@ def update_user(username: str, updated_user: UpdateUserRequest):
         query = {"username": username}
         update_operation = {"$set": {"private_account": updated_user.private_account}}
         result = userDb.update_one(query, update_operation)
+
     if updated_user.phone_number is not None:
+        if (not is_valid_phone_number(updated_user.phone_number)): #if phone number is not valid
+            raise ValueError("Phone number must be 11 digits and start with '05'")
+        
         query = {"username": username}
         update_operation = {"$set": {"phone_number": updated_user.phone_number}}
         result = userDb.update_one(query, update_operation)
