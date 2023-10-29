@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from http import HTTPStatus
 import json
 import config
+from typing import Union
 from Database.mongo import MongoDB
 from Models.user_model import *
 from Services.build_API_returns import create_json_for_error
@@ -22,15 +23,21 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 userDb = MongoDB.get_collection('authenticated_user')
 
 
-@router.post("/signup", status_code=status.HTTP_201_CREATED)
+@router.post("/signup", responses={
+    status.HTTP_201_CREATED: {"model": SignUpSuccess},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
 async def signup(currentUser : CreateUserRequest, response: Response):
     try:
         result= authentication_service.create_user(currentUser)
-        return json.loads(result)
+
+        return result
     except ValueError as err:
-        err_json = create_json_for_error("Signup error", str(err))
+        error= Error(ErrorMessage="Signup failed", ErrorDetail= str(err))
         response.status_code= HTTPStatus.BAD_REQUEST
-        return json.loads(err_json)
+        response.response_model= Error
+
+        return error
    
 
 @router.put("/update-user", status_code=200)

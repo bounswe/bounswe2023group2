@@ -112,7 +112,11 @@ def create_user(user: CreateUserRequest):
     insert_result = userDb.insert_one(user.dict())
     
     if insert_result.inserted_id:
-        return "{\"Users\":[" + json.dumps(dict(user)) + "], \"inserted_id\": " + f"\"{insert_result.inserted_id}\"" + "}"
+        success_response = SignUpSuccess(
+            user=dict(user),
+            inserted_id=str(insert_result.inserted_id)  # Assuming 'result' is the inserted_id
+        )
+        return success_response
     else:
         raise ValueError("User could not be created")
 
