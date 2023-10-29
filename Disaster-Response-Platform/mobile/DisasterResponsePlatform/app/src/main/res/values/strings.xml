@@ -74,6 +74,7 @@
     <string name="activity_item">Activity:</string>
     <string name="clothes">Clothes</string>
     <string name="date">Date:</string>
+    <string name="add_example_user_data">Add Example User Data</string>
     <string name="select_sub_type">Select or Enter Sub-Type <font color='#B00020'>*</font></string>
     <string name="select_need_type">Select or Enter Need Type <font color='#B00020'>*</font></string>
     <string name="select_or_enter_location">Select or Enter Location <font color='#B00020'>*</font></string>

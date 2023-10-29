@@ -8,10 +8,13 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.need.NeedDao
+import com.example.disasterresponseplatform.data.database.userdata.UserData
+import com.example.disasterresponseplatform.data.database.userdata.UserDataDao
 
-@Database(entities = [Need::class], version = DatabaseInfo.DATABASE_VERSION, exportSchema = false)
+@Database(entities = [Need::class, UserData::class], version = DatabaseInfo.DATABASE_VERSION, exportSchema = false)
 abstract class DarpDB: RoomDatabase() {
     abstract val needDao: NeedDao
+    abstract val userDataDao: UserDataDao
 
     // it's static object in this way you can call getInstance method without any initialization
     companion object{

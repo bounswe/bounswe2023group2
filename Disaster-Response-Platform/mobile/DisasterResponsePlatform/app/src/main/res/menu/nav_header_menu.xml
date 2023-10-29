@@ -21,5 +21,9 @@
         android:id="@+id/miAddNeed"
         android:title="@string/add_need"/>
 
+    <item
+        android:id="@+id/miAddUserData"
+        android:title="@string/add_example_user_data"/>
+
 
 </menu>

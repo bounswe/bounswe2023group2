@@ -3,6 +3,7 @@ package com.example.disasterresponseplatform.dependencyInjection
 import android.app.Application
 import com.example.disasterresponseplatform.data.database.DarpDB
 import com.example.disasterresponseplatform.data.repositories.NeedRepository
+import com.example.disasterresponseplatform.data.repositories.UserDataRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,4 +42,8 @@ class AppModule {
     @Provides
     @Singleton
     fun provideNeedRepository(database: DarpDB): NeedRepository = NeedRepository(database.needDao)
+
+    @Provides
+    @Singleton
+    fun provideUserDataRepository(database: DarpDB): UserDataRepository = UserDataRepository(database.userDataDao)
 }
