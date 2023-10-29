@@ -5,10 +5,7 @@ import Services.uprofile_skills_service as uprofile_skills_service
 from Services.build_API_returns import *
 import Services.authentication_service as authentication_service
 
-
-
 router = APIRouter()
-
 
 @router.get("/skills", )
 async def get_user_skill_level(response: Response, anyuser:str= None, skill:str = None, current_username: str = Depends(authentication_service.get_current_username)):
