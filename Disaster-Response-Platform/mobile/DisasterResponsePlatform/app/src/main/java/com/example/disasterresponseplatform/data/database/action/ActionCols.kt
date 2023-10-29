@@ -5,7 +5,6 @@ class ActionCols {
     companion object{
         const val id: String = "id"
         const val type: String = "type"
-        const val subTypeList: String = "subTypeList"
         const val creationTime: String = "creationTime"
         const val creatorID: String = "creatorID"
         const val startLocation: String = "startLocation"

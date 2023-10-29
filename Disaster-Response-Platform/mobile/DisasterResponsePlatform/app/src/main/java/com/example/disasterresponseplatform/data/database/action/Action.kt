@@ -14,8 +14,6 @@ data class Action(
     val creatorID: String,
     @ColumnInfo(name = ActionCols.type)
     val type: String,
-    @ColumnInfo(name = ActionCols.subTypeList)
-    val subType: String,
     @ColumnInfo(name = ActionCols.creationTime)
     val creationTime: String?,
     @ColumnInfo(name = ActionCols.quantity)
