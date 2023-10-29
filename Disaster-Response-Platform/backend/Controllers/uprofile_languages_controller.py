@@ -24,63 +24,6 @@ async def get_user_and_language_level(response: Response, anyuser:str= None, lan
         - if anyuser is None and language is set, a list of users (in Language info model) will be retured
         - if anyuser is set but language is None, the language skills of anyuser will be returned
 
-    **Returns**
-
-    In a structured json
-    - **username**
-    - **language**: Any language like German, Spanish, Zulu etc.
-    - **language_level**: One of     beginner, intermediate, advanced. native
-
-    Like:
-    ~~~
-    {
-        "user_languages": [
-            {
-                "username": "mehmetk",
-                "language": "Turkish",
-                "language_level": "native"
-            }
-        ]
-    }
-    ~~~
-    Note that any result with no data will return with success but will be an empty array. Like:
-    ~~~
-    {
-        "user_languages": []
-    }
-    ~~~
-
-    **Error conditions**
-
-    The responce code of the API result is set according to the error.
-
-    Possible codes for structured response for now is:
-    - **HTTPStatus.NOT_FOUND** (404) <br>
-    And the result is formatted like<br>
-    ~~~
-    {
-      "ErrorMessage": "Login required",
-      "ErrorDetails": "Login to create resources"
-    }
-    ~~~
-
-    - **HTTPStatus.UNPROCESSABLE_ENTITY** (422)<br>
-    This is FastAPI response when parameters do not comply with the data model<br>
-    The result is formatted like<br>
-    ~~~
-    {
-      "detail": [
-        {
-          "loc": [
-            "string",
-            0
-          ],
-          "msg": "string",
-          "type": "string"
-        }
-      ]
-    }
-    ~~~
     """
     if anyuser is None:
         if language is None:
@@ -110,9 +53,6 @@ async def add_a_language_currentuser(user_language: UserLanguage, response: Resp
         - **language**: Any language like German, Spanish, Zulu etc.
         - **language_level**: One of     beginner, intermediate, advanced. native
 
-    **Returns**
-
-    - **Language Info**: As set by the operation
     """
 
     try:
@@ -135,8 +75,6 @@ async def delete_current_users_language(user_language: UserLanguage, response: R
     - **Language info++: such that:
         - **language**: Any language like German, Spanish, Zulu etc.
 
-    **Returns**
-    - **Language Info**: The deleted info (without skill)
     """
 
     try:
@@ -146,6 +84,5 @@ async def delete_current_users_language(user_language: UserLanguage, response: R
         return json.loads(result)
     except ValueError as err:
         response.status_code = HTTPStatus.NOT_FOUND
-        return create_json_for_error("User language not fetched", str(err))
-
-
+        err_json =  create_json_for_error("User language not fetched", str(err))
+        return json.loads(err_json)

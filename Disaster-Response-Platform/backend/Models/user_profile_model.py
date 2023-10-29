@@ -34,6 +34,12 @@ class LanguageLevel(str, Enum):
     advanced = "advanced"
     native = "native"
 
+class ProfessionLevel(str, Enum):
+    amateur = "amateur"
+    pro = "pro"
+    certified_pro = "certified pro"
+
+
 class UserOptionalInfo(BaseModel):
     username: str = Field(default=None)
     date_of_birth: date = Field(default=None)
@@ -47,8 +53,8 @@ class UserOptionalInfo(BaseModel):
 
 class UserSocialMediaLink(BaseModel):
     username: str = Field(default=None)
-    platform_name: str
-    profile_URL: str
+    platform_name: str = Field(default=None)
+    profile_URL: str = Field(default=None)
 
 class UserSkill(BaseModel):
     username: str = Field(default=None)
@@ -60,3 +66,8 @@ class UserLanguage(BaseModel):
     username: str = Field(default=None)
     language: str
     language_level: LanguageLevel = Field(default=None)
+
+class UserProfession(BaseModel):
+    username: str = Field(default=None)
+    profession: str
+    profession_level: ProfessionLevel = Field(default=None)
