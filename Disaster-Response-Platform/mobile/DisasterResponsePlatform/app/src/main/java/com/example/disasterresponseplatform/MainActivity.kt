@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.userdata.UserData
+import com.example.disasterresponseplatform.data.database.action.Action
 import com.example.disasterresponseplatform.data.enums.Urgency
 import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
@@ -19,6 +20,7 @@ import com.example.disasterresponseplatform.ui.HomePageFragment
 import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
+import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
 import com.example.disasterresponseplatform.ui.authentication.RegistrationFragment
 import com.example.disasterresponseplatform.ui.map.MapFragment
@@ -42,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var needViewModel: NeedViewModel
     private lateinit var userDataViewModel: UserDataViewModel
+    private lateinit var actionViewModel: ActionViewModel
 
 
     private lateinit var toggle: ActionBarDrawerToggle
@@ -64,6 +67,9 @@ class MainActivity : AppCompatActivity() {
         val getUserDataViewModel: UserDataViewModel by viewModels()
         userDataViewModel = getUserDataViewModel
 
+        val getActionViewModel: ActionViewModel by viewModels()
+        actionViewModel = getActionViewModel
+
     }
 
     private fun tryNeedViewModel(){
@@ -84,6 +90,13 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this,email,Toast.LENGTH_SHORT).show()
     }
 
+    private fun tryActionViewModel(){
+        val action = Action(null,"Halil","Search","Survivor",DateUtil.getDate("dd-MM-yy").toString(),50,"Ankara","Erzurum", Urgency.CRITICAL.type)
+        actionViewModel.insertAction(action)
+        val startLocation = actionViewModel.getStartLocation("Halil")
+        Toast.makeText(this,startLocation,Toast.LENGTH_SHORT).show()
+    }
+
     private fun toggleListener(){
         toggle = ActionBarDrawerToggle(this, binding.root,R.string.open,R.string.close) //like adapter
         binding.root.addDrawerListener(toggle) // add toggle into layout
@@ -99,6 +112,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.miLogout -> logOutActions()
                 R.id.miAddNeed -> tryNeedViewModel()
                 R.id.miAddUserData -> tryUserDataViewModel()
+                R.id.miAddAction -> tryActionViewModel()
             }
             binding.root.closeDrawer(GravityCompat.START) //whenever clicked item on drawer, closing it automatically
             true

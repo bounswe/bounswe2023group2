@@ -25,5 +25,9 @@
         android:id="@+id/miAddUserData"
         android:title="@string/add_example_user_data"/>
 
+    <item
+        android:id="@+id/miAddAction"
+        android:title="@string/add_action"/>
+
 
 </menu>

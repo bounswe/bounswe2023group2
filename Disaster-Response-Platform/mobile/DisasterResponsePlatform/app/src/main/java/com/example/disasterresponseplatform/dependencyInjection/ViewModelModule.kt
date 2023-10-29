@@ -2,8 +2,10 @@ package com.example.disasterresponseplatform.dependencyInjection
 
 import com.example.disasterresponseplatform.data.repositories.NeedRepository
 import com.example.disasterresponseplatform.data.repositories.UserDataRepository
+import com.example.disasterresponseplatform.data.repositories.ActionRepository
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
+import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.authentication.AuthenticationViewModel
 import dagger.Module
 import dagger.Provides
@@ -37,4 +39,8 @@ class ViewModelModule {
     fun provideUserDataViewModel(repository: UserDataRepository): UserDataViewModel =
         UserDataViewModel(repository)
 
+    @Provides
+    @ViewModelScoped
+    fun provideActionViewModel(repository: ActionRepository): ActionViewModel =
+        ActionViewModel(repository)
 }
