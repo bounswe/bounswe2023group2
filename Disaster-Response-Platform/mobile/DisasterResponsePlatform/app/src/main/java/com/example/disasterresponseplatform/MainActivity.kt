@@ -14,6 +14,7 @@ import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.userdata.UserData
 import com.example.disasterresponseplatform.data.enums.Urgency
 import com.example.disasterresponseplatform.databinding.ActivityMainBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.HomePageFragment
 import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
@@ -95,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.miLogin -> replaceNavFragment(loginFragment)
                 R.id.miRegister -> replaceNavFragment(registrationFragment)
                 R.id.miNetwork -> replaceNavFragment(networkFragment)
-                R.id.miLogout -> Toast.makeText(this,"Logout",Toast.LENGTH_SHORT).show()
+                R.id.miLogout -> logOutActions()
                 R.id.miAddNeed -> tryNeedViewModel()
                 R.id.miAddUserData -> tryUserDataViewModel()
             }
@@ -104,6 +105,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun logOutActions() {
+        DiskStorageManager.removeKey("token")
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)){
             return true // notifies that user clicked that toggle button
