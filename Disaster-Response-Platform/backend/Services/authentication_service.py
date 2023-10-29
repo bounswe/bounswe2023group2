@@ -93,17 +93,20 @@ def create_jwt_token(data: dict, expires_delta: timedelta):
 def create_user(user: CreateUserRequest):
 
     if not (all([user.username,user.password, user.first_name, user.last_name] )) or not (user.phone_number or user.email) :
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,detail="Please fill all mandatory fields"  )
+        raise ValueError("Please fill all mandatory fields")     
        
     if (userDb.find_one({"username": user.username}) !=None) : #if there is a user already existed with current username
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Username already taken")
+        raise ValueError("Username already taken")
     
     if (user.email and userDb.find_one({"email": user.email}) !=None):
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Email already taken")
+        raise ValueError("Email already taken")
+       
     if (not is_valid_password(user.password)) : #if username is not existed in db but password contains less than 8 characters
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Password should include a digit")
+        raise ValueError("Password should include a digit")
+    
     if (user.phone_number and not is_valid_phone_number(user.phone_number)): #if phone number is not valid
-        return HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Phone number must be 11 digits and start with '05'")
+        raise ValueError("Phone number must be 11 digits and start with '05'")
+        
     hash= get_password_hash(user.password)
     user.password=hash
     insert_result = userDb.insert_one(user.dict())

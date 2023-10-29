@@ -24,20 +24,23 @@ userDb = MongoDB.get_collection('authenticated_user')
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(currentUser : CreateUserRequest, response: Response):
- 
-    result= authentication_service.create_user(currentUser)
-    if isinstance(result, HTTPException):
-        response.status_code= result.status_code
-    return json.loads(result)
+    try:
+        result= authentication_service.create_user(currentUser)
+        return json.loads(result)
+    except ValueError as err:
+        err_json = create_json_for_error("Signup error", str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        return json.loads(err_json)
+   
 
-@router.put("/update_user", status_code=200)
+@router.put("/update-user", status_code=200)
 async def update_user_info(updated_user: UpdateUserRequest, response:Response,username: str = Depends(authentication_service.get_current_username)):
     try:
         result= authentication_service.update_user(username=username, updated_user=updated_user)
         return result
     except ValueError as err:
         err_json = create_json_for_error("User update error", str(err))
-        response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+        response.status_code = HTTPStatus.BAD_REQUEST
         return json.loads(err_json)
    
         
