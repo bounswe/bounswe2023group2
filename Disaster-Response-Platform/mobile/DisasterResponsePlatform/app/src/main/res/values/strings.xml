@@ -75,17 +75,71 @@
     <string name="clothes">Clothes</string>
     <string name="date">Date:</string>
     <string name="add_example_user_data">Add Example User Data</string>
+    <string name="select_sub_type">Select or Enter Sub-Type <font color='#B00020'>*</font></string>
+    <string name="select_need_type">Select or Enter Need Type <font color='#B00020'>*</font></string>
+    <string name="select_or_enter_location">Select or Enter Location <font color='#B00020'>*</font></string>
+    <string name="enter_quantity">Enter Quantity <font color='#B00020'>*</font></string>
+    <string name="enter_allergens">Enter Allergens</string>
+    <string name="enter_additional_notes">Enter Additional Notes</string>
+    <string name="enter_full_name">Enter Full Name <font color='#B00020'>*</font></string>
+    <string name="enter_phone_number">Enter Phone Number <font color='#B00020'>*</font></string>
+    <string name="submit">Submit</string>
+    <string name="select_resource_type">Select or Enter Resource Type <font color='#B00020'>*</font></string>
+    <string name="enter_expiration_date">Enter Expiration Date</string>
 
-    <string-array name="need_categories">
-        <item>Food</item>
+    <string-array name="need_types">
         <item>Clothes</item>
-        <item>Accomedation</item>
+        <item>Food</item>
+        <item>Shelter</item>
+        <item>Medication</item>
+        <item>Transportation</item>
+        <item>Tools</item>
+        <item>Human</item>
         <item>Other</item>
     </string-array>
 
-    <string-array name="need_food_types">
-        <item>Baby Food</item>
-        <item>Pasta</item>
+    <string-array name="resource_types">
+        <item>Clothes</item>
+        <item>Food</item>
+        <item>Shelter</item>
+        <item>Medication</item>
+        <item>Transportation</item>
+        <item>Tools</item>
+        <item>Human</item>
         <item>Other</item>
     </string-array>
+
+    <string-array name="need_food_sub_types">
+        <item>Pasta</item>
+        <item>Rice</item>
+        <item>Canned Good</item>
+        <item>Baby Food</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="need_empty_sub_types">
+    </string-array>
+
+    <string-array name="resource_food_sub_types">
+        <item>Pasta</item>
+        <item>Rice</item>
+        <item>Canned Good</item>
+        <item>Baby Food</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="resource_human_sub_types">
+        <item>Doctor</item>
+        <item>Nurse</item>
+        <item>Pharmacist</item>
+        <item>Firefighter</item>
+        <item>Police Officer</item>
+        <item>Driver</item>
+        <item>Translator</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="resource_empty_sub_types">
+    </string-array>
+
 </resources>
