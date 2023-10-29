@@ -77,16 +77,13 @@ class AddResourceFragment : Fragment() {
 
         if (selectedType.isEmpty()) {
             boxResourceSubType.visibility = View.GONE
-            boxResourceSubType.hint = "Select Resource Sub-Type"
             spResourceSubType.setText("")
             spResourceSubType.setAdapter(resourceEmptyAdapter)
         } else if (selectedType == "Food") {
             boxResourceSubType.visibility = View.VISIBLE
-            boxResourceSubType.hint = "Select $selectedType Sub-Type"
             spResourceSubType.setAdapter(resourceFoodAdapter)
         } else {
             boxResourceSubType.visibility = View.VISIBLE
-            boxResourceSubType.hint = "Select $selectedType Sub-Type"
             spResourceSubType.setText("")
             spResourceSubType.setAdapter(resourceEmptyAdapter)
         }

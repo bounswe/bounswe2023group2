@@ -3,13 +3,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:padding="20dp">
+android:layout_height="match_parent">
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp">
 
     <TextView
         android:id="@+id/tvAddResource"
@@ -46,7 +46,7 @@ android:padding="20dp">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:hint="@string/select_resource_sub_type"
+        android:hint="@string/select_sub_type"
         android:visibility="gone"
         app:endIconMode="dropdown_menu">
 

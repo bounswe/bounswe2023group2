@@ -77,16 +77,13 @@ class AddNeedFragment : Fragment() {
 
         if (selectedType.isEmpty()) {
             boxNeedSubType.visibility = View.GONE
-            boxNeedSubType.hint = "Select Need Sub-Type"
             spNeedSubType.setText("")
             spNeedSubType.setAdapter(needEmptyAdapter)
         } else if (selectedType == "Food") {
             boxNeedSubType.visibility = View.VISIBLE
-            boxNeedSubType.hint = "Select $selectedType Sub-Type"
             spNeedSubType.setAdapter(needFoodAdapter)
         } else {
             boxNeedSubType.visibility = View.VISIBLE
-            boxNeedSubType.hint = "Select $selectedType Sub-Type"
             spNeedSubType.setText("")
             spNeedSubType.setAdapter(needEmptyAdapter)
         }

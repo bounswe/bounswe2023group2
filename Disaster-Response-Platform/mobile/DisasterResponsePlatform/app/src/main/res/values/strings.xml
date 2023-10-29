@@ -74,17 +74,16 @@
     <string name="activity_item">Activity:</string>
     <string name="clothes">Clothes</string>
     <string name="date">Date:</string>
-    <string name="select_need_type">Select or Enter Need Type</string>
-    <string name="select_need_sub_type">Select or Enter Need Sub-Type</string>
-    <string name="select_or_enter_location">Select or Enter Location</string>
-    <string name="enter_quantity">Enter Quantity</string>
+    <string name="select_sub_type">Select or Enter Sub-Type <font color='#B00020'>*</font></string>
+    <string name="select_need_type">Select or Enter Need Type <font color='#B00020'>*</font></string>
+    <string name="select_or_enter_location">Select or Enter Location <font color='#B00020'>*</font></string>
+    <string name="enter_quantity">Enter Quantity <font color='#B00020'>*</font></string>
     <string name="enter_allergens">Enter Allergens</string>
     <string name="enter_additional_notes">Enter Additional Notes</string>
-    <string name="enter_full_name">Enter Full Name</string>
-    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="enter_full_name">Enter Full Name <font color='#B00020'>*</font></string>
+    <string name="enter_phone_number">Enter Phone Number <font color='#B00020'>*</font></string>
     <string name="submit">Submit</string>
-    <string name="select_resource_type">Select or Enter Resource Type</string>
-    <string name="select_resource_sub_type">Select or Enter Resource Sub-Type</string>
+    <string name="select_resource_type">Select or Enter Resource Type <font color='#B00020'>*</font></string>
     <string name="enter_expiration_date">Enter Expiration Date</string>
 
     <string-array name="need_types">
