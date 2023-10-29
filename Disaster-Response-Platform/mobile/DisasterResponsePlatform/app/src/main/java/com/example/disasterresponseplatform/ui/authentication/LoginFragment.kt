@@ -16,7 +16,7 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentLoginBinding
 import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 
-class LoginFragment : Fragment(R.layout.fragment_login) {
+class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var authViewModel: AuthenticationViewModel

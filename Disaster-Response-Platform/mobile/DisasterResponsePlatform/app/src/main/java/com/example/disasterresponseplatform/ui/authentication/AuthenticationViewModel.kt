@@ -261,6 +261,11 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                                 val gson = Gson()
                                 val signUpResponse = gson.fromJson(rawJson, SignUpResponseBody::class.java)
                                 Log.d("Access Token", signUpResponse.accessToken + "asdas")
+                                _signUpSuccessful.value = true
+                                _username.value = username
+                                _email.value = email
+                                _password.value = password
+                                sendSignInRequest()
                             } catch (e: IOException) {
                                 // Handle IOException if reading the response body fails
                                 Log.e("ResponseError", "Error reading response body: ${e.message}")

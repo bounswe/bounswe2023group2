@@ -18,8 +18,8 @@ class RegistrationFragment : Fragment() {
 
     private lateinit var binding: FragmentRegistrationBinding
     private val forgotPasswordFragment = ForgotPasswordFragment()
-
     private val activityFragment =  ActivityFragment()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +47,7 @@ class RegistrationFragment : Fragment() {
             } else if (isValid == 1) {
                 Toast.makeText(context, "Passwords doesn't match", Toast.LENGTH_SHORT).show()
             } else {
+                authViewModel.sendSignUpRequest()
                 //Toast.makeText(context, "Api request has been sent check Logcat for more details", Toast.LENGTH_SHORT).show()
             }
         })
@@ -70,7 +71,6 @@ class RegistrationFragment : Fragment() {
             authViewModel.updateSignUpEmail(email.text.toString())
             authViewModel.updateSignUpPassword(password.text.toString())
             authViewModel.updateSignUpConfirmPassword(password_confirm.text.toString())
-            authViewModel.sendSignUpRequest()
             authViewModel.validateSignUp()
         }
         binding.signInButton.setOnClickListener {
