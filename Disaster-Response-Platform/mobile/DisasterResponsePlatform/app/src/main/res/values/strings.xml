@@ -74,6 +74,7 @@
     <string name="activity_item">Activity:</string>
     <string name="clothes">Clothes</string>
     <string name="date">Date:</string>
+    <string name="add_example_user_data">Add Example User Data</string>
 
     <string-array name="need_categories">
         <item>Food</item>

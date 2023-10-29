@@ -11,11 +11,13 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.data.database.need.Need
+import com.example.disasterresponseplatform.data.database.userdata.UserData
 import com.example.disasterresponseplatform.data.enums.Urgency
 import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.ui.HomePageFragment
 import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
+import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
 import com.example.disasterresponseplatform.ui.authentication.RegistrationFragment
 import com.example.disasterresponseplatform.ui.map.MapFragment
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private val registrationFragment = RegistrationFragment()
 
     private lateinit var needViewModel: NeedViewModel
+    private lateinit var userDataViewModel: UserDataViewModel
 
 
     private lateinit var toggle: ActionBarDrawerToggle
@@ -57,6 +60,9 @@ class MainActivity : AppCompatActivity() {
         val getNeedViewModel: NeedViewModel by viewModels()
         needViewModel = getNeedViewModel
 
+        val getUserDataViewModel: UserDataViewModel by viewModels()
+        userDataViewModel = getUserDataViewModel
+
     }
 
     private fun tryNeedViewModel(){
@@ -64,6 +70,17 @@ class MainActivity : AppCompatActivity() {
         needViewModel.insertNeed(need)
         val location = needViewModel.getLocation("Egecan")
         Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+    }
+
+    private fun tryUserDataViewModel() {
+        val userData = UserData(null, "cahid", "cahid.keles@boun.edu.tr",
+            "05340623847", "Cahid Enes", "Keleş", false,
+            false, null, 0, false, null,
+            null, null, null, null, null, null,
+            null, null, null, null, null, null)
+        userDataViewModel.insertUserData(userData)
+        val email = userDataViewModel.getEmail("cahid")
+        Toast.makeText(this,email,Toast.LENGTH_SHORT).show()
     }
 
     private fun toggleListener(){
@@ -80,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.miNetwork -> replaceNavFragment(networkFragment)
                 R.id.miLogout -> Toast.makeText(this,"Logout",Toast.LENGTH_SHORT).show()
                 R.id.miAddNeed -> tryNeedViewModel()
+                R.id.miAddUserData -> tryUserDataViewModel()
             }
             binding.root.closeDrawer(GravityCompat.START) //whenever clicked item on drawer, closing it automatically
             true
