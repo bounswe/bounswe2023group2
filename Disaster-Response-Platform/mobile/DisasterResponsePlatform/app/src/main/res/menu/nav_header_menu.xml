@@ -29,5 +29,8 @@
         android:id="@+id/miAddAction"
         android:title="@string/add_action"/>
 
+    <item
+        android:id="@+id/miAddEvent"
+        android:title="@string/add_event"/>
 
 </menu>

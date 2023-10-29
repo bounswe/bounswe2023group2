@@ -12,12 +12,15 @@ import com.example.disasterresponseplatform.data.database.userdata.UserData
 import com.example.disasterresponseplatform.data.database.userdata.UserDataDao
 import com.example.disasterresponseplatform.data.database.action.Action
 import com.example.disasterresponseplatform.data.database.action.ActionDao
+import com.example.disasterresponseplatform.data.database.event.Event
+import com.example.disasterresponseplatform.data.database.event.EventDao
 
-@Database(entities = [Need::class, UserData::class, Action::class], version = DatabaseInfo.DATABASE_VERSION, exportSchema = false)
+@Database(entities = [Need::class, UserData::class, Action::class, Event::class], version = DatabaseInfo.DATABASE_VERSION, exportSchema = false)
 abstract class DarpDB: RoomDatabase() {
     abstract val needDao: NeedDao
     abstract val userDataDao: UserDataDao
     abstract val actionDao: ActionDao
+    abstract val eventDao: EventDao
 
     // it's static object in this way you can call getInstance method without any initialization
     companion object{
