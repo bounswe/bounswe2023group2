@@ -1,8 +1,9 @@
 import bson
 from pydantic import BaseModel, Field
-from typing import Dict, Any
+from typing import Dict, Any, List
 from enum import Enum
 from datetime import date
+
 
 class EducationEnum(str, Enum):
     ilk = "ilk"
@@ -71,3 +72,20 @@ class UserProfession(BaseModel):
     username: str = Field(default=None)
     profession: str
     profession_level: ProfessionLevel = Field(default=None)
+
+class Professions(BaseModel):
+    professions: List[UserProfession]
+
+class Languages(BaseModel):
+    languages: List[UserLanguage]
+
+class UserSkills(BaseModel):
+    skills: List[UserSkill]
+
+class UserSocialMediaLinks(BaseModel):
+    user_socialmedia_links: List[UserSocialMediaLink]
+
+class UserOptionalInfos(BaseModel):
+    user_optional_infos: List[UserOptionalInfo]
+
+
