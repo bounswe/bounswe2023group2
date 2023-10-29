@@ -46,7 +46,6 @@ class LoginFragment : Fragment() {
         // Access the views from the XML
         val signInTopLabel = view.findViewById<TextView>(R.id.sign_in_top_label)
         val usernameEditText = view.findViewById<EditText>(R.id.username)
-        val emailEditText = view.findViewById<EditText>(R.id.email)
         val passwordEditText = view.findViewById<EditText>(R.id.password)
         val forgotPasswordButton = view.findViewById<Button>(R.id.forgot_password_button)
         val signInButton = view.findViewById<Button>(R.id.sign_in_button)
@@ -78,7 +77,6 @@ class LoginFragment : Fragment() {
 
         // Set button click listener for sign-in
         signInButton.setOnClickListener {
-            authViewModel.updateEmail(emailEditText.text.toString())
             authViewModel.updateUsername(usernameEditText.text.toString())
             authViewModel.updatePassword(passwordEditText.text.toString())
             authViewModel.validateLogin()
