@@ -1,6 +1,10 @@
-from fastapi import APIRouter, Response, Depends
+import http
+
+from fastapi import APIRouter, Response, Depends, status
+from typing import List
 from http import HTTPStatus
 from Models.user_profile_model import *
+from Models.user_model import Error
 import Services.uprofile_professions_service as uprofile_professions_service
 from Services.build_API_returns import *
 import Services.authentication_service as authentication_service
@@ -8,7 +12,6 @@ import Services.authentication_service as authentication_service
 
 
 router = APIRouter()
-
 
 @router.get("/professions", )
 async def get_user_profession_level(response: Response, anyuser:str= None, profession:str = None, current_username: str = Depends(authentication_service.get_current_username)):

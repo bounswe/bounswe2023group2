@@ -26,11 +26,11 @@ app.add_middleware(
 # ROUTES
 app.include_router(resource_controller.router, prefix = "/api/resource", tags=["resource"])
 app.include_router(user_controller.router, prefix= "/api/users", tags=["users"])
-app.include_router(uprofile_optinfo_controller.router, prefix= "/api/profiles", tags=["user-profiles"])
-app.include_router(uprofile_languages_controller.router, prefix= "/api/profiles", tags=["user-profiles"])
-app.include_router(uprofile_SocMed_controller.router, prefix= "/api/profiles", tags=["user-profiles"])
-app.include_router(uprofile_professions_controller.router, prefix= "/api/profiles", tags=["user-profiles"])
-app.include_router(uprofile_skills_controller.router, prefix= "/api/profiles", tags=["user-profiles"])
+app.include_router(uprofile_optinfo_controller.router, prefix= "/api/profiles", tags=["User Profiles Optional Information"])
+app.include_router(uprofile_languages_controller.router, prefix= "/api/profiles", tags=["User Profiles Language Skills"])
+app.include_router(uprofile_SocMed_controller.router, prefix= "/api/profiles", tags=["User Profiles Social Media Links"])
+app.include_router(uprofile_professions_controller.router, prefix= "/api/profiles", tags=["User Profiles Professions"])
+app.include_router(uprofile_skills_controller.router, prefix= "/api/profiles", tags=["User Profiles Skills"])
 
 
 @app.get("/")
