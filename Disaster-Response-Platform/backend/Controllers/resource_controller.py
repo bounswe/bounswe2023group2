@@ -7,6 +7,9 @@ import Services.resource_service as resource_service
 import Services.authentication_service as authentication_service
 from Services.build_API_returns import create_json_for_error
 
+# Change history:
+# 26/10/2023 The changes for auth2 authorization added and merged
+
 router = APIRouter()
 
 @router.post("/", status_code=201)
@@ -62,8 +65,9 @@ def update_resource(resource_id: str, resource: Resource, response:Response, cur
 @router.delete("/{resource_id}")
 def delete_resource(resource_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
-        resource_service.delete_resource(resource_id)
-        response.status_code=HTTPStatus.NO_CONTENT
+        res_list = resource_service.delete_resource(resource_id)
+        response.status_code=HTTPStatus.OK
+        return json.loads(res_list)
     except ValueError as err:
         err_json = create_json_for_error("Resource update error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
