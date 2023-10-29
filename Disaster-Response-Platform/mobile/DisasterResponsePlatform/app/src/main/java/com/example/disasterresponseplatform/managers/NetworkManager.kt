@@ -3,10 +3,10 @@ package com.example.disasterresponseplatform.managers
 import android.util.Log
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -40,7 +40,7 @@ import retrofit2.http.Path
  */
 class NetworkManager {
 
-    private val baseUrl = "https://v2.jokeapi.dev/"
+    private val baseUrl = "http://3.218.226.215:8000/api/"
 
     val api: ApiService by lazy {
         val retrofit = Retrofit.Builder()
@@ -64,8 +64,8 @@ class NetworkManager {
         endpoint: Endpoint,
         requestType: RequestType,
         headers: Map<String, String>,
-        requestBody: Any? = null,
-        callback: Callback<Response<ResponseBody>>
+        requestBody: RequestBody? = null,
+        callback: Callback<ResponseBody>
     ) {
         when (endpoint) {
             Endpoint.DATA -> {
@@ -76,13 +76,13 @@ class NetworkManager {
                         call.enqueue(callback)
                     }
                     RequestType.POST -> {
-                        val call = api.postData(endpoint.path, headers, requestBody as Map<String, String>)
                         Log.d("RESPONSE", callback.toString())
-                        call.enqueue(callback)
+                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
                     }
                     RequestType.PUT -> {
-                        val call = api.putData(endpoint.path, headers, requestBody as Map<String, String>)
-                        call.enqueue(callback)
+                        requestBody?.let { api.putData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
                     }
                     RequestType.DELETE -> {
                         val call = api.deleteData(endpoint.path, headers)
@@ -99,8 +99,20 @@ class NetworkManager {
                         call.enqueue(callback)
                     }
                     RequestType.POST -> {
-                        val call = api.postData(endpoint.path, headers, requestBody as Map<String, String>)
-                        call.enqueue(callback)
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    else -> {}
+                }
+            }
+
+            Endpoint.SIGNUP -> {
+                when (requestType) {
+                    RequestType.POST -> {
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
                     }
                     else -> {}
                 }
@@ -115,25 +127,25 @@ interface ApiService {
     fun getData(
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
-    ): Call<Response<ResponseBody>>
+    ): Call<ResponseBody>
 
     @POST("{endpoint}")
     fun postData(
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
-        @Body requestBody: Map<String, String>,
-    ): Call<Response<ResponseBody>>
+        @Body requestBody: RequestBody,
+    ): Call<ResponseBody>
 
     @PUT("{endpoint}")
     fun putData(
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
-        @Body requestBody: Map<String, String>,
-    ): Call<Response<ResponseBody>>
+        @Body requestBody: RequestBody,
+    ): Call<ResponseBody>
 
     @DELETE("{endpoint}")
     fun deleteData(
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
-    ): Call<Response<ResponseBody>>
+    ): Call<ResponseBody>
 }
