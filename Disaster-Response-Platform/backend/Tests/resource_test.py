@@ -3,13 +3,50 @@ sys.path.append("..")
 from fastapi.testclient import TestClient
 from main import app
 from Services import resource_service 
-from Models import resource_model
+from Models.resource_model import Resource
+import json
+
 client = TestClient(app)
+
+TOKEN = None
+
+def signup_user():
+    response = client.post("/api/users/signup", json={
+        "username": "burak2",
+        "email": "user3@example.com",
+        "disabled": False,
+        "password": "burak1234",
+        "first_name": "string",
+        "last_name": "string",
+        "phone_number": "05532137842",
+        "is_email_verified": True,
+        "private_account": False
+    })
+    assert response.status_code == 201
+
+def login_user():
+    response = client.post("/api/users/login", json={
+        "username_or_email_or_phone": "burak1",
+        "password": "burak1234"
+    })
+    assert response.status_code == 200
+    token_data = response.json()
+    return token_data["access_token"]
 
 def setup_test_environment():
     """Set up test environment by creating a sample resource."""
+    global TOKEN
+    # Signup and login only if the token is not already available
+    if TOKEN is None:
+        signup_user()
+        TOKEN = login_user()
+    
+    headers = {
+        "Authorization": f"bearer {TOKEN}"
+    }
+    
     sample_resource = Resource(
-        created_by="user123",
+        created_by="testuser",
         condition="new",
         initialQuantity=65,
         currentQuantity=35,
@@ -21,12 +58,13 @@ def setup_test_environment():
             "subtype": "Shirt"
         }
     )
-    created_resource = resource_service.create_resource(sample_resource)
-    return created_resource.id  # Return the ID of the created resource.
+    created_resource_json_str = resource_service.create_resource(sample_resource)
+    created_resource_dict = json.loads(created_resource_json_str)
+    return created_resource_dict["resources"][0]["_id"], headers
 
 # Test for creating a resource
 def test_create_resource():
-    response = client.post("/", json={
+    response = client.post("/api/resource", json={
         "condition": "new",
         "initialQuantity": 50,
         "currentQuantity": 20,
@@ -48,7 +86,7 @@ def test_create_resource():
 # Test for getting a resource
 def test_get_resource():
     resource_id = setup_test_environment()
-    response = client.get(f"/{resource_id}")
+    response = client.get(f"/api/resource/{resource_id}")
     assert response.status_code == 200
     data = response.json()
     assert data["id"] == resource_id
