@@ -10,13 +10,13 @@ needs_collection = MongoDB.get_collection('needs')
 
 def create_need(need: Need) -> str:
     # Manual validation for required fields during creation
-    if not all([need._id, need.created_by, need.urgency, 
+    if not all([need.created_by, need.urgency, 
                 need.initialQuantity, need.unsuppliedQuantity, 
                 need.type, need.details]):
         raise ValueError("All fields are mandatory for creation.")
     insert_result = needs_collection.insert_one(need.dict())
     if insert_result.inserted_id:
-        return "{\"needs\":[" + json.dumps(dict(need)) + "], \"inserted_id\": " + f"\"{insert_result.inserted_id}\"" + "}"
+        return "{\"needs\":[{\"_id\":" + f"\"{insert_result.inserted_id}\"" 
     else:
         raise ValueError("Need could not be created")
     # return str(result.inserted_id)
