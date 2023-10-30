@@ -1,14 +1,13 @@
 
 import { Inter } from 'next/font/google';
 import MainLayout from '@/layouts/MainLayout';
-// import { withSessionSsr } from '../../path/to/sessionMiddleware'; // Import your session middleware
 import MainInfo from '@/components/profile/MainInfo';
 import OptionalInfo from '@/components/profile/OptionalInfo';
 import ActivityTable from '@/components/ActivityTable';
 import InfoList from '@/components/profile/InfoList';
+import { api } from '@/lib/apiUtils';
 
-
-export default function profile({ user }) {
+export default function Profile({ user }) {
   const {misc, main_info, optional_info, list_info, activities} = user;
   const {social, skills, languages, professions} = list_info;
   return (
@@ -28,11 +27,19 @@ export default function profile({ user }) {
     </>
   )
 }
-profile.getLayout = function getLayout(page) {
+Profile.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export function getServerSideProps(context) {
+export async function getServerSideProps(context) {
+
+  const optional_info = [
+          {"title": "Date of Birth", "content": "31.09.2000"},
+          {"title": "Nationality", "content": "Turkey"},
+          {"title": "Blood Type", "content": "0+"},
+          {"title": "Address", "content": "really really really long address to test css stuff and overflows and height imbalances"}
+  ];
+
   return {
     props: {
       "user": {
@@ -45,12 +52,7 @@ export function getServerSideProps(context) {
           "phone": "05555555555",
           "email": "sample-user@darp.com"
         },
-        "optional_info": [
-          {"title": "Date of Birth", "content": "31.09.2000"},
-          {"title": "Nationality", "content": "Turkey"},
-          {"title": "Blood Type", "content": "0+"},
-          {"title": "Address", "content": "really really really long address to test css stuff and overflows and height imbalances"}
-        ],
+        optional_info,
         "list_info": {
           "social": "social media links go here",
           "skills": "skills with certifications go here",
