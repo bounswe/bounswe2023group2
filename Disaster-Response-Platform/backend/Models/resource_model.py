@@ -48,3 +48,10 @@ class Resource(BaseModel):
     currentQuantity: int = Field(default=None)
     type: str = Field(default=None)
     details: Dict[str, Any] = Field(default=None)
+
+# Update Body Models
+class QuantityUpdate(BaseModel):
+    quantity: int
+
+class ConditionUpdate(BaseModel):
+    condition: ConditionEnum
