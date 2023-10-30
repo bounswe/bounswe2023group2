@@ -21,6 +21,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
 
     fun getLocation(creatorName: String): String? = resourceRepository.getLocation(creatorName)
 
+
     fun getAllResources(): List<Resource>? = resourceRepository.getAllResources()
 
 }

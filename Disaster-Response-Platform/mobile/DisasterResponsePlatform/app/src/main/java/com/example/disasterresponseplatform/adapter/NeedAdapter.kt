@@ -12,7 +12,7 @@ import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.databinding.NeedItemBinding
 
 
-class NeedAdapter(private val needList: List<Need?>?): RecyclerView.Adapter<NeedAdapter.NeedViewHolder>() {
+class NeedAdapter(private val needList: List<Need>?): RecyclerView.Adapter<NeedAdapter.NeedViewHolder>() {
 
     inner class NeedViewHolder(val binding: NeedItemBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -40,11 +40,12 @@ class NeedAdapter(private val needList: List<Need?>?): RecyclerView.Adapter<Need
         hb.tvDate.text = currentNeed?.creationTime
         hb.tvLocation.text = currentNeed?.location
         hb.tvQuantity.text = currentNeed?.quantity.toString()
+        hb.tvCreator.text = currentNeed?.creatorName
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->
             view.isActivated = true // make it active, then its background color will change thanks to selector_item_background
-            liveDataNeed.postValue(currentNeed)
+            liveDataNeed.postValue(currentNeed!!)
             android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
                 view.isActivated = false // make it false to set its original color again
             }, 50)
@@ -52,13 +53,14 @@ class NeedAdapter(private val needList: List<Need?>?): RecyclerView.Adapter<Need
     }
 
 
-    private val liveDataNeed = MutableLiveData<Need?>()
+    private val liveDataNeed = MutableLiveData<Need>()
     // this is for updating LiveData, it can be observed from where it is called
-    fun getLiveIntent(): LiveData<Need?> = liveDataNeed
+    fun getLiveIntent(): LiveData<Need> = liveDataNeed
 
 
     override fun getItemCount(): Int {
-        return needList!!.size //TODO check
+        return if (needList.isNullOrEmpty()) 0
+        else needList.size
     }
 
 }

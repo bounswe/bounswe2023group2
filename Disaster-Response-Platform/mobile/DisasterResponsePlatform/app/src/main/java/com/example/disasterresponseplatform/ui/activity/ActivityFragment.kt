@@ -14,15 +14,16 @@ import com.example.disasterresponseplatform.ui.activity.event.EventFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceFragment
+import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
 
-class ActivityFragment(private val needViewModel: NeedViewModel) : Fragment() {
+class ActivityFragment(private val needViewModel: NeedViewModel, private val resourceViewModel: ResourceViewModel) : Fragment() {
 
     private lateinit var binding: FragmentActivityBinding
     private val emergencyFragment = EmergencyFragment()
     private val actionFragment = ActionFragment()
     private val eventFragment = EventFragment()
     private lateinit var needFragment:NeedFragment
-    private val resourceFragment = ResourceFragment()
+    private lateinit var resourceFragment : ResourceFragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +49,7 @@ class ActivityFragment(private val needViewModel: NeedViewModel) : Fragment() {
             addFragment(needFragment)
         }
         binding.btResource.setOnClickListener {
+            resourceFragment = ResourceFragment(resourceViewModel)
             addFragment(resourceFragment)
         }
     }

@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.disasterresponseplatform.data.database.DatabaseInfo
 import com.example.disasterresponseplatform.data.database.need.NeedResourceCols
+import com.example.disasterresponseplatform.data.enums.NeedTypes
+import com.example.disasterresponseplatform.data.enums.ResourceCondition
 
 @Entity(tableName = DatabaseInfo.RESOURCE)
 data class Resource(
@@ -14,11 +16,11 @@ data class Resource(
     @ColumnInfo(name = NeedResourceCols.creatorName)
     val creatorName: String,
     @ColumnInfo(name = NeedResourceCols.condition)
-    val condition: Int?,
+    val condition: ResourceCondition,
     @ColumnInfo(name = NeedResourceCols.quantity)
     val quantity: Int?,
     @ColumnInfo(name = NeedResourceCols.type)
-    val type: String,
+    val type: NeedTypes,
     @ColumnInfo(name = NeedResourceCols.details)
     val details: String,
     @ColumnInfo(name = NeedResourceCols.creationTime)
