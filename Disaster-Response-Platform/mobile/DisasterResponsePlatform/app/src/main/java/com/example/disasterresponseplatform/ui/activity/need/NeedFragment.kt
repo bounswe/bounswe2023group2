@@ -17,7 +17,7 @@ import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
     private lateinit var binding: FragmentNeedBinding
-    private val addNeedFragment = AddNeedFragment()
+    private lateinit var addNeedFragment: AddNeedFragment
     private lateinit var searchView: SearchView
 
     override fun onCreateView(
@@ -36,6 +36,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     private fun arrangeView(){
         // add need clickable
         binding.btAddNeed.setOnClickListener {
+            addNeedFragment = AddNeedFragment(needViewModel)
             addFragment(addNeedFragment)
         }
         arrangeSearchView()
@@ -55,7 +56,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity()){
-            val text = "Type: ${it?.type}, Location: ${it?.location}, " +
+            val text = "Type: ${it?.type}, SubType: ${it?.details}, Location: ${it?.location}, " +
                     "Date: ${it?.creationTime}, Quantity: ${it?.quantity}, Urgency: ${it?.urgency}"
             Toast.makeText(requireActivity(), text, Toast.LENGTH_LONG).show()
         }

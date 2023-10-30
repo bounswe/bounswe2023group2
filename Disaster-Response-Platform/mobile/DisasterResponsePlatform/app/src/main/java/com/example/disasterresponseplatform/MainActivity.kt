@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun tryResourceViewModel(){
-        val resource = Resource(null,"Mansur",ResourceCondition.NEW,400,NeedTypes.Food,"Soap",DateUtil.getDate("dd-MM-yy").toString(),"Ankara")
+        val resource = Resource(null,"Mansur","new",400,NeedTypes.Food,"Soup",DateUtil.getDate("dd-MM-yy").toString(),"Ankara")
         resourceViewModel.insertResource(resource)
         android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
             val location = resourceViewModel.getLocation("Mansur")

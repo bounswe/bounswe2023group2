@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/location"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="16dp"
             android:text="22.10.2023 13:02"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -92,7 +92,7 @@
             android:id="@+id/tvQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:text="50"
             android:textSize="12sp"
@@ -121,6 +121,28 @@
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/titleLocation"
             app:layout_constraintTop_toTopOf="@+id/titleCreatorName" />
+
+        <TextView
+            android:id="@+id/titleDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:text="Details:"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/tvDetails"
+            app:layout_constraintTop_toBottomOf="@+id/titleQuantity" />
+
+        <TextView
+            android:id="@+id/tvDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:text="Deatils"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvQuantity" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

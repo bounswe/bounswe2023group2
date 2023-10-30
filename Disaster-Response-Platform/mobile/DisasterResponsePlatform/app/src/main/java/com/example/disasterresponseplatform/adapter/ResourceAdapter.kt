@@ -39,6 +39,7 @@ class ResourceAdapter(private val resourceList: List<Resource>?): RecyclerView.A
         hb.tvLocation.text = currentResource?.location
         hb.tvQuantity.text = currentResource?.quantity.toString()
         hb.tvCreator.text = currentResource?.creatorName
+        hb.tvDetails.text = currentResource?.details
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

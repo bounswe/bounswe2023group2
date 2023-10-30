@@ -8,9 +8,13 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.data.database.need.Need
+import com.example.disasterresponseplatform.data.database.resource.Resource
+import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
+import com.example.disasterresponseplatform.utils.DateUtil
 
-class AddResourceFragment : Fragment() {
+class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
 
     private lateinit var binding: FragmentAddResourceBinding
 
@@ -93,6 +97,27 @@ class AddResourceFragment : Fragment() {
         binding.btnSubmit.setOnClickListener {
             if ((validateFullName() and validatePhoneNumber() and validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
                 Toast.makeText(context, "{'created_by': ${binding.etFullName.editText?.text.toString().trim()}, 'quantity': ${binding.etQuantity.editText?.text.toString().trim()}, 'type':  ${binding.boxResourceType.editText?.text.toString().trim()}}", Toast.LENGTH_SHORT).show()
+
+                val type: NeedTypes =
+                    when(binding.boxResourceType.editText?.text.toString().trim()){
+                        NeedTypes.Clothes.toString() -> NeedTypes.Clothes
+                        NeedTypes.Food.toString() -> NeedTypes.Food
+                        NeedTypes.Shelter.toString() -> NeedTypes.Shelter
+                        NeedTypes.Medication.toString() -> NeedTypes.Medication
+                        NeedTypes.Transportation.toString() -> NeedTypes.Transportation
+                        NeedTypes.Tools.toString() -> NeedTypes.Tools
+                        NeedTypes.Human.toString() -> NeedTypes.Human
+                        else -> NeedTypes.Other
+                    }
+                val creatorName = binding.etFullName.editText?.text.toString().trim()
+                val details = binding.spResourceSubType.text.toString().trim()
+                val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
+                val location = binding.etLocation.editText?.text.toString().trim()
+                val date = DateUtil.getDate("dd-MM-yy").toString()
+                val resource = Resource(null,creatorName,"new",quantity,type,details,date,location)
+                //TODO do with token
+                resourceViewModel.insertResource(resource)
+                parentFragmentManager.popBackStack()
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
             }
