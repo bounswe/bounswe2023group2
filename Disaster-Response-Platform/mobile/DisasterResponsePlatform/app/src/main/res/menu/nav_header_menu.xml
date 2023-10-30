@@ -2,24 +2,43 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/miNetwork"
-        android:title="@string/network_request"/>
+        android:id="@+id/miLoggedInAs"
+        android:title=""
+        android:icon="@drawable/ic_profile"
+        android:visible="false" />
 
     <item
         android:id="@+id/miLogin"
         android:title="@string/login"/>
 
     <item
-        android:id="@+id/miRegister"
-        android:title="@string/register"/>
+        android:id="@+id/miLogout"
+        android:visible="false"
+        android:title="@string/logout"/>
+
+<!--    <item-->
+<!--        android:id="@+id/miRegister"-->
+<!--        android:title="@string/register"/>-->
 
     <item
-        android:id="@+id/miLogout"
-        android:title="@string/logout"/>
+        android:id="@+id/miNetwork"
+        android:title="@string/network_request"/>
+
 
     <item
         android:id="@+id/miAddNeed"
         android:title="@string/add_need"/>
 
+    <item
+        android:id="@+id/miAddUserData"
+        android:title="@string/add_example_user_data"/>
+
+    <item
+        android:id="@+id/miAddAction"
+        android:title="@string/add_action"/>
+
+    <item
+        android:id="@+id/miAddEvent"
+        android:title="@string/add_event"/>
 
 </menu>

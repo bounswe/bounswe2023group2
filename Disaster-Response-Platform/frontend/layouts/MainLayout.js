@@ -11,6 +11,7 @@ import NavigationBar from "@/components/NavigationBar.js";
 function MainLayout({ children }) {
   const router = useRouter();
 
+
   return (
     <div className={styles.main}>
       <NavigationBar />
