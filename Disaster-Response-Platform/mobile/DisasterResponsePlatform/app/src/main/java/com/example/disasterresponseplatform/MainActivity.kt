@@ -40,13 +40,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var homePageFragment: HomePageFragment
-    private lateinit var networkFragment: NetworkFragment
 
+    private val homePageFragment = HomePageFragment()
+    private val networkFragment = NetworkFragment()
     private val mapFragment = MapFragment()
-    private lateinit var activityFragment: ActivityFragment
     private val profileFragment = ProfileFragment()
     private val loginFragment = LoginFragment()
+    private lateinit var activityFragment: ActivityFragment
 
     private lateinit var needViewModel: NeedViewModel
     private lateinit var userDataViewModel: UserDataViewModel
@@ -93,8 +93,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeFragments(){
-        homePageFragment = HomePageFragment(this)
-        networkFragment = NetworkFragment(this)
         activityFragment = ActivityFragment(needViewModel,resourceViewModel)
         replaceFragment(homePageFragment)
     }
