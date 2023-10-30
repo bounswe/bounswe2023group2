@@ -96,7 +96,8 @@ merve_singup_body={
   "last_name": "gurbuz",
   "password": "12345merve",
   "phone_number": "05527934742",
-  "email": "merve16gurbuz@gmail.com"
+  "email": "merve16gurbuz@gmail.com",
+  "private_account": True
 }
 
 email_login_body= {
@@ -185,7 +186,7 @@ def test_login4():
     assert response.status_code == 401
 
 
-def test_refresh_token():
+def test_refresh_token1():
     response = client.post("/api/users/login", json=
     phone_login_body)
     response_data = response.json()
@@ -199,7 +200,7 @@ def test_refresh_token():
     response = client.post("/api/users/refresh-token", headers=headers)
     assert response.status_code == 200
 
-def test_login_expired():
+def test_refresh_token2():
     token="dkfrgos"
     token = "Bearer " + token
     headers = {
@@ -208,12 +209,63 @@ def test_login_expired():
     }
     response = client.post("/api/users/refresh-token", headers=headers)
     assert response.status_code == 401
-# def test_get_me():
-#     response = client.get("/api/users/me")
-#     assert response.status_code == 200
-# def test_get_username():
-#     response = client.get("/api/users/{username}", "begummm")
-#     assert response.status_code == 200
+def test_get_me():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    response = client.get("/api/users/me", headers=headers)
+    assert response.status_code == 200
+def test_get_username():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    endpoint= "/api/users/" + "begum4"
+    response = client.get(endpoint, headers=headers)
+    assert response.status_code == 200
+
+def test_get_username2():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    endpoint= "/api/users/" + "merve"
+    response = client.get(endpoint, headers=headers)
+    assert response.status_code == 403
+
+def test_get_username3():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    endpoint= "/api/users/" + "merve22p3"
+    response = client.get(endpoint, headers=headers)
+    assert response.status_code == 404
 
 # def test_update_user():
 #     response = client.put("/api/users/login", json=
