@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform.ui.authentication
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,6 @@ class RegistrationFragment : Fragment() {
 
     private lateinit var binding: FragmentRegistrationBinding
     private val forgotPasswordFragment = ForgotPasswordFragment()
-    private val activityFragment =  ActivityFragment()
 
 
     override fun onCreateView(
@@ -59,7 +59,7 @@ class RegistrationFragment : Fragment() {
         authViewModel.signUpSuccessful.observe(viewLifecycleOwner, Observer { isSuccessful ->
             if (isSuccessful) {
                 Toast.makeText(context, "proceeding", Toast.LENGTH_SHORT ).show()
-                addFragment(activityFragment)
+                parentFragmentManager.popBackStack()
             }
 
         })
@@ -77,12 +77,4 @@ class RegistrationFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
     }
-
-    private fun addFragment(fragment: Fragment) {
-        val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
-        ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
-        ft.commit()
-    }
-
 }
