@@ -24,7 +24,6 @@ missing_field_signup_body= {
   "email": "begum@outwelook.com",
   "disabled": False,
   "first_name": "Begum",
-  "last_name": "Arslan",
   "phone_number": "05355783149",
   "is_email_verified": False,
   "private_account": False
@@ -91,6 +90,15 @@ username_login_body= {
 
 }
 
+merve_singup_body={
+  "username": "merve",
+  "first_name": "merve",
+  "last_name": "gurbuz",
+  "password": "12345merve",
+  "phone_number": "05527974742",
+  "email": "merve16gurbuz@gmail.com"
+}
+
 email_login_body= {
     "username": "begum",
     "password": "a2345678"
@@ -118,11 +126,11 @@ def test_signup2():
 def test_signup3():
     response = client.post("/api/users/signup", json=
     wrong_phone_number_signup_body)
-    assert response.status_code == 422
+    assert response.status_code == 400
 
 def test_signup4():
     response = client.post("/api/users/signup", json=
-    only_email_signup_body)
+    merve_singup_body)
     assert response.status_code == 201
 
 def test_signup5():
