@@ -4,7 +4,7 @@ from Database.mongo import MongoDB
 client = TestClient(app)
 db = MongoDB.getInstance()
 
-
+import json
 
 correct_signup_body= {
   "username": "begummm",
@@ -116,6 +116,8 @@ wrong_login_body= {
     "password": "a2345678"
 
 }
+
+
 def test_signup1():
     response = client.post("/api/users/signup", json=
     correct_signup_body)
@@ -181,3 +183,40 @@ def test_login4():
     response = client.post("/api/users/login", json=
     wrong_login_body)
     assert response.status_code == 401
+
+
+def test_refresh_token():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    response = client.post("/api/users/refresh-token", headers=headers)
+    assert response.status_code == 200
+
+def test_login_expired():
+    token="dkfrgos"
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    response = client.post("/api/users/refresh-token", headers=headers)
+    assert response.status_code == 401
+# def test_get_me():
+#     response = client.get("/api/users/me")
+#     assert response.status_code == 200
+# def test_get_username():
+#     response = client.get("/api/users/{username}", "begummm")
+#     assert response.status_code == 200
+
+# def test_update_user():
+#     response = client.put("/api/users/login", json=
+#     wrong_login_body)
+#     assert response.status_code == 401
+
