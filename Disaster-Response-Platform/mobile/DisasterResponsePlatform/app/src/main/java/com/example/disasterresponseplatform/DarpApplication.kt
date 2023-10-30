@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform
 
 import android.app.Application
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import dagger.hilt.android.HiltAndroidApp
 
 /** This is for Hilt
@@ -10,4 +11,8 @@ import dagger.hilt.android.HiltAndroidApp
  */
 @HiltAndroidApp
 class DarpApplication: Application() {
+    override fun onCreate() {
+        super.onCreate()
+        DiskStorageManager.initialize(this)
+    }
 }

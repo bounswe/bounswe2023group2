@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Response, Depends, status
 from http import HTTPStatus
-from Models.user_profile_model import UserOptionalInfo
+from Models.user_profile_model import UserOptionalInfo, UserOptionalInfos
+from Models.user_model import Error
 import Services.uprofile_optinfo_service as user_profile_service
 from Services.build_API_returns import *
 import Services.authentication_service as authentication_service
 
 router = APIRouter()
 
-def general_user_optional_info(response, username:str) ->json:
+def general_user_optional_info(response, username:str = None) ->json:
     try:
         json_result = user_profile_service.get_user_optional_info(username)
         response.status_code = HTTPStatus.OK
@@ -17,17 +18,29 @@ def general_user_optional_info(response, username:str) ->json:
         json_result = create_json_for_error("Get user optional info faild", str(val_error))
         return json.loads(json_result)
 
-@router.get("/get-user-optional-info", )
+@router.get("/get-user-optional-info", responses={
+    status.HTTP_200_OK: {"model": UserOptionalInfos},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}
+} )
 async def get_user_optional_info(response: Response, username: str = Depends(authentication_service.get_current_username)):
     return general_user_optional_info(response, username)
 
 
-@router.get("/all-user-optional-infos", )
+@router.get("/all-user-optional-infos", responses={
+    status.HTTP_200_OK: {"model": UserOptionalInfos},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}
+})
 async def get_all_user_optional_info(response: Response, username: str = Depends(authentication_service.get_current_username)):
     return general_user_optional_info(response=response)
 
 
-@router.post("/set-user-optional-info", )
+@router.post("/set-user-optional-info", responses={
+    status.HTTP_200_OK: {"model": UserOptionalInfo},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}
+})
 async def set_user_optional_info(user_optional_info: UserOptionalInfo, response: Response, username: str = Depends(authentication_service.get_current_username)):
     try:
         user_optional_info.username  = username
@@ -55,7 +68,11 @@ async def set_user_optional_info(reset_field: str, response: Response, username:
         return json.loads(json_result)
 
 
-@router.delete("/delete-user-optional-info", )
+@router.delete("/delete-user-optional-info", responses={
+    status.HTTP_200_OK: {"model": UserOptionalInfo},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}
+} )
 async def delete_user_optional_info(response: Response, username: str = Depends(authentication_service.get_current_username)):
     try:
         json_result = user_profile_service.delete_user_optional_info(username)

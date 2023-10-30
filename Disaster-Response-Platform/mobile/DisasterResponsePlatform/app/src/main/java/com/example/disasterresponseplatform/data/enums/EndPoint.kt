@@ -1,7 +1,8 @@
 package com.example.disasterresponseplatform.data.enums
 
 enum class Endpoint(val path: String) {
-    LOGIN("api/login"),
+    LOGIN("users/login"),
+    SIGNUP("users/signup"),
     DATA("joke/any"),
     USER("user"),
     PRODUCTS("products");

@@ -51,6 +51,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
 
     // retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -119,5 +120,9 @@ dependencies {
 
     // Picasso for downloading profile images
     implementation 'com.squareup.picasso:picasso:2.8'
+
+    // Material design
+    implementation 'com.google.android.material:material:1.10.0'
+
 
 }

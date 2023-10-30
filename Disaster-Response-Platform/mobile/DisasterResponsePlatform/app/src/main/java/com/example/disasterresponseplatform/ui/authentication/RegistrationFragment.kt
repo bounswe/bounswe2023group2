@@ -12,11 +12,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentRegistrationBinding
+import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 
 class RegistrationFragment : Fragment() {
 
     private lateinit var binding: FragmentRegistrationBinding
     private val forgotPasswordFragment = ForgotPasswordFragment()
+    private val activityFragment =  ActivityFragment()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,8 +47,21 @@ class RegistrationFragment : Fragment() {
             } else if (isValid == 1) {
                 Toast.makeText(context, "Passwords doesn't match", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "Api request has been sent check Logcat for more details", Toast.LENGTH_SHORT).show()
+                authViewModel.sendSignUpRequest()
+                //Toast.makeText(context, "Api request has been sent check Logcat for more details", Toast.LENGTH_SHORT).show()
             }
+        })
+
+        authViewModel.signUpError.observe(viewLifecycleOwner, Observer { error ->
+            Toast.makeText(context, error, Toast.LENGTH_SHORT ).show()
+        })
+
+        authViewModel.signUpSuccessful.observe(viewLifecycleOwner, Observer { isSuccessful ->
+            if (isSuccessful) {
+                Toast.makeText(context, "proceeding", Toast.LENGTH_SHORT ).show()
+                addFragment(activityFragment)
+            }
+
         })
 
 
@@ -55,7 +71,6 @@ class RegistrationFragment : Fragment() {
             authViewModel.updateSignUpEmail(email.text.toString())
             authViewModel.updateSignUpPassword(password.text.toString())
             authViewModel.updateSignUpConfirmPassword(password_confirm.text.toString())
-            authViewModel.sendSignUpRequest()
             authViewModel.validateSignUp()
         }
         binding.signInButton.setOnClickListener {

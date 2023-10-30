@@ -1,13 +1,14 @@
 import styles from "./NavigationBar.module.scss";
 import {FaMapMarkedAlt} from "react-icons/fa";
 import {BsSearch} from "react-icons/bs";
-import {Button} from "@nextui-org/react";
 import {CgProfile} from "react-icons/cg";
 import Link from "next/link";
-
+import { Button, useDisclosure } from '@nextui-org/react'
+import AddResourceForm from "./AddResource";
 
 
 export default function NavigationBar() {
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
     return (
         <main className={styles.main}>
             <div className={styles.navbar}>
@@ -33,6 +34,10 @@ export default function NavigationBar() {
                       <BsSearch size={25} />
                     </Link>
                 </nav>
+                <nav> 
+                  <Button onPress={onOpen}>Add Resource</Button>
+                  </nav>
+                <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen}  />
                 <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
                     <Link href={`/profile`}>
                       <CgProfile size={30} />

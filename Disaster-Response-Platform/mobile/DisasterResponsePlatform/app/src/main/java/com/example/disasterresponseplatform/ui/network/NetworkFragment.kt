@@ -47,14 +47,14 @@ class NetworkFragment(val mainActivity: MainActivity) : Fragment() {
                 endpoint = Endpoint.DATA,
                 requestType = RequestType.GET,  // Specify the type of request here
                 headers = headers,
-                callback = object : Callback<Response<ResponseBody>> {
-                    override fun onFailure(call: Call<Response<ResponseBody>>, t: Throwable) {
+                callback = object : Callback<ResponseBody> {
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                         Toast.makeText(mainActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onResponse(
-                        call: Call<Response<ResponseBody>>,
-                        response: Response<Response<ResponseBody>>
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
                     ) {
                         if (response.isSuccessful) {
                             Toast.makeText(mainActivity, "Status Code: ${response.code()}, Successful Response!", Toast.LENGTH_SHORT).show()

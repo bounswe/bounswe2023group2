@@ -13,9 +13,12 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.databinding.FragmentLoginBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 
-class LoginFragment : Fragment(R.layout.fragment_login) {
+class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var authViewModel: AuthenticationViewModel
@@ -23,6 +26,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     val registrationFragment = RegistrationFragment()
     val forgotPasswordFragment = ForgotPasswordFragment()
 
+    private val activityFragment =  ActivityFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,8 +60,20 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
                 Log.d("", "Sent sign in request")
-                Toast.makeText(context, "Api Request has been sent", Toast.LENGTH_SHORT).show()
+                DiskStorageManager.setKeyValue("username", usernameEditText.text.toString())
                 authViewModel.sendSignInRequest()
+            }
+        })
+
+        authViewModel.signInError.observe(viewLifecycleOwner, Observer { error ->
+            Toast.makeText(context, error, Toast.LENGTH_SHORT ).show()
+        })
+
+        authViewModel.signInSuccessful.observe(viewLifecycleOwner, Observer { isSuccessful ->
+            if (isSuccessful) {
+                Toast.makeText(context, "Logged in as " + DiskStorageManager.getKeyValue("username"), Toast.LENGTH_SHORT ).show()
+                requireActivity().finish()
+                startActivity(requireActivity().intent)
             }
         })
 
