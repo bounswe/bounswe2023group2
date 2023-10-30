@@ -41,7 +41,7 @@ def create_resource(resource: Resource, response:Response, current_user: str = D
 
 # Get the resource with the specified ID.
 @router.get("/{resource_id}")
-def get_resource(resource_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+def get_resource(resource_id: str, response: Response):
     try:
         resource = resource_service.get_resource_by_id(resource_id)
         response.status_code = HTTPStatus.OK
@@ -53,7 +53,7 @@ def get_resource(resource_id: str, response:Response, current_user: str = Depend
 
 # Get all resources.
 @router.get("/")
-def get_all_resources(response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+def get_all_resources(response: Response):
     try:
         resources = resource_service.get_resources()
         response.status_code = HTTPStatus.OK
@@ -113,7 +113,7 @@ def set_initial_quantity_of_resource(resource_id: str, quantity_data: QuantityUp
 
 # Response Body = {"quantity": 75}
 @router.get("/{resource_id}/initial_quantity")
-def get_initial_quantity_of_resource(resource_id: str, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def get_initial_quantity_of_resource(resource_id: str, response: Response):
     try:
         quantity = resource_service.get_initial_quantity(resource_id)
         response.status_code = HTTPStatus.OK
@@ -137,7 +137,7 @@ def set_current_quantity_of_resource(resource_id: str, quantity_data: QuantityUp
 
 # Response Body = {"quantity": 75}
 @router.get("/{resource_id}/current_quantity")
-def get_current_quantity_of_resource(resource_id: str, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def get_current_quantity_of_resource(resource_id: str, response: Response):
     try:
         quantity = resource_service.get_current_quantity(resource_id)
         response.status_code = HTTPStatus.OK
@@ -160,7 +160,7 @@ def set_condition_of_resource(resource_id: str, condition_data: ConditionUpdate,
         return json.loads(err_json)
 # Response Body = {"condition": "used"}
 @router.get("/{resource_id}/condition")
-def get_condition_of_resource(resource_id: str, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def get_condition_of_resource(resource_id: str, response: Response):
     try:
         condition = resource_service.get_condition(resource_id)
         response.status_code = HTTPStatus.OK
