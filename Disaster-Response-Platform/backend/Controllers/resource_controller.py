@@ -9,7 +9,7 @@ from Services.build_API_returns import create_json_for_error
 
 # Change history:
 # 26/10/2023 The changes for auth2 authorization added and merged
-# 30/10/2023 Add additional methods
+# 30/10/2023 Add additional endpoints
 
 router = APIRouter()
 
@@ -146,7 +146,6 @@ def get_current_quantity_of_resource(resource_id: str, response: Response, curre
         err_json = create_json_for_error("Resource error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
-
 
 # Body = {"condition": "used"}
 @router.put("/{resource_id}/condition")
