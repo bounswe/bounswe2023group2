@@ -15,8 +15,7 @@ export default withIronSessionApiRoute(
       };
       await req.session.save();
 
-      res.status(200 || 201 ).json(data);
-      res.redirect(307, '/')
+      res.status(200).json(data);
     } catch (error) {
       res.status(error?.response?.status ?? 400).json({ error });
     }
