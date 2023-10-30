@@ -2,9 +2,5 @@ export default function InfoList({ list }) {
 	if (list.length === 0) {
 		return null;
 	}
-	return (
-		<>
-			<p> (TEMPORARY) {list} </p>
-		</>
-	);
+	return list.entries().map(([index, elem]) => <div key={index.toString()}> elem </div>)
 }

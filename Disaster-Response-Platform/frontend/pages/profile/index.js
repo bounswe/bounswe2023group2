@@ -9,21 +9,37 @@ import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
 
-export default function Profile({ user }) {
-  const {misc, main_info, optional_info, list_info, activities} = user;
-  const {social, skills, languages, professions} = list_info;
+export default function Profile({ main_info, optional_info, list_info }) {
+  // const {misc, activities} = TODO;
+  const {professions, languages, "socialmedia-links": social, skills} = list_info;
+  const prof_str = professions.map(prof => `${prof.profession} (${prof.profession_level})`);
+  const lang_str = languages.map(lang => `${lang.language} (${lang.language_level})`);
+  const skill_str = skills.map(skill => `${skill.skill_definition} (${skill.skill_level})`);
+  const social_str = social.map(social => <a href={social.profile_URL}>{platform_name}</a>);
+  const dictionary_tr = {
+    "date_of_birth": "Doğum Tarihi",
+    "nationality": "Ülke",
+    "identity_number": "Kimlik No",
+    "education": "Öğrenim",
+    "health_condition": "Sağlık Durumu",
+    "blood_type": "Kan Grubu",
+    "Address": "Adres"
+  }
+  if ("username" in optional_info) delete optional_info["username"];
+  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val])
+  optional_info_tr.sort();
   return (
     <>
       <main>
         <div class="flex justify-around space-x-8">
           <MainInfo className="w-60" info={main_info}/>
-          <OptionalInfo className="w-96" fields={optional_info} />
+          <OptionalInfo className="w-96" fields={optional_info_tr} />
         </div>
         <br />
-        <InfoList list={social} />
-        <InfoList list={skills} />
-        <InfoList list={languages} />
-        <InfoList list={professions} />
+        <InfoList list={social_str} />
+        <InfoList list={skill_str} />
+        <InfoList list={lang_str} />
+        <InfoList list={prof_str} />
         <ActivityTable />
       </main>
     </>
@@ -36,41 +52,51 @@ Profile.getLayout = function getLayout(page) {
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps({ req, locale }) {
 
+    let user;
+
     try {
-      const user = req.session.user;
-      console.log(user);
+      user = req.session.user;
     } catch (error) {
-      console.log('Error in getServerSideProps @ profile/index.js: ', error);
+      console.log('Error @ profile/index.js: ', error);
       return { notFound: true };
     }
 
-    const optional_info = [
-            {"title": "Date of Birth", "content": "31.09.2000"},
-            {"title": "Nationality", "content": "Turkey"},
-            {"title": "Blood Type", "content": "0+"},
-            {"title": "Address", "content": "really really really long address to test css stuff and overflows and height imbalances"}
-    ];
+    if (!user?.accessToken) {
+      console.log("A guest is trying to view own profile");
+      return { guest: true };
+    }
+
+    const { data: main_info } = await api.get('/api/users/me', {
+      headers: {
+        'Authorization': `Bearer ${user.accessToken}` 
+      }
+    });
+
+    const { data: { user_optional_infos: [optional_info] } } = await api.get('/api/profiles/get-user-optional-info', {
+      headers: {
+        'Authorization': `Bearer ${user.accessToken}` 
+      }
+    });
+
+    let list_info = {}
+
+    for (let topic of ["professions", "languages", "socialmedia-links", "skills"]) {
+      let key = `user_${topic.replaceAll("-", "_")}`;
+      const { data: { [key]: fields } } = await api.get(`/api/profiles/${topic}`, {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}` 
+        }
+      });
+      list_info[topic] = fields;
+    }
+
+    console.log(list_info)
 
     return {
       props: {
-        "user": {
-          "misc": {
-
-          },
-          "main_info": {
-            "username": "user3",
-            "name": "Sample User",
-            "phone": "05555555555",
-            "email": "sample-user@darp.com"
-          },
-          optional_info,
-          "list_info": {
-            "social": [],
-            "skills": [],
-            "languages": [],
-            "professions": []
-          }
-        }
+        main_info,
+        optional_info,
+        list_info
       },
     };
   },
