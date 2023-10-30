@@ -57,6 +57,19 @@ class MainActivity : AppCompatActivity() {
         navBarListener()
         toggleListener()
 
+        // Set logged in state
+        if (DiskStorageManager.hasKey("token")) {
+            binding.navView.menu.findItem(R.id.miLogin).isVisible = false
+            binding.navView.menu.findItem(R.id.miLoggedInAs).isVisible = true
+            binding.navView.menu.findItem(R.id.miLogout).isVisible = true
+            // This value will be fetched from API when it is ready
+            binding.navView.menu.findItem(R.id.miLoggedInAs).title = DiskStorageManager.getKeyValue("username")
+        } else {
+            binding.navView.menu.findItem(R.id.miLogin).isVisible = true
+            binding.navView.menu.findItem(R.id.miLoggedInAs).isVisible = false
+            binding.navView.menu.findItem(R.id.miLogout).isVisible = false
+        }
+
         // it is created by dependency Injection without creating any of db, dao or repo
         val getNeedViewModel: NeedViewModel by viewModels()
         needViewModel = getNeedViewModel
@@ -93,10 +106,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.navView.setNavigationItemSelectedListener {
             when(it.itemId){
+                R.id.miLoggedInAs -> replaceNavFragment(profileFragment)
                 R.id.miLogin -> replaceNavFragment(loginFragment)
-                R.id.miRegister -> replaceNavFragment(registrationFragment)
-                R.id.miNetwork -> replaceNavFragment(networkFragment)
                 R.id.miLogout -> logOutActions()
+//                R.id.miRegister -> replaceNavFragment(registrationFragment)
+                R.id.miNetwork -> replaceNavFragment(networkFragment)
                 R.id.miAddNeed -> tryNeedViewModel()
                 R.id.miAddUserData -> tryUserDataViewModel()
             }
@@ -107,6 +121,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun logOutActions() {
         DiskStorageManager.removeKey("token")
+        finish()
+        startActivity(getIntent())
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)){
