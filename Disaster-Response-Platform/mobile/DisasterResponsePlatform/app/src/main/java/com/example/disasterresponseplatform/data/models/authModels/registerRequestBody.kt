@@ -21,7 +21,16 @@ data class SignUpResponseBody(
     val tokenType: String
 )
 
-data class ValidationErrorResponse(
+data class SignUpResponseBody400 (
+    @SerializedName("ErrorMessage")
+    val errorMessage :String,
+
+    @SerializedName("ErrorDetail")
+    val errorDetail :String,
+)
+
+
+data class SignUpResponseBody422(
     @SerializedName("detail")
     val detail: List<ValidationErrorDetail>
 )

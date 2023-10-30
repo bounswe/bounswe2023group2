@@ -14,6 +14,10 @@ object DiskStorageManager {
         sharedPreferences.edit().putString(key, value).apply()
     }
 
+    fun hasKey(key: String): Boolean {
+        return sharedPreferences.contains(key)
+    }
+
     fun getKeyValue(key: String): String? {
         return sharedPreferences.getString(key, null)
     }
