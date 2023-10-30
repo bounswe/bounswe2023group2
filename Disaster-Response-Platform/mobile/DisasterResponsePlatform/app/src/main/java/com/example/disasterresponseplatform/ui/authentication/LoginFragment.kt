@@ -13,7 +13,9 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.databinding.FragmentLoginBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 
 class LoginFragment : Fragment() {
@@ -46,7 +48,6 @@ class LoginFragment : Fragment() {
         // Access the views from the XML
         val signInTopLabel = view.findViewById<TextView>(R.id.sign_in_top_label)
         val usernameEditText = view.findViewById<EditText>(R.id.username)
-        val emailEditText = view.findViewById<EditText>(R.id.email)
         val passwordEditText = view.findViewById<EditText>(R.id.password)
         val forgotPasswordButton = view.findViewById<Button>(R.id.forgot_password_button)
         val signInButton = view.findViewById<Button>(R.id.sign_in_button)
@@ -59,6 +60,7 @@ class LoginFragment : Fragment() {
                 Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
                 Log.d("", "Sent sign in request")
+                DiskStorageManager.setKeyValue("username", usernameEditText.text.toString())
                 authViewModel.sendSignInRequest()
             }
         })
@@ -69,16 +71,15 @@ class LoginFragment : Fragment() {
 
         authViewModel.signInSuccessful.observe(viewLifecycleOwner, Observer { isSuccessful ->
             if (isSuccessful) {
-                Toast.makeText(context, "proceeding", Toast.LENGTH_SHORT ).show()
-                addFragment(activityFragment)
+                Toast.makeText(context, "Logged in as " + DiskStorageManager.getKeyValue("username"), Toast.LENGTH_SHORT ).show()
+                requireActivity().finish()
+                startActivity(requireActivity().intent)
             }
-
         })
 
 
         // Set button click listener for sign-in
         signInButton.setOnClickListener {
-            authViewModel.updateEmail(emailEditText.text.toString())
             authViewModel.updateUsername(usernameEditText.text.toString())
             authViewModel.updatePassword(passwordEditText.text.toString())
             authViewModel.validateLogin()

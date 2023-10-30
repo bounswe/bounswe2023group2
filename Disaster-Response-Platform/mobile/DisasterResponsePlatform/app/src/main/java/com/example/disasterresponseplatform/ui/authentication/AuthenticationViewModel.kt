@@ -8,8 +8,11 @@ import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.authModels.RegisterRequestBody
 import com.example.disasterresponseplatform.data.models.authModels.SignInRequestBody
+import com.example.disasterresponseplatform.data.models.authModels.SignInResponseBody401
+import com.example.disasterresponseplatform.data.models.authModels.SignInResponseBody422
 import com.example.disasterresponseplatform.data.models.authModels.SignUpResponseBody
-import com.example.disasterresponseplatform.data.models.authModels.ValidationErrorResponse
+import com.example.disasterresponseplatform.data.models.authModels.SignUpResponseBody400
+import com.example.disasterresponseplatform.data.models.authModels.SignUpResponseBody422
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.google.gson.Gson
@@ -136,14 +139,11 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
         val signInRequestBody = _username.value?.let {
             _password.value?.let { it1 ->
-                _email.value?.let { it2 ->
                     SignInRequestBody(
                         username = it,
-                        email = it2,
                         password = it1,
-                        disabled = true
                     )
-                }
+
             }
         }
 
@@ -184,20 +184,34 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                         }
                     } else {
                         val errorBody = response.errorBody()?.string()
+                        var responseCode = response.code()
                         if (errorBody != null) {
                             try {
-                                val errorResponse = gson.fromJson(errorBody, ValidationErrorResponse::class.java)
-                                Log.d("Error Message", errorResponse.detail[0].message)
-                                _signInError.value = errorResponse.detail[0].message
+                                if (responseCode == 422) {
+                                    val errorResponse = gson.fromJson(errorBody, SignInResponseBody422::class.java)
+                                    Log.d("Error Message", errorResponse.detail[0].message)
+                                    _signInError.value = errorResponse.detail[0].message
+                                }
+                                else if (responseCode == 400) {
+                                    val errorResponse = gson.fromJson(errorBody, SignInResponseBody401::class.java)
+                                    Log.d("Error Message", errorResponse.errorDetail)
+                                    _signInError.value = errorResponse.errorDetail
+                                }
+                                else {
+                                    Log.d("Error Message", "Unexpected Error Happened")
+                                    _signInError.value = "Unexpected Error Happened"
+                                }
+
                             } catch (e: JsonSyntaxException) {
                                 Log.e("ResponseError", "Error parsing error body: ${e.message}")
+                                _signInError.value = "Unexpected Error Happened"
                             }
                         }
-                        Log.d("ResponseError", "Error Message: ${response.message()}")
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    _signInError.value = "Unexpected Error Happened"
                     Log.e("ResponseError", "Request failed: ${t.message}")
                 }
             }
@@ -221,7 +235,12 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
         // Splitting the full name into first name and last name
         val parts = fullName.split(" ", limit = 2)
         val firstName = parts.getOrElse(0) { "" }
-        val lastName = parts.getOrElse(1) { "" }
+        var lastName = parts.getOrElse(1) { "" }
+        lastName =  if (lastName.isBlank()) {
+            "not specified"
+        } else {
+            lastName
+        }
 
         val registerRequestBody = RegisterRequestBody(
             username = username,
@@ -276,31 +295,36 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                     } else {
                         val errorBody = response.errorBody()?.string()
                         if (errorBody != null) {
-                            try {
-                                val gson = Gson()
-                                val errorResponse = gson.fromJson(errorBody, ValidationErrorResponse::class.java)
-                                Log.d("Error Message", errorResponse.detail[0].message)
-                                _signUpError.value = errorResponse.detail[0].message
-                            } catch (e: JsonSyntaxException) {
-                                // Handle JSON parsing error
-                                Log.e("ResponseError", "Error parsing error body: ${e.message}")
-                            }
-                        }
+                            var responseCode = response.code()
+                            Log.d("ResponseSuccess", "Body: $errorBody")
+                            if (errorBody != null) {
+                                try {
+                                    if (responseCode == 422) {
+                                        val errorResponse = gson.fromJson(errorBody, SignUpResponseBody422::class.java)
+                                        Log.d("Error Message", errorResponse.detail[0].message)
+                                        _signUpError.value = errorResponse.detail[0].message
+                                    }
+                                    else if (responseCode == 400) {
+                                        val errorResponse = gson.fromJson(errorBody, SignUpResponseBody400::class.java)
+                                        Log.d("Error Message", errorResponse.errorDetail)
+                                        _signUpError.value = errorResponse.errorDetail
+                                    }
+                                    else {
+                                        Log.d("Error Message", "Unexpected Error Happened")
+                                        _signUpError.value = "Unexpected Error Happened"
+                                    }
 
-                        if (errorBody != null) {
-                            try {
-                                Log.d("ResponseSuccess", "Body: $errorBody")
-                            } catch (e: IOException) {
-                                // Handle IOException if reading the response body fails
-                                Log.e("ResponseError", "Error reading response body: ${e.message}")
+                                } catch (e: JsonSyntaxException) {
+                                    Log.e("ResponseError", "Error parsing error body: ${e.message}")
+                                    _signUpError.value = "Unexpected Error Happened"
+                                }
                             }
                         }
-                        Log.d("ResponseError", "Error Message: ${response.message()}")
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    // Handle the failure case
+                    _signUpError.value = "Unexpected Error Happened"
                 }
             }
         )
