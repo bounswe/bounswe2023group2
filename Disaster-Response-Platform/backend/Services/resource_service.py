@@ -58,9 +58,9 @@ def update_resource(resource_id: str, resource: Resource) -> Resource:
         if 'details' in resource.dict(exclude_none=True) and 'details' in existing_resource:
             resource.details = {**existing_resource['details'], **resource.dict(exclude_none=True)['details']}
 
-        update_data = {k: v for k, v in resource.dict(exclude_none=True).items()}
+            update_data = {k: v for k, v in resource.dict(exclude_none=True).items()}
 
-        resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": update_data})
+            resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": update_data})
 
         updated_resource_data = resources_collection.find_one({"_id": ObjectId(resource_id)})
         return Resource(**updated_resource_data)
