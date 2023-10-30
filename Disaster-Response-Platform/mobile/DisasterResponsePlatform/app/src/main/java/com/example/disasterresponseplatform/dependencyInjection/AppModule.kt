@@ -7,6 +7,7 @@ import com.example.disasterresponseplatform.data.repositories.UserDataRepository
 import com.example.disasterresponseplatform.data.repositories.ActionRepository
 import com.example.disasterresponseplatform.data.repositories.EmergencyRepository
 import com.example.disasterresponseplatform.data.repositories.EventRepository
+import com.example.disasterresponseplatform.data.repositories.ResourceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,5 +62,9 @@ class AppModule {
     @Provides
     @Singleton
     fun provideEmergencyRepository(database: DarpDB): EmergencyRepository = EmergencyRepository(database.emergencyDao)
+
+    @Provides
+    @Singleton
+    fun provideResourceRepository(database: DarpDB): ResourceRepository = ResourceRepository(database.resourceDao)
 
 }

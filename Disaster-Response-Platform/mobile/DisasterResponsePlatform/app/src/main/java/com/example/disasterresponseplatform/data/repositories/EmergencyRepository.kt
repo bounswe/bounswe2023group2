@@ -5,7 +5,7 @@ import com.example.disasterresponseplatform.data.database.emergency.Emergency
 import com.example.disasterresponseplatform.data.database.emergency.EmergencyDao
 import javax.inject.Inject
 
-class EmergencyRepository@Inject constructor(private val emergencyDao: EmergencyDao) {
+class EmergencyRepository @Inject constructor(private val emergencyDao: EmergencyDao) {
 
     suspend fun insertEmergency(emergency: Emergency){
         emergencyDao.insertEmergency(emergency)

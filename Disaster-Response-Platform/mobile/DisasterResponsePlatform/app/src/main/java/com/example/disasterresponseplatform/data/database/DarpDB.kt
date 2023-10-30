@@ -16,14 +16,17 @@ import com.example.disasterresponseplatform.data.database.emergency.Emergency
 import com.example.disasterresponseplatform.data.database.emergency.EmergencyDao
 import com.example.disasterresponseplatform.data.database.event.Event
 import com.example.disasterresponseplatform.data.database.event.EventDao
+import com.example.disasterresponseplatform.data.database.resource.Resource
+import com.example.disasterresponseplatform.data.database.resource.ResourceDao
 
-@Database(entities = [Need::class, UserData::class, Action::class, Event::class, Emergency::class], version = DatabaseInfo.DATABASE_VERSION, exportSchema = false)
+@Database(entities = [Need::class, UserData::class, Action::class, Event::class, Emergency::class, Resource::class], version = DatabaseInfo.DATABASE_VERSION, exportSchema = false)
 abstract class DarpDB: RoomDatabase() {
     abstract val needDao: NeedDao
     abstract val userDataDao: UserDataDao
     abstract val actionDao: ActionDao
     abstract val eventDao: EventDao
     abstract val emergencyDao: EmergencyDao
+    abstract val resourceDao: ResourceDao
 
     // it's static object in this way you can call getInstance method without any initialization
     companion object{
