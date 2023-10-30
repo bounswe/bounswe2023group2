@@ -5,7 +5,7 @@ from Services import resource_service
 from Services.build_API_returns import *
 
 
-from Controllers import resource_controller, user_controller, uprofile_optinfo_controller, uprofile_languages_controller, user_profile_controller, need_controller
+from Controllers import resource_controller, user_controller, uprofile_optinfo_controller, uprofile_languages_controller, need_controller
 
 from fastapi.responses import JSONResponse
 from http import HTTPStatus

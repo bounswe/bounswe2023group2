@@ -11,3 +11,6 @@ class Need(BaseModel):
     unsuppliedQuantity: int = Field(default=None)
     type: str = Field(default=None)
     details: Dict[str, Any] = Field(default=None)
+    
+class QuantityUpdate(BaseModel):
+    quantity: int

@@ -2,7 +2,7 @@ import json
 from http import HTTPStatus
 
 from fastapi import APIRouter, HTTPException, Response, Depends
-from Models.need_model import Need
+from Models.need_model import Need, QuantityUpdate
 import Services.need_service as need_service
 
 import Services.authentication_service as authentication_service
@@ -66,10 +66,57 @@ def update_need(need_id: str, need: Need, response:Response, current_user: str =
 @router.delete("/{need_id}")
 def delete_need(need_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
     try:
-        need_service.delete_need(need_id)
-        response.status_code=HTTPStatus.NO_CONTENT
+        res = need_service.delete_need(need_id)
+        response.status_code=HTTPStatus.OK
+        return json.loads(res)
+        
     except ValueError as err:
-        err_json = create_json_for_error("Need update error", str(err))
+        err_json = create_json_for_error("Need delete error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)    
     
+
+@router.put("/{need_id}/initial_quantity")
+def set_initial_quantity(need_id: str, quantity_data: QuantityUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        need_service.set_initial_quantity(need_id, quantity_data.quantity)
+        response.status_code = HTTPStatus.OK
+        return {"message": f"Initial quantity of need {need_id} is set to {quantity_data.quantity}"}
+    except ValueError as err:
+        err_json = create_json_for_error("Need update error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+    
+@router.get("/{need_id}/initial_quantity")
+def get_initial_quantity(need_id: str, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        quantity = need_service.get_initial_quantity(need_id)
+        response.status_code = HTTPStatus.OK
+        return {"Initial quantity": quantity}
+    except ValueError as err:
+        err_json = create_json_for_error("Need initial quantity error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+
+
+@router.put("/{need_id}/unsupplied_quantity")
+def set_unsupplied_quantity(need_id: str, quantity_data: QuantityUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        need_service.set_unsupplied_quantity(need_id, quantity_data.quantity)
+        response.status_code = HTTPStatus.OK
+        return {"message": f"Unsupplied quantity of need {need_id} is set to {quantity_data.quantity}"}
+    except ValueError as err:
+        err_json = create_json_for_error("Need unsupplied quantity set update error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+    
+@router.get("/{need_id}/unsupplied_quantity")
+def get_unsupplied_quantity(need_id: str, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        quantity = need_service.get_unsupplied_quantity(need_id)
+        response.status_code = HTTPStatus.OK
+        return {"Unsupplied quantity": quantity}
+    except ValueError as err:
+        err_json = create_json_for_error("Need unsupplied quantity get error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
