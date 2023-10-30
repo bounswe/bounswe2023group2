@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializeFragments(){
         homePageFragment = HomePageFragment(this)
         networkFragment = NetworkFragment(this)
-        activityFragment = ActivityFragment(needViewModel)
+        activityFragment = ActivityFragment()
         replaceFragment(homePageFragment)
     }
 
