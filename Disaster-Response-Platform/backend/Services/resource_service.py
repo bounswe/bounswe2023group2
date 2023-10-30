@@ -1,4 +1,4 @@
-from Models.resource_model import Resource
+from Models.resource_model import Resource, ConditionEnum
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 

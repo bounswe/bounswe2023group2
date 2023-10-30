@@ -1,8 +1,8 @@
 import json
 from http import HTTPStatus
 
-from fastapi import APIRouter, HTTPException, Response, Depends
-from Models.resource_model import Resource
+from fastapi import APIRouter, HTTPException, Response, Depends, Body
+from Models.resource_model import Resource, ConditionEnum, QuantityUpdate, ConditionUpdate
 import Services.resource_service as resource_service
 import Services.authentication_service as authentication_service
 from Services.build_API_returns import create_json_for_error
@@ -73,11 +73,11 @@ def delete_resource(resource_id: str, response:Response, current_user: str = Dep
         return json.loads(err_json)
 
 @router.put("/{resource_id}/initial_quantity")
-def set_initial_quantity_of_resource(resource_id: str, quantity: int, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def set_initial_quantity_of_resource(resource_id: str, quantity_data: QuantityUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
-        resource_service.set_initial_quantity(resource_id, quantity)
+        resource_service.set_initial_quantity(resource_id, quantity_data.quantity)
         response.status_code = HTTPStatus.OK
-        return {"message": f"Initial quantity of resource {resource_id} set to {quantity}"}
+        return {"message": f"Initial quantity of resource {resource_id} set to {quantity_data.quantity}"}
     except ValueError as err:
         err_json = create_json_for_error("Resource error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
@@ -95,11 +95,11 @@ def get_initial_quantity_of_resource(resource_id: str, response: Response, curre
         return json.loads(err_json)
 
 @router.put("/{resource_id}/current_quantity")
-def set_current_quantity_of_resource(resource_id: str, quantity: int, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def set_current_quantity_of_resource(resource_id: str, quantity_data: QuantityUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
-        resource_service.set_current_quantity(resource_id, quantity)
+        resource_service.set_current_quantity(resource_id, quantity_data.quantity)
         response.status_code = HTTPStatus.OK
-        return {"message": f"Current quantity of resource {resource_id} set to {quantity}"}
+        return {"message": f"Current quantity of resource {resource_id} set to {quantity_data.quantity}"}
     except ValueError as err:
         err_json = create_json_for_error("Resource error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
@@ -117,11 +117,11 @@ def get_current_quantity_of_resource(resource_id: str, response: Response, curre
         return json.loads(err_json)
 
 @router.put("/{resource_id}/condition")
-def set_condition_of_resource(resource_id: str, condition: ConditionEnum, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def set_condition_of_resource(resource_id: str, condition_data: ConditionUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
-        resource_service.set_condition(resource_id, condition)
+        resource_service.set_condition(resource_id, condition_data.condition)
         response.status_code = HTTPStatus.OK
-        return {"message": f"Condition of resource {resource_id} set to {condition}"}
+        return {"message": f"Condition of resource {resource_id} set to {condition_data.condition}"}
     except ValueError as err:
         err_json = create_json_for_error("Resource error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
