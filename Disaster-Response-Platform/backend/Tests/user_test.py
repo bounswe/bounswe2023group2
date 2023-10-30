@@ -18,6 +18,14 @@ correct_signup_body= {
   "private_account": True
 }
 
+correct_update_body= {
+  "email": "begumarslan2@outlook.de",
+  "first_name": "Begum",
+  "last_name": "Arslan",
+  "phone_number": "05531420999",
+  "private_account": False
+}
+
 missing_field_signup_body= {
   "username": "mistake",
   "password": "a234567we8",
@@ -267,8 +275,18 @@ def test_get_username3():
     response = client.get(endpoint, headers=headers)
     assert response.status_code == 404
 
-# def test_update_user():
-#     response = client.put("/api/users/login", json=
-#     wrong_login_body)
-#     assert response.status_code == 401
+def test_update_user():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    response = client.put("/api/users/update-user", json=
+    correct_update_body, headers=headers)
+    assert response.status_code == 200
 
