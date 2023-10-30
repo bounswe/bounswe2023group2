@@ -25,7 +25,9 @@ router = APIRouter()
 #        "gender": "Male",
 #        "age": "Adult",
 #        "subtype": "Shirt"
-#   }
+#   },
+#   "x": 48.7634,
+#   "y": 21.3466
 # }
 @router.post("/", status_code=201)
 def create_resource(resource: Resource, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
