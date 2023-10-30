@@ -3,6 +3,7 @@ sys.path.append("..")
 from fastapi.testclient import TestClient
 from main import app
 from Services import resource_service 
+from Models import resource_model
 client = TestClient(app)
 
 def setup_test_environment():
