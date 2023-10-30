@@ -24,7 +24,7 @@ missing_field_signup_body= {
   "email": "begum@outwelook.com",
   "disabled": False,
   "first_name": "Begum",
-  "phone_number": "05355783149",
+  "phone_number": "05355783349",
   "is_email_verified": False,
   "private_account": False
 }
@@ -85,7 +85,7 @@ wrong_email_signup_body= {
 }
 
 username_login_body= {
-    "username": "begum",
+    "username": "begummm",
     "password": "a2345678"
 
 }
@@ -95,18 +95,24 @@ merve_singup_body={
   "first_name": "merve",
   "last_name": "gurbuz",
   "password": "12345merve",
-  "phone_number": "05527974742",
+  "phone_number": "05527934742",
   "email": "merve16gurbuz@gmail.com"
 }
 
 email_login_body= {
-    "username": "begum",
+    "username_or_email_or_phone": "begumarslan@outlook.de",
     "password": "a2345678"
 
 }
 
 phone_login_body= {
-    "username": "begum",
+    "username_or_email_or_phone": "05531420999",
+    "password": "a2345678"
+
+}
+
+wrong_login_body= {
+    "username_or_email_or_phone": "bIdontexits",
     "password": "a2345678"
 
 }
@@ -158,11 +164,20 @@ def test_signup7():
 
 
 
-# def test_login1():
-#     response = client.post("/api/users/login", json=
-#     correct_signup_body)
-#     assert response.status_code == 201
-# def test_login2():
-#     response = client.post("/api/users/login", json=
-#     correct_signup_body)
-#     assert response.status_code == 201
+def test_login1():
+    response = client.post("/api/users/login", json=
+    email_login_body)
+    assert response.status_code == 200
+def test_login2():
+    response = client.post("/api/users/login", json=
+    email_login_body)
+    assert response.status_code == 200
+def test_login3():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    assert response.status_code == 200
+
+def test_login4():
+    response = client.post("/api/users/login", json=
+    wrong_login_body)
+    assert response.status_code == 401
