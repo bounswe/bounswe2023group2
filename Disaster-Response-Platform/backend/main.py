@@ -25,7 +25,7 @@ app.add_middleware(
 
 # ROUTES
 app.include_router(resource_controller.router, prefix = "/api/resource", tags=["resource"])
-app.include_router(need_controller.router, prefix="/api/need", tags=["need"])
+app.include_router(need_controller.router, prefix="/api/needs", tags=["needs"])
 app.include_router(user_controller.router, prefix= "/api/users", tags=["users"])
 app.include_router(uprofile_optinfo_controller.router, prefix= "/api/profiles", tags=["User Profiles Optional Information"])
 app.include_router(uprofile_languages_controller.router, prefix= "/api/profiles", tags=["User Profiles Language Skills"])
