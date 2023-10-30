@@ -6,6 +6,8 @@ import OptionalInfo from '@/components/profile/OptionalInfo';
 import ActivityTable from '@/components/ActivityTable';
 import InfoList from '@/components/profile/InfoList';
 import { api } from '@/lib/apiUtils';
+import { withIronSessionSsr } from 'iron-session/next';
+import sessionConfig from '@/lib/sessionConfig';
 
 export default function Profile({ user }) {
   const {misc, main_info, optional_info, list_info, activities} = user;
@@ -31,35 +33,46 @@ Profile.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export async function getServerSideProps(context) {
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req, locale }) {
 
-  const optional_info = [
-          {"title": "Date of Birth", "content": "31.09.2000"},
-          {"title": "Nationality", "content": "Turkey"},
-          {"title": "Blood Type", "content": "0+"},
-          {"title": "Address", "content": "really really really long address to test css stuff and overflows and height imbalances"}
-  ];
+    try {
+      const user = req.session.user;
+      console.log(user);
+    } catch (error) {
+      console.log('Error in getServerSideProps @ profile/index.js: ', error);
+      return { notFound: true };
+    }
 
-  return {
-    props: {
-      "user": {
-        "misc": {
+    const optional_info = [
+            {"title": "Date of Birth", "content": "31.09.2000"},
+            {"title": "Nationality", "content": "Turkey"},
+            {"title": "Blood Type", "content": "0+"},
+            {"title": "Address", "content": "really really really long address to test css stuff and overflows and height imbalances"}
+    ];
 
-        },
-        "main_info": {
-          "username": "user3",
-          "name": "Sample User",
-          "phone": "05555555555",
-          "email": "sample-user@darp.com"
-        },
-        optional_info,
-        "list_info": {
-          "social": "social media links go here",
-          "skills": "skills with certifications go here",
-          "languages": "languages go here",
-          "professions": "professions go here"
+    return {
+      props: {
+        "user": {
+          "misc": {
+
+          },
+          "main_info": {
+            "username": "user3",
+            "name": "Sample User",
+            "phone": "05555555555",
+            "email": "sample-user@darp.com"
+          },
+          optional_info,
+          "list_info": {
+            "social": [],
+            "skills": [],
+            "languages": [],
+            "professions": []
+          }
         }
-      }
-    },
-  };
-}
+      },
+    };
+  },
+  sessionConfig
+)
