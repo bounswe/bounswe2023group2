@@ -11,7 +11,7 @@ from Services.build_API_returns import create_json_for_error
 router = APIRouter()
 
 @router.post("/", status_code=201)
-def create_need(need: Need, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def create_need(need: Need, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         need.created_by = current_user
         need_result = need_service.create_need(need)
@@ -23,7 +23,7 @@ def create_need(need: Need, response:Response, current_user: str = Depends(authe
         return json.loads(err_json)
 
 @router.get("/{need_id}")
-def get_need(need_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def get_need(need_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         need = need_service.get_need_by_id(need_id)
         response.status_code = HTTPStatus.OK
@@ -35,7 +35,7 @@ def get_need(need_id: str, response:Response, current_user: str = Depends(authen
     
 
 @router.get("/")
-def get_all_needs(response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def get_all_needs(response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         needs = need_service.get_needs()
         response.status_code = HTTPStatus.OK
@@ -46,7 +46,7 @@ def get_all_needs(response:Response, current_user: str = Depends(authentication_
         return json.loads(err_json)  
 
 @router.put("/{need_id}")
-def update_need(need_id: str, need: Need, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def update_need(need_id: str, need: Need, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     
     try:
         updated_need = need_service.update_need(need_id, need)
@@ -64,7 +64,7 @@ def update_need(need_id: str, need: Need, response:Response, current_user: str =
 
     
 @router.delete("/{need_id}")
-def delete_need(need_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
+def delete_need(need_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         res = need_service.delete_need(need_id)
         response.status_code=HTTPStatus.OK
