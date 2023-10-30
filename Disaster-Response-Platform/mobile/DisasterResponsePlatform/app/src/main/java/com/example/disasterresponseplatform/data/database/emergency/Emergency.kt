@@ -6,23 +6,23 @@ import androidx.room.PrimaryKey
 import com.example.disasterresponseplatform.data.database.DatabaseInfo
 import com.example.disasterresponseplatform.data.database.action.ActionCols
 
-@Entity(tableName = DatabaseInfo.ACTION)
+@Entity(tableName = DatabaseInfo.EMERGENCY)
 data class Emergency(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = ActionCols.id)
+    @ColumnInfo(name = EmergencyCols.id)
     val ID: Int?, // if user does not enter ID, it generates it automatically
-    @ColumnInfo(name = ActionCols.creatorID)
-    val creatorID: String,
-    @ColumnInfo(name = ActionCols.type)
+    @ColumnInfo(name = EmergencyCols.creatorName)
+    val creatorName: String,
+    @ColumnInfo(name = EmergencyCols.type)
     val type: String,
-    @ColumnInfo(name = ActionCols.creationTime)
+    @ColumnInfo(name = EmergencyCols.creationTime)
     val creationTime: String?,
-    @ColumnInfo(name = ActionCols.quantity)
-    val quantity: Int?,
-    @ColumnInfo(name = ActionCols.startLocation)
-    val startLocation: String?,
-    @ColumnInfo(name = ActionCols.endLocation)
-    val endLocation: String?,
-    @ColumnInfo(name = ActionCols.urgency)
-    val urgency: Int?
+    @ColumnInfo(name = EmergencyCols.lastUpdateTime)
+    val lastUpdateTime: String?,
+    @ColumnInfo(name = EmergencyCols.location)
+    val location: String?,
+    @ColumnInfo(name = EmergencyCols.contactNumber)
+    val contactNumber: String?,
+    @ColumnInfo(name = EmergencyCols.notes)
+    val notes: String?
 )

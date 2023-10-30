@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform
 
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
@@ -30,6 +31,7 @@ import com.example.disasterresponseplatform.ui.network.NetworkFragment
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import com.example.disasterresponseplatform.utils.DateUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -94,8 +96,10 @@ class MainActivity : AppCompatActivity() {
     private fun tryNeedViewModel(){
         val need = Need(null,"Egecan","Clothes","T-Shirt",DateUtil.getDate("dd-MM-yy").toString(),50,"İstanbul",Urgency.CRITICAL.type)
         needViewModel.insertNeed(need)
-        val location = needViewModel.getLocation("Egecan")
-        Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+            val location = needViewModel.getLocation("Egecan")
+            Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+        }, 200)
     }
 
     private fun tryUserDataViewModel() {
@@ -105,22 +109,29 @@ class MainActivity : AppCompatActivity() {
             null, null, null, null, null, null,
             null, null, null, null, null, null)
         userDataViewModel.insertUserData(userData)
-        val email = userDataViewModel.getEmail("cahid")
-        Toast.makeText(this,email,Toast.LENGTH_SHORT).show()
+        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+            val email = userDataViewModel.getEmail("cahid")
+            Toast.makeText(this,email,Toast.LENGTH_SHORT).show()
+        }, 200)
+
     }
 
     private fun tryActionViewModel(){
         val action = Action(null,"Halil","Search for Survivors",DateUtil.getDate("dd-MM-yy").toString(),50,"Ankara","Erzurum", Urgency.CRITICAL.type)
         actionViewModel.insertAction(action)
-        val startLocation = actionViewModel.getStartLocation("Halil")
-        Toast.makeText(this,startLocation,Toast.LENGTH_SHORT).show()
+        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+            val startLocation = actionViewModel.getStartLocation("Halil")
+            Toast.makeText(this,startLocation,Toast.LENGTH_SHORT).show()
+        }, 200)
     }
 
     private fun tryEventViewModel(){
         val event = Event(null,"Halil","Road Blocked", DateUtil.getDate("dd-MM-yy").toString(),"Rize")
         eventViewModel.insertEvent(event)
-        val location = eventViewModel.getLocation("Halil")
-        Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+            val location = eventViewModel.getLocation("Halil")
+            Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+        }, 200)
     }
 
     private fun toggleListener(){
@@ -150,7 +161,7 @@ class MainActivity : AppCompatActivity() {
     private fun logOutActions() {
         DiskStorageManager.removeKey("token")
         finish()
-        startActivity(getIntent())
+        startActivity(intent)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)){
