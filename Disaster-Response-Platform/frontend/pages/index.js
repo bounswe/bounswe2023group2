@@ -2,8 +2,8 @@ import styles from '@/styles/Home.module.css'
 import MainLayout from '@/layouts/MainLayout'
 import dynamic from 'next/dynamic'
 import ActivityTable from '@/components/ActivityTable'
-import { toast } from 'react-toastify'
-import { useEffect, useState } from 'react'
+import { ToastContainer } from 'react-toastify'
+import { useState,useEffect } from 'react'
 
 const Map = dynamic(() => import('../components/Map/Map'), {
   ssr: false,
@@ -31,7 +31,10 @@ export default function home() {
   return (
     <>
         <Map />
-        <ActivityTable resource={resource} />
+        <ActivityTable />
+        <ToastContainer position="bottom-center" />
+     
+     
       <div className={styles.buttonContainer}>
       </div>
     </>
