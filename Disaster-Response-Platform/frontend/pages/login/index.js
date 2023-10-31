@@ -28,12 +28,12 @@ export default function login() {
     }
   }
   const fields = [
-    { type: "text", name: "username_or_email_or_phone", required: true, label: "username, email or phone", },
-    { type: "password", name: "password", required: true, label: "Password" },
+    { type: "text", name: "username_or_email_or_phone", required: true, label: "telefon numarası, email ya da kullanıcı adı", placeholder: "telefon numarası, email ya da kullanıcı adı" },
+    { type: "password", name: "password", required: true, label: "Şifre" , placeholder: "strong12345"},
 
   ]
-  return <form className="rounded-xl bg-gray-400 p-4 w-8/12" onSubmit={handleSubmit(onSubmit)} >
-
+  return <form className="rounded-xl bg-gray-200 p-6 w-8/12 center" onSubmit={handleSubmit(onSubmit)} >
+      <h1 className='text-6xl font-normal leading-normal mt-0 mb-2 text-center text-emerald-800'> Giriş yap</h1>
     {fields.map(field => {
       return <>
         <Input type={field.type}
@@ -41,13 +41,15 @@ export default function login() {
           style={{ border: 'none' }}
           label={field.label}
           labelPlacement={'outside'}
-          variant={'bordered'}
+          variant={'faded'}
           className='mb-2'
+          placeholder={field.placeholder}
+          isRequired
         />
-        <div className="error" >{errors[field.name]?.message}</div>
+        <div className="text-center" >{errors[field.name]?.message}</div>
       </>
     })}
-    <Button disabled={isSubmitting} type='submit'>
+    <Button disabled={isSubmitting} type='submit' className='m-3 ml-0'>
       {isSubmitting ? 'Loading' : "Submit"}
     </Button>
   </form>;

@@ -28,11 +28,6 @@ export default function NavigationBar() {
               <FaMapMarkedAlt size={30} />
             </Link>
           </nav>
-          <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300" >
-            <Link href={`search`}>
-              <BsSearch size={25} />
-            </Link>
-          </nav>
         </div>
         <div className={styles.rightbar}>
           <nav>
@@ -44,12 +39,12 @@ export default function NavigationBar() {
           <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
           {user?.isLoggedIn === false && <nav>
             <Link href={`register`}>
-              <Button variant="solid" color="primary" >Sign up</Button>
+              <Button variant="solid" color="primary" >Kayıt ol</Button>
             </Link>
           </nav>}
           {user?.isLoggedIn === false && <nav>
             <Link href={`login`}>
-              <Button variant="solid" color='primary' >Sign in</Button>
+              <Button variant="solid" color='primary' >Giriş yap</Button>
             </Link>
           </nav>}
           {user?.isLoggedIn === true && <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
