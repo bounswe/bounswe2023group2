@@ -187,8 +187,38 @@ def test_update_need():
     response = client.put(f"/api/needs/{need_id}", json=updated_need_data, headers=header)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
     updated_need = response.json()["needs"][0]
-    assert updated_need["unsuppliedQuantity"] == 2
-    assert updated_need["details"]["medicine_name"] == "ddd"
+    assert updated_need["unsuppliedQuantity"] == updated_need_data["unsuppliedQuantity"]
+    assert updated_need["details"]["medicine_name"] == updated_need_data["details"]["medicine_name"]
+
+
+def test_set_initial_quantity():
+    new_quantity = 44 
+    response = client.put(f"/api/needs/{need_id}/initial_quantity", json={"quantity": new_quantity}, headers=header)
+    assert response.status_code == HTTPStatus.OK
+    res = response.json()
+    assert str(new_quantity) in res["message"]
+
+def test_get_initial_quantity():
+    response = client.get(f"/api/needs/{need_id}/initial_quantity", headers=header)
+    assert response.status_code == HTTPStatus.OK
+    quantity_data = response.json()
+    assert "Initial quantity" in quantity_data    
+
+def test_set_unsupplied_quantity():
+    new_quantity = 55 
+    response = client.put(f"/api/needs/{need_id}/unsupplied_quantity", json={"quantity": new_quantity}, headers=header)
+    assert response.status_code == HTTPStatus.OK
+    res = response.json()
+    assert str(new_quantity) in res["message"]
+
+def test_get_unsupplied_quantity():
+    response = client.get(f"/api/needs/{need_id}/unsupplied_quantity", headers=header)
+    assert response.status_code == HTTPStatus.OK
+    quantity_data = response.json()
+    assert "Unsupplied quantity" in quantity_data    
+
+
+
 
     
 def test_delete_need1():
