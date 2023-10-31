@@ -41,7 +41,6 @@ class NeedAdapter(private val needList: List<Need>?): RecyclerView.Adapter<NeedA
         hb.tvLocation.text = currentNeed?.location
         hb.tvQuantity.text = currentNeed?.quantity.toString()
         hb.tvCreator.text = currentNeed?.creatorName
-        hb.tvDetails.text = currentNeed?.details
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

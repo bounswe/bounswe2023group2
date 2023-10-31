@@ -12,6 +12,6 @@ class DatabaseInfo {
         const val NEED: String = "NEED"
         const val RESOURCE: String = "RESOURCE"
         const val USER_DATA: String = "USER_DATA"
-        const val DATABASE_VERSION: Int = 11 // you need to change that whenever you change any table on DB
+        const val DATABASE_VERSION: Int = 12 // you need to change that whenever you change any table on DB
     }
 }

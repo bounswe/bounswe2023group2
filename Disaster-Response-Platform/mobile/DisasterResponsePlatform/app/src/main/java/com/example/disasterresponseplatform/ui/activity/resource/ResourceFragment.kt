@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ResourceAdapter
+import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.databinding.FragmentResourceBinding
 
 class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
@@ -39,23 +41,33 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
             addFragment(addResourceFragment)
         }
         arrangeSearchView()
-        arrangeRecyclerView()
+        //arrangeRecyclerView()
+        sendRequest()
     }
+
+    private fun sendRequest(){
+        resourceViewModel.sendGetAllRequest()
+        resourceViewModel.getLiveDataResponse().observe(requireActivity()){ resourceResponse ->
+            val lst = resourceViewModel.createResourceList(resourceResponse)
+            arrangeRecyclerView(lst)
+        }
+    }
+
 
     /**
      * Arrange recycler view and its adapter
      */
-    private fun arrangeRecyclerView(){
+    private fun arrangeRecyclerView(resourceList : List<Resource>){
         val recyclerView = binding.recyclerViewNeeds
         val layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
         val list = resourceViewModel.getAllResources()
-        val adapter = ResourceAdapter(list)
+        val adapter = ResourceAdapter(resourceList)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity()){
-            val text = "Type: ${it?.type}, SubType: ${it?.details}, Location: ${it?.location}, "+
+            val text = "Type: ${it?.type}, Details: ${it?.details}, Location: ${it?.location}, "+
                     "Date: ${it?.creationTime}, Quantity: ${it?.quantity}, Condition: ${it?.condition}"
             Toast.makeText(requireActivity(), text, Toast.LENGTH_LONG).show()
         }

@@ -19,7 +19,7 @@ import com.example.disasterresponseplatform.databinding.FragmentHomePageBinding
 import com.example.disasterresponseplatform.utils.DateUtil
 
 
-class HomePageFragment() : Fragment() {
+class HomePageFragment : Fragment() {
 
     private lateinit var binding: FragmentHomePageBinding
     private lateinit var searchView: SearchView

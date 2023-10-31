@@ -122,28 +122,6 @@
             app:layout_constraintStart_toEndOf="@+id/titleLocation"
             app:layout_constraintTop_toTopOf="@+id/titleCreatorName" />
 
-        <TextView
-            android:id="@+id/titleDetails"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:text="Details:"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/tvDetails"
-            app:layout_constraintTop_toBottomOf="@+id/titleQuantity" />
-
-        <TextView
-            android:id="@+id/tvDetails"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:text="Deatils"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvQuantity" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
