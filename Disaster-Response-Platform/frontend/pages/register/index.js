@@ -33,14 +33,15 @@ export default function login() {
 
 
   const fields = [
-    { type: "text", name: "username", required: true, label: "Username", placeholder: "Food" },
-    { type: "text", name: "first_name", required: true, label: "First name", placeholder: "Pasta" },
-    { type: "text", name: "last_name", required: true, label: "Last name"  },
-    { type: "password", name: "password", required: true, label: "Password" },
-    { type: "phone_number", name: "phone_number", required: true, label: "Phone Number" },
-    { type: "email", name: "email", required: true, label: "Email" },
+    { type: "text", name: "username", required: true, label: "Kullanıcı adı", placeholder: "Food" },
+    { type: "text", name: "first_name", required: true, label: "İsim", placeholder: "Pasta" },
+    { type: "text", name: "last_name", required: true, label: "Soyadı", placeholder: "dede"  },
+    { type: "password", name: "password", required: true, label: "Şifre", placeholder: "strong12345" },
+    { type: "phone_number", name: "phone_number", required: true, label: "Telefon numarası", placeholder: "05321234567" },
+    { type: "email", name: "email", required: true, label: "Email", placeholder: "Email" },
 ]
-  return <form className="rounded-xl bg-gray-400 p-10 w-8/12" onSubmit={handleSubmit(onSubmit)} >
+  return <form className="rounded-xl bg-gray-200 p-10 w-8/12" onSubmit={handleSubmit(onSubmit)} >
+    <h1 className='text-6xl font-normal leading-normal mt-0 mb-1 text-center text-emerald-800'> Kayıt ol</h1>
           {fields.map(field => {
               return <>
                   <Input type={field.type} 
@@ -48,8 +49,9 @@ export default function login() {
                       style={{ border: 'none' }}
                       label={field.label}
                       labelPlacement={'outside'}
-                      variant={'bordered'}
+                      variant={'faded'}
                       className='mb-6'
+                      placeholder={field.placeholder}
                   />
                   <div className="error" >{errors[field.name]?.message}</div>
               </>
