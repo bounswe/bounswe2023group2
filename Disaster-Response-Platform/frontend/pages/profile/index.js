@@ -8,6 +8,8 @@ import InfoList from '@/components/profile/InfoList';
 import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export default function Profile({ main_info, optional_info, list_info }) {
   // const {misc, activities} = TODO;
@@ -17,6 +19,7 @@ export default function Profile({ main_info, optional_info, list_info }) {
   const skill_str = skills.map(skill => `${skill.skill_definition} (${skill.skill_level})`);
   const social_str = social.map(social => <a href={social.profile_URL}>{platform_name}</a>);
   const dictionary_tr = {
+    "username": "Kullanıcı Adı",
     "date_of_birth": "Doğum Tarihi",
     "nationality": "Ülke",
     "identity_number": "Kimlik No",
@@ -25,7 +28,6 @@ export default function Profile({ main_info, optional_info, list_info }) {
     "blood_type": "Kan Grubu",
     "Address": "Adres"
   }
-  if ("username" in optional_info) delete optional_info["username"];
   const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val])
   optional_info_tr.sort();
   return (
@@ -35,7 +37,11 @@ export default function Profile({ main_info, optional_info, list_info }) {
           <MainInfo className="w-60" info={main_info}/>
           <OptionalInfo className="w-96" fields={optional_info_tr} />
         </div>
-        <br />
+        <div class="my-10 w-full text-center">
+          <Link href='/profile/edit'>
+            <button type="submit" class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Düzenle</button>
+          </Link>
+        </div>
         <InfoList list={social_str} />
         <InfoList list={skill_str} />
         <InfoList list={lang_str} />
@@ -89,8 +95,6 @@ export const getServerSideProps = withIronSessionSsr(
       });
       list_info[topic] = fields;
     }
-
-    console.log(list_info)
 
     return {
       props: {
