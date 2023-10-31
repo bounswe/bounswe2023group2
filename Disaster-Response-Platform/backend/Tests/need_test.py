@@ -219,6 +219,22 @@ def test_get_unsupplied_quantity():
 
 
 
+def test_set_urgency():
+    new_urgency = 5
+    response = client.put(f"/api/needs/{need_id}/urgency", json={"urgency": new_urgency}, headers=header)
+    assert response.status_code == HTTPStatus.OK
+    res = response.json()
+    assert str(new_urgency) in res["message"]
+
+def test_get_urgency():
+    response = client.get(f"/api/needs/{need_id}/urgency", headers=header)
+    assert response.status_code == HTTPStatus.OK
+    urgency_data = response.json()
+    assert "Urgency" in urgency_data     
+
+
+
+
 
     
 def test_delete_need1():
