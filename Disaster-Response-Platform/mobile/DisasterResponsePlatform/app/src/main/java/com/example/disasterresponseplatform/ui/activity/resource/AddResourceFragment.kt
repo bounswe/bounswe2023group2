@@ -98,7 +98,7 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
 
     private fun submitAddResource() {
         binding.btnSubmit.setOnClickListener {
-            if ((validateFullName() and validatePhoneNumber() and validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
+            if ((validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
                     when(binding.boxResourceType.editText?.text.toString().trim()){
@@ -111,7 +111,7 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
                         NeedTypes.Human.toString() -> NeedTypes.Human
                         else -> NeedTypes.Other
                     }
-                val creatorName = binding.etFullName.editText?.text.toString().trim()
+                val creatorName = DiskStorageManager.getKeyValue("username").toString()
                 val details = binding.spResourceSubType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
                 val location = binding.etLocation.editText?.text.toString().trim()
@@ -197,34 +197,6 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
         } else {
             etQuantity.error = null
             etQuantity.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun validateFullName(): Boolean {
-        val etFullName = binding.etFullName
-        val fullName = etFullName.editText?.text.toString().trim()
-
-        return if (fullName.isEmpty()) {
-            etFullName.error = "Field can not be empty"
-            false
-        } else {
-            etFullName.error = null
-            etFullName.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun validatePhoneNumber(): Boolean {
-        val etPhoneNumber = binding.etPhoneNumber
-        val phoneNumber = etPhoneNumber.editText?.text.toString().trim()
-
-        return if (phoneNumber.isEmpty()) {
-            etPhoneNumber.error = "Field can not be empty$phoneNumber"
-            false
-        } else {
-            etPhoneNumber.error = null
-            etPhoneNumber.isErrorEnabled = false
             true
         }
     }
