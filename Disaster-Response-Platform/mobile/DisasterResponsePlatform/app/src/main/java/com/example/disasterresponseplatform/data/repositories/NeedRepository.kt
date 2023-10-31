@@ -14,6 +14,6 @@ class NeedRepository @Inject constructor(private val needDao: NeedDao) {
         return needDao.getLocation(creatorID)
     }
 
-    fun getAllNeeds(): List<Need?>? = needDao.getAllNeeds()
+    fun getAllNeeds(): List<Need>? = needDao.getAllNeeds()
 
 }

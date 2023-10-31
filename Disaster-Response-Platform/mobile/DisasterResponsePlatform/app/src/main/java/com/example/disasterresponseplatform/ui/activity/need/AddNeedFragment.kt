@@ -8,9 +8,12 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.data.database.need.Need
+import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddNeedBinding
+import com.example.disasterresponseplatform.utils.DateUtil
 
-class AddNeedFragment : Fragment() {
+class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
     private lateinit var binding: FragmentAddNeedBinding
 
@@ -93,6 +96,28 @@ class AddNeedFragment : Fragment() {
         binding.btnSubmit.setOnClickListener {
             if ((validateFullName() and validatePhoneNumber() and validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
                 Toast.makeText(context, "{'created_by': ${binding.etFullName.editText?.text.toString().trim()}, 'quantity': ${binding.etQuantity.editText?.text.toString().trim()}, 'type':  ${binding.boxNeedType.editText?.text.toString().trim()}}", Toast.LENGTH_SHORT).show()
+
+                val type: NeedTypes =
+                when(binding.boxNeedType.editText?.text.toString().trim()){
+                    NeedTypes.Clothes.toString() -> NeedTypes.Clothes
+                    NeedTypes.Food.toString() -> NeedTypes.Food
+                    NeedTypes.Shelter.toString() -> NeedTypes.Shelter
+                    NeedTypes.Medication.toString() ->NeedTypes.Medication
+                    NeedTypes.Transportation.toString() ->NeedTypes.Transportation
+                    NeedTypes.Tools.toString() -> NeedTypes.Tools
+                    NeedTypes.Human.toString() -> NeedTypes.Human
+                    else -> NeedTypes.Other
+                }
+                val creatorName = binding.etFullName.editText?.text.toString().trim()
+                val details = binding.spNeedSubType.text.toString().trim()
+                val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
+                val location = binding.etLocation.editText?.text.toString().trim()
+                val date = DateUtil.getDate("dd-MM-yy").toString()
+                val need = Need(null,creatorName,type,details, date,quantity,location,1)
+                //TODO do with token
+                needViewModel.insertNeed(need)
+                parentFragmentManager.popBackStack()
+
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
             }
