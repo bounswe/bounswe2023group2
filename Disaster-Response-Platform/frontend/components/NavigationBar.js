@@ -7,6 +7,7 @@ import { Button, useDisclosure } from '@nextui-org/react'
 import AddResourceForm from "./AddResource";
 import useUser from "@/lib/useUser";
 import { useRouter } from "next/router";
+import fetchJson from "@/lib/fetchJson";
 
 
 export default function NavigationBar() {
@@ -28,11 +29,6 @@ export default function NavigationBar() {
               <FaMapMarkedAlt size={30} />
             </Link>
           </nav>
-          <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300" >
-            <Link href={`search`}>
-              <BsSearch size={25} />
-            </Link>
-          </nav>
         </div>
         <div className={styles.rightbar}>
           <nav>
@@ -44,18 +40,36 @@ export default function NavigationBar() {
           <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
           {user?.isLoggedIn === false && <nav>
             <Link href={`register`}>
-              <Button variant="solid" color="primary" >Sign up</Button>
+              <Button variant="solid" color="primary" >Kayıt ol</Button>
             </Link>
           </nav>}
           {user?.isLoggedIn === false && <nav>
             <Link href={`login`}>
-              <Button variant="solid" color='primary' >Sign in</Button>
+              <Button variant="solid" color='primary' >Giriş yap</Button>
             </Link>
           </nav>}
           {user?.isLoggedIn === true && <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
             <Link href={`/profile`}>
               <CgProfile size={30} />
             </Link>
+          </nav>}
+          {user?.isLoggedIn === true && <nav >
+            <Button variant="solid" color='default'>
+
+          <a
+                  href="/api/logout"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    mutateUser(
+                      await fetchJson("/api/logout", { method: "POST" }),
+                      false,
+                      );
+                      router.push("/");
+                    }}
+                    >
+                  Çıkış yap
+                </a>
+                  </Button>
           </nav>}
           <nav>
             <Button color="primary" className={styles.button}>
