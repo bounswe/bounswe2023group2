@@ -12,12 +12,12 @@ export default function mapPage() {
   const [isClickActivated, setIsClickActivated] = useState(false);
 
   const activateClick = () => {
-    setIsClickActivated(true);
+    setIsClickActivated(!isClickActivated);
   };
 
   return (
     <>
-      <Map isClickActivated={isClickActivated}/>
+      <Map isClickActivated={isClickActivated} activateClick={activateClick}/>
       <MapFilterMenu activateClick={activateClick}/>
     </>
   );

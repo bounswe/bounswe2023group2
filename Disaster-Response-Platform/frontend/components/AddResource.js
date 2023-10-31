@@ -12,8 +12,8 @@ import { Button, Input } from "@nextui-org/react";
 export default function AddResourceForm({ isOpen, onOpenChange }) {
     const fields = [
         { type: "text", name: "type", required: true, label: "Type", placeholder: "Food" },
-        { type: "text", name: "sub-type", required: true, label: "Sub Type", placeholder: "Pasta" },
-        { type: "date", name: "due-date", required: true,  },
+        { type: "text", name: "sub_type", required: true, label: "Sub Type", placeholder: "Pasta" },
+        { type: "date", name: "due_date", required: true,  },
         { type: "text", name: "location", required: true, label: "Location" },
     ]
     const renderForm = ({ register, errors, isSubmitting }) => {
@@ -30,7 +30,7 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
                     <div className="error" >{errors[field.name]?.message}</div>
                 </>
             })}
-            <Button disabled={isSubmitting} >
+            <Button disabled={isSubmitting} type='submit' >
                 {isSubmitting ? 'Loading' : "Submit"}
             </Button>
         </>;

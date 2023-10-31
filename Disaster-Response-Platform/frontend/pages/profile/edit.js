@@ -6,7 +6,7 @@ import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
 
-export default function Edit({ current_main_fields, current_optional_fields, accessToken }) {
+export default function Edit({ guest, expired, current_main_fields, current_optional_fields, accessToken }) {
 
   const router = useRouter();
 
@@ -45,6 +45,16 @@ export default function Edit({ current_main_fields, current_optional_fields, acc
     }
 
     router.push('/profile');
+  }
+
+  if (guest || expired) {
+    useEffect(() => router.push("/login"));
+    return (
+      <div class="text-center text-xl">
+        <br /><br /><br />
+        Oturum açmaya yönlendiriliyorsunuz...
+      </div>
+    );
   }
 
   const main_tr = {
@@ -116,14 +126,20 @@ export const getServerSideProps = withIronSessionSsr(
 
     if (!user?.accessToken) {
       console.log("A guest is trying to edit");
-      return { guest: true };
+      return { props: {guest: true} };
     }
 
-    const { data: current_main_fields } = await api.get('/api/users/me', {
-      headers: {
-        'Authorization': `Bearer ${user.accessToken}`
-      }
-    });
+    let current_main_fields;
+    try {
+      ({ data: current_main_fields } = await api.get('/api/users/me', {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      }));
+    } catch (AxiosError) {
+      console.log("A token expired");
+      return { props: { expired: true } };
+    }
 
     const { data: { user_optional_infos: [current_optional_fields] } } = await api.get('/api/profiles/get-user-optional-info', {
       headers: {
