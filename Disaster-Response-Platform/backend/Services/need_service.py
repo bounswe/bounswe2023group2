@@ -123,6 +123,6 @@ def set_urgency(need_id: str, urgency: int) -> bool:
 def get_urgency(need_id: str) -> int:
     need_data = needs_collection.find_one({"_id": ObjectId(need_id)})
     if need_data:
-        return need_data["unsuppliedQuantity"]
+        return need_data["urgency"]
     else:
         raise ValueError(f"Need id {need_id} not found")
