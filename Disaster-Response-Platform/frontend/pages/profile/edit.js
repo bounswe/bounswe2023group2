@@ -141,11 +141,12 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { expired: true } };
     }
 
-    const { data: { user_optional_infos: [current_optional_fields] } } = await api.get('/api/profiles/get-user-optional-info', {
+    const { data: { user_optional_infos: current_optional_fields_list } } = await api.get('/api/profiles/get-user-optional-info', {
       headers: {
         'Authorization': `Bearer ${user.accessToken}`
       }
     });
+    const current_optional_fields = current_optional_fields_list.length > 0 ? current_main_fields_list[0] : {}
 
     return {"props":
       {
