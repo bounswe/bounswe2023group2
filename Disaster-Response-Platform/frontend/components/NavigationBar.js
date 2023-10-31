@@ -5,10 +5,13 @@ import {CgProfile} from "react-icons/cg";
 import Link from "next/link";
 import { Button, useDisclosure } from '@nextui-org/react'
 import AddResourceForm from "./AddResource";
+import { useRouter } from "next/router";
 
 
 export default function NavigationBar() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const router = useRouter();
+  const isMapPage = router.pathname === '/map';
     return (
         <main className={styles.main}>
             <div className={styles.navbar}>
@@ -35,8 +38,11 @@ export default function NavigationBar() {
                     </Link>
                 </nav>
                 <nav> 
-                  <Button onPress={onOpen}>Add Resource</Button>
-                  </nav>
+                {isMapPage ? <></>:(
+                  <Button onPress={onOpen}>İlan Oluştur</Button>
+                  
+                )}
+                </nav>
                 <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen}  />
                 <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
                     <Link href={`/profile`}>
