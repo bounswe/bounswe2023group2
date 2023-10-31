@@ -23,7 +23,7 @@ def create_need(need: Need, response:Response, current_user: str = Depends(authe
         return json.loads(err_json)
 
 @router.get("/{need_id}")
-def get_need(need_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+def get_need(need_id: str, response:Response):
     try:
         need = need_service.get_need_by_id(need_id)
         response.status_code = HTTPStatus.OK
@@ -35,7 +35,7 @@ def get_need(need_id: str, response:Response, current_user: str = Depends(authen
     
 
 @router.get("/")
-def get_all_needs(response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+def get_all_needs(response:Response):
     try:
         needs = need_service.get_needs()
         response.status_code = HTTPStatus.OK
@@ -88,7 +88,7 @@ def set_initial_quantity(need_id: str, quantity_data: QuantityUpdate, response: 
         return json.loads(err_json)
     
 @router.get("/{need_id}/initial_quantity")
-def get_initial_quantity(need_id: str, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def get_initial_quantity(need_id: str, response: Response):
     try:
         quantity = need_service.get_initial_quantity(need_id)
         response.status_code = HTTPStatus.OK
@@ -111,7 +111,7 @@ def set_unsupplied_quantity(need_id: str, quantity_data: QuantityUpdate, respons
         return json.loads(err_json)
     
 @router.get("/{need_id}/unsupplied_quantity")
-def get_unsupplied_quantity(need_id: str, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def get_unsupplied_quantity(need_id: str, response: Response):
     try:
         quantity = need_service.get_unsupplied_quantity(need_id)
         response.status_code = HTTPStatus.OK

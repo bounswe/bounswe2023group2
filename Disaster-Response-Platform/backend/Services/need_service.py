@@ -37,6 +37,8 @@ def get_needs(need_id:str = None) -> list[dict]:
             "unsuppliedQuantity": 1,
             "type": 1,
             "details": 1,
+            "x": 1,
+            "y": 1
         }
     
     if (need_id is None):
