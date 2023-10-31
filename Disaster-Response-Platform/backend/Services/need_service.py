@@ -68,9 +68,9 @@ def update_need(need_id: str, need: Need) -> Need:
         if 'details' in need.dict(exclude_none=True) and 'details' in existing_need:
             need.details = {**existing_need['details'], **need.dict(exclude_none=True)['details']}
 
-            update_data = {k: v for k, v in need.dict(exclude_none=True).items()}
+        update_data = {k: v for k, v in need.dict(exclude_none=True).items()}
 
-            needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": update_data})
+        needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": update_data})
 
         updated_need_data = needs_collection.find_one({"_id": ObjectId(need_id)})
         return Need(**updated_need_data)
