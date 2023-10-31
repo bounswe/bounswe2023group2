@@ -12,7 +12,7 @@ def create_resource(resource: Resource) -> str:
     # Manual validation for required fields during creation
     if not all([resource.created_by, resource.condition,
                 resource.initialQuantity, resource.currentQuantity,
-                resource.type, resource.details]):
+                resource.type, resource.details, resource.x, resource.y]):
         raise ValueError("All fields are mandatory for creation.")
     insert_result = resources_collection.insert_one(resource.dict())
     #check the result to change from
@@ -31,7 +31,9 @@ def get_resources(resource_id:str = None) -> list[dict]:
                   "initialQuantity": 1,
                   "currentQuantity": 1,
                   "type": 1,
-                  "details":1
+                  "details":1,
+                  "x":1,
+                  "y":1
                   }
     #projection["_id"] = {"$toString": "$_id"}
     if (resource_id is None):

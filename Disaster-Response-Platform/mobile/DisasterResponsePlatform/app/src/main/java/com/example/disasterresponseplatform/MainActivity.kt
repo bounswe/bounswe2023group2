@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform
 
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
@@ -14,6 +15,7 @@ import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.userdata.UserData
 import com.example.disasterresponseplatform.data.database.action.Action
 import com.example.disasterresponseplatform.data.database.event.Event
+import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.Urgency
 import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
@@ -22,9 +24,10 @@ import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
+import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
+import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
-import com.example.disasterresponseplatform.ui.authentication.RegistrationFragment
 import com.example.disasterresponseplatform.ui.map.MapFragment
 import com.example.disasterresponseplatform.ui.network.NetworkFragment
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
@@ -39,15 +42,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var networkFragment: NetworkFragment
 
     private val mapFragment = MapFragment()
-    private val activityFragment = ActivityFragment()
+    private lateinit var activityFragment: ActivityFragment
     private val profileFragment = ProfileFragment()
     private val loginFragment = LoginFragment()
-    private val registrationFragment = RegistrationFragment()
 
     private lateinit var needViewModel: NeedViewModel
     private lateinit var userDataViewModel: UserDataViewModel
     private lateinit var actionViewModel: ActionViewModel
     private lateinit var eventViewModel: EventViewModel
+    private lateinit var emergencyViewModel: EmergencyViewModel
+    private lateinit var resourceViewModel: ResourceViewModel
 
 
     private lateinit var toggle: ActionBarDrawerToggle
@@ -56,26 +60,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         //instead setContentView(R.layout.activity_main) doing that with binding
         setContentView(binding.root)
-        homePageFragment = HomePageFragment(this)
-        networkFragment = NetworkFragment(this)
 
-        replaceFragment(homePageFragment)
+        createViewModels()
         navBarListener()
         toggleListener()
+        arrangeVisibility()
+        initializeFragments()
 
-        // Set logged in state
-        if (DiskStorageManager.hasKey("token")) {
-            binding.navView.menu.findItem(R.id.miLogin).isVisible = false
-            binding.navView.menu.findItem(R.id.miLoggedInAs).isVisible = true
-            binding.navView.menu.findItem(R.id.miLogout).isVisible = true
-            // This value will be fetched from API when it is ready
-            binding.navView.menu.findItem(R.id.miLoggedInAs).title = DiskStorageManager.getKeyValue("username")
-        } else {
-            binding.navView.menu.findItem(R.id.miLogin).isVisible = true
-            binding.navView.menu.findItem(R.id.miLoggedInAs).isVisible = false
-            binding.navView.menu.findItem(R.id.miLogout).isVisible = false
-        }
+    }
 
+    private fun createViewModels(){
         // it is created by dependency Injection without creating any of db, dao or repo
         val getNeedViewModel: NeedViewModel by viewModels()
         needViewModel = getNeedViewModel
@@ -89,13 +83,42 @@ class MainActivity : AppCompatActivity() {
         val getEventViewModel: EventViewModel by viewModels()
         eventViewModel = getEventViewModel
 
+        val getEmergencyViewModel: EmergencyViewModel by viewModels()
+        emergencyViewModel = getEmergencyViewModel
+
+        val getResourceViewModel: ResourceViewModel by viewModels()
+        resourceViewModel = getResourceViewModel
+    }
+
+    private fun initializeFragments(){
+        homePageFragment = HomePageFragment(this)
+        networkFragment = NetworkFragment(this)
+        activityFragment = ActivityFragment()
+        replaceFragment(homePageFragment)
+    }
+
+    private fun arrangeVisibility(){
+        // Set logged in state
+        if (DiskStorageManager.hasKey("token")) {
+            binding.navView.menu.findItem(R.id.miLogin).isVisible = false
+            binding.navView.menu.findItem(R.id.miLoggedInAs).isVisible = true
+            binding.navView.menu.findItem(R.id.miLogout).isVisible = true
+            // This value will be fetched from API when it is ready
+            binding.navView.menu.findItem(R.id.miLoggedInAs).title = DiskStorageManager.getKeyValue("username")
+        } else {
+            binding.navView.menu.findItem(R.id.miLogin).isVisible = true
+            binding.navView.menu.findItem(R.id.miLoggedInAs).isVisible = false
+            binding.navView.menu.findItem(R.id.miLogout).isVisible = false
+        }
     }
 
     private fun tryNeedViewModel(){
-        val need = Need(null,"Egecan","Clothes","T-Shirt",DateUtil.getDate("dd-MM-yy").toString(),50,"İstanbul",Urgency.CRITICAL.type)
+        val need = Need(null,"Egecan",NeedTypes.Clothes,"T-Shirt",DateUtil.getDate("dd-MM-yy").toString(),50,"İstanbul",Urgency.CRITICAL.type)
         needViewModel.insertNeed(need)
-        val location = needViewModel.getLocation("Egecan")
-        Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+            val location = needViewModel.getLocation("Egecan")
+            Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+        }, 200)
     }
 
     private fun tryUserDataViewModel() {
@@ -105,22 +128,29 @@ class MainActivity : AppCompatActivity() {
             null, null, null, null, null, null,
             null, null, null, null, null, null)
         userDataViewModel.insertUserData(userData)
-        val email = userDataViewModel.getEmail("cahid")
-        Toast.makeText(this,email,Toast.LENGTH_SHORT).show()
+        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+            val email = userDataViewModel.getEmail("cahid")
+            Toast.makeText(this,email,Toast.LENGTH_SHORT).show()
+        }, 200)
+
     }
 
     private fun tryActionViewModel(){
         val action = Action(null,"Halil","Search for Survivors",DateUtil.getDate("dd-MM-yy").toString(),50,"Ankara","Erzurum", Urgency.CRITICAL.type)
         actionViewModel.insertAction(action)
-        val startLocation = actionViewModel.getStartLocation("Halil")
-        Toast.makeText(this,startLocation,Toast.LENGTH_SHORT).show()
+        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+            val startLocation = actionViewModel.getStartLocation("Halil")
+            Toast.makeText(this,startLocation,Toast.LENGTH_SHORT).show()
+        }, 200)
     }
 
     private fun tryEventViewModel(){
         val event = Event(null,"Halil","Road Blocked", DateUtil.getDate("dd-MM-yy").toString(),"Rize")
         eventViewModel.insertEvent(event)
-        val location = eventViewModel.getLocation("Halil")
-        Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+            val location = eventViewModel.getLocation("Halil")
+            Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+        }, 200)
     }
 
     private fun toggleListener(){
@@ -150,7 +180,7 @@ class MainActivity : AppCompatActivity() {
     private fun logOutActions() {
         DiskStorageManager.removeKey("token")
         finish()
-        startActivity(getIntent())
+        startActivity(intent)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)){

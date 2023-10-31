@@ -7,11 +7,13 @@ import javax.inject.Inject
 class NeedRepository @Inject constructor(private val needDao: NeedDao) {
 
     suspend fun insertNeed(need: Need){
-        needDao.insertActivation(need)
+        needDao.insertNeed(need)
     }
 
-    fun getLocation(creatorID: String): String{
+    fun getLocation(creatorID: String): String?{
         return needDao.getLocation(creatorID)
     }
+
+    fun getAllNeeds(): List<Need?>? = needDao.getAllNeeds()
 
 }
