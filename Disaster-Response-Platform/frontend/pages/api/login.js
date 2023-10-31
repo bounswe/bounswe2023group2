@@ -6,8 +6,8 @@ export default withIronSessionApiRoute(loginRoute, sessionConfig);
 
   async function loginRoute(req, res) {
     try {
-      const { username, password } = JSON.parse(req.body);
-      const { data } = await api.post('/api/users/login', { "username_or_email_or_phone": username, password });
+      const { username, password } =req.body;
+      const { data } = await api.post('/api/users/login', req.body);
       req.session.user = {
         accessToken: data?.access_token,
         refreshToken: data?.refresh_token,
@@ -17,7 +17,7 @@ export default withIronSessionApiRoute(loginRoute, sessionConfig);
       res.status(200).json(data);
     } catch (error) {
       console.log('error', error);
-      res.status(error?.response?.status ?? 403).json({ error });
+      res.status(error?.response?.status ?? 403).json({...error.data });
     }
   }
 

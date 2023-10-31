@@ -8,9 +8,6 @@ import { toast, ToastContainer } from 'react-toastify';
 export default function login() {
   const { register, reset, handleSubmit, setError, formState: { isSubmitting, errors } } = useForm();
   const router = useRouter()
-  function sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-  }
 
   const onSubmit = async (data) => {
     const response = await fetch('/api/login', {
@@ -19,20 +16,15 @@ export default function login() {
         "Content-Type": "application/json",
       }, body: JSON.stringify(data)
     });
-    if (response.status === 400) {
-      const fieldToErrorMessage = await response.json()
-      for (const [fieldName, errorMessage] of Object.entries(fieldToErrorMessage)) {
-        setError(fieldName, { type: 'custom', message: errorMessage })
-      }
-    } else if (response.ok) {
+    if (response.ok) {
       // successful
       toast.success("Successfully saved")
       // Usage!
-      await sleep(500)
+      
       router.push('/profile');
     } else {
       // unknown error
-      toast.error("An unexpected error occurred while saving, please try again")
+      toast.error(response.statusText)
     }
   }
   const fields = [
