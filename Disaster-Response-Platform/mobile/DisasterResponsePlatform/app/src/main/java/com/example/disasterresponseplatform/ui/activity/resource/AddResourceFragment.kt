@@ -1,18 +1,27 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.data.database.need.Need
+import com.example.disasterresponseplatform.data.database.resource.Resource
+import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.utils.DateUtil
 
-class AddResourceFragment : Fragment() {
+class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
 
     private lateinit var binding: FragmentAddResourceBinding
+    private var requireActivity: FragmentActivity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,9 +99,40 @@ class AddResourceFragment : Fragment() {
     }
 
     private fun submitAddResource() {
+        if (requireActivity == null){ // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         binding.btnSubmit.setOnClickListener {
-            if ((validateFullName() and validatePhoneNumber() and validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
-                Toast.makeText(context, "{'created_by': ${binding.etFullName.editText?.text.toString().trim()}, 'quantity': ${binding.etQuantity.editText?.text.toString().trim()}, 'type':  ${binding.boxResourceType.editText?.text.toString().trim()}}", Toast.LENGTH_SHORT).show()
+            if ((validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
+
+                val type: NeedTypes =
+                    when(binding.boxResourceType.editText?.text.toString().trim()){
+                        NeedTypes.Clothes.toString() -> NeedTypes.Clothes
+                        NeedTypes.Food.toString() -> NeedTypes.Food
+                        NeedTypes.Shelter.toString() -> NeedTypes.Shelter
+                        NeedTypes.Medication.toString() -> NeedTypes.Medication
+                        NeedTypes.Transportation.toString() -> NeedTypes.Transportation
+                        NeedTypes.Tools.toString() -> NeedTypes.Tools
+                        NeedTypes.Human.toString() -> NeedTypes.Human
+                        else -> NeedTypes.Other
+                    }
+                val creatorName = DiskStorageManager.getKeyValue("username").toString()
+                val details = binding.spResourceSubType.text.toString().trim()
+                val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
+                val location = binding.etLocation.editText?.text.toString().trim()
+                val date = DateUtil.getDate("dd-MM-yy").toString()
+                val resource = Resource(null,creatorName,"new",quantity,type,details,date,location)
+
+                //resourceViewModel.insertResource(resource) insert local db
+
+                resourceViewModel.arrangePostRequest(resource) // pass resource to view Model
+                resourceViewModel.postResourceRequest()
+                resourceViewModel.getLiveDataResourceID().observe(requireActivity!!){
+                    Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                    Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                        parentFragmentManager.popBackStack()
+                    }, 200)
+                }
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
             }
@@ -152,34 +192,6 @@ class AddResourceFragment : Fragment() {
         } else {
             etQuantity.error = null
             etQuantity.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun validateFullName(): Boolean {
-        val etFullName = binding.etFullName
-        val fullName = etFullName.editText?.text.toString().trim()
-
-        return if (fullName.isEmpty()) {
-            etFullName.error = "Field can not be empty"
-            false
-        } else {
-            etFullName.error = null
-            etFullName.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun validatePhoneNumber(): Boolean {
-        val etPhoneNumber = binding.etPhoneNumber
-        val phoneNumber = etPhoneNumber.editText?.text.toString().trim()
-
-        return if (phoneNumber.isEmpty()) {
-            etPhoneNumber.error = "Field can not be empty$phoneNumber"
-            false
-        } else {
-            etPhoneNumber.error = null
-            etPhoneNumber.isErrorEnabled = false
             true
         }
     }

@@ -41,4 +41,8 @@
         android:id="@+id/miAddEvent"
         android:title="@string/add_event"/>
 
+    <item
+        android:id="@+id/miAddResource"
+        android:title="@string/add_resource"/>
+
 </menu>
