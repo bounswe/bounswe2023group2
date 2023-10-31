@@ -21,7 +21,7 @@ export default function login() {
       toast.success("Successfully saved")
       // Usage!
       
-      router.push('/profile');
+      router.push('/');
     } else {
       // unknown error
       toast.error(response.statusText)
