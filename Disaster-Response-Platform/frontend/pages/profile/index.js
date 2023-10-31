@@ -8,10 +8,22 @@ import InfoList from '@/components/profile/InfoList';
 import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useEffect } from "react";
 
-export default function Profile({ main_info, optional_info, list_info }) {
+export default function Profile({guest, expired, main_info, optional_info, list_info }) {
+  const router = useRouter();
+  if (guest || expired) {
+    useEffect(() => router.push("/login"));
+    return (
+      <div class="text-center text-xl">
+        <br /><br /><br />
+        Oturum açmaya yönlendiriliyorsunuz...
+      </div>
+    );
+  }
+
   // const {misc, activities} = TODO;
   const {professions, languages, "socialmedia-links": social, skills} = list_info;
   const prof_str = professions.map(prof => `${prof.profession} (${prof.profession_level})`);
@@ -69,14 +81,20 @@ export const getServerSideProps = withIronSessionSsr(
 
     if (!user?.accessToken) {
       console.log("A guest is trying to view own profile");
-      return { guest: true };
+      return { props: { guest: true } };
     }
 
-    const { data: main_info } = await api.get('/api/users/me', {
-      headers: {
-        'Authorization': `Bearer ${user.accessToken}` 
-      }
-    });
+    let main_info;
+    try {
+      ({ data: main_info } = await api.get('/api/users/me', {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}` 
+        }
+      }));
+    } catch (AxiosError) {
+      console.log("A token expired");
+      return { props: { expired: true } };
+    }
 
     const { data: { user_optional_infos: [optional_info] } } = await api.get('/api/profiles/get-user-optional-info', {
       headers: {
