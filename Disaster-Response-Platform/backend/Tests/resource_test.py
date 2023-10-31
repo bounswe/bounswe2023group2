@@ -29,9 +29,17 @@ def generate_random_email():
     random_username = generate_random_string()
     return f"{random_username}@example.com"
 
+def generate_random_phone_number():
+    """Generate a random phone number with the format 05XXXXXXXX."""
+    # Generate a random 8-digit number
+    random_digits = ''.join([str(random.randint(0, 9)) for _ in range(9)])
+    # Return the number with the 05 prefix
+    return "05" + random_digits
+
 def signup_user():
     random_username = generate_random_string()
     random_email = generate_random_email()
+    random_number = generate_random_phone_number()
     response = client.post("/api/users/signup", json={
         "username": random_username,
         "email": random_email,
@@ -39,10 +47,11 @@ def signup_user():
         "password": TEST_PASSWORD,
         "first_name": "string",
         "last_name": "string",
-        "phone_number": "05532137842",
+        "phone_number": random_number,
         "is_email_verified": True,
         "private_account": False
     })
+    print(response.text)
     assert response.status_code == 201
     return random_username, random_email
 
@@ -93,10 +102,13 @@ def test_create_resource():
             "gender": "Male",
             "age": "Adult",
             "subtype": "Shirt"
-        }
+        },
+        "x": 12.00,
+        "y": 14.00
     }
 
     response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    print(response.text)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -121,10 +133,13 @@ def test_get_resource():
             "gender": "Male",
             "age": "Adult",
             "subtype": "Shirt"
-        }
+        },
+        "x": 12.00,
+        "y": 14.00
     }
 
     response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    print(response.text)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -146,6 +161,7 @@ def test_get_all_resources():
 
     # Test getting all resources
     response = client.get("/api/resource/", headers=valid_headers)
+    print(response.text)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
     resources = response.json()
     assert isinstance(resources["resources"], list)
@@ -164,7 +180,9 @@ def test_update_resource():
             "gender": "Male",
             "age": "Adult",
             "subtype": "Shirt"
-        }
+        },
+        "x": 12.00,
+        "y": 14.00
     }
 
     response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
@@ -208,7 +226,9 @@ def test_delete_resource():
             "gender": "Male",
             "age": "Adult",
             "subtype": "Shirt"
-        }
+        },
+        "x": 12.00,
+        "y": 14.00
     }
 
     response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
@@ -226,180 +246,296 @@ def test_delete_resource():
     response = client.get(f"/api/resource/{resource_id}", headers=valid_headers)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
-# Ensure that the test environment is torn down after all tests
-# def test_teardown():
-#    teardown_test_environment()
+def test_set_initial_quantity():
+    setup_test_environment()
 
+    # Create a resource for testing
+    resource_data = {
+        "condition": "new",
+        "initialQuantity": 100,
+        "currentQuantity": 100,
+        "type": "Cloth",
+        "details": {
+            "size": "L",
+            "gender": "Male",
+            "age": "Adult",
+            "subtype": "Shirt"
+        },
+        "x": 12.00,
+        "y": 14.00
+    }
 
-# client = TestClient(app)
+    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
-# TOKEN = None
+    created_resource = response.json()["resources"][0]
+    assert created_resource["_id"] is not None
 
-# def signup_user():
-#     response = client.post("/api/users/signup", json={
-#         "username": "burak25",
-#         "email": "user25@example.com",
-#         "disabled": False,
-#         "password": "burak1234",
-#         "first_name": "string",
-#         "last_name": "string",
-#         "phone_number": "05532137842",
-#         "is_email_verified": True,
-#         "private_account": False
-#     })
-#     assert response.status_code == 201
+    resource_id = created_resource["_id"]
+    new_initial_quantity = 75
 
-# def login_user():
-#     response = client.post("/api/users/login", json={
-#         "username_or_email_or_phone": "burak1",
-#         "password": "burak1234"
-#     })
-#     assert response.status_code == 200
-#     token_data = response.json()
-#     return token_data["access_token"]
+    response = client.put(f"/api/resource/{resource_id}/initial_quantity", json={"quantity": new_initial_quantity}, headers=valid_headers)
+    assert response.status_code == HTTPStatus.OK
 
-# def setup_test_environment():
-#     """Set up test environment by creating a sample resource."""
-#     global TOKEN
-#     # Signup and login only if the token is not already available
-#     if TOKEN is None:
-#         # signup_user()
-#         TOKEN = login_user()
+    # Verify the updated initial quantity
+    response = client.get(f"/api/resource/{resource_id}/initial_quantity", headers=valid_headers)
+    assert response.status_code == HTTPStatus.OK
+    quantity_data = response.json()
+    assert quantity_data["quantity"] == new_initial_quantity
+
+    # Clean up: Delete the created resource
+    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+def test_set_current_quantity():
+    setup_test_environment()
+
+    # Create a resource for testing
+    resource_data = {
+        "condition": "new",
+        "initialQuantity": 100,
+        "currentQuantity": 100,
+        "type": "Cloth",
+        "details": {
+            "size": "L",
+            "gender": "Male",
+            "age": "Adult",
+            "subtype": "Shirt"
+        },
+        "x": 12.00,
+        "y": 14.00
+    }
+
+    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+    created_resource = response.json()["resources"][0]
+    assert created_resource["_id"] is not None
+
+    resource_id = created_resource["_id"]
+    new_current_quantity = 75
+
+    response = client.put(f"/api/resource/{resource_id}/current_quantity", json={"quantity": new_current_quantity}, headers=valid_headers)
+    assert response.status_code == HTTPStatus.OK
+
+    # Verify the updated current quantity
+    response = client.get(f"/api/resource/{resource_id}/current_quantity", headers=valid_headers)
+    assert response.status_code == HTTPStatus.OK
+    quantity_data = response.json()
+    assert quantity_data["quantity"] == new_current_quantity
+
+    # Clean up: Delete the created resource
+    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+def test_set_condition():
+    setup_test_environment()
+
+    # Create a resource for testing
+    resource_data = {
+        "condition": "new",
+        "initialQuantity": 100,
+        "currentQuantity": 100,
+        "type": "Cloth",
+        "details": {
+            "size": "L",
+            "gender": "Male",
+            "age": "Adult",
+            "subtype": "Shirt"
+        },
+        "x": 12.00,
+        "y": 14.00
+    }
+
+    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+    created_resource = response.json()["resources"][0]
+    assert created_resource["_id"] is not None
+
+    resource_id = created_resource["_id"]
+    new_condition = "used"
+
+    response = client.put(f"/api/resource/{resource_id}/condition", json={"condition": new_condition}, headers=valid_headers)
+    assert response.status_code == HTTPStatus.OK
+
+    # Verify the updated condition
+    response = client.get(f"/api/resource/{resource_id}/condition", headers=valid_headers)
+    assert response.status_code == HTTPStatus.OK
+    condition_data = response.json()
+    assert condition_data["condition"] == new_condition
+
+    # Clean up: Delete the created resource
+    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+def test_get_initial_quantity_succeed():
+    setup_test_environment()
+
+    # Create a resource for testing
+    resource_data = {
+        "condition": "new",
+        "initialQuantity": 100,
+        "currentQuantity": 100,
+        "type": "Cloth",
+        "details": {
+            "size": "L",
+            "gender": "Male",
+            "age": "Adult",
+            "subtype": "Shirt"
+        },
+        "x": 12.00,
+        "y": 14.00
+    }
+
+    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+    created_resource = response.json()["resources"][0]
+    assert created_resource["_id"] is not None
+
+    resource_id = created_resource["_id"]
+
+    # Test getting the initial quantity of the created resource
+    response = client.get(f"/api/resource/{resource_id}/initial_quantity", headers=valid_headers)
+    assert response.status_code == HTTPStatus.OK
+    quantity_data = response.json()
+    assert "quantity" in quantity_data
+
+    # Clean up: Delete the created resource
+    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+def test_get_current_quantity_succeed():
+    setup_test_environment()
+
+    # Create a resource for testing
+    resource_data = {
+        "condition": "new",
+        "initialQuantity": 100,
+        "currentQuantity": 100,
+        "type": "Cloth",
+        "details": {
+            "size": "L",
+            "gender": "Male",
+            "age": "Adult",
+            "subtype": "Shirt"
+        },
+        "x": 12.00,
+        "y": 14.00
+    }
+
+    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+    created_resource = response.json()["resources"][0]
+    assert created_resource["_id"] is not None
+
+    resource_id = created_resource["_id"]
+
+    # Test getting the current quantity of the created resource
+    response = client.get(f"/api/resource/{resource_id}/current_quantity", headers=valid_headers)
+    assert response.status_code == HTTPStatus.OK
+    quantity_data = response.json()
+    assert "quantity" in quantity_data
+
+    # Clean up: Delete the created resource
+    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+### SUPPOSED TO FAIL TESTS
+def test_create_resource_missing_fields():
+    setup_test_environment()
     
-#     headers = {
-#         "Authorization": f"bearer {TOKEN}"
-#     }
-    
-#     sample_resource = Resource(
-#         created_by="testuser",
-#         condition="new",
-#         initialQuantity=65,
-#         currentQuantity=35,
-#         type="Cloth",
-#         details={
-#             "size": "L",
-#             "gender": "Male",
-#             "age": "Adult",
-#             "subtype": "Shirt"
-#         }
-#     )
-#     created_resource_json_str = resource_service.create_resource(sample_resource)
-#     created_resource_dict = json.loads(created_resource_json_str)
-#     return created_resource_dict["resources"][0]["_id"], headers
+    resource_data = {
+        "condition": "new",
+        "type": "Cloth",
+        "x": 12.00,
+        "y": 14.00
+    }
 
-# # Test for creating a resource
-# def test_create_resource():
-#     _, headers = setup_test_environment()
-#     response = client.post("/api/resource", headers=headers, json={
-#         "condition": "new",
-#         "initialQuantity": 50,
-#         "currentQuantity": 20,
-#         "type": "Cloth",
-#         "details": {
-#             "size": "M",
-#             "gender": "Female",
-#             "age": "Adult",
-#             "subtype": "Shirt"
-#         }
-#     })
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["initialQuantity"] == 50
-#     assert data["currentQuantity"] == 20
-#     assert data["type"] == "Cloth"
+    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    assert response.status_code == HTTPStatus.NOT_FOUND  # Change NOT_FOUND to BAD_REQUEST
 
-# # Test for getting a resource
-# def test_get_resource():
-#     resource_id, headers = setup_test_environment()
-#     response = client.get(f"/api/resource/{resource_id}", headers=headers)
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["id"] == resource_id
-#     assert data["condition"] == "new"
-#     assert data["initialQuantity"] == 65
-#     assert data["currentQuantity"] == 35
-#     assert data["type"] == "Cloth"
+def test_get_nonexistent_resource():
+    setup_test_environment()
 
-# # Test for getting all resources
-# def test_get_all_resources():
-#     setup_test_environment()  # Create a sample resource
-#     response = client.get("/")
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert isinstance(data, list)
-#     assert len(data) >= 1
+    resource_id = "111111111111000000000000"
+    response = client.get(f"/api/resource/{resource_id}", headers=valid_headers)
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
-# # Test for updating a resource
-# def test_update_resource():
-#     resource_id, headers = setup_test_environment()
-#     response = client.put(f"/api/resource/{resource_id}", headers=headers, json={
-#         "created_by": "tester",
-#         "currentQuantity": 15,
-#         "details": {
-#             "size": "XL",
-#             "gender": "Male",
-#             "age": "Elder",
-#             "subtype": "Shirt"
-#         }
-#     })
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["currentQuantity"] == 15
-#     assert data["details"]["size"] == "XL"
+def test_update_nonexistent_resource():
+    setup_test_environment()
 
-# # Test for deleting a resource
-# def test_delete_resource():
-#     resource_id, headers = setup_test_environment()
-#     response = client.delete(f"/api/resource/{resource_id}", headers = headers)
-#     assert response.status_code == 200
-#     # Try to retrieve the deleted resource to make sure it's gone
-#     response = client.get(f"/{resource_id}")
-#     assert response.status_code == 404
+    resource_id = "222222222222000000000000"
+    updated_resource_data = {
+        "currentQuantity": 50
+    }
 
-# # Test for setting initial quantity of a resource
-# def test_set_initial_quantity_of_resource():
-#     resource_id, headers = setup_test_environment()
-#     response = client.put(f"/api/resource/{resource_id}/initial_quantity", headers= headers, json={"quantity": 55})
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["initialQuantity"] == 55
+    response = client.put(f"/api/resource/{resource_id}", json=updated_resource_data, headers=valid_headers)
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
-# # Test for getting initial quantity of a resource
-# def test_get_initial_quantity_of_resource():
-#     resource_id, headers = setup_test_environment()
-#     response = client.get(f"/api/resource/{resource_id}/initial_quantity", headers=headers)
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["initialQuantity"] == 65
+def test_delete_nonexistent_resource():
+    setup_test_environment()
 
-# # Test for setting current quantity of a resource
-# def test_set_current_quantity_of_resource():
-#     resource_id, headers = setup_test_environment()
-#     response = client.put(f"/api/resource/{resource_id}/current_quantity", headers=headers, json={"quantity": 40})
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["currentQuantity"] == 40
+    resource_id = "121212121212000000000000"
+    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
-# # Test for getting current quantity of a resource
-# def test_get_current_quantity_of_resource():
-#     resource_id, headers = setup_test_environment()
-#     response = client.get(f"/api/resource/{resource_id}/current_quantity", headers=headers)
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["currentQuantity"] == 35
+def test_set_invalid_condition():
+    setup_test_environment()
 
-# # Test for setting condition of a resource
-# def test_set_condition_of_resource():
-#     resource_id, headers = setup_test_environment()
-#     response = client.put(f"/api/resource/{resource_id}/condition", headers=headers, json={"condition": "used"})
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["condition"] == "used"
+    # Create a resource for testing
+    resource_data = {
+        "condition": "new",
+        "initialQuantity": 100,
+        "currentQuantity": 100,
+        "type": "Cloth",
+        "details": {
+            "size": "L",
+            "gender": "Male",
+            "age": "Adult",
+            "subtype": "Shirt"
+        },
+        "x": 12.00,
+        "y": 14.00
+    }
 
-# # Test for getting condition of a resource
-# def test_get_condition_of_resource():
-#     resource_id, headers = setup_test_environment()
-#     response = client.get(f"/{resource_id}/condition", headers=headers)
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert data["condition"] == "new"
+    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+    created_resource = response.json()["resources"][0]
+    assert created_resource["_id"] is not None
+
+    resource_id = created_resource["_id"]
+    invalid_condition_data = {
+        "condition": "invalid_condition"
+    }
+
+    response = client.put(f"/api/resource/{resource_id}/condition", json=invalid_condition_data, headers=valid_headers)
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+
+    # Clean up: Delete the created resource
+    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+
+def test_get_initial_quantity_of_nonexistent_resource():
+    setup_test_environment()
+
+    resource_id = "353535353535000000000000"
+    response = client.get(f"/api/resource/{resource_id}/initial_quantity", headers=valid_headers)
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+def test_get_current_quantity_of_nonexistent_resource():
+    setup_test_environment()
+
+    resource_id = "000000000000000000000000"
+    response = client.get(f"/api/resource/{resource_id}/current_quantity", headers=valid_headers)
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+def test_get_condition_of_nonexistent_resource():
+    setup_test_environment()
+
+    resource_id = "aaaaaaaaaaaa000000000000"
+    response = client.get(f"/api/resource/{resource_id}/condition", headers=valid_headers)
+    assert response.status_code == HTTPStatus.NOT_FOUND
