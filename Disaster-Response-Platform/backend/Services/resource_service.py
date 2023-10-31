@@ -1,4 +1,4 @@
-from Models.resource_model import Resource
+from Models.resource_model import Resource, ConditionEnum
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 
@@ -12,7 +12,7 @@ def create_resource(resource: Resource) -> str:
     # Manual validation for required fields during creation
     if not all([resource.created_by, resource.condition,
                 resource.initialQuantity, resource.currentQuantity,
-                resource.type, resource.details]):
+                resource.type, resource.details, resource.x, resource.y]):
         raise ValueError("All fields are mandatory for creation.")
     insert_result = resources_collection.insert_one(resource.dict())
     #check the result to change from
@@ -31,7 +31,9 @@ def get_resources(resource_id:str = None) -> list[dict]:
                   "initialQuantity": 1,
                   "currentQuantity": 1,
                   "type": 1,
-                  "details":1
+                  "details":1,
+                  "x":1,
+                  "y":1
                   }
     #projection["_id"] = {"$toString": "$_id"}
     if (resource_id is None):
@@ -58,9 +60,9 @@ def update_resource(resource_id: str, resource: Resource) -> Resource:
         if 'details' in resource.dict(exclude_none=True) and 'details' in existing_resource:
             resource.details = {**existing_resource['details'], **resource.dict(exclude_none=True)['details']}
 
-        update_data = {k: v for k, v in resource.dict(exclude_none=True).items()}
+            update_data = {k: v for k, v in resource.dict(exclude_none=True).items()}
 
-        resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": update_data})
+            resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": update_data})
 
         updated_resource_data = resources_collection.find_one({"_id": ObjectId(resource_id)})
         return Resource(**updated_resource_data)
@@ -68,12 +70,51 @@ def update_resource(resource_id: str, resource: Resource) -> Resource:
         raise ValueError(f"Resource id {resource_id} not found")
 
 
-# Returning the deleted id would be nice
 def delete_resource(resource_id: str):
     try:
         d = resources_collection.delete_one({"_id": ObjectId(resource_id)})
         if d.deleted_count == 0:
             raise
         return "{\"resources\":[{\"_id\":" + f"\"{resource_id}\"" + "}]}"
+        # Returning the deleted id would be nice
     except:
         raise ValueError(f"Resource {resource_id} cannot be deleted")
+
+def set_initial_quantity(resource_id: str, quantity: int) -> bool:
+    result = resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": {"initialQuantity": quantity}})
+    if result.matched_count == 0:
+        raise ValueError(f"Resource id {resource_id} not found")
+    return True
+
+def get_initial_quantity(resource_id: str) -> int:
+    resource_data = resources_collection.find_one({"_id": ObjectId(resource_id)}, {"initialQuantity": 1})
+    if resource_data:
+        return resource_data["initialQuantity"]
+    else:
+        raise ValueError(f"Resource id {resource_id} not found")
+
+def set_current_quantity(resource_id: str, quantity: int) -> bool:
+    result = resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": {"currentQuantity": quantity}})
+    if result.matched_count == 0:
+        raise ValueError(f"Resource id {resource_id} not found")
+    return True
+
+def get_current_quantity(resource_id: str) -> int:
+    resource_data = resources_collection.find_one({"_id": ObjectId(resource_id)}, {"currentQuantity": 1})
+    if resource_data:
+        return resource_data["currentQuantity"]
+    else:
+        raise ValueError(f"Resource id {resource_id} not found")
+
+def set_condition(resource_id: str, condition: ConditionEnum) -> bool:
+    result = resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": {"condition": condition.value}})
+    if result.matched_count == 0:
+        raise ValueError(f"Resource id {resource_id} not found")
+    return True
+
+def get_condition(resource_id: str) -> ConditionEnum:
+    resource_data = resources_collection.find_one({"_id": ObjectId(resource_id)}, {"condition": 1})
+    if resource_data:
+        return ConditionEnum(resource_data["condition"])
+    else:
+        raise ValueError(f"Resource id {resource_id} not found")

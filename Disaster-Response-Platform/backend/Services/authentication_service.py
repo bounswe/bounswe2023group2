@@ -104,6 +104,8 @@ def create_user(user: CreateUserRequest):
     
     if (user.email and userDb.find_one({"email": user.email}) !=None):
         raise ValueError("Email already taken")
+    if (user.phone_number and userDb.find_one({"phone_number": user.phone_number}) !=None):
+        raise ValueError("phone_number already taken")
        
     if (not is_valid_password(user.password)) : #if username is not existed in db but password contains less than 8 characters
         raise ValueError("Password should include a digit")
