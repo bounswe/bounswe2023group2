@@ -1,8 +1,9 @@
 import bson
 from pydantic import BaseModel, Field
-from typing import Dict, Any
+from typing import Dict, Any, List
 from enum import Enum
 from datetime import date
+
 
 class EducationEnum(str, Enum):
     ilk = "ilk"
@@ -34,6 +35,12 @@ class LanguageLevel(str, Enum):
     advanced = "advanced"
     native = "native"
 
+class ProfessionLevel(str, Enum):
+    amateur = "amateur"
+    pro = "pro"
+    certified_pro = "certified pro"
+
+
 class UserOptionalInfo(BaseModel):
     username: str = Field(default=None)
     date_of_birth: date = Field(default=None)
@@ -47,8 +54,8 @@ class UserOptionalInfo(BaseModel):
 
 class UserSocialMediaLink(BaseModel):
     username: str = Field(default=None)
-    platform_name: str
-    profile_URL: str
+    platform_name: str = Field(default=None)
+    profile_URL: str = Field(default=None)
 
 class UserSkill(BaseModel):
     username: str = Field(default=None)
@@ -60,3 +67,25 @@ class UserLanguage(BaseModel):
     username: str = Field(default=None)
     language: str
     language_level: LanguageLevel = Field(default=None)
+
+class UserProfession(BaseModel):
+    username: str = Field(default=None)
+    profession: str
+    profession_level: ProfessionLevel = Field(default=None)
+
+class Professions(BaseModel):
+    professions: List[UserProfession]
+
+class Languages(BaseModel):
+    languages: List[UserLanguage]
+
+class UserSkills(BaseModel):
+    skills: List[UserSkill]
+
+class UserSocialMediaLinks(BaseModel):
+    user_socialmedia_links: List[UserSocialMediaLink]
+
+class UserOptionalInfos(BaseModel):
+    user_optional_infos: List[UserOptionalInfo]
+
+

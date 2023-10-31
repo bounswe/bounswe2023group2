@@ -9,6 +9,24 @@ const Map = dynamic(() => import('../components/Map/Map'), {
 })
 
 export default function home() {
+  const [resource, setResource] = useState([]); 
+  const resources = async () => {
+    const  response = await  fetch('/api/resource', { method: 'GET', headers: { "Content-Type": "application/json" }});
+  let res = await response.json();
+     if (response.ok) {
+
+      setResource(res.resources)
+    } else {
+      // unknown error
+      toast.error("An unexpected error occurred while saving, please try again")
+    }
+  }
+  useEffect(()=>{
+    resources();
+  
+    
+  },[resource])
+
   return (
     <>
         <Map />

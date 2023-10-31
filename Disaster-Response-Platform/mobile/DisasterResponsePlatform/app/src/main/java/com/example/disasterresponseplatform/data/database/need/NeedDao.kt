@@ -8,8 +8,11 @@ import com.example.disasterresponseplatform.data.database.DatabaseInfo
 @Dao
 interface NeedDao {
     @Insert
-    suspend fun insertActivation(need: Need)
+    suspend fun insertNeed(need: Need)
 
-    @Query("SELECT ${NeedCols.location} FROM ${DatabaseInfo.NEED}  WHERE ${NeedCols.creatorID} = :creatorID")
-    fun getLocation(creatorID: String): String
+    @Query("SELECT ${NeedResourceCols.location} FROM ${DatabaseInfo.NEED}  WHERE ${NeedResourceCols.creatorName} = :creatorID")
+    fun getLocation(creatorID: String): String?
+
+    @Query("SELECT * FROM ${DatabaseInfo.NEED} ORDER BY ${NeedResourceCols.id}")
+    fun getAllNeeds(): List<Need>?
 }
