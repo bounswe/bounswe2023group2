@@ -2,6 +2,9 @@ import sys
 sys.path.append("..")
 from fastapi.testclient import TestClient
 from main import app
+import random
+import json
+import string
 from http import HTTPStatus
 
 from Database.mongo import MongoDB
@@ -13,22 +16,26 @@ db = MongoDB.getInstance()
 # token can be set
 TOKEN = None
 header = None
+need_id = None
 
 # header = {"Authorization": f"Bearer {TOKEN}"}
 
 signup_body= {
-  "username": "user1",
   "password": "a2345678",
-  "email": "user@mail.com",
   "disabled": False,
   "first_name": "User",
   "last_name": "Test",
-  "phone_number": "05531420995",
   "is_email_verified": False,
   "private_account": True
 }
+
+TEST_USERNAME = None
+TEST_EMAIL = None
+TEST_PHONE_NO = None
+
+
 email_login_body= {
-    "username_or_email_or_phone": "user@mail.com",
+    "username_or_email_or_phone": "",
     "password": "a2345678"
 }
 need_data = {
@@ -42,6 +49,15 @@ need_data = {
         "age": 0
             }
     }
+
+updated_need_data = {
+    "unsuppliedQuantity": 2,
+    "details": {
+       "medicine_name": "ddd",
+    }
+}
+
+
 need_data_wrong = {
     "initialQuantity": 7,
     "unsuppliedQuantity": 6,
@@ -53,9 +69,31 @@ need_data_wrong = {
             }
     }
     
+    
+def generate_random_string(length=10):
+    """Generate a random string of letters and digits."""
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+def generate_random_email():
+    """Generate a random email address."""
+    random_username = generate_random_string()
+    return f"{random_username}@example.com"
+
+def generate_random_phone_number():
+    """Generate a random phone number with the format 05XXXXXXXX."""
+    # Generate a random 8-digit number
+    random_digits = ''.join([str(random.randint(0, 9)) for _ in range(9)])
+    # Return the number with the 05 prefix
+    return "05" + random_digits
 
 
 def test_signup():
+    username = generate_random_string()
+    signup_body['username']  = username
+    
+    signup_body['email']  = generate_random_email()
+    signup_body['phone_number']  = generate_random_phone_number()
+    email_login_body['username_or_email_or_phone']=username
     response = client.post("/api/users/signup", json=signup_body)    
     assert response.status_code == 201
     # return user_id
@@ -144,6 +182,14 @@ def test_get_all_needs():
     needs = response.json()
     assert isinstance(needs['needs'], list)
     
+def test_update_need():
+
+    response = client.put(f"/api/needs/{need_id}", json=updated_need_data, headers=header)
+    assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
+    updated_need = response.json()["needs"][0]
+    assert updated_need["unsuppliedQuantity"] == 2
+    assert updated_need["details"]["medicine_name"] == "ddd"
+
     
 def test_delete_need1():
     # # Clean up: Delete the created need
@@ -154,7 +200,3 @@ def test_delete_need2():
     response = client.delete(f"/api/needs/222", headers=header)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
-
-# def test_delete_user():
-#     response = client.delete(f"/api/users/{signup_body['username']}", headers=header)
-#     assert response.status_code == HTTPStatus.OK
