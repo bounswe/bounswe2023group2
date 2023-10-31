@@ -16,3 +16,6 @@ class Need(BaseModel):
     
 class QuantityUpdate(BaseModel):
     quantity: int
+    
+class UrgencyUpdate(BaseModel):
+    urgency: int

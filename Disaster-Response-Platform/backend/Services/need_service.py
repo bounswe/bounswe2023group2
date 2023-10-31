@@ -113,3 +113,16 @@ def get_unsupplied_quantity(need_id: str) -> int:
         return need_data["unsuppliedQuantity"]
     else:
         raise ValueError(f"Need id {need_id} not found")
+    
+def set_urgency(need_id: str, urgency: int) -> bool:
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"urgency": urgency}})
+    if result.matched_count == 0:
+        raise ValueError(f"Need id {need_id} not found")
+    return True
+    
+def get_urgency(need_id: str) -> int:
+    need_data = needs_collection.find_one({"_id": ObjectId(need_id)})
+    if need_data:
+        return need_data["unsuppliedQuantity"]
+    else:
+        raise ValueError(f"Need id {need_id} not found")
