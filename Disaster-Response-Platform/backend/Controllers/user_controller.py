@@ -60,12 +60,13 @@ async def update_user_info(updated_user: UpdateUserRequest, response:Response,us
 @router.post("/login", responses={
     status.HTTP_200_OK: {"model": Token},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
+
 })
 async def login_for_access_token(user: LoginUserRequest, response:Response): ##douıble check here
     user = authentication_service.authenticate_user(user.username_or_email_or_phone, user.password)
     if not user:
         error= Error(ErrorMessage="Login failed", ErrorDetail= "Incorrect username or password")
-        response.status_code= HTTPStatus.BAD_REQUEST
+        response.status_code= HTTPStatus.UNAUTHORIZED
         return error
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = authentication_service.create_jwt_token(data={"sub": user.username}, expires_delta=access_token_expires)

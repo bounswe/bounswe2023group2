@@ -29,7 +29,7 @@ export default function login() {
       toast.success("Successfully saved")
       // Usage!
       await sleep(500)
-      router.push("/")
+      router.push('/profile');
     } else {
       // unknown error
       toast.error("An unexpected error occurred while saving, please try again")
