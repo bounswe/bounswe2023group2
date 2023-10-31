@@ -6,18 +6,19 @@ import Link from "next/link";
 import { Button, useDisclosure } from '@nextui-org/react'
 import AddResourceForm from "./AddResource";
 import useUser from "@/lib/useUser";
+import { useRouter } from "next/router";
 
 
 export default function NavigationBar() {
   const { user, mutateUser } = useUser();
-  
+  const router = useRouter();
+  const isMapPage = router.pathname === '/map';
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <main className={styles.main}>
       <div className={styles.navbar}>
         <div className={styles.leftbar}>
           <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
-
             <Link href={`/`}>
               <h1>DaRP   </h1>
             </Link>
@@ -34,19 +35,21 @@ export default function NavigationBar() {
           </nav>
         </div>
         <div className={styles.rightbar}>
-          
           <nav>
-            <Button onPress={onOpen}>Add Resource</Button>
+            {isMapPage ? <></> : (
+              <Button onPress={onOpen}>İlan Oluştur</Button>
+            )}
           </nav>
+          
           <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
-          {user?.isLoggedIn === false &&  <nav>
-          <Link href={`register`}>
-            <Button variant="solid" color="primary" >Sign up</Button>
+          {user?.isLoggedIn === false && <nav>
+            <Link href={`register`}>
+              <Button variant="solid" color="primary" >Sign up</Button>
             </Link>
           </nav>}
           {user?.isLoggedIn === false && <nav>
-          <Link href={`login`}>
-            <Button variant="solid" color='primary' >Sign in</Button>
+            <Link href={`login`}>
+              <Button variant="solid" color='primary' >Sign in</Button>
             </Link>
           </nav>}
           {user?.isLoggedIn === true && <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
@@ -60,8 +63,10 @@ export default function NavigationBar() {
             </Button>
           </nav>
         </div>
-
+        
       </div>
-    </main>
+     
+    </main >
   )
+
 }
