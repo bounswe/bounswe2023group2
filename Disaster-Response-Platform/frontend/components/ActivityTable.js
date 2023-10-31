@@ -2,7 +2,7 @@ import React from "react";
 
 
 
-export default function ActivityTable({ resource }) {
+export default function ActivityTable({ resource, needFilter, resourceFilter }) {
     return (
 
         <div class="w-full overflow-x-auto shadow-md sm:rounded my-10">
@@ -34,7 +34,7 @@ export default function ActivityTable({ resource }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {resource.map((resource) => (
+                    {resourceFilter && resource && resource.map((resource) => (
                         <>
                             <tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-500">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
@@ -51,7 +51,25 @@ export default function ActivityTable({ resource }) {
                                 </td>
                             </tr>
                         </>
-                    ))}
+                    )) }
+                    {needFilter && [].map((resource) => (
+                        <>
+                            <tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-500">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
+                                    {resource.type}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {resource.condition}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {resource.created_by}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {resource.details.subtype ?? resource.details.tool_type }
+                                </td>
+                            </tr>
+                        </>
+                    )) }
                    
                 </tbody>
             </table>
