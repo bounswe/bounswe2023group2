@@ -1,7 +1,5 @@
 import styles from "./MapFilterMenu.module.scss";
 import { FaSearch } from "react-icons/fa";
-import CreateActivityButton from "../NewActivityButton";
-
 
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,8 +16,6 @@ export default function MapFilterMenu({activateClick,isMapSelected,selectMap}) {
     onOpen();
     []
   }
-
-  
 
   return (
     <div className={styles.main}>
