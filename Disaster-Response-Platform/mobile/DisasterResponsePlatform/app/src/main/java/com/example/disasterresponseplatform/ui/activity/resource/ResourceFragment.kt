@@ -39,17 +39,15 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
     }
 
     private fun arrangeView(){
-        val token = DiskStorageManager.getKeyValue("token")
-        if (!token.isNullOrEmpty()){
-            binding.btAddResource.setOnClickListener {
+        binding.btAddResource.setOnClickListener {
+            val token = DiskStorageManager.getKeyValue("token")
+            if (!token.isNullOrEmpty()) {
                 val addResourceFragment = AddResourceFragment(resourceViewModel)
                 addFragment(addResourceFragment)
             }
-        } else{
-            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
-            Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                parentFragmentManager.popBackStack()
-            }, 200)
+            else{
+                Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
+            }
         }
 
         arrangeSearchView()
