@@ -3,6 +3,7 @@ import MainLayout from '@/layouts/MainLayout'
 import dynamic from 'next/dynamic'
 import ActivityTable from '@/components/ActivityTable'
 import { ToastContainer } from 'react-toastify'
+import { useState,useEffect } from 'react'
 
 const Map = dynamic(() => import('../components/Map/Map'), {
   ssr: false,
