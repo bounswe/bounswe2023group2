@@ -1,6 +1,8 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,18 +10,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ResourceAdapter
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.databinding.FragmentResourceBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 
 class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
 
     private lateinit var binding: FragmentResourceBinding
-    private lateinit var addResourceFragment : AddResourceFragment
     private lateinit var searchView: SearchView
+    private var requireActivity: FragmentActivity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,19 +39,30 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
     }
 
     private fun arrangeView(){
-        // add need clickable
-        binding.btAddResource.setOnClickListener {
-            val addResourceFragment = AddResourceFragment(resourceViewModel)
-            addFragment(addResourceFragment)
+        val token = DiskStorageManager.getKeyValue("token")
+        if (!token.isNullOrEmpty()){
+            binding.btAddResource.setOnClickListener {
+                val addResourceFragment = AddResourceFragment(resourceViewModel)
+                addFragment(addResourceFragment)
+            }
+        } else{
+            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
+            Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                parentFragmentManager.popBackStack()
+            }, 200)
         }
+
         arrangeSearchView()
         //arrangeRecyclerView()
         sendRequest()
     }
 
     private fun sendRequest(){
+        if (requireActivity == null){ // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         resourceViewModel.sendGetAllRequest()
-        resourceViewModel.getLiveDataResponse().observe(requireActivity()){ resourceResponse ->
+        resourceViewModel.getLiveDataResponse().observe(requireActivity!!){ resourceResponse ->
             val lst = resourceViewModel.createResourceList(resourceResponse)
             arrangeRecyclerView(lst)
         }
@@ -59,14 +74,16 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
      */
     private fun arrangeRecyclerView(resourceList : List<Resource>){
         val recyclerView = binding.recyclerViewNeeds
-        val layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.layoutManager = layoutManager
+        if (recyclerView.layoutManager == null){
+            val layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.layoutManager = layoutManager
+        }
         val list = resourceViewModel.getAllResources()
         val adapter = ResourceAdapter(resourceList)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
-        adapter.getLiveIntent().observe(requireActivity()){
+        adapter.getLiveIntent().observe(requireActivity!!){
             val text = "Type: ${it?.type}, Details: ${it?.details}, Location: ${it?.location}, "+
                     "Date: ${it?.creationTime}, Quantity: ${it?.quantity}, Condition: ${it?.condition}"
             Toast.makeText(requireActivity(), text, Toast.LENGTH_LONG).show()

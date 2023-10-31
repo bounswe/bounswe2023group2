@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.resource.Resource
@@ -20,6 +21,7 @@ import com.example.disasterresponseplatform.utils.DateUtil
 class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
 
     private lateinit var binding: FragmentAddResourceBinding
+    private var requireActivity: FragmentActivity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,6 +99,9 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
     }
 
     private fun submitAddResource() {
+        if (requireActivity == null){ // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         binding.btnSubmit.setOnClickListener {
             if ((validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
 
@@ -120,24 +125,14 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
 
                 //resourceViewModel.insertResource(resource) insert local db
 
-                val token = DiskStorageManager.getKeyValue("token")
-                if (!token.isNullOrEmpty()){
-                    resourceViewModel.arrangePostRequest(resource) // pass resource to view Model
-                    resourceViewModel.postResourceRequest()
-                    resourceViewModel.getLiveDataResourceID().observe(requireActivity()){
-                        Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
-                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                            parentFragmentManager.popBackStack()
-                        }, 200)
-                    }
-                } else{
-                    Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
+                resourceViewModel.arrangePostRequest(resource) // pass resource to view Model
+                resourceViewModel.postResourceRequest()
+                resourceViewModel.getLiveDataResourceID().observe(requireActivity!!){
+                    Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
                     Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                         parentFragmentManager.popBackStack()
                     }, 200)
                 }
-
-
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
             }

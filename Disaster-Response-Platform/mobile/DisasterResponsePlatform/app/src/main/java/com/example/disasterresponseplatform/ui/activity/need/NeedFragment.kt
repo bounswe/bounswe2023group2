@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.R
@@ -19,6 +20,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     private lateinit var binding: FragmentNeedBinding
     private lateinit var addNeedFragment: AddNeedFragment
     private lateinit var searchView: SearchView
+    private var requireActivity: FragmentActivity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,15 +49,22 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
      * Arrange recycler view and its adapter
      */
     private fun arrangeRecyclerView(){
+
+        if (requireActivity == null){ // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         val recyclerView = binding.recyclerViewNeeds
-        val layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.layoutManager = layoutManager
+        if (recyclerView.layoutManager == null){
+            val layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.layoutManager = layoutManager
+        }
+
         val list = needViewModel.getAllNeeds()
         val adapter = NeedAdapter(list)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
-        adapter.getLiveIntent().observe(requireActivity()){
+        adapter.getLiveIntent().observe(requireActivity!!){
             val text = "Type: ${it?.type}, Details: ${it?.details}, Location: ${it?.location}, " +
                     "Date: ${it?.creationTime}, Quantity: ${it?.quantity}, Urgency: ${it?.urgency}"
             Toast.makeText(requireActivity(), text, Toast.LENGTH_LONG).show()
