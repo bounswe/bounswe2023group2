@@ -18,7 +18,7 @@ def general_user_optional_info(response, username:str = None) ->json:
         json_result = create_json_for_error("Get user optional info faild", str(val_error))
         return json.loads(json_result)
 
-@router.get("/get-user-optional-info", responses={
+@router.get("/user-optional-infos", responses={
     status.HTTP_200_OK: {"model": UserOptionalInfos},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
@@ -36,7 +36,7 @@ async def get_all_user_optional_info(response: Response, username: str = Depends
     return general_user_optional_info(response=response)
 
 
-@router.post("/set-user-optional-info", responses={
+@router.post("/user-optional-infos/add-user-optional-info", responses={
     status.HTTP_200_OK: {"model": UserOptionalInfo},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
@@ -54,7 +54,7 @@ async def set_user_optional_info(user_optional_info: UserOptionalInfo, response:
         return json.loads(json_result)
 
 
-@router.post("/reset-user-optional-info", )
+@router.post("/delete-user-optional-info-item", )
 async def set_user_optional_info(reset_field: str, response: Response, username: str = Depends(authentication_service.get_current_username)):
     try:
         user_profile_service.reset_user_optional_info(username, reset_field)

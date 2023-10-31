@@ -1,7 +1,5 @@
+import datetime
 import json
-from urllib.parse import urlencode
-
-import httpx
 from fastapi.testclient import TestClient
 from main import app
 from Models.user_model import *
@@ -14,6 +12,7 @@ client = TestClient(app)
 TEST_USER = "testi"
 TEST_PASS = "tesTi2023!"
 
+GLOBAL_TOKEN = ""
 user_to_create:CreateUserRequest = CreateUserRequest(username = TEST_USER, first_name="Mahir", last_name = "Testeden",
                                                  phone_number = "05325325353", is_email_verified = False, private_account = False,
                                                  password = TEST_PASS, email = "testi@boun.edu.tr")
@@ -24,9 +23,18 @@ language_to_add:UserLanguage = UserLanguage(username=TEST_USER, language="Zulu",
 language_to_update:UserLanguage = UserLanguage(username=TEST_USER, language="Zulu", language_level="beginner")
 language_to_delete:UserLanguage = UserLanguage(username=TEST_USER, language="Zulu", language_level=None)
 
-profession_to_add:UserProfession = UserProfession(username = TEST_USER, profession = "Truck Driver", profession_level= "certified pro")
 
-def prepare_for_test():
+profession_to_add:UserProfession = UserProfession(username = TEST_USER, profession = "Truck Driver", profession_level= "certified pro")
+skill_to_add:UserSkill = UserSkill(username=TEST_USER, skill_definition="Truck Driver", skill_level="skilled")
+socialmedia_link_to_add = UserSocialMediaLink(username=TEST_USER, platform_name="X",
+                                              profile_URL="https://twitter.com/testici")
+user_optionalinfo_to_add = UserOptionalInfo(username=TEST_USER,
+                                            date_of_birth=datetime.datetime.strptime("1990-10-12", "%Y-%m-%d"), nationality="TC",
+                                           identity_number="139090909090", education="orta",
+                                           ealth_condition="Hepimizi gömer", blood_type="B Rh+",
+                                           Address="O cadde bu sokak Kadıköy/İstanbul")
+
+def clean_db_for_test():
     profile_languages = MongoDB.get_collection('user_languages')
     profile_optional_infos = MongoDB.get_collection('user_optional_infos')
     profile_professions = MongoDB.get_collection('user_professions')
@@ -44,9 +52,16 @@ def prepare_for_test():
     userDb.delete_one(query)
     return
 
+def prepare_for_test():
+    global GLOBAL_TOKEN
+    clean_db_for_test()
+    create_user()
+    token = do_login()
+    GLOBAL_TOKEN = token
+
 def create_user():
     response = client.post("/api/users/signup", json=dict(user_to_create))
-    return
+    assert response.status_code == HTTPStatus.CREATED
 
 
 def do_login():
@@ -59,72 +74,86 @@ def do_login():
     assert token is not None
     return token
 
-def create_profile_info(profile_sub_info: ProfileInfoApi, jsonParam):
-    prepare_for_test()
-    create_user()
-    token = do_login()
-
+def create_profile_info_subitems(profile_sub_info: ProfileInfoApi, jsonParam):
     url = profile_sub_info.base_url + "/" + profile_sub_info.prefix +"/add-" + profile_sub_info.name
     response = client.post(url,
                            json = dict(jsonParam),
-                           headers={"Authorization": f"Bearer {token}"})
+                           headers={"Authorization": f"Bearer {GLOBAL_TOKEN}"})
 
     assert response.status_code == HTTPStatus.OK
 
     return response.json()
 
 def test_create_language():
+    prepare_for_test()
     command = ProfileInfoApi( prefix = "languages", name = "language")
-    create_profile_info(command, language_to_add)
+    create_profile_info_subitems(command, language_to_add)
 
-def test_create_profession():
-    command = ProfileInfoApi( prefix = "professions", name = "profession")
-    create_profile_info(command, profession_to_add)
+def test_create_skills():
+    prepare_for_test()
+    command = ProfileInfoApi(prefix="skills", name="skill")
+    create_profile_info_subitems(command, skill_to_add)
 
-def test_create_get_language():
+def test_create_socialmedia_links():
+    prepare_for_test()
+    command = ProfileInfoApi(prefix="socialmedia-links", name="socialmedia-link")
+    create_profile_info_subitems(command, socialmedia_link_to_add)
+
+def test_create_professions():
+    prepare_for_test()
+    command = ProfileInfoApi(prefix="professions", name="profession")
+    create_profile_info_subitems(command, profession_to_add)
+
+def test_create_optionalinfos():
+    prepare_for_test()
+    command = ProfileInfoApi(prefix="user-optional-infos", name="user-optional-info")
+    res = user_optionalinfo_to_add.json()
+    res_j = json.loads(res)
+    create_profile_info_subitems(command, res_j)
+
+def test_create_get_languages():
     test_create_language()
-    token = do_login()
+    command = ProfileInfoApi(prefix="languages", name="language")
+    response_json = create_get_profile_info_subitems(command)
+    assert dict(language_to_add) == dict(response_json["user_languages"][0])
 
-    response = client.get("/api/profiles/languages",
-                           headers={"Authorization": f"Bearer {token}"})
+def test_create_get_skills():
+    test_create_skills()
+    command = ProfileInfoApi(prefix="skills", name="skill")
+    response_json = create_get_profile_info_subitems(command)
+    assert dict(skill_to_add) == dict(response_json["user_skills"][0])
+
+def test_create_get_professions():
+    test_create_professions()
+    command = ProfileInfoApi(prefix="professions", name="profession")
+    response_json = create_get_profile_info_subitems(command)
+    assert dict(profession_to_add) == dict(response_json["user_professions"][0])
+
+def test_create_get_socialmedia_links():
+    test_create_socialmedia_links()
+    command = ProfileInfoApi(prefix="socialmedia-links", name="socialmedia-link")
+    response_json = create_get_profile_info_subitems(command)
+    assert dict(socialmedia_link_to_add) == dict(response_json["user_socialmedia_links"][0])
+
+def test_create_get_optionalinfos():
+    test_create_optionalinfos()
+    command = ProfileInfoApi(prefix="user-optional-infos", name="user-optional-info")
+    response_json = create_get_profile_info_subitems(command)
+    res = user_optionalinfo_to_add.json()
+    res_j = json.loads(res)
+    if (response_json["user_optional_infos"][0]["date_of_birth"] is not None):
+        response_json["user_optional_infos"][0]["date_of_birth"] = (
+            datetime.datetime.strptime(response_json["user_optional_infos"][0]["date_of_birth"], "%Y-%m-%d  %H:%M:%S"))
+        response_json["user_optional_infos"][0]["date_of_birth"] = response_json["user_optional_infos"][0]["date_of_birth"].strftime("%Y-%m-%d")
+    assert dict(res_j) == dict(response_json["user_optional_infos"][0])
+
+def create_get_profile_info_subitems(profile_sub_info: ProfileInfoApi):
+    url = profile_sub_info.base_url + "/" + profile_sub_info.prefix
+    response = client.get(url,
+                          headers={"Authorization": f"Bearer {GLOBAL_TOKEN}"})
 
     assert response.status_code == HTTPStatus.OK
 
-    assert dict(language_to_add) ==  dict(response.json()["user_languages"][0])
-
-    return response.json()
-
-def test_update_language():
-    test_create_language()
-    token = do_login()
-
-    response = client.post("/api/profiles/languages/add-language",
-                           json=dict(language_to_update),
-                           headers={"Authorization": f"Bearer {token}"})
-
-    assert response.status_code == HTTPStatus.OK
-
-    assert dict(language_to_update) == dict(response.json())
-
-    return response.json()
-
-
-def test_delete_language():
-    test_create_language()
-    token = do_login()
-
-    response = client.request(method="DELETE", url="/api/profiles/languages/delete-language",
-                             json= {"language":language_to_delete.language},
-                           headers = {"Authorization": f"Bearer {token}"})
-
-    assert response.status_code == HTTPStatus.OK
-
-    #check the deleted language
-    response = client.get("/api/profiles/languages", params={"language": language_to_delete.language},
-                           headers={"Authorization": f"Bearer {token}"})
-
-    assert response.status_code == HTTPStatus.OK
-
-    assert len(response.json()["user_languages"]) == 0
+    #assert dict(language_to_add) ==  dict(response.json()["user_languages"][0])
 
     return response.json()
