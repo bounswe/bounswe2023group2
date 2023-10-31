@@ -7,6 +7,7 @@ import { Button, useDisclosure } from '@nextui-org/react'
 import AddResourceForm from "./AddResource";
 import useUser from "@/lib/useUser";
 import { useRouter } from "next/router";
+import fetchJson from "@/lib/fetchJson";
 
 
 export default function NavigationBar() {
@@ -51,6 +52,21 @@ export default function NavigationBar() {
             <Link href={`/profile`}>
               <CgProfile size={30} />
             </Link>
+          </nav>}
+          {user?.isLoggedIn === true && <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
+          <a
+                  href="/api/logout"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    mutateUser(
+                      await fetchJson("/api/logout", { method: "POST" }),
+                      false,
+                    );
+                    router.push("/");
+                  }}
+                >
+                  Logout
+                </a>
           </nav>}
           <nav>
             <Button color="primary" className={styles.button}>
