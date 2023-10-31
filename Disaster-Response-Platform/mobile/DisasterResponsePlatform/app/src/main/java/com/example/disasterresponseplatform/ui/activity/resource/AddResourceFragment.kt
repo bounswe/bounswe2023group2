@@ -1,6 +1,8 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,7 +98,6 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
     private fun submitAddResource() {
         binding.btnSubmit.setOnClickListener {
             if ((validateFullName() and validatePhoneNumber() and validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
-                Toast.makeText(context, "{'created_by': ${binding.etFullName.editText?.text.toString().trim()}, 'quantity': ${binding.etQuantity.editText?.text.toString().trim()}, 'type':  ${binding.boxResourceType.editText?.text.toString().trim()}}", Toast.LENGTH_SHORT).show()
 
                 val type: NeedTypes =
                     when(binding.boxResourceType.editText?.text.toString().trim()){
@@ -115,9 +116,17 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
                 val location = binding.etLocation.editText?.text.toString().trim()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
                 val resource = Resource(null,creatorName,"new",quantity,type,details,date,location)
-                //TODO do with token
-                resourceViewModel.insertResource(resource)
-                parentFragmentManager.popBackStack()
+
+                //resourceViewModel.insertResource(resource) insert local db
+                resourceViewModel.arrangePostRequest(resource) // pass resource to view Model
+                resourceViewModel.postResourceRequest()
+                resourceViewModel.getLiveDataResourceID().observe(requireActivity()){
+                    Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_SHORT).show()
+                    Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                        parentFragmentManager.popBackStack()
+                    }, 200)
+                }
+
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
             }

@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.data.models.authModels
+package com.example.disasterresponseplatform.data.models
 
 import com.google.gson.annotations.SerializedName
 
@@ -10,9 +10,22 @@ class ResourceBody {
         @SerializedName("initialQuantity") val initialQuantity: Int,
         @SerializedName("currentQuantity") val currentQuantity: Int,
         @SerializedName("type") val type: String,
-        @SerializedName("details") val details: String ,
-        @SerializedName("x") val x: Float,
-        @SerializedName("y") val y: Float
+        @SerializedName("details") val details: Details,
+        @SerializedName("x") val x: Double?,
+        @SerializedName("y") val y: Double?
+    )
+
+
+    data class PostRegisterResponseList(
+        val resources: List<PostRegisterResponseBody>
+    )
+    data class PostRegisterResponseBody(
+        @SerializedName("_id")
+        val _id: String
+    )
+
+    data class Details(
+        val subtype: String?
     )
 
     data class ResourceDetails(val size: String?, val gender: String?, val age: Any?,

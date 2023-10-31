@@ -18,7 +18,7 @@ data class Resource(
     @ColumnInfo(name = NeedResourceCols.condition)
     val condition: String,
     @ColumnInfo(name = NeedResourceCols.quantity)
-    val quantity: Int?,
+    val quantity: Int,
     @ColumnInfo(name = NeedResourceCols.type)
     val type: NeedTypes,
     @ColumnInfo(name = NeedResourceCols.details)
