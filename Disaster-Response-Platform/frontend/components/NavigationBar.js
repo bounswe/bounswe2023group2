@@ -53,7 +53,9 @@ export default function NavigationBar() {
               <CgProfile size={30} />
             </Link>
           </nav>}
-          {user?.isLoggedIn === true && <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
+          {user?.isLoggedIn === true && <nav >
+            <Button variant="solid" color='default'>
+
           <a
                   href="/api/logout"
                   onClick={async (e) => {
@@ -61,12 +63,13 @@ export default function NavigationBar() {
                     mutateUser(
                       await fetchJson("/api/logout", { method: "POST" }),
                       false,
-                    );
-                    router.push("/");
-                  }}
-                >
-                  Logout
+                      );
+                      router.push("/");
+                    }}
+                    >
+                  Çıkış yap
                 </a>
+                  </Button>
           </nav>}
           <nav>
             <Button color="primary" className={styles.button}>
