@@ -4,8 +4,8 @@ import 'leaflet/dist/leaflet.css'
 import styles from './Map.module.scss'
 
 export default function Map() {
-  const [center, setCenter] = useState({ lat: 37.4, lng: 37 })
-  const ZOOM_LEVEL = 6
+  const [center, setCenter] = useState({ lat: 41.08714, lng: 29.043474 })
+  const ZOOM_LEVEL = 15
   const mapRef = useRef()
 
   

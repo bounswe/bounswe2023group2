@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 
 const fetcher = (url) => fetch(url).then(r => r.json())
 
-function GenericForm({ url, renderForm }) {
+function GenericForm({ url, renderForm,fetchData }) {
   // Fetch our initial form data
   const { data, error } = useSWR(url, fetcher)
 
@@ -21,6 +21,7 @@ function GenericForm({ url, renderForm }) {
   }
   // Submit handler which displays errors + success messages to the user
   const onSubmit = async (data) => {
+    fetchData(data);
     console.log(data)
     const response = await saveFormData(data, url)
 
@@ -56,7 +57,7 @@ function GenericForm({ url, renderForm }) {
 
   return <form  onSubmit={handleSubmit(onSubmit)} className='flex w-full flex-col  mb-6 md:mb-0 gap-4'  >
     {renderForm({ register, errors, isSubmitting })}
-    <ToastContainer position="bottom-center" />
+    
   </form>
   ;
 }
