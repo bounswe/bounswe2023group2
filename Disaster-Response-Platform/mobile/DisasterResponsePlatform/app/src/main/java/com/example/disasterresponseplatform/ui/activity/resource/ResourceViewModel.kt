@@ -155,68 +155,62 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
     }
 
     fun sendGetAllRequest() {
-        val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
-        if (!token.isNullOrEmpty()) {
-            val headers = mapOf(
-                "Authorization" to token,
-                "Content-Type" to "application/json"
-            )
-            networkManager.makeRequest(
-                endpoint = Endpoint.RESOURCE,
-                requestType = RequestType.GET,
-                headers = headers,
-                callback = object : Callback<ResponseBody> {
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                        Log.d("ResponseInfo", "Headers: ${response.headers()}")
+        val headers = mapOf(
+            "Content-Type" to "application/json"
+        )
+        networkManager.makeRequest(
+            endpoint = Endpoint.RESOURCE,
+            requestType = RequestType.GET,
+            headers = headers,
+            callback = object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
 
-                        if (response.isSuccessful) {
-                            val rawJson = response.body()?.string()
-                            if (rawJson != null) {
-                                try {
-                                    Log.d("ResponseSuccess", "Body: $rawJson")
-                                    val gson = Gson()
-                                    val resourceResponse = gson.fromJson(
-                                        rawJson,
-                                        ResourceBody.ResourceResponse::class.java
+                    if (response.isSuccessful) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
+                            try {
+                                Log.d("ResponseSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val resourceResponse = gson.fromJson(
+                                    rawJson,
+                                    ResourceBody.ResourceResponse::class.java
+                                )
+                                if (resourceResponse != null) { // TODO check null
+                                    Log.d(
+                                        "ResponseSuccess",
+                                        "resourceResponse: $resourceResponse"
                                     )
-                                    if (resourceResponse != null) { // TODO check null
-                                        Log.d(
-                                            "ResponseSuccess",
-                                            "resourceResponse: $resourceResponse"
-                                        )
-                                        liveDataResponse.postValue(resourceResponse)
-                                    }
-                                } catch (e: IOException) {
-                                    // Handle IOException if reading the response body fails
-                                    Log.e(
-                                        "ResponseError",
-                                        "Error reading response body: ${e.message}"
-                                    )
+                                    liveDataResponse.postValue(resourceResponse)
                                 }
-                            } else {
-                                Log.d("ResponseSuccess", "Body is null")
+                            } catch (e: IOException) {
+                                // Handle IOException if reading the response body fails
+                                Log.e(
+                                    "ResponseError",
+                                    "Error reading response body: ${e.message}"
+                                )
                             }
                         } else {
-                            val errorBody = response.errorBody()?.string()
-                            if (errorBody != null) {
-                                var responseCode = response.code()
-                                Log.d("ResponseSuccess", "Body: $errorBody")
-                            }
+                            Log.d("ResponseSuccess", "Body is null")
+                        }
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            var responseCode = response.code()
+                            Log.d("ResponseSuccess", "Body: $errorBody")
                         }
                     }
-
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.d("onFailure", "Happens")
-                    }
                 }
-            )
 
-        }
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("onFailure", "Happens")
+                }
+            }
+        )
     }
 
     lateinit var postRequest: Resource

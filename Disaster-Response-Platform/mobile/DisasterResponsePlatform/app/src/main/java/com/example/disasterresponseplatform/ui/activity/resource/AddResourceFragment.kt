@@ -14,6 +14,7 @@ import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
 
 class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
@@ -118,14 +119,24 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
                 val resource = Resource(null,creatorName,"new",quantity,type,details,date,location)
 
                 //resourceViewModel.insertResource(resource) insert local db
-                resourceViewModel.arrangePostRequest(resource) // pass resource to view Model
-                resourceViewModel.postResourceRequest()
-                resourceViewModel.getLiveDataResourceID().observe(requireActivity()){
-                    Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_SHORT).show()
+
+                val token = DiskStorageManager.getKeyValue("token")
+                if (!token.isNullOrEmpty()){
+                    resourceViewModel.arrangePostRequest(resource) // pass resource to view Model
+                    resourceViewModel.postResourceRequest()
+                    resourceViewModel.getLiveDataResourceID().observe(requireActivity()){
+                        Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                            parentFragmentManager.popBackStack()
+                        }, 200)
+                    }
+                } else{
+                    Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
                     Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                         parentFragmentManager.popBackStack()
                     }, 200)
                 }
+
 
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
