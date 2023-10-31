@@ -5,5 +5,7 @@ enum class Endpoint(val path: String) {
     SIGNUP("users/signup"),
     DATA("joke/any"),
     USER("user"),
-    PRODUCTS("products");
+    PRODUCTS("products"),
+    RESOURCE("resource"),
+    NEED("need");
 }

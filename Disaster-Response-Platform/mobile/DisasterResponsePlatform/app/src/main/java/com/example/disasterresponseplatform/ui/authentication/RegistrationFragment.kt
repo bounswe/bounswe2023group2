@@ -7,18 +7,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentRegistrationBinding
-import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 
 class RegistrationFragment : Fragment() {
 
     private lateinit var binding: FragmentRegistrationBinding
     private val forgotPasswordFragment = ForgotPasswordFragment()
-    private val activityFragment =  ActivityFragment()
 
 
     override fun onCreateView(
@@ -59,7 +56,7 @@ class RegistrationFragment : Fragment() {
         authViewModel.signUpSuccessful.observe(viewLifecycleOwner, Observer { isSuccessful ->
             if (isSuccessful) {
                 Toast.makeText(context, "proceeding", Toast.LENGTH_SHORT ).show()
-                addFragment(activityFragment)
+                parentFragmentManager.popBackStack()
             }
 
         })
@@ -77,12 +74,4 @@ class RegistrationFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
     }
-
-    private fun addFragment(fragment: Fragment) {
-        val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
-        ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
-        ft.commit()
-    }
-
 }

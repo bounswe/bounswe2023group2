@@ -15,7 +15,9 @@ import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.userdata.UserData
 import com.example.disasterresponseplatform.data.database.action.Action
 import com.example.disasterresponseplatform.data.database.event.Event
+import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
+import com.example.disasterresponseplatform.data.enums.ResourceCondition
 import com.example.disasterresponseplatform.data.enums.Urgency
 import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
@@ -38,13 +40,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var homePageFragment: HomePageFragment
-    private lateinit var networkFragment: NetworkFragment
 
+    private val homePageFragment = HomePageFragment()
+    private val networkFragment = NetworkFragment()
     private val mapFragment = MapFragment()
-    private lateinit var activityFragment: ActivityFragment
     private val profileFragment = ProfileFragment()
     private val loginFragment = LoginFragment()
+    private lateinit var activityFragment: ActivityFragment
 
     private lateinit var needViewModel: NeedViewModel
     private lateinit var userDataViewModel: UserDataViewModel
@@ -91,9 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeFragments(){
-        homePageFragment = HomePageFragment(this)
-        networkFragment = NetworkFragment(this)
-        activityFragment = ActivityFragment()
+        activityFragment = ActivityFragment(needViewModel,resourceViewModel)
         replaceFragment(homePageFragment)
     }
 
@@ -117,6 +117,15 @@ class MainActivity : AppCompatActivity() {
         needViewModel.insertNeed(need)
         android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
             val location = needViewModel.getLocation("Egecan")
+            Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+        }, 200)
+    }
+
+    private fun tryResourceViewModel(){
+        val resource = Resource(null,"Mansur","new",400,NeedTypes.Food,"Soup",DateUtil.getDate("dd-MM-yy").toString(),"Ankara")
+        resourceViewModel.insertResource(resource)
+        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
+            val location = resourceViewModel.getLocation("Mansur")
             Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
         }, 200)
     }
@@ -165,12 +174,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.miLoggedInAs -> replaceNavFragment(profileFragment)
                 R.id.miLogin -> replaceNavFragment(loginFragment)
                 R.id.miLogout -> logOutActions()
-//                R.id.miRegister -> replaceNavFragment(registrationFragment)
                 R.id.miNetwork -> replaceNavFragment(networkFragment)
                 R.id.miAddNeed -> tryNeedViewModel()
                 R.id.miAddUserData -> tryUserDataViewModel()
                 R.id.miAddAction -> tryActionViewModel()
                 R.id.miAddEvent -> tryEventViewModel()
+                R.id.miAddResource -> tryResourceViewModel()
             }
             binding.root.closeDrawer(GravityCompat.START) //whenever clicked item on drawer, closing it automatically
             true

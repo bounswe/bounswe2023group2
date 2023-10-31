@@ -26,6 +26,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class AuthenticationViewModel@Inject constructor() : ViewModel() {
@@ -230,7 +231,8 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
         val email = _signUpEmail.value ?: "defaultEmail@example.com"
         val password = _signUpPassword.value ?: "defaultPassword"
         val fullName = _signUpFullName.value ?: "Default Name"
-        val phoneNumber = "05346710755" ?: "defaultPhoneNumber"
+        val phoneNumber =
+            ("0534671" + Random.nextInt(1000, 10000).toString()) ?: "defaultPhoneNumber"
 
         // Splitting the full name into first name and last name
         val parts = fullName.split(" ", limit = 2)
@@ -304,7 +306,7 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                                         Log.d("Error Message", errorResponse.detail[0].message)
                                         _signUpError.value = errorResponse.detail[0].message
                                     }
-                                    else if (responseCode == 400) {
+                                    else if (responseCode == 401) {
                                         val errorResponse = gson.fromJson(errorBody, SignUpResponseBody400::class.java)
                                         Log.d("Error Message", errorResponse.errorDetail)
                                         _signUpError.value = errorResponse.errorDetail
