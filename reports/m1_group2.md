@@ -233,16 +233,31 @@ As a member of backend team I was responsible for the implementation of need rel
 ##### Main contributions:
 
 I was reviewing the project requirements and diagrams with fresh eyes since I was not a a member of the team last semester. I pointed out some inconsistencies and suggested some improvements. My main contribution involved implementation of need related endpoints. Furthermore, I contributed to establishing a backbone of project plan for the team. Also, I was involved in project management through issue tracking, documentation updates, and project planning, ensuring alignment with the Github roadmap and milestone deliverables.
-**Code-related significant issues**: - [Backend - API Convention: Data Structure, Error Handling, Response Codes #290](https://github.com/bounswe/bounswe2023group2/issues/290) - [Initial Database - Installation and Design Setup #292](https://github.com/bounswe/bounswe2023group2/issues/292) - [Backend - Need CRUD endpoint implementation #326](https://github.com/bounswe/bounswe2023group2/issues/326) - [Backend - Test: Need CRUD Endpoints #381](https://github.com/bounswe/bounswe2023group2/issues/381) - [Backend - Improvements Need CRUD and additional endpoints #400
-](https://github.com/bounswe/bounswe2023group2/issues/400)- [How to handle resource and need Items - Typing and information structure #359](https://github.com/bounswe/bounswe2023group2/issues/359)
 
-**Management-related significant issues**: - [Create personal wiki pages of the new members #262](https://github.com/bounswe/bounswe2023group2/issues/262)  
- - [Reviewing the Project Details from CMPE352 by the new members #263](https://github.com/bounswe/bounswe2023group2/issues/263) - [Update the Class Diagrams with respect to the changes in the requirements #265](https://github.com/bounswe/bounswe2023group2/issues/265) - [Edit & Update the README page of Repository #275](https://github.com/bounswe/bounswe2023group2/issues/275) - [Create a project for DaRP #282](https://github.com/bounswe/bounswe2023group2/issues/282) - [Backend - Self-training of decided technologies #286](https://github.com/bounswe/bounswe2023group2/issues/286) - [Project Plan Contribution: Back-end Perspective #297](https://github.com/bounswe/bounswe2023group2/issues/297) - [Backend - Milestone 1 review #382](https://github.com/bounswe/bounswe2023group2/issues/382) - [Backend Meeting #3 Notes #426](https://github.com/bounswe/bounswe2023group2/issues/426)
+**Code-related significant issues**: 
+- [Backend - API Convention: Data Structure, Error Handling, Response Codes #290](https://github.com/bounswe/bounswe2023group2/issues/290)
+- [Initial Database - Installation and Design Setup #292](https://github.com/bounswe/bounswe2023group2/issues/292)
+- [Backend - Need CRUD endpoint implementation #326](https://github.com/bounswe/bounswe2023group2/issues/326)
+- [Backend - Test: Need CRUD Endpoints #381](https://github.com/bounswe/bounswe2023group2/issues/381)
+- [Backend - Improvements Need CRUD and additional endpoints #400](https://github.com/bounswe/bounswe2023group2/issues/400)
+- [How to handle resource and need Items - Typing and information structure #359](https://github.com/bounswe/bounswe2023group2/issues/359)
+
+**Management-related significant issues**: 
+- [Create personal wiki pages of the new members #262](https://github.com/bounswe/bounswe2023group2/issues/262)
+- [Reviewing the Project Details from CMPE352 by the new members #263](https://github.com/bounswe/bounswe2023group2/issues/263)
+- [Update the Class Diagrams with respect to the changes in the requirements #265](https://github.com/bounswe/bounswe2023group2/issues/265)
+- [Edit & Update the README page of Repository #275](https://github.com/bounswe/bounswe2023group2/issues/275)
+- [Create a project for DaRP #282](https://github.com/bounswe/bounswe2023group2/issues/282)
+- [Backend - Self-training of decided technologies #286](https://github.com/bounswe/bounswe2023group2/issues/286)
+- [Project Plan Contribution: Back-end Perspective #297](https://github.com/bounswe/bounswe2023group2/issues/297)
+- [Backend - Milestone 1 review #382](https://github.com/bounswe/bounswe2023group2/issues/382)
+- [Backend Meeting #3 Notes #426](https://github.com/bounswe/bounswe2023group2/issues/426)
 
 - **Pull requests**:
   - **Reviewed:** [#424](https://github.com/bounswe/bounswe2023group2/pull/424) [#450](https://github.com/bounswe/bounswe2023group2/pull/450) [#459](https://github.com/bounswe/bounswe2023group2/pull/459) [#462](https://github.com/bounswe/bounswe2023group2/pull/462) [#466](https://github.com/bounswe/bounswe2023group2/pull/466)
   - In general there were no big conflicts with the reviews, I only asked for small changes, such as typos
   - **Created:** [#392](https://github.com/bounswe/bounswe2023group2/pull/392) [#467](https://github.com/bounswe/bounswe2023group2/pull/467) [#469](https://github.com/bounswe/bounswe2023group2/pull/469)
+
 - **Additional information**:
   I attended all group and backend teams’ meetings. I have self-studied FastAPI and MongoDB for this project.
 
@@ -258,12 +273,24 @@ Member of mobile team. Designing add need and resource forms assigned to me. Sel
 
 My main contribution to the project was to design the Add Need and Add Resource pages and implement their functionality. I also created some tables in the local database and reviewed the PRs as much as possible.
 
-- **Code-related significant issues**: - [Mobile - Add Need Form](https://github.com/bounswe/bounswe2023group2/issues/338) - [Mobile - Add Resource Page Initialization](https://github.com/bounswe/bounswe2023group2/issues/413) - [Mobile - Creating Action Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/342) - [Mobile - Creating Event Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/344)
-- **Management-related significant issues**: - [Update the Sequence Diagrams with respect to the changes in the requirements](https://github.com/bounswe/bounswe2023group2/issues/267) - [Update Screenshots of Sequence Diagrams](https://github.com/bounswe/bounswe2023group2/issues/280) - [Edit & Update the README page of Repository](https://github.com/bounswe/bounswe2023group2/issues/267) - [Mobile - Self-training of decided technologies](https://github.com/bounswe/bounswe2023group2/issues/288) - [Mobile - Team Meeting #1](https://github.com/bounswe/bounswe2023group2/issues/346)
+- **Code-related significant issues**:
+  - [Mobile - Add Need Form](https://github.com/bounswe/bounswe2023group2/issues/338)
+  - [Mobile - Add Resource Page Initialization](https://github.com/bounswe/bounswe2023group2/issues/413)
+  - [Mobile - Creating Action Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/342)
+  - [Mobile - Creating Event Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/344)
+
+- **Management-related significant issues**:
+  - [Update the Sequence Diagrams with respect to the changes in the requirements](https://github.com/bounswe/bounswe2023group2/issues/267)
+  - [Update Screenshots of Sequence Diagrams](https://github.com/bounswe/bounswe2023group2/issues/280)
+  - [Edit & Update the README page of Repository](https://github.com/bounswe/bounswe2023group2/issues/267)
+  - [Mobile - Self-training of decided technologies](https://github.com/bounswe/bounswe2023group2/issues/288)
+  - [Mobile - Team Meeting #1](https://github.com/bounswe/bounswe2023group2/issues/346)
+
 - **Pull requests**:
   - **Reviewed:** [311](https://github.com/bounswe/bounswe2023group2/pull/311) [317](https://github.com/bounswe/bounswe2023group2/pull/317) [351](https://github.com/bounswe/bounswe2023group2/pull/351) [446](https://github.com/bounswe/bounswe2023group2/pull/446) [436](https://github.com/bounswe/bounswe2023group2/pull/436)
     There were no conflicts in the PRs I reviewed. There was a case that I wanted to be fixed in [PR 446](https://github.com/bounswe/bounswe2023group2/pull/446)
   - **Created:** [279](https://github.com/bounswe/bounswe2023group2/pull/279) [415](https://github.com/bounswe/bounswe2023group2/pull/415) [437](https://github.com/bounswe/bounswe2023group2/pull/437) [442](https://github.com/bounswe/bounswe2023group2/pull/442)
+
 
 ##### Additional information:
 
@@ -281,7 +308,12 @@ As a member of the Backend team, my responsibilities included contributing to th
 
 I have been involved in various aspects of the project, from writing code to managing tasks and documenting our progress. My significant involvement in the backend development was particularly in implementing and testing various features related to Resource model. Additionally, I have managed issues related to our weekly lab reports, proposed collaborative tools, and reviewed pull requests, while fixing bugs and minor conflicts in some.
 
-- **Code-related significant issues:** - Backend - Implemented CRUD operations for Resources ([#325](https://github.com/bounswe/bounswe2023group2/issues/325)) - Backend - Implementation of additional endpoints for Resource ([#404](https://github.com/bounswe/bounswe2023group2/issues/404)) - Backend - Public Access to Get endpoint of Resource & Need ([#451](https://github.com/bounswe/bounswe2023group2/issues/451)) - Backend - Add Coordinates to Resource & Need ([#453](https://github.com/bounswe/bounswe2023group2/issues/453)) - Backend - Test: Resource CRUD Endpoints ([#406](https://github.com/bounswe/bounswe2023group2/issues/406))
+- **Code-related significant issues:**
+  - Backend - Implemented CRUD operations for Resources ([#325](https://github.com/bounswe/bounswe2023group2/issues/325))
+  - Backend - Implementation of additional endpoints for Resource ([#404](https://github.com/bounswe/bounswe2023group2/issues/404))
+  - Backend - Public Access to Get endpoint of Resource & Need ([#451](https://github.com/bounswe/bounswe2023group2/issues/451))
+  - Backend - Add Coordinates to Resource & Need ([#453](https://github.com/bounswe/bounswe2023group2/issues/453))
+  - Backend - Test: Resource CRUD Endpoints ([#406](https://github.com/bounswe/bounswe2023group2/issues/406))
 
 - **Management-related significant issues**:
 
@@ -321,8 +353,20 @@ Being a guide in most of the issues.
 
 I played a pivotal role in the project by establishing a structured Mobile codebase with respect to MVVM and singleActivity structure. Implementing local database initializations, page structures, nav and toggle bar and recyclerView. Also implementing backend connection for need and resources posting and getting. Additionally, I contributed to project management through issue tracking, project planning, ensuring alignment with the Github roadmap and milestone deliverables.
 
-- **Code-related significant issues**: - [Create empty Android Studio project](https://github.com/bounswe/bounswe2023group2/issues/289) - [Mobile - Navigation route page structure](https://github.com/bounswe/bounswe2023group2/issues/291) - [Mobile - Simple main page and navigation bar](https://github.com/bounswe/bounswe2023group2/issues/337) - [Mobile - Creating Need Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/341) - [Mobile - Creating Emergency Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/343) - [Mobile - Creating Resource Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/345) - [Mobile - Connecting into Backend for Add Resource](https://github.com/bounswe/bounswe2023group2/issues/412) - [Mobile - Show Needs and Resources on Home Page](https://github.com/bounswe/bounswe2023group2/issues/403)
-- **Management-related significant issues**: - [Mobile - Self-training of decided technologies](https://github.com/bounswe/bounswe2023group2/issues/288) - [Update the Class Diagrams with respect to the changes in the requirements](https://github.com/bounswe/bounswe2023group2/issues/265) - [Edit & Update the Sidebar of Wiki](https://github.com/bounswe/bounswe2023group2/issues/273) - [Project Plan Contribution: Mobile Perspective](https://github.com/bounswe/bounswe2023group2/issues/299)
+- **Code-related significant issues**:
+  - [Create empty Android Studio project](https://github.com/bounswe/bounswe2023group2/issues/289)
+  - [Mobile - Navigation route page structure](https://github.com/bounswe/bounswe2023group2/issues/291)
+  - [Mobile - Simple main page and navigation bar](https://github.com/bounswe/bounswe2023group2/issues/337)
+  - [Mobile - Creating Need Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/341)
+  - [Mobile - Creating Emergency Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/343)
+  - [Mobile - Creating Resource Table in Local Database](https://github.com/bounswe/bounswe2023group2/issues/345)
+  - [Mobile - Connecting into Backend for Add Resource](https://github.com/bounswe/bounswe2023group2/issues/412)
+  - [Mobile - Show Needs and Resources on Home Page](https://github.com/bounswe/bounswe2023group2/issues/403)
+- **Management-related significant issues**:
+  - [Mobile - Self-training of decided technologies](https://github.com/bounswe/bounswe2023group2/issues/288)
+  - [Update the Class Diagrams with respect to the changes in the requirements](https://github.com/bounswe/bounswe2023group2/issues/265)
+  - [Edit & Update the Sidebar of Wiki](https://github.com/bounswe/bounswe2023group2/issues/273)
+  - [Project Plan Contribution: Mobile Perspective](https://github.com/bounswe/bounswe2023group2/issues/299)
   - [Implementation of Project Plan to the Github Roadmap](https://github.com/bounswe/bounswe2023group2/issues/304)
   - [Add Branch Name Rules into SideBar](https://github.com/bounswe/bounswe2023group2/issues/318)
   - [RAM preparation (Contribute for mobile)](https://github.com/bounswe/bounswe2023group2/issues/332)
@@ -430,8 +474,19 @@ Member of frontend team. Responsible for the deployment.
 
 I have created the fundamental folder structure of the frontend. I searched for the libraries and implemented most suitable ones fo the team, I created the system level authentication related functions to provide secure and error-free user experience. I contributed to project management through issue tracking, documentation updates, and project planning, ensuring alignment with the Github roadmap and milestone deliverables.
 
-- **Code-related significant issues**: - [Devops - Adding Docker-compose and Dockerfiles of the subteams](https://github.com/bounswe/bounswe2023group2/issues/292) - [Frontend - Defining Routes and Initialize frontend](https://github.com/bounswe/bounswe2023group2/issues/300) - [Frontend - Autherization implementation and Implementing pages](https://github.com/bounswe/bounswe2023group2/issues/328) - [Frontend - Implement add button to the main page](https://github.com/bounswe/bounswe2023group2/issues/396) - [Frontend - Implementation of the Modal component for add activity](https://github.com/bounswe/bounswe2023group2/issues/394) - [Frontend - Adding api Utils](https://github.com/bounswe/bounswe2023group2/issues/407) - [Frontend - Making the Activity Table component more flexible](https://github.com/bounswe/bounswe2023group2/issues/409)
-- **Management-related significant issues**: - [Revisiting the issues from previous year](https://github.com/bounswe/bounswe2023group2/issues/260) - [Update the Class Diagrams with respect to the changes in the requirements](https://github.com/bounswe/bounswe2023group2/issues/265) - [Project Plan Contribution: Front-end Perspective](https://github.com/bounswe/bounswe2023group2/issues/298) - [Implementation of Project Plan to the Github Roadmap](https://github.com/bounswe/bounswe2023group2/issues/304)
+- **Code-related significant issues**:
+  - [Devops - Adding Docker-compose and Dockerfiles of the subteams](https://github.com/bounswe/bounswe2023group2/issues/292)
+  - [Frontend - Defining Routes and Initialize frontend](https://github.com/bounswe/bounswe2023group2/issues/300)
+  - [Frontend - Autherization implementation and Implementing pages](https://github.com/bounswe/bounswe2023group2/issues/328)
+  - [Frontend - Implement add button to the main page](https://github.com/bounswe/bounswe2023group2/issues/396)
+  - [Frontend - Implementation of the Modal component for add activity](https://github.com/bounswe/bounswe2023group2/issues/394)
+  - [Frontend - Adding api Utils](https://github.com/bounswe/bounswe2023group2/issues/407)
+  - [Frontend - Making the Activity Table component more flexible](https://github.com/bounswe/bounswe2023group2/issues/409)
+- **Management-related significant issues**:
+  - [Revisiting the issues from previous year](https://github.com/bounswe/bounswe2023group2/issues/260)
+  - [Update the Class Diagrams with respect to the changes in the requirements](https://github.com/bounswe/bounswe2023group2/issues/265)
+  - [Project Plan Contribution: Front-end Perspective](https://github.com/bounswe/bounswe2023group2/issues/298)
+  - [Implementation of Project Plan to the Github Roadmap](https://github.com/bounswe/bounswe2023group2/issues/304)
   - [Documentation: Docker usage and local deployment ](https://github.com/bounswe/bounswe2023group2/issues/349)
   - [Implementation of Project Plan to the Github Roadmap](https://github.com/bounswe/bounswe2023group2/issues/304)
 - **Pull requests**:
@@ -503,15 +558,17 @@ I am a member of the backend team. My main responsibility was CRUD, get set and 
 I worked on need and resource related files as a backend team member, implemented need CRUD, set and get functions, gave feedback and reviewed the resource endpoint implementations. Also implemented half of the need test files and tested reviewed my team members contributons. Since I am a new member of the team and new to the technologies, I was not very dominant and could not contribute as much as I would liked to the project.
 
 - **Code-related significant issues**:
-  - Did the coding for the backend implementation of Need related data entry. (CRUD for Need)
-    [Backend - Test: Need CRUD Endpoints](https://github.com/bounswe/bounswe2023group2/issues/381) -[Backend - Improvements Need CRUD and additional endpoints](https://github.com/bounswe/bounswe2023group2/issues/400) -[Backend - Gave feedback to resource CRUD implementation and reviewed the code](https://github.com/bounswe/bounswe2023group2/issues/325)
+  - Did the coding for the backend implementation of Need related data entry. (CRUD for Need) [Backend - Test: Need CRUD Endpoints](https://github.com/bounswe/bounswe2023group2/issues/381)
+  - [Backend - Improvements Need CRUD and additional endpoints](https://github.com/bounswe/bounswe2023group2/issues/400)
+  - [Backend - Gave feedback to resource CRUD implementation and reviewed the code](https://github.com/bounswe/bounswe2023group2/issues/325)
 - **Management-related significant issues**:
   - [Edit & Update the README page of Repository #275](https://github.com/bounswe/bounswe2023group2/issues/275)
   - [Backend - Self-training of decided technologies #286](https://github.com/bounswe/bounswe2023group2/issues/286)
   - [Project Plan Contribution: Back-end Perspective #297](https://github.com/bounswe/bounswe2023group2/issues/297)
   - [Backend - Milestone 1 review #382](https://github.com/bounswe/bounswe2023group2/issues/382)
 - **Pull requests**: You have created, merged, and reviewed. Please also briefly summarize what
-  There were small conflicts not major issues so everything was smooth. -[Reviewed and merged 7 commits into main from BE/test/need. ](https://github.com/bounswe/bounswe2023group2/pull/467) -[Created and requested review for Be/feature/need improvement ](https://github.com/bounswe/bounswe2023group2/pull/426)
+  There were small conflicts not major issues so everything was smooth.
+  [Reviewed and merged 7 commits into main from BE/test/need. ](https://github.com/bounswe/bounswe2023group2/pull/467) -[Created and requested review for Be/feature/need improvement ](https://github.com/bounswe/bounswe2023group2/pull/426)
 - **Additional information**:
   Since I am a new member of the team I reviewed the requirements, diagrams and mockups, created my wiki page. I attended every team and backend meeting, learned MongoDB, FastAPI and Docker for this project.
 
