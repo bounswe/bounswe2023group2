@@ -4,21 +4,19 @@
 
 **Date:** 03.11.2023
 
-{{TOC}}
-
 # Deliverables
 
-[Software Requirements Specification](https://github.com/bounswe/bounswe2023group2/wiki/Requirements)
-[Software Design (Use case diagrams)](https://github.com/bounswe/bounswe2023group2/wiki/Use-Cases)
-[Software Design (Class diagrams)](https://github.com/bounswe/bounswe2023group2/wiki/Class-Diagrams)
-[Software Design (Sequence diagrams)](https://github.com/bounswe/bounswe2023group2/wiki/Sequence-Diagrams)
-Scenarios and Mockups: [1](https://github.com/bounswe/bounswe2023group2/wiki/Scenario-1) [2](https://github.com/bounswe/bounswe2023group2/wiki/Scenario-2---Use-Map) [3](https://github.com/bounswe/bounswe2023group2/wiki/Scenario-3) [4](https://github.com/bounswe/bounswe2023group2/wiki/Scenerio-4----Creating-an-Emergency)
-[Project Plan](https://github.com/orgs/bounswe/projects/12)
-[Communication Plan](https://github.com/bounswe/bounswe2023group2/wiki/Communication-Plan)
-[Responsibility Assignment Matrix](https://github.com/bounswe/bounswe2023group2/wiki/RAM)
-[Weekly Reports in Milestone-1](https://github.com/bounswe/bounswe2023group2/tree/main/reports)
-Backend Team additional meeting Notes in Milestone-1: [1](https://github.com/bounswe/bounswe2023group2/wiki/Backend-Team-Meeting-%231) [2](https://github.com/bounswe/bounswe2023group2/wiki/Backend-Team-Meeting-%232) [3](https://github.com/bounswe/bounswe2023group2/wiki/Backend-Team-Meeting-%233)
-Mobile Team additional meeting Notes: [1](https://github.com/bounswe/bounswe2023group2/wiki/Mobile-Team-Meeting-1)
+- [Software Requirements Specification](https://github.com/bounswe/bounswe2023group2/wiki/Requirements)
+- [Software Design (Use case diagrams)](https://github.com/bounswe/bounswe2023group2/wiki/Use-Cases)
+- [Software Design (Class diagrams)](https://github.com/bounswe/bounswe2023group2/wiki/Class-Diagrams)
+- [Software Design (Sequence diagrams)](https://github.com/bounswe/bounswe2023group2/wiki/Sequence-Diagrams)
+- Scenarios and Mockups: [1](https://github.com/bounswe/bounswe2023group2/wiki/Scenario-1) [2](https://github.com/bounswe/bounswe2023group2/wiki/Scenario-2---Use-Map) [3](https://github.com/bounswe/bounswe2023group2/wiki/Scenario-3) [4](https://github.com/bounswe/bounswe2023group2/wiki/Scenerio-4----Creating-an-Emergency)
+- [Project Plan](https://github.com/orgs/bounswe/projects/12)
+- [Communication Plan](https://github.com/bounswe/bounswe2023group2/wiki/Communication-Plan)
+- [Responsibility Assignment Matrix](https://github.com/bounswe/bounswe2023group2/wiki/RAM)
+- [Weekly Reports in Milestone-1](https://github.com/bounswe/bounswe2023group2/tree/main/reports)
+- Backend Team additional meeting Notes in Milestone-1: [1](https://github.com/bounswe/bounswe2023group2/wiki/Backend-Team-Meeting-%231) [2](https://github.com/bounswe/bounswe2023group2/wiki/Backend-Team-Meeting-%232) [3](https://github.com/bounswe/bounswe2023group2/wiki/Backend-Team-Meeting-%233)
+- Mobile Team additional meeting Notes: [1](https://github.com/bounswe/bounswe2023group2/wiki/Mobile-Team-Meeting-1)
 
 ## Milestone Review
 
