@@ -149,15 +149,40 @@ Member of backend team. Authentication related parts were assigned to me for Mil
 
 ##### Main contributions:
 
-I played a pivotal role in the project by establishing a structured Backend codebase, implementing authentication features, and resolving critical bugs -mostly caused by me- . Additionally, I contributed to project management through issue tracking, documentation updates, and project planning, ensuring alignment with the Github roadmap and milestone deliverables. - **Code-related significant issues**: - [Creating Backend Folder Structure](https://github.com/bounswe/bounswe2023group2/issues/313) - [Backend - Authentication related endpoint implementation](https://github.com/bounswe/bounswe2023group2/issues/327) - [Backend - Container bugfix](https://github.com/bounswe/bounswe2023group2/issues/362) - [Backend - User session implementation](https://github.com/bounswe/bounswe2023group2/issues/367) - [Backend - Password hashing implementation](https://github.com/bounswe/bounswe2023group2/issues/368) - [Backend - Signup](https://github.com/bounswe/bounswe2023group2/issues/376) - [Backend - Test: Authentication endpoints ](https://github.com/bounswe/bounswe2023group2/issues/379) - [Backend - Improvements Authentication CRUD endpoints](https://github.com/bounswe/bounswe2023group2/issues/403) - [signUp api response inconsistency](https://github.com/bounswe/bounswe2023group2/issues/435) - [Backend - Bugfix for resource and need get](https://github.com/bounswe/bounswe2023group2/issues/451) - **Management-related significant issues**: - [Revisiting the issues from previous year](https://github.com/bounswe/bounswe2023group2/issues/260) - [Update the Class Diagrams with respect to the changes in the requirements](https://github.com/bounswe/bounswe2023group2/issues/265) - [Backend - Self-training of decided technologies](https://github.com/bounswe/bounswe2023group2/issues/286) - [Backend - API Convention: Data Structure, Error Handling, Response Codes](https://github.com/bounswe/bounswe2023group2/issues/290) - [Project Plan Contribution: Back-end Perspective](https://github.com/bounswe/bounswe2023group2/issues/297) - [Implementation of Project Plan to the Github Roadmap](https://github.com/bounswe/bounswe2023group2/issues/304) - [Defining branch name rules](https://github.com/bounswe/bounswe2023group2/issues/310) - [Milestone 1 - Prepare Demos (Scenarios, Personas...)](https://github.com/bounswe/bounswe2023group2/issues/418) - [Create a pre-release version](https://github.com/bounswe/bounswe2023group2/issues/465) - [Milestone 1 - Prepare Deliverables](https://github.com/bounswe/bounswe2023group2/issues/419)
+I played a pivotal role in the project by establishing a structured Backend codebase, implementing authentication features, and resolving critical bugs -mostly caused by me- . Additionally, I contributed to project management through issue tracking, documentation updates, and project planning, ensuring alignment with the Github roadmap and milestone deliverables. 
+
+- **Code-related significant issues**:
+  - [Creating Backend Folder Structure](https://github.com/bounswe/bounswe2023group2/issues/313) - [Backend - Authentication related endpoint implementation](https://github.com/bounswe/bounswe2023group2/issues/327)
+  - [Backend - Container bugfix](https://github.com/bounswe/bounswe2023group2/issues/362)
+  - [Backend - User session implementation](https://github.com/bounswe/bounswe2023group2/issues/367)
+  - [Backend - Password hashing implementation](https://github.com/bounswe/bounswe2023group2/issues/368)
+  - [Backend - Signup](https://github.com/bounswe/bounswe2023group2/issues/376)
+  - [Backend - Test: Authentication endpoints ](https://github.com/bounswe/bounswe2023group2/issues/379)
+  - [Backend - Improvements Authentication CRUD endpoints](https://github.com/bounswe/bounswe2023group2/issues/403)
+  - [signUp api response inconsistency](https://github.com/bounswe/bounswe2023group2/issues/435)
+  - [Backend - Bugfix for resource and need get](https://github.com/bounswe/bounswe2023group2/issues/451)
+
+- **Management-related significant issues**:
+  - [Revisiting the issues from previous year](https://github.com/bounswe/bounswe2023group2/issues/260)
+  - [Update the Class Diagrams with respect to the changes in the requirements](https://github.com/bounswe/bounswe2023group2/issues/265)
+  - [Backend - Self-training of decided technologies](https://github.com/bounswe/bounswe2023group2/issues/286)
+  - Backend - API Convention: Data Structure, Error Handling, Response Codes](https://github.com/bounswe/bounswe2023group2/issues/290)
+  - [Project Plan Contribution: Back-end Perspective](https://github.com/bounswe/bounswe2023group2/issues/297)
+  - [Implementation of Project Plan to the Github Roadmap](https://github.com/bounswe/bounswe2023group2/issues/304)
+  - [Defining branch name rules](https://github.com/bounswe/bounswe2023group2/issues/310)
+  - [Milestone 1 - Prepare Demos (Scenarios, Personas...)](https://github.com/bounswe/bounswe2023group2/issues/418)
+  - [Create a pre-release version](https://github.com/bounswe/bounswe2023group2/issues/465)
+  - [Milestone 1 - Prepare Deliverables](https://github.com/bounswe/bounswe2023group2/issues/419)
   
-
-
 - **Pull requests**:
-  - **Reviewed:** [322](https://github.com/bounswe/bounswe2023group2/pull/322) [357](https://github.com/bounswe/bounswe2023group2/pull/357) [363](https://github.com/bounswe/bounswe2023group2/pull/363) [428](https://github.com/bounswe/bounswe2023group2/pull/428) [440](https://github.com/bounswe/bounswe2023group2/pull/440)
-  - We did not have big conflicts with the reviews, I asked small changes mostly.
+  - **Reviewed:**
+    - [322](https://github.com/bounswe/bounswe2023group2/pull/322) [357](https://github.com/bounswe/bounswe2023group2/pull/357) [363](https://github.com/bounswe/bounswe2023group2/pull/363) [428](https://github.com/bounswe/bounswe2023group2/pull/428) [440](https://github.com/bounswe/bounswe2023group2/pull/440)
+    - We did not have big conflicts with the reviews, I asked small changes mostly.
     With Pull Request [357](https://github.com/bounswe/bounswe2023group2/pull/357), we encountered a conflict in the session implementation. Initially, it was stateful, but after thorough discussion, I recommended transitioning to a stateless approach using Json Web Tokens, and the implementation was subsequently updated to align with this recommendation([Backend - User session implementation](https://github.com/bounswe/bounswe2023group2/issues/367)).
-  - **Created:** [314](https://github.com/bounswe/bounswe2023group2/pull/314) [378](https://github.com/bounswe/bounswe2023group2/pull/378) [422](https://github.com/bounswe/bounswe2023group2/pull/422) [432](https://github.com/bounswe/bounswe2023group2/pull/432) [438](https://github.com/bounswe/bounswe2023group2/pull/438) [450](https://github.com/bounswe/bounswe2023group2/pull/450) [452](https://github.com/bounswe/bounswe2023group2/pull/452) [470](https://github.com/bounswe/bounswe2023group2/pull/470)
+
+   - **Created:**
+     - [314](https://github.com/bounswe/bounswe2023group2/pull/314) [378](https://github.com/bounswe/bounswe2023group2/pull/378) [422](https://github.com/bounswe/bounswe2023group2/pull/422) [432](https://github.com/bounswe/bounswe2023group2/pull/432) [438](https://github.com/bounswe/bounswe2023group2/pull/438) [450](https://github.com/bounswe/bounswe2023group2/pull/450) [452](https://github.com/bounswe/bounswe2023group2/pull/452) [470](https://github.com/bounswe/bounswe2023group2/pull/470)
+
 - **Additional information**:
   Additional issues are actually a part of another issue such as: [Backend - Improve login and signup with options](https://github.com/bounswe/bounswe2023group2/issues/429)
   In addition to the mentioned tasks, one of my significant contributions was implementing code to display special response types on Swagger, which greatly improved documentation and communication with the front-end team.
@@ -173,11 +198,27 @@ Member of frontend team. In milestone 1, I focused on the map page's interactivi
 ##### Main contributions:
 
 My main focus in the milestone 1 was designing and implementing map page and making the map interactive. Also I designed filter menu, developed various components for the project, prepared the RAM (Requirements and Milestones) documentation. Furthermore, I contributed to the creation of a scenario for the project presentation.
-Customer Milestone 1 - **Code-related significant issues**: - [Frontend - Simple map page initialization](https://github.com/bounswe/bounswe2023group2/issues/309) - [Frontend - Adding Emergency button on navbar](https://github.com/bounswe/bounswe2023group2/issues/321) - [Frontend - Organizing MainLayout and Creating MapLayout](https://github.com/bounswe/bounswe2023group2/issues/360) - [Frontend - Adding Main CSS effects](https://github.com/bounswe/bounswe2023group2/issues/366) - [Frontend - Implement add button to the map page](https://github.com/bounswe/bounswe2023group2/issues/398) - [Frontend - Make Map interactive to click](https://github.com/bounswe/bounswe2023group2/issues/402) - [Frontend - Showing new created activity on map](https://github.com/bounswe/bounswe2023group2/issues/405) - [Frontend - Components adding](https://github.com/bounswe/bounswe2023group2/issues/365) - **Management-related significant issues**: - [RAM preparation](https://github.com/bounswe/bounswe2023group2/issues/332) - [Project Plan Sprint Assignment](https://github.com/bounswe/bounswe2023group2/issues/307) - [Milestone 1 - Prepare Demos (Scenarios, Personas...)](https://github.com/bounswe/bounswe2023group2/issues/418)
+Customer Milestone 1 
+
+- **Code-related significant issues**:
+  - [Frontend - Simple map page initialization](https://github.com/bounswe/bounswe2023group2/issues/309)
+  - [Frontend - Adding Emergency button on navbar](https://github.com/bounswe/bounswe2023group2/issues/321)
+  - [Frontend - Organizing MainLayout and Creating MapLayout](https://github.com/bounswe/bounswe2023group2/issues/360)
+  - [Frontend - Adding Main CSS effects](https://github.com/bounswe/bounswe2023group2/issues/366)
+  - [Frontend - Implement add button to the map page](https://github.com/bounswe/bounswe2023group2/issues/398)
+  - [Frontend - Make Map interactive to click](https://github.com/bounswe/bounswe2023group2/issues/402)
+  - [Frontend - Showing new created activity on map](https://github.com/bounswe/bounswe2023group2/issues/405)
+  - [Frontend - Components adding](https://github.com/bounswe/bounswe2023group2/issues/365)
+  
+- **Management-related significant issues**:
+  - [RAM preparation](https://github.com/bounswe/bounswe2023group2/issues/332)
+  - [Project Plan Sprint Assignment](https://github.com/bounswe/bounswe2023group2/issues/307)
+  - [Milestone 1 - Prepare Demos (Scenarios, Personas...)](https://github.com/bounswe/bounswe2023group2/issues/418)
 
 - **Pull requests**:
   - **Reviewed:** [315](https://github.com/bounswe/bounswe2023group2/pull/315) [365](https://github.com/bounswe/bounswe2023group2/pull/356) [439](https://github.com/bounswe/bounswe2023group2/pull/439) [454](https://github.com/bounswe/bounswe2023group2/pull/454) [457](https://github.com/bounswe/bounswe2023group2/pull/457) [460](https://github.com/bounswe/bounswe2023group2/pull/460)
-  - Although we encountered some conflicts, they were generally minor issues, such as changes in dependencies or imports. To prevent conflicts, everyone worked on their own part in separate files. As a result, I created different navigation bars for map compatibility while ensuring that nothing was disrupted on other fronts.
+
+    Although we encountered some conflicts, they were generally minor issues, such as changes in dependencies or imports. To prevent conflicts, everyone worked on their own part in separate files. As a result, I created different navigation bars for map compatibility while ensuring that nothing was disrupted on other fronts.
   - **Created** [355](https://github.com/bounswe/bounswe2023group2/pull/355) [364](https://github.com/bounswe/bounswe2023group2/pull/364) [377](https://github.com/bounswe/bounswe2023group2/pull/377) [449](https://github.com/bounswe/bounswe2023group2/pull/449) [458](https://github.com/bounswe/bounswe2023group2/pull/458)
 - **Additional information**:
 
