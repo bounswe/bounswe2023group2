@@ -79,7 +79,7 @@ So the design background should be restudied. Revisiting the issues of the Miles
 
 | Description | Issue | Assignee | Due  | Actual Duration | Artifacts |
 | - | - | - | - | - | - |
-| Backend - Team meeting #3 | [#426](https://github.com/bounswe/bounswe2023group2/issues/426) | Backend Team | 27.10.2023  | 1h |  |
+| Backend - Team meeting #3 | [#426](https://github.com/bounswe/bounswe2023group2/issues/426) | Backend Team | 27.10.2023  | 1h | [MNote](https://github.com/bounswe/bounswe2023group2/wiki/Backend-Team-Meeting-%233) |
 | Mobile - Logged-in Indicator | [#443](https://github.com/bounswe/bounswe2023group2/issues/443) | Cahid Enes |  | 1h | [PR #441](https://github.com/bounswe/bounswe2023group2/pull/441) |
 | Mobile - User Classes | [#373](https://github.com/bounswe/bounswe2023group2/issues/373) | Cahid Enes | 23.10.2023 | 3h | [PR #375](https://github.com/bounswe/bounswe2023group2/pull/375) |
 |Backend - Bugfix for resource and need get| [#451](https://github.com/bounswe/bounswe2023group2/issues/451) | Begüm, Burak | 30.11.2023 | 1h | [PR #452](https://github.com/bounswe/bounswe2023group2/pull/452) |
