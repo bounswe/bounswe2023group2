@@ -4,7 +4,7 @@ import Services.authentication_service as authentication_service
 from Services import resource_service
 from Services.build_API_returns import *
 
-from Controllers import resource_controller, user_controller, uprofile_optinfo_controller, uprofile_languages_controller, uprofile_SocMed_controller, uprofile_professions_controller, uprofile_skills_controller, need_controller
+from Controllers import resource_controller, user_controller, uprofile_optinfo_controller, uprofile_languages_controller, uprofile_SocMed_controller, uprofile_professions_controller, uprofile_skills_controller, need_controller,user_roles_controller
 
 
 from fastapi.responses import JSONResponse
@@ -27,6 +27,7 @@ app.add_middleware(
 app.include_router(resource_controller.router, prefix = "/api/resource", tags=["resource"])
 app.include_router(need_controller.router, prefix="/api/needs", tags=["needs"])
 app.include_router(user_controller.router, prefix= "/api/users", tags=["users"])
+app.include_router(user_roles_controller.router, prefix= "/api/users", tags=["user-roles"])
 app.include_router(uprofile_optinfo_controller.router, prefix= "/api/profiles", tags=["User Profiles Optional Information"])
 app.include_router(uprofile_languages_controller.router, prefix= "/api/profiles", tags=["User Profiles Language Skills"])
 app.include_router(uprofile_SocMed_controller.router, prefix= "/api/profiles", tags=["User Profiles Social Media Links"])

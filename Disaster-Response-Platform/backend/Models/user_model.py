@@ -39,6 +39,23 @@ class CreateUserRequest(BaseModel):
     password: constr(
         min_length=8,
     )
+class ProficiencyEnum(str, Enum):
+    bilingual = "bilingual"
+    doctor = "doctor"
+    pharmacist ="pharmacist"
+    rescue_member="rescue_member"
+    infrastructure_engineer="infrastructure_engineer"
+    it_specialist= "it_specialist"
+    #police, soldier, not for human resource but searching certain info, 
+
+
+
+
+
+class ProfRequest(BaseModel):
+    username: str | None= None
+    proficiency: ProficiencyEnum
+    details: str
 
 class UserProfile(User):
     first_name: str
@@ -72,4 +89,8 @@ class UpdateUserRequest(BaseModel):
 
 class SignUpSuccess(BaseModel):
     user: dict
+    inserted_id: str
+
+class ProfReqSuccess(BaseModel):
+    proficiency: dict
     inserted_id: str
