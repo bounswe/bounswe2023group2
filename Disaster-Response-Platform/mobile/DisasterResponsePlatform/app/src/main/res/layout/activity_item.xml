@@ -5,10 +5,9 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/selector_item_background">
@@ -22,6 +21,8 @@
             android:layout_marginTop="10dp"
             android:text="@string/activity_item"
             android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/onPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,7 +33,9 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:text="@string/type"
+            android:textStyle="bold"
             android:textSize="12sp"
+            android:textColor="@color/onPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleActivityType" />
 
@@ -44,7 +47,9 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:text="@string/location"
+            android:textStyle="bold"
             android:textSize="12sp"
+            android:textColor="@color/onPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleType" />
@@ -57,6 +62,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/need"
             android:textSize="12sp"
+            android:textColor="@color/onPrimary"
             app:layout_constraintStart_toEndOf="@+id/titleLocation"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -68,6 +74,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/clothes"
             android:textSize="12sp"
+            android:textColor="@color/onPrimary"
             app:layout_constraintStart_toEndOf="@+id/titleLocation"
             app:layout_constraintTop_toBottomOf="@+id/tvActivity" />
 
@@ -79,6 +86,7 @@
             android:layout_marginTop="10dp"
             android:text="Gaziantep"
             android:textSize="12sp"
+            android:textColor="@color/onPrimary"
             app:layout_constraintStart_toEndOf="@+id/titleLocation"
             app:layout_constraintTop_toBottomOf="@+id/tvType" />
 
@@ -88,7 +96,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="@string/date"
+            android:textStyle="bold"
             android:textSize="12sp"
+            android:textColor="@color/onPrimary"
             app:layout_constraintEnd_toStartOf="@+id/tvDate"
             app:layout_constraintTop_toTopOf="@+id/tvDate" />
 
@@ -100,6 +110,7 @@
             android:layout_marginBottom="16dp"
             android:text="22.10.2023 13:02"
             android:textSize="12sp"
+            android:textColor="@color/onPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -109,7 +120,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="Reliability Scale:"
+            android:textStyle="bold"
             android:textSize="12sp"
+            android:textColor="@color/onPrimary"
             app:layout_constraintEnd_toStartOf="@+id/tvReliabilityScale"
             app:layout_constraintTop_toTopOf="@+id/tvReliabilityScale" />
 
@@ -121,6 +134,7 @@
             android:layout_marginEnd="24dp"
             android:text="0.98"
             android:textSize="12sp"
+            android:textColor="@color/onPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
