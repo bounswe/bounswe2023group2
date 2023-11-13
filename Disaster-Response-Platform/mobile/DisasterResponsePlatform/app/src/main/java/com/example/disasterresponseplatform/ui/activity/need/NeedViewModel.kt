@@ -21,8 +21,12 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         }
     }
 
-    fun getLocation(creatorID: String): String?{
-        return needRepository.getLocation(creatorID)
+    fun getX(creatorID: String): Double?{
+        return needRepository.getX(creatorID)
+    }
+
+    fun getY(creatorID: String): Double?{
+        return needRepository.getY(creatorID)
     }
 
     fun getAllNeeds(): List<Need>? = needRepository.getAllNeeds()

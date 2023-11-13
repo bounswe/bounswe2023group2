@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
@@ -103,7 +102,7 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
             requireActivity = requireActivity()
         }
         binding.btnSubmit.setOnClickListener {
-            if ((validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
+            if (validateQuantity() and validateCoordinateY() and validateCoordinateX()  and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
                     when(binding.boxResourceType.editText?.text.toString().trim()){
@@ -119,9 +118,10 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
                 val creatorName = DiskStorageManager.getKeyValue("username").toString()
                 val details = binding.spResourceSubType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val location = binding.etLocation.editText?.text.toString().trim()
+                val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
+                val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
-                val resource = Resource(null,creatorName,"new",quantity,type,details,date,location)
+                val resource = Resource(null,creatorName,"new",quantity,type,details,date,coordinateX,coordinateY)
 
                 //resourceViewModel.insertResource(resource) insert local db
 
@@ -168,16 +168,28 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
     }
 
 
-    private fun validateLocation(): Boolean {
-        val etLocation = binding.etLocation
-        val location = etLocation.editText?.text.toString().trim()
-
-        return if (location.isEmpty()) {
-            etLocation.error = "Field can not be empty"
+    private fun validateCoordinateX(): Boolean {
+        val etCoordinateX = binding.etCoordinateX
+        val coordinateX = etCoordinateX.editText?.text.toString().trim()
+        return if (coordinateX.isEmpty()) {
+            etCoordinateX.error = "Field can not be empty"
             false
         } else {
-            etLocation.error = null
-            etLocation.isErrorEnabled = false
+            etCoordinateX.error = null
+            etCoordinateX.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateCoordinateY(): Boolean {
+        val etCoordinateY = binding.etCoordinateY
+        val coordinateY = etCoordinateY.editText?.text.toString().trim()
+        return if (coordinateY.isEmpty()) {
+            etCoordinateY.error = "Field can not be empty"
+            false
+        } else {
+            etCoordinateY.error = null
+            etCoordinateY.isErrorEnabled = false
             true
         }
     }

@@ -10,7 +10,13 @@ class ResourceRepository @Inject constructor(private val resourceDao: ResourceDa
         resourceDao.insertResource(resource)
     }
 
-    fun getLocation(creatorName: String): String? = resourceDao.getLocation(creatorName)
+    fun getX(creatorID: String): Double?{
+        return resourceDao.getX(creatorID)
+    }
+
+    fun getY(creatorID: String): Double?{
+        return resourceDao.getY(creatorID)
+    }
 
     fun getAllResources(): List<Resource>? = resourceDao.getAllResources()
 }
