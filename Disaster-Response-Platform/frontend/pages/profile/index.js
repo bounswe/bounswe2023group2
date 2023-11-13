@@ -96,7 +96,7 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { expired: true } };
     }
 
-    const { data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/get-user-optional-info', {
+    const { data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/user-optional-infos', {
       headers: {
         'Authorization': `Bearer ${user.accessToken}` 
       }
