@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, constr, Field
-from enum import Enum
+from enum import Enum, auto
 from typing import Dict, Any
 
 class Token(BaseModel):
@@ -9,12 +9,20 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: str | None = None
 
+class UserRole(Enum):
+    GUEST = "GUEST"
+    AUTHENTICATED = "AUTHENTICATED"
+    ROLE_BASED = "ROLE_BASED"
+    CREDIBLE = "CREDIBLE"
+    ADMIN = "ADMIN"
+
 class User(BaseModel):
     username: str 
     email: EmailStr | None = None
     disabled: bool | None = None
     password:str
-    
+    #user_role: UserRole = Field(default=None)
+
 
 class LoginUserRequest(BaseModel):
     username_or_email_or_phone: str
@@ -39,6 +47,9 @@ class CreateUserRequest(BaseModel):
     password: constr(
         min_length=8,
     )
+    user_role: UserRole = Field(default=None)
+    #user_role: str | None= None
+
 class ProficiencyEnum(str, Enum):
     bilingual = "bilingual"
     doctor = "doctor"
@@ -63,6 +74,7 @@ class UserProfile(User):
     phone_number: str | None= None
     is_email_verified: bool = False
     private_account: bool = False
+    user_role: UserRole = Field(default=None)
 
 
 class UserInfo(BaseModel):
@@ -94,3 +106,6 @@ class SignUpSuccess(BaseModel):
 class ProfReqSuccess(BaseModel):
     proficiency: dict
     inserted_id: str
+
+class UserRoleResponse(BaseModel):
+    user_role: str
