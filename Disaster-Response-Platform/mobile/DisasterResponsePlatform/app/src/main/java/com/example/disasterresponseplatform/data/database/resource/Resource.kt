@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 import com.example.disasterresponseplatform.data.database.DatabaseInfo
 import com.example.disasterresponseplatform.data.database.need.NeedResourceCols
 import com.example.disasterresponseplatform.data.enums.NeedTypes
-import com.example.disasterresponseplatform.data.enums.ResourceCondition
 
 @Entity(tableName = DatabaseInfo.RESOURCE)
 data class Resource(
@@ -25,6 +24,9 @@ data class Resource(
     val details: String,
     @ColumnInfo(name = NeedResourceCols.creationTime)
     val creationTime: String?,
-    @ColumnInfo(name = NeedResourceCols.location)
-    val location: String?,
+    @ColumnInfo(name = NeedResourceCols.coordinateX)
+    val coordinateX: Double,
+    @ColumnInfo(name = NeedResourceCols.coordinateY)
+    val coordinateY: Double,
 )
+

@@ -10,8 +10,11 @@ interface NeedDao {
     @Insert
     suspend fun insertNeed(need: Need)
 
-    @Query("SELECT ${NeedResourceCols.location} FROM ${DatabaseInfo.NEED}  WHERE ${NeedResourceCols.creatorName} = :creatorID")
-    fun getLocation(creatorID: String): String?
+    @Query("SELECT ${NeedResourceCols.coordinateX} FROM ${DatabaseInfo.NEED}  WHERE ${NeedResourceCols.creatorName} = :creatorID")
+    fun getX(creatorID: String): Double?
+
+    @Query("SELECT ${NeedResourceCols.coordinateY} FROM ${DatabaseInfo.NEED}  WHERE ${NeedResourceCols.creatorName} = :creatorID")
+    fun getY(creatorID: String): Double?
 
     @Query("SELECT * FROM ${DatabaseInfo.NEED} ORDER BY ${NeedResourceCols.id}")
     fun getAllNeeds(): List<Need>?

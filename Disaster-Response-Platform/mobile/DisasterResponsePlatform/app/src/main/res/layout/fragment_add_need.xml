@@ -60,11 +60,11 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etLocation"
+            android:id="@+id/etCoordinateX"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/select_or_enter_location"
+            android:hint="@string/select_or_enter_coordinate_x"
             app:endIconDrawable="@android:drawable/ic_dialog_map"
             app:endIconMode="custom"
             android:layout_marginBottom="10dp">
@@ -72,7 +72,23 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"/>
+                android:inputType="numberDecimal"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etCoordinateY"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_or_enter_coordinate_y"
+            app:endIconDrawable="@android:drawable/ic_dialog_map"
+            app:endIconMode="custom"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 

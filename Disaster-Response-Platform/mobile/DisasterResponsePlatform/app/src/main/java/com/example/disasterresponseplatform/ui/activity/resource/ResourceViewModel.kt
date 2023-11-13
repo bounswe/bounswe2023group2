@@ -4,24 +4,17 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.ResourceBody
-import com.example.disasterresponseplatform.data.models.authModels.RegisterRequestBody
-import com.example.disasterresponseplatform.data.models.authModels.SignUpResponseBody
-import com.example.disasterresponseplatform.data.models.authModels.SignUpResponseBody400
-import com.example.disasterresponseplatform.data.models.authModels.SignUpResponseBody422
 import com.example.disasterresponseplatform.data.repositories.ResourceRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
-import com.google.gson.annotations.SerializedName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,7 +38,13 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
 
     }
 
-    fun getLocation(creatorName: String): String? = resourceRepository.getLocation(creatorName)
+    fun getX(creatorID: String): Double?{
+        return resourceRepository.getX(creatorID)
+    }
+
+    fun getY(creatorID: String): Double?{
+        return resourceRepository.getY(creatorID)
+    }
 
     fun getAllResources(): List<Resource>? = resourceRepository.getAllResources()
 
@@ -65,10 +64,11 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             //Log.d("createResourceList", "responseItem: $responseItem")
             //Log.d("createResourceList", "responseItemDetails: ${responseItem.details}")
             val details = returnDetailsAsString(responseItem.details)
-            val location = returnLocationAsString(responseItem.x, responseItem.y)
             val needType = returnNeedType(responseItem.type)
             val time = DateUtil.getDate("dd-MM-yy").toString()
             val id = BigInteger(responseItem._id.uppercase(), 16).toLong()
+            val coordinateX = if (responseItem.x == null) 1.0 else responseItem.x.toDouble()
+            val coordinateY = if (responseItem.y == null) 1.0 else responseItem.y.toDouble()
             val currentResource = Resource(
                 id,
                 responseItem.created_by,
@@ -77,7 +77,8 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                 needType,
                 details,
                 time,
-                location
+                coordinateX,
+                coordinateY
             )
             lst.add(currentResource)
         }
@@ -251,8 +252,8 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                 currentQuantity = postRequest.quantity,
                 type = type,
                 details = ResourceBody.Details(postRequest.details),
-                x = 1.0,
-                y = 1.0
+                x = postRequest.coordinateX,
+                y = postRequest.coordinateY
             )
             val gson = Gson()
             val json = gson.toJson(resourceRequestBody)

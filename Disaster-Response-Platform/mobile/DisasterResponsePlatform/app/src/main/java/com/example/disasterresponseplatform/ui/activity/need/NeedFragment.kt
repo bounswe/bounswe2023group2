@@ -65,7 +65,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
-            val text = "Type: ${it?.type}, Details: ${it?.details}, Location: ${it?.location}, " +
+            val text = "Type: ${it?.type}, Details: ${it?.details}, x: ${it?.coordinateX}, y: ${it?.coordinateY}," +
                     "Date: ${it?.creationTime}, Quantity: ${it?.quantity}, Urgency: ${it?.urgency}"
             Toast.makeText(requireActivity(), text, Toast.LENGTH_LONG).show()
         }
