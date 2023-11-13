@@ -16,4 +16,8 @@ class NeedRepository @Inject constructor(private val needDao: NeedDao) {
 
     fun getAllNeeds(): List<Need>? = needDao.getAllNeeds()
 
+    suspend fun updateNeed(need: Need) {
+        needDao.updateNeed(need)
+    }
+
 }

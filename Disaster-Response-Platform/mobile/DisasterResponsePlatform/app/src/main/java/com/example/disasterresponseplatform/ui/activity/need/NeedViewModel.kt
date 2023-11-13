@@ -21,6 +21,12 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         }
     }
 
+    fun updateNeed(need: Need){
+        viewModelScope.launch(Dispatchers.IO){
+            needRepository.updateNeed(need)
+        }
+    }
+
     fun getLocation(creatorID: String): String?{
         return needRepository.getLocation(creatorID)
     }
