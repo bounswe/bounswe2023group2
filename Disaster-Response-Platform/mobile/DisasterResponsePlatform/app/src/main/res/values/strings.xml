@@ -87,6 +87,8 @@
     <string name="select_resource_type">Select or Enter Resource Type <font color='#B00020'>*</font></string>
     <string name="enter_expiration_date">Enter Expiration Date</string>
     <string name="username_or_email">Username or Email</string>
+    <string name="edit_need">Edit Need</string>
+    <string name="save_changes">Save Changes</string>
 
     <string-array name="need_types">
         <item>Clothes</item>
@@ -118,8 +120,7 @@
         <item>Other</item>
     </string-array>
 
-    <string-array name="need_empty_sub_types">
-    </string-array>
+    <string-array name="need_empty_sub_types"></string-array>
 
     <string-array name="resource_food_sub_types">
         <item>Pasta</item>
@@ -140,7 +141,6 @@
         <item>Other</item>
     </string-array>
 
-    <string-array name="resource_empty_sub_types">
-    </string-array>
+    <string-array name="resource_empty_sub_types"></string-array>
 
 </resources>
