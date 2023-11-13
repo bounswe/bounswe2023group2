@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!--
+    colorPrimary - The color displayed most frequently.
+    colorPrimaryVariant - A tonal variation of the primary color.
+    colorOnPrimary - A color that passes accessibility guidelines for text/iconography when drawn on top of the primary color.
+    colorSecondary - The secondary branding color for the app, usually an accented complement to the primary branding color.
+    colorSecondaryVariant - A tonal variation of the secondary color.
+    colorOnSecondary - A color that passes accessibility guidelines for text/iconography when drawn on top of the secondary color.
+    -->
+
+    <color name="primary">#00695C</color>
+    <color name="primaryVariant">#00897B</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="secondary">#D84315</color>
+    <color name="secondaryVariant">#F4511E</color>
+    <color name="onSecondary">#FFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

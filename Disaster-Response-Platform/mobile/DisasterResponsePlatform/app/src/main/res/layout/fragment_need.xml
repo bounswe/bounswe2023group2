@@ -13,6 +13,10 @@ xmlns:tools="http://schemas.android.com/tools">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="0dp"
     tools:context=".ui.activity.need.NeedFragment">
 
     <Button
@@ -44,7 +48,7 @@ xmlns:tools="http://schemas.android.com/tools">
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/search_view_container"
         app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
