@@ -66,11 +66,11 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             val details = returnDetailsAsString(responseItem.details)
             val needType = returnNeedType(responseItem.type)
             val time = DateUtil.getDate("dd-MM-yy").toString()
-            val id = BigInteger(responseItem._id.uppercase(), 16).toLong()
+            Log.i("Created Resource ", "Before Arrange ID: ${responseItem._id} ")
             val coordinateX = if (responseItem.x == null) 1.0 else responseItem.x.toDouble()
             val coordinateY = if (responseItem.y == null) 1.0 else responseItem.y.toDouble()
             val currentResource = Resource(
-                id,
+                responseItem._id,
                 responseItem.created_by,
                 responseItem.condition,
                 responseItem.currentQuantity,
@@ -280,7 +280,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                                         ResourceBody.PostRegisterResponseList::class.java
                                     )
                                     val resourceID = registerResponse.resources[0]._id
-                                    Log.d("Created Resource ", "ID: $resourceID ")
+                                    Log.i("Created Resource ", "ID: $resourceID ")
                                     liveDataResourceID.postValue(resourceID)
 
                                 } catch (e: IOException) {

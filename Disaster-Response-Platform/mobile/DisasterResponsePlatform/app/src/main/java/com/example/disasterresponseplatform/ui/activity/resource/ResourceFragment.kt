@@ -93,8 +93,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
             addOrEditResource(it)
-            Log.i("Resource ID:",java.lang.Long.toUnsignedString(it.ID!!.toLong(), 16))
-            val text = "ID: ${java.lang.Long.toUnsignedString(it.ID.toLong(), 16)}, Type: ${it?.type}, Details: ${it?.details}," +
+            val text = "ID: ${it?.ID}, Type: ${it?.type}, Details: ${it?.details}," +
                     " x: ${String.format("%.4f", it?.coordinateX).replace(',', '.')}, y: ${String.format("%.4f", it?.coordinateY).replace(',', '.')},\" "+
                     "Date: ${it?.creationTime}, Quantity: ${it?.quantity}, Condition: ${it?.condition}"
             Toast.makeText(requireActivity(), text, Toast.LENGTH_LONG).show()

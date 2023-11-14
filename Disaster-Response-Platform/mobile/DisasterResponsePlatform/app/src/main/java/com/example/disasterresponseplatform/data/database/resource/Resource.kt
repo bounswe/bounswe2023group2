@@ -9,9 +9,9 @@ import com.example.disasterresponseplatform.data.enums.NeedTypes
 
 @Entity(tableName = DatabaseInfo.RESOURCE)
 data class Resource(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     @ColumnInfo(name = NeedResourceCols.id)
-    val ID: Long?, // if user does not enter ID, it generates it automatically
+    val ID: String,
     @ColumnInfo(name = NeedResourceCols.creatorName)
     val creatorName: String,
     @ColumnInfo(name = NeedResourceCols.condition)

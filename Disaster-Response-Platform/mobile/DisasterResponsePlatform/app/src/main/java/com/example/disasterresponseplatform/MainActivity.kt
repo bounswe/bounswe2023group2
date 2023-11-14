@@ -33,6 +33,7 @@ import com.example.disasterresponseplatform.ui.map.MapFragment
 import com.example.disasterresponseplatform.ui.network.NetworkFragment
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import com.example.disasterresponseplatform.utils.DateUtil
+import com.example.disasterresponseplatform.utils.StringUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -123,7 +124,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun tryResourceViewModel(){
-        val resource = Resource(null,"Mansur","new",400,NeedTypes.Food,"Soup",DateUtil.getDate("dd-MM-yy").toString(), 500.2,432.3)
+        val resource = Resource(StringUtil.generateRandomStringID(),"Mansur","new",400,NeedTypes.Food,"Soup",DateUtil.getDate("dd-MM-yy").toString(), 500.2,432.3)
         resourceViewModel.insertResource(resource)
         android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
             val xCoordinate = resourceViewModel.getX("Mansur")

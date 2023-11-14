@@ -17,6 +17,7 @@ import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
+import com.example.disasterresponseplatform.utils.StringUtil.Companion.generateRandomStringID
 import java.text.DecimalFormat
 
 class AddResourceFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource?) : Fragment() {
@@ -138,7 +139,7 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
                 val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
                 val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
-                val resource = Resource(null,creatorName,"new",quantity,type,details,date,coordinateX,coordinateY)
+                val resource = Resource(generateRandomStringID(),creatorName,"new",quantity,type,details,date,coordinateX,coordinateY)
 
                 //resourceViewModel.insertResource(resource) insert local db
                 if (isAdd){
