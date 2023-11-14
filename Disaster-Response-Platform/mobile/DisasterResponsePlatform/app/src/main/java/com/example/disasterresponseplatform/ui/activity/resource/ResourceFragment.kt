@@ -40,14 +40,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
 
     private fun arrangeView(){
         binding.btAddResource.setOnClickListener {
-            val token = DiskStorageManager.getKeyValue("token")
-            if (!token.isNullOrEmpty()) {
-                val addResourceFragment = AddResourceFragment(resourceViewModel)
-                addFragment(addResourceFragment)
-            }
-            else{
-                Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
-            }
+            addOrEditResource(null)
         }
 
         arrangeSearchView()
@@ -55,6 +48,23 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         sendRequest()
     }
 
+    /** This function is called whenever resource is created or edited
+     * If it is created resource should be null, else resource should be the clicked item
+     */
+    private fun addOrEditResource(resource: Resource?){
+        val token = DiskStorageManager.getKeyValue("token")
+        if (!token.isNullOrEmpty()) {
+            val addResourceFragment = AddResourceFragment(resourceViewModel,resource)
+            addFragment(addResourceFragment)
+        }
+        else{
+            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /** This function connects backend and get all resource requests, then it observes livedata from viewModel which is changed
+     * whenever all resources are fetched from backend. Then it creates a resource list with this response and prepare recyclerView with this list
+     */
     private fun sendRequest(){
         if (requireActivity == null){ // to handle error when user enters this page twice
             requireActivity = requireActivity()
@@ -67,8 +77,8 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
     }
 
 
-    /**
-     * Arrange recycler view and its adapter
+    /** Arrange recycler view and its adapter
+     * Whenever an item is clicked, it make toast and opens edit resource page
      */
     private fun arrangeRecyclerView(resourceList : List<Resource>){
         val recyclerView = binding.recyclerViewNeeds
@@ -82,7 +92,8 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
-            val text = "Type: ${it?.type}, Details: ${it?.details}, x: ${it?.coordinateX}, y: ${it?.coordinateY},\" "+
+            addOrEditResource(it)
+            val text = "ID: ${java.lang.Long.toUnsignedString(it.ID!!.toLong(), 16)}, Type: ${it?.type}, Details: ${it?.details}, x: ${it?.coordinateX}, y: ${it?.coordinateY},\" "+
                     "Date: ${it?.creationTime}, Quantity: ${it?.quantity}, Condition: ${it?.condition}"
             Toast.makeText(requireActivity(), text, Toast.LENGTH_LONG).show()
         }

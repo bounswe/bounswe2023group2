@@ -13,11 +13,12 @@ import androidx.fragment.app.FragmentActivity
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
+import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
 
-class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
+class AddResourceFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource?) : Fragment() {
 
     private lateinit var binding: FragmentAddResourceBinding
     private var requireActivity: FragmentActivity? = null
@@ -30,11 +31,23 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
 
         binding = FragmentAddResourceBinding.inflate(inflater, container, false)
         setUpResourceTypeSpinner()
-        submitAddResource()
+        fillParameters(resource)
+        submitResource(resource == null)
         return binding.root
     }
 
-
+    /** It fills the layout's fields corresponding data if it is editResource
+     * It checks whether it is editResource by checking if resource is null, if it is not null then it should be edit form
+     */
+    private fun fillParameters(resource: Resource?){
+        if (resource != null){
+            binding.spResourceType.setText(resource.type.toString())
+            binding.spResourceSubType.setText(resource.details)
+            binding.etQuantity.editText?.setText(resource.quantity.toString())
+            binding.etCoordinateX.editText?.setText(resource.coordinateX.toString())
+            binding.etCoordinateY.editText?.setText(resource.coordinateY.toString())
+        }
+    }
     private fun setUpResourceTypeSpinner() {
 
         // Get the array of resource types from resource
@@ -84,20 +97,20 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
         val boxResourceSubType = binding.boxResourceSubType
 
         if (selectedType.isEmpty()) {
-            boxResourceSubType.visibility = View.GONE
             spResourceSubType.setText("")
             spResourceSubType.setAdapter(resourceEmptyAdapter)
         } else if (selectedType == "Food") {
-            boxResourceSubType.visibility = View.VISIBLE
             spResourceSubType.setAdapter(resourceFoodAdapter)
         } else {
-            boxResourceSubType.visibility = View.VISIBLE
             spResourceSubType.setText("")
             spResourceSubType.setAdapter(resourceEmptyAdapter)
         }
     }
 
-    private fun submitAddResource() {
+    /**
+     * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
+     */
+    private fun submitResource(isAdd : Boolean) {
         if (requireActivity == null){ // to handle error when user enters this page twice
             requireActivity = requireActivity()
         }
@@ -124,11 +137,17 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
                 val resource = Resource(null,creatorName,"new",quantity,type,details,date,coordinateX,coordinateY)
 
                 //resourceViewModel.insertResource(resource) insert local db
-
-                resourceViewModel.arrangePostRequest(resource) // pass resource to view Model
-                resourceViewModel.postResourceRequest()
+                if (isAdd){
+                    resourceViewModel.postResourceRequest(resource,RequestType.POST)
+                } else{
+                    resourceViewModel.postResourceRequest(resource,RequestType.PUT)
+                }
                 resourceViewModel.getLiveDataResourceID().observe(requireActivity!!){
-                    Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                    if (isAdd){
+                        Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                    } else{
+                        Toast.makeText(context, "Updated Resource ID: $it", Toast.LENGTH_LONG).show()
+                    }
                     Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                         parentFragmentManager.popBackStack()
                     }, 200)
