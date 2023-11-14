@@ -78,9 +78,9 @@
     <string name="select_sub_type">Select or Enter Sub-Type <font color='#B00020'>*</font></string>
     <string name="select_need_type">Select or Enter Need Type <font color='#B00020'>*</font></string>
     <string name="select_or_enter_location">Select or Enter Location <font color='#B00020'>*</font></string>
+    <string name="enter_quantity">Enter Quantity <font color='#B00020'>*</font></string>
     <string name="select_or_enter_coordinate_x">Select or Enter Coordinate X <font color='#B00020'>*</font></string>
     <string name="select_or_enter_coordinate_y">Select or Enter Coordinate Y <font color='#B00020'>*</font></string>
-    <string name="enter_quantity">Enter Quantity <font color='#B00020'>*</font></string>
     <string name="enter_allergens">Enter Allergens</string>
     <string name="enter_additional_notes">Enter Additional Notes</string>
     <string name="enter_full_name">Enter Full Name <font color='#B00020'>*</font></string>
@@ -89,6 +89,8 @@
     <string name="select_resource_type">Select or Enter Resource Type <font color='#B00020'>*</font></string>
     <string name="enter_expiration_date">Enter Expiration Date</string>
     <string name="username_or_email">Username or Email</string>
+    <string name="edit_need">Edit Need</string>
+    <string name="save_changes">Save Changes</string>
 
     <string-array name="need_types">
         <item>Clothes</item>
@@ -120,8 +122,7 @@
         <item>Other</item>
     </string-array>
 
-    <string-array name="need_empty_sub_types">
-    </string-array>
+    <string-array name="need_empty_sub_types"></string-array>
 
     <string-array name="resource_food_sub_types">
         <item>Pasta</item>
@@ -142,7 +143,6 @@
         <item>Other</item>
     </string-array>
 
-    <string-array name="resource_empty_sub_types">
-    </string-array>
+    <string-array name="resource_empty_sub_types"></string-array>
 
 </resources>
