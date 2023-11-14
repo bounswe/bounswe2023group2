@@ -6,17 +6,17 @@
 
 ## Progress Summary
 
-On the backend, we did little implementation of user role endpoints and try to figure out how to move for this milestone. There were lots of design choices. We plan to finalize resource, need, action, event, filter and sort in two weeks.
+On the backend, we have had a  modest improvement on implementation of user role endpoints and tried to figure out how to move for this milestone. There were lots of design choices. We plan to finalize resource, need, action, event, filter and sort in two weeks.
 
-On the frontend, dynamics forms have implemented and navigation bar has improved. Need and resource endpoints are implemented but the UI part design is on hold.
+On the frontend, dynamics forms have been implemented and navigation bar improved. Need and resource endpoints are implemented but the UI part design is on hold.
 
 As for Mobile developments:
 
-- We prepared edit need and resources form, when users clicks corresponding activity its form opens with its data from backend.
+- We prepared edit need and resources form, when users clicks corresponding activity its form shows up with related data from backend.
 - We also send PUT request for need and resource to backend, it works correctly.
 - We created a color scheme after the feedbacks from presentation, now our colors are defined.
-- We implemented a interactive map from Open Street Map, we also arranged location in need/resources forms as X,Y (latitude, longtitude) for the future usage on map.
-- A piece of profile page was connected to backend, users can change their email from profile page the next parts (skills, languages, etc.) will be implemented.
+- We implemented an interactive map from Open Street Map, we also arranged location in need/resources forms as X,Y (latitude, longtitude) for the future usage on map.
+- A part of profile page was connected to backend, users can change their email from profile page the next parts (skills, languages, etc.) will be implemented.
 
 ### Objectives for the following week
 
