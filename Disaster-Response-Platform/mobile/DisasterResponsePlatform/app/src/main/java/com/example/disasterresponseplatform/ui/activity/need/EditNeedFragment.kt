@@ -1,21 +1,25 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentEditNeedBinding
 import com.example.disasterresponseplatform.utils.DateUtil
 
-class EditNeedFragment(private val needViewModel: NeedViewModel, private val initData: Need?) : Fragment() {
+class EditNeedFragment(private val needViewModel: NeedViewModel, private val initData: Need) : Fragment() {
 
     private lateinit var binding: FragmentEditNeedBinding
+    private var requireActivity: FragmentActivity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +31,7 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
         setUpNeedTypeSpinner()
 
         // Check if initData is not null, and if not, fill the fields
-        initData?.let { fillFieldsWithData(it) }
+        fillFieldsWithData(initData)
 
         submitEditNeed()
         return binding.root
@@ -94,8 +98,11 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
     }
 
     private fun submitEditNeed() {
+        if (requireActivity == null){ // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         binding.btnSaveChanges.setOnClickListener {
-            if (validateFullName() and validatePhoneNumber() and validateQuantity() and validateCoordinateX() and validateCoordinateY() and validateType() and validateSubType()) {
+            if (validateFullName() and validateQuantity() and validateCoordinateX() and validateCoordinateY() and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
                     when(binding.boxNeedType.editText?.text.toString().trim()){
@@ -119,7 +126,7 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
 
                 // Creating a new Need object with the updated data
                 val updatedNeed = Need(
-                    initData?.ID,
+                    initData.ID,
                     creatorName,
                     type,
                     details,
@@ -130,12 +137,17 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
                     1
                 )
 
-                needViewModel.updateNeed(updatedNeed)
-                Toast.makeText(context, "UPDATED", Toast.LENGTH_SHORT).show()
-
-                parentFragmentManager.popBackStack()
-
-
+                // needViewModel.updateNeed(updatedNeed) localDB
+                val needID = "/"+initData.ID // comes from older resource
+                needViewModel.postNeedRequest(updatedNeed,needID)
+                needViewModel.getLiveDataResourceID().observe(requireActivity!!){
+                    if (it == "null"){ // when updated id should be "" or empty
+                        Toast.makeText(context, "UPDATED", Toast.LENGTH_SHORT).show()
+                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                            parentFragmentManager.popBackStack()
+                        }, 200)
+                    }
+                }
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
             }

@@ -13,7 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ActivityAdapter
 import com.example.disasterresponseplatform.adapter.NeedAdapter
+import com.example.disasterresponseplatform.data.database.need.Need
+import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.resource.AddResourceFragment
 
 class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
@@ -38,36 +42,57 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     private fun arrangeView(){
         // add need clickable
         binding.btAddNeed.setOnClickListener {
-            addNeedFragment = AddNeedFragment(needViewModel)
-            addFragment(addNeedFragment)
+            addOrEditNeed(null)
         }
         arrangeSearchView()
-        arrangeRecyclerView()
+        sendRequest()
+    }
+
+    /** This function connects backend and get all resource requests, then it observes livedata from viewModel which is changed
+     * whenever all resources are fetched from backend. Then it creates a need list with this response and prepare recyclerView with this list
+     */
+    private fun sendRequest(){
+        if (requireActivity == null){ // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
+        needViewModel.sendGetAllRequest()
+        needViewModel.getLiveDataResponse().observe(requireActivity!!){ needResponse ->
+            val lst = needViewModel.createNeedList(needResponse)
+            arrangeRecyclerView(lst)
+        }
     }
 
     /**
      * Arrange recycler view and its adapter
      */
-    private fun arrangeRecyclerView(){
-
-        if (requireActivity == null){ // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
+    private fun arrangeRecyclerView(needList : List<Need>){
         val recyclerView = binding.recyclerViewNeeds
         if (recyclerView.layoutManager == null){
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.layoutManager = layoutManager
         }
 
-        val list = needViewModel.getAllNeeds()
-        val adapter = NeedAdapter(list)
+        val list = needViewModel.getAllNeeds() // from local db
+        val adapter = NeedAdapter(needList)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
             // Handle item click by navigating to EditNeedFragment
-            val editNeedFragment = EditNeedFragment(needViewModel, it)
-            addFragment(editNeedFragment)
+            addOrEditNeed(it)
+        }
+    }
+
+    private fun addOrEditNeed(need: Need?){
+        val token = DiskStorageManager.getKeyValue("token")
+        if (!token.isNullOrEmpty()) {
+            if (need == null)
+                addFragment(AddNeedFragment(needViewModel))
+            else
+                addFragment(EditNeedFragment(needViewModel,need))
+        }
+        else{
+            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
         }
     }
 

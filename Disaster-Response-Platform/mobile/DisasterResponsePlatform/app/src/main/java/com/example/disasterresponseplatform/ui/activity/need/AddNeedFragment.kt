@@ -1,21 +1,26 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddNeedBinding
 import com.example.disasterresponseplatform.utils.DateUtil
+import com.example.disasterresponseplatform.utils.StringUtil
 
 class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
     private lateinit var binding: FragmentAddNeedBinding
+    private var requireActivity: FragmentActivity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,8 +98,12 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     }
 
     private fun submitAddNeed() {
+        if (requireActivity == null){ // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
+
         binding.btnSubmit.setOnClickListener {
-            if (validateFullName() and validatePhoneNumber() and validateQuantity() and validateCoordinateX() and validateCoordinateY()and validateType() and validateSubType()) {
+            if (validateFullName() and validateQuantity() and validateCoordinateX() and validateCoordinateY()and validateType() and validateSubType()) {
                 Toast.makeText(context, "{'created_by': ${binding.etFullName.editText?.text.toString().trim()}, 'quantity': ${binding.etQuantity.editText?.text.toString().trim()}, 'type':  ${binding.boxNeedType.editText?.text.toString().trim()}}", Toast.LENGTH_SHORT).show()
 
                 val type: NeedTypes =
@@ -114,11 +123,18 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
                 val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
                 val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
-                val need = Need(null,creatorName,type,details, date,quantity, coordinateX,coordinateY,1)
-                //TODO do with token
-                needViewModel.insertNeed(need)
-                parentFragmentManager.popBackStack()
+                val need = Need(StringUtil.generateRandomStringID(),creatorName,type,details, date,quantity, coordinateX,coordinateY,1)
 
+                //needViewModel.insertNeed(need)
+                needViewModel.postNeedRequest(need)
+                needViewModel.getLiveDataResourceID().observe(requireActivity!!){
+                    if (it != "null"){ // when it's not empty or null
+                        Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                            parentFragmentManager.popBackStack()
+                        }, 200)
+                    }
+                }
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
             }

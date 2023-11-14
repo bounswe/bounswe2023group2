@@ -99,17 +99,6 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
         return needType
     }
 
-    private fun returnLocationAsString(x: Float?, y: Float?): String {
-        var location = " "
-        if (x != null) {
-            location += "x : $x "
-        }
-        if (y != null) {
-            location += "y: $y"
-        }
-        return location
-    }
-
     private fun returnDetailsAsString(resourceDetails: ResourceBody.ResourceDetails): String {
         var detailsString = ""
         if (!resourceDetails.size.isNullOrEmpty()) {
