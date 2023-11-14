@@ -21,14 +21,12 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         }
     }
 
-    fun updateNeed(need: Need){
-        viewModelScope.launch(Dispatchers.IO){
-            needRepository.updateNeed(need)
-        }
+    fun getX(creatorID: String): Double?{
+        return needRepository.getX(creatorID)
     }
 
-    fun getLocation(creatorID: String): String?{
-        return needRepository.getLocation(creatorID)
+    fun getY(creatorID: String): Double?{
+        return needRepository.getY(creatorID)
     }
 
     fun getAllNeeds(): List<Need>? = needRepository.getAllNeeds()

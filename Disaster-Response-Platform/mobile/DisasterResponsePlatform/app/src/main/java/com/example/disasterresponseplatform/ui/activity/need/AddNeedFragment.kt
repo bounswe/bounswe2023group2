@@ -94,7 +94,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
     private fun submitAddNeed() {
         binding.btnSubmit.setOnClickListener {
-            if ((validateFullName() and validatePhoneNumber() and validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
+            if (validateFullName() and validatePhoneNumber() and validateQuantity() and validateCoordinateX() and validateCoordinateY()and validateType() and validateSubType()) {
                 Toast.makeText(context, "{'created_by': ${binding.etFullName.editText?.text.toString().trim()}, 'quantity': ${binding.etQuantity.editText?.text.toString().trim()}, 'type':  ${binding.boxNeedType.editText?.text.toString().trim()}}", Toast.LENGTH_SHORT).show()
 
                 val type: NeedTypes =
@@ -111,9 +111,10 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
                 val creatorName = binding.etFullName.editText?.text.toString().trim()
                 val details = binding.spNeedSubType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val location = binding.etLocation.editText?.text.toString().trim()
+                val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
+                val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
-                val need = Need(null,creatorName,type,details, date,quantity,location,1)
+                val need = Need(null,creatorName,type,details, date,quantity, coordinateX,coordinateY,1)
                 //TODO do with token
                 needViewModel.insertNeed(need)
                 parentFragmentManager.popBackStack()
@@ -153,16 +154,28 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     }
 
 
-    private fun validateLocation(): Boolean {
-        val etLocation = binding.etLocation
-        val location = etLocation.editText?.text.toString().trim()
-
-        return if (location.isEmpty()) {
-            etLocation.error = "Field can not be empty"
+    private fun validateCoordinateX(): Boolean {
+        val etCoordinateX = binding.etCoordinateX
+        val coordinateX = etCoordinateX.editText?.text.toString().trim()
+        return if (coordinateX.isEmpty()) {
+            etCoordinateX.error = "Field can not be empty"
             false
         } else {
-            etLocation.error = null
-            etLocation.isErrorEnabled = false
+            etCoordinateX.error = null
+            etCoordinateX.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateCoordinateY(): Boolean {
+        val etCoordinateY = binding.etCoordinateY
+        val coordinateY = etCoordinateY.editText?.text.toString().trim()
+        return if (coordinateY.isEmpty()) {
+            etCoordinateY.error = "Field can not be empty"
+            false
+        } else {
+            etCoordinateY.error = null
+            etCoordinateY.isErrorEnabled = false
             true
         }
     }

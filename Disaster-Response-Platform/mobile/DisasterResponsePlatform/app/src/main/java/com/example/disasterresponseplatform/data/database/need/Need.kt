@@ -21,8 +21,10 @@ data class Need(
     val creationTime: String?,
     @ColumnInfo(name = NeedResourceCols.quantity)
     val quantity: Int?,
-    @ColumnInfo(name = NeedResourceCols.location)
-    val location: String?,
+    @ColumnInfo(name = NeedResourceCols.coordinateX)
+    val coordinateX: Double,
+    @ColumnInfo(name = NeedResourceCols.coordinateY)
+    val coordinateY: Double,
     @ColumnInfo(name = NeedResourceCols.urgency)
     val urgency: Int?
 )
