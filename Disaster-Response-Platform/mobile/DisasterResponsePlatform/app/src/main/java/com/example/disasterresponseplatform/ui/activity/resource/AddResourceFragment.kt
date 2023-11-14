@@ -97,14 +97,11 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
         val boxResourceSubType = binding.boxResourceSubType
 
         if (selectedType.isEmpty()) {
-            boxResourceSubType.visibility = View.GONE
             spResourceSubType.setText("")
             spResourceSubType.setAdapter(resourceEmptyAdapter)
         } else if (selectedType == "Food") {
-            boxResourceSubType.visibility = View.VISIBLE
             spResourceSubType.setAdapter(resourceFoodAdapter)
         } else {
-            boxResourceSubType.visibility = View.VISIBLE
             spResourceSubType.setText("")
             spResourceSubType.setAdapter(resourceEmptyAdapter)
         }
