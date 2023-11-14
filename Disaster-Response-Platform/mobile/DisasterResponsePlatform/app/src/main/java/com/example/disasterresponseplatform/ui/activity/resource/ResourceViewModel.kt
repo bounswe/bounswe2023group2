@@ -66,7 +66,6 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             val details = returnDetailsAsString(responseItem.details)
             val needType = returnNeedType(responseItem.type)
             val time = DateUtil.getDate("dd-MM-yy").toString()
-            Log.i("Created Resource ", "Before Arrange ID: ${responseItem._id} ")
             val coordinateX = if (responseItem.x == null) 1.0 else responseItem.x.toDouble()
             val coordinateY = if (responseItem.y == null) 1.0 else responseItem.y.toDouble()
             val currentResource = Resource(
@@ -218,7 +217,10 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResourceID(): LiveData<String> = liveDataResourceID
 
-    fun postResourceRequest(postRequest: Resource, requestType: RequestType) {
+    /**
+     * It send POST or PUT request with respect to id, if there was an id it should be PUT
+     */
+    fun postResourceRequest(postRequest: Resource, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
         Log.i("token", "Token $token")
         if (!token.isNullOrEmpty()) {
@@ -251,16 +253,17 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             )
             val gson = Gson()
             val json = gson.toJson(resourceRequestBody)
-            val requestBody =
-                json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+            val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+
+            val requestType = if (id == null) RequestType.POST else RequestType.PUT
 
             Log.d("requestBody", json.toString())
-
             networkManager.makeRequest(
                 endpoint = Endpoint.RESOURCE,
                 requestType = requestType,
                 headers = headers,
                 requestBody = requestBody,
+                id, // Resource's ID
                 callback = object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,

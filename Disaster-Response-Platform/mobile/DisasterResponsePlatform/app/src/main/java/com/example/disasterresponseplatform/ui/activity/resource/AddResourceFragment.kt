@@ -13,12 +13,10 @@ import androidx.fragment.app.FragmentActivity
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
-import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
 import com.example.disasterresponseplatform.utils.StringUtil.Companion.generateRandomStringID
-import java.text.DecimalFormat
 
 class AddResourceFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource?) : Fragment() {
 
@@ -139,20 +137,18 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
                 val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
                 val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
-                val resource = Resource(generateRandomStringID(),creatorName,"new",quantity,type,details,date,coordinateX,coordinateY)
+                val newResource = Resource(generateRandomStringID(),creatorName,"new",quantity,type,details,date,coordinateX,coordinateY)
 
                 //resourceViewModel.insertResource(resource) insert local db
                 if (isAdd){
-                    resourceViewModel.postResourceRequest(resource,RequestType.POST)
+                    resourceViewModel.postResourceRequest(newResource)
                 } else{
-                    resourceViewModel.postResourceRequest(resource,RequestType.PUT)
+                    val resourceID = "/"+resource!!.ID // comes from older resource
+                    resourceViewModel.postResourceRequest(newResource,resourceID)
                 }
                 resourceViewModel.getLiveDataResourceID().observe(requireActivity!!){
-                    if (isAdd){
+                    if (isAdd)
                         Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
-                    } else{
-                        Toast.makeText(context, "Updated Resource ID: $it", Toast.LENGTH_LONG).show()
-                    }
                     Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                         parentFragmentManager.popBackStack()
                     }, 200)
