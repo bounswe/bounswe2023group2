@@ -84,14 +84,11 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         val boxNeedSubType = binding.boxNeedSubType
 
         if (selectedType.isEmpty()) {
-            boxNeedSubType.visibility = View.GONE
             spNeedSubType.setText("")
             spNeedSubType.setAdapter(needEmptyAdapter)
         } else if (selectedType == "Food") {
-            boxNeedSubType.visibility = View.VISIBLE
             spNeedSubType.setAdapter(needFoodAdapter)
         } else {
-            boxNeedSubType.visibility = View.VISIBLE
             spNeedSubType.setText("")
             spNeedSubType.setAdapter(needEmptyAdapter)
         }
