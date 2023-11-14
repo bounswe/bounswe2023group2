@@ -44,7 +44,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
         <div class="flex justify-around space-x-8">
           <MainInfo className="w-60" info={main_info}/>
           <OptionalInfo className="w-96" fields={optional_info_tr} />
-          <div class="w=36">
+          <div>
             <SkillList list={social.list} topic={social.topic}/>
             <SkillList list={skills.list} topic={skills.topic} />
             <SkillList list={languages.list} topic={languages.topic} />

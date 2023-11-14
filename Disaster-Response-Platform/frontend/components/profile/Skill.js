@@ -4,7 +4,7 @@ export default function Skill({ skill, topic }) {
 			{
 				topic.is_link ? 
 				<a class="text-blue-600" href={skill[topic.url]}>{skill[topic.text]}</a> :
-				<span class="text-center text-sm text-gray-600"> {skill[topic.primary]} (level: {skill[topic.secondary]}) </span>
+				<span class="text-center text-sm text-gray-600"> {skill[topic.primary]} ({skill[topic.secondary]}) </span>
 			}
 		</div>
 	);
