@@ -38,7 +38,6 @@ class NeedAdapter(private val needList: List<Need>?): RecyclerView.Adapter<NeedA
 
 
         hb.tvType.text = currentNeed?.type.toString()
-
         hb.tvDate.text = currentNeed?.creationTime
         hb.tvLocation.text = "x: ${currentNeed?.coordinateX.toString()}, y: ${currentNeed?.coordinateY.toString()}"
         hb.tvQuantity.text = currentNeed?.quantity.toString()

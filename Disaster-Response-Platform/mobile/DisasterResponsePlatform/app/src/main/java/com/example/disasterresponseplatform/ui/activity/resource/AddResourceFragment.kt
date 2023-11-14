@@ -17,6 +17,7 @@ import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
+import java.text.DecimalFormat
 
 class AddResourceFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource?) : Fragment() {
 
@@ -44,8 +45,8 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
             binding.spResourceType.setText(resource.type.toString())
             binding.spResourceSubType.setText(resource.details)
             binding.etQuantity.editText?.setText(resource.quantity.toString())
-            binding.etCoordinateX.editText?.setText(resource.coordinateX.toString())
-            binding.etCoordinateY.editText?.setText(resource.coordinateY.toString())
+            binding.etCoordinateX.editText?.setText(String.format("%.2f", resource.coordinateX).replace(',', '.'))
+            binding.etCoordinateY.editText?.setText(String.format("%.2f", resource.coordinateY).replace(',', '.'))
         }
     }
     private fun setUpResourceTypeSpinner() {
