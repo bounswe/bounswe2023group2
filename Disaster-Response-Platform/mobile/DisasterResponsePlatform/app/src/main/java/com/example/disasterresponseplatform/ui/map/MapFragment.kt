@@ -33,7 +33,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         // Set the default zoom level and center of the map
         val mapController: IMapController = mapView.controller
         mapController.setZoom(15.0)
-        val startPoint = GeoPoint(37.7749, -122.4194) // San Francisco coordinates
+        val startPoint = GeoPoint(41.0851550, 29.0450574) // San Francisco coordinates
         mapController.setCenter(startPoint)
 
         return view
