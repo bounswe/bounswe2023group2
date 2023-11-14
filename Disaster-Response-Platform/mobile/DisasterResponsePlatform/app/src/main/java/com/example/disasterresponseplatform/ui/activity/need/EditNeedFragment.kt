@@ -95,7 +95,7 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
 
     private fun submitEditNeed() {
         binding.btnSaveChanges.setOnClickListener {
-            if ((validateFullName() and validatePhoneNumber() and validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
+            if (validateFullName() and validatePhoneNumber() and validateQuantity() and validateCoordinateX() and validateCoordinateY() and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
                     when(binding.boxNeedType.editText?.text.toString().trim()){
@@ -113,7 +113,8 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
                 val creatorName = binding.etFullName.editText?.text.toString().trim()
                 val details = binding.spNeedSubType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val location = binding.etLocation.editText?.text.toString().trim()
+                val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
+                val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
 
                 // Creating a new Need object with the updated data
@@ -124,7 +125,8 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
                     details,
                     date,
                     quantity,
-                    location,
+                    coordinateX,
+                    coordinateY,
                     1
                 )
 
@@ -169,16 +171,28 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
     }
 
 
-    private fun validateLocation(): Boolean {
-        val etLocation = binding.etLocation
-        val location = etLocation.editText?.text.toString().trim()
-
-        return if (location.isEmpty()) {
-            etLocation.error = "Field can not be empty"
+    private fun validateCoordinateX(): Boolean {
+        val etCoordinateX = binding.etCoordinateX
+        val coordinateX = etCoordinateX.editText?.text.toString().trim()
+        return if (coordinateX.isEmpty()) {
+            etCoordinateX.error = "Field can not be empty"
             false
         } else {
-            etLocation.error = null
-            etLocation.isErrorEnabled = false
+            etCoordinateX.error = null
+            etCoordinateX.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateCoordinateY(): Boolean {
+        val etCoordinateY = binding.etCoordinateY
+        val coordinateY = etCoordinateY.editText?.text.toString().trim()
+        return if (coordinateY.isEmpty()) {
+            etCoordinateY.error = "Field can not be empty"
+            false
+        } else {
+            etCoordinateY.error = null
+            etCoordinateY.isErrorEnabled = false
             true
         }
     }
@@ -231,7 +245,8 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
         binding.spNeedSubType.setText(need.details)
         binding.etFullName.editText?.setText(need.creatorName)
         binding.etQuantity.editText?.setText(need.quantity.toString())
-        binding.etLocation.editText?.setText(need.location)
+        binding.etCoordinateX.editText?.setText(need.coordinateX.toString())
+        binding.etCoordinateY.editText?.setText(need.coordinateY.toString())
         binding.spNeedType.setText(need.type.toString())
     }
 }
