@@ -214,17 +214,11 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
         )
     }
 
-    lateinit var postRequest: Resource
-
-    fun arrangePostRequest(resource: Resource) {
-        postRequest = resource
-    }
-
     private val liveDataResourceID = MutableLiveData<String>()
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResourceID(): LiveData<String> = liveDataResourceID
 
-    fun postResourceRequest() {
+    fun postResourceRequest(postRequest: Resource, requestType: RequestType) {
         val token = DiskStorageManager.getKeyValue("token")
         Log.i("token", "Token $token")
         if (!token.isNullOrEmpty()) {
@@ -264,7 +258,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
 
             networkManager.makeRequest(
                 endpoint = Endpoint.RESOURCE,
-                requestType = RequestType.POST,
+                requestType = requestType,
                 headers = headers,
                 requestBody = requestBody,
                 callback = object : Callback<ResponseBody> {

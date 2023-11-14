@@ -130,6 +130,7 @@ class NetworkManager {
                             ?.enqueue(callback)
                     }
                     RequestType.PUT -> {
+                        Log.d("RESPONSE", callback.toString())
                         requestBody?.let { api.putData(endpoint.path, headers, it) }
                             ?.enqueue(callback)
                     }
