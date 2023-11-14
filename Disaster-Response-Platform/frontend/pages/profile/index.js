@@ -5,7 +5,6 @@ import MainInfo from '@/components/profile/MainInfo';
 import OptionalInfo from '@/components/profile/OptionalInfo';
 import ActivityTable from '@/components/ActivityTable';
 import SkillList from '@/components/profile/SkillList';
-import GrayBox from '@/components/GrayBox';
 import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
@@ -26,7 +25,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
   }
 
   // const {misc, activities} = TODO;
-  const {professions, languages, user_socialmedia_links: social, skills} = list_info;
+  const {professions, languages, "socialmedia-links": social, skills} = list_info;
   const dictionary_tr = {
     "username": "Kullanıcı Adı",
     "date_of_birth": "Doğum Tarihi",
@@ -45,12 +44,12 @@ export default function Profile({guest, expired, main_info, optional_info, list_
         <div class="flex justify-around space-x-8">
           <MainInfo className="w-60" info={main_info}/>
           <OptionalInfo className="w-96" fields={optional_info_tr} />
-          <GrayBox class="w=36">
+          <div class="w=36">
             <SkillList list={social.list} topic={social.topic}/>
             <SkillList list={skills.list} topic={skills.topic} />
             <SkillList list={languages.list} topic={languages.topic} />
             <SkillList list={professions.list} topic={professions.topic} />
-          </GrayBox>
+          </div>
         </div>
         <div class="my-10 w-full text-center">
           <Link href='/profile/edit'>
@@ -105,16 +104,16 @@ export const getServerSideProps = withIronSessionSsr(
     let list_info = {}
 
     const topics = [
-      {"api_url": "professions", "key": "professions",
+      {"api_url": "professions", "key": "user_professions",
         "title": "Meslekler", "primary": "profession", "secondary": "profession_level", "is_link": false,
         "post": "/add-profession", "delete": ""},
-      {"api_url": "languages", "key": "languages",
+      {"api_url": "languages", "key": "user_languages",
         "title": "Diller", "primary": "language", "secondary": "language_level", "is_link": false,
         "post": "/add-language", "delete": "/delete-language"},
       {"api_url": "socialmedia-links", "key": "user_socialmedia_links",
         "title": "Sosyal Medya", "text": "platform_name", "url": "profile_URL", "is_link": true,
         "post": "/add-social-media-link", "delete": ""},
-      {"api_url": "skills", "key": "skills",
+      {"api_url": "skills", "key": "user_skills",
         "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", "is_link": false,
         "post": "/add-skill", "delete": ""},
     ]
@@ -125,7 +124,7 @@ export const getServerSideProps = withIronSessionSsr(
           'Authorization': `Bearer ${user.accessToken}` 
         }
       });
-      list_info[topic.key] = {"list": fields ? fields : [], "topic": topic};
+      list_info[topic.api_url] = {"list": fields ? fields : [], "topic": topic};
     }
 
     return {
