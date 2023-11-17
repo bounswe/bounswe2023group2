@@ -2,12 +2,14 @@ import Skill from './Skill';
 import GrayBox from '../GrayBox';
 import { useState } from 'react';
 
-export default function SkillList({ list, topic }) {
+export default function SkillList({ list, topic, username }) {
 	let [ skills, setSkills ] = useState(list);
-	function addSkill(skill) {
+	async function addSkill(event) {
+    	event.preventDefault();
 		setSkills([...skills, elem]);
 	}
-	function deleteSkill(key) {
+	async function deleteSkill(event) {
+    	event.preventDefault();
 		setSkills(skills.filter(skill => (skill[topic.primary] != key)))
 	}
 	return (

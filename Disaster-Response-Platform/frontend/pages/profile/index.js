@@ -1,4 +1,3 @@
-
 import { Inter } from 'next/font/google';
 import MainLayout from '@/layouts/MainLayout';
 import MainInfo from '@/components/profile/MainInfo';
@@ -24,7 +23,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
     );
   }
 
-  // const {misc, activities} = TODO;
+  const username = main_info.username;
   const {professions, languages, "socialmedia-links": social, skills} = list_info;
   const dictionary_tr = {
     "username": "Kullanıcı Adı",
@@ -45,10 +44,10 @@ export default function Profile({guest, expired, main_info, optional_info, list_
           <MainInfo className="w-60" info={main_info}/>
           <OptionalInfo className="w-80" fields={optional_info_tr} />
           <div>
-            <SkillList list={social.list} topic={social.topic}/>
-            <SkillList list={skills.list} topic={skills.topic} />
-            <SkillList list={languages.list} topic={languages.topic} />
-            <SkillList list={professions.list} topic={professions.topic} />
+            <SkillList list={social.list} topic={social.topic} username={username}/>
+            <SkillList list={skills.list} topic={skills.topic} username={username} />
+            <SkillList list={languages.list} topic={languages.topic} username={username} />
+            <SkillList list={professions.list} topic={professions.topic} username={username} />
           </div>
         </div>
         <div class="my-10 w-full text-center">
