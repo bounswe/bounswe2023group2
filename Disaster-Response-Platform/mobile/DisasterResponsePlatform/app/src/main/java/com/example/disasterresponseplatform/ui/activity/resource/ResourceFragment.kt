@@ -81,7 +81,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
      * Whenever an item is clicked, it make toast and opens edit resource page
      */
     private fun arrangeRecyclerView(resourceList : List<Resource>){
-        val recyclerView = binding.recyclerViewNeeds
+        val recyclerView = binding.recyclerViewResources
         if (recyclerView.layoutManager == null){
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.layoutManager = layoutManager
