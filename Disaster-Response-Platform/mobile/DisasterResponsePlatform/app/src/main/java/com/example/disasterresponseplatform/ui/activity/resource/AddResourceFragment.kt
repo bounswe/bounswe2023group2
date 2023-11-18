@@ -115,6 +115,10 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
             requireActivity = requireActivity()
         }
         binding.btnSubmit.setOnClickListener {
+            if (!binding.btnSubmit.isEnabled) { // Prevent multiple clicks
+                return@setOnClickListener
+            }
+            binding.btnSubmit.isEnabled = false
             if (validateQuantity() and validateCoordinateY() and validateCoordinateX()  and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
@@ -148,10 +152,13 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
                         Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
                     Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                         parentFragmentManager.popBackStack()
+                        // Re-enable the button after the background operation completes
+                        binding.btnSubmit.isEnabled = true
                     }, 200)
                 }
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
+                binding.btnSubmit.isEnabled = true
             }
         }
     }

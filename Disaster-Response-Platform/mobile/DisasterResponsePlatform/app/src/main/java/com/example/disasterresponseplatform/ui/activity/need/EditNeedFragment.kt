@@ -102,6 +102,10 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
             requireActivity = requireActivity()
         }
         binding.btnSaveChanges.setOnClickListener {
+            if (!binding.btnSaveChanges.isEnabled) { // Prevent multiple clicks
+                return@setOnClickListener
+            }
+            binding.btnSaveChanges.isEnabled = false
             if (validateFullName() and validateQuantity() and validateCoordinateX() and validateCoordinateY() and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
@@ -145,11 +149,13 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
                         Toast.makeText(context, "UPDATED", Toast.LENGTH_SHORT).show()
                         Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                             parentFragmentManager.popBackStack()
+                            binding.btnSaveChanges.isEnabled = true
                         }, 200)
                     }
                 }
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
+                binding.btnSaveChanges.isEnabled = true
             }
         }
     }
