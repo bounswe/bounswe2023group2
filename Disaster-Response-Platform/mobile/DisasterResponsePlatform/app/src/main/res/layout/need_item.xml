@@ -28,7 +28,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toEndOf="@+id/badge"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/hierarchy" />
+            app:srcCompat="@drawable/recyc_category" />
 
         <TextView
             android:id="@+id/tvActivity"
@@ -91,7 +91,7 @@
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="@+id/iconType"
             app:layout_constraintTop_toBottomOf="@+id/sep1"
-            app:srcCompat="@drawable/address_location" />
+            app:srcCompat="@drawable/recyc_location" />
 
         <TextView
             android:id="@+id/tvLocation"
@@ -112,7 +112,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/iconLocation"
             app:layout_constraintTop_toBottomOf="@+id/iconLocation"
-            app:srcCompat="@drawable/date_time" />
+            app:srcCompat="@drawable/recyc_date_time" />
 
         <TextView
             android:id="@+id/tvDate"
@@ -131,7 +131,7 @@
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvQuantity"
-            app:srcCompat="@drawable/quantity" />
+            app:srcCompat="@drawable/recyc_quantity" />
 
         <TextView
             android:id="@+id/tvQuantity"
@@ -150,7 +150,7 @@
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvCreator"
-            app:srcCompat="@drawable/ic_profile" />
+            app:srcCompat="@drawable/recyc_user" />
 
         <TextView
             android:id="@+id/tvCreator"

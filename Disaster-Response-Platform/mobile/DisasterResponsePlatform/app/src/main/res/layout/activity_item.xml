@@ -29,7 +29,7 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toEndOf="@+id/badge"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/hierarchy" />
+                app:srcCompat="@drawable/recyc_category" />
 
             <TextView
                 android:id="@+id/tvActivity"
@@ -92,7 +92,7 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="@+id/iconType"
                 app:layout_constraintTop_toBottomOf="@+id/sep1"
-                app:srcCompat="@drawable/address_location" />
+                app:srcCompat="@drawable/recyc_location" />
 
             <TextView
                 android:id="@+id/tvLocation"
@@ -113,7 +113,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/iconLocation"
                 app:layout_constraintTop_toBottomOf="@+id/iconLocation"
-                app:srcCompat="@drawable/date_time" />
+                app:srcCompat="@drawable/recyc_date_time" />
 
             <TextView
                 android:id="@+id/tvDate"
@@ -132,7 +132,7 @@
                 android:layout_marginEnd="6dp"
                 app:layout_constraintEnd_toStartOf="@+id/tvReliabilityScale"
                 app:layout_constraintTop_toTopOf="@+id/tvReliabilityScale"
-                app:srcCompat="@drawable/reliability" />
+                app:srcCompat="@drawable/recyc_reliability" />
 
             <TextView
                 android:id="@+id/tvReliabilityScale"
