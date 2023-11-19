@@ -7,34 +7,13 @@
     android:orientation="vertical"
     tools:context=".ui.profile.ProfileFragment">
 
-    <ProgressBar
-        android:id="@+id/profile_progress_bar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="100dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="You need to log in first"
-        android:textSize="30sp"
-        android:padding="20dp"
-        android:gravity="center"
-        android:visibility="gone"
-        android:id="@+id/profile_login_first_text"/>
-
     <ScrollView
-        android:id="@+id/profile_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/profile_top_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp">
@@ -66,22 +45,12 @@
                     </androidx.cardview.widget.CardView>
 
                     <ImageView
-                        android:id="@+id/profile_verified_icon"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
+                        android:id="@+id/profile_edit_icon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom|end"
                         android:elevation="13dp"
-                        android:src="@drawable/verified_icon"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:id="@+id/profile_admin_icon"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:elevation="13dp"
-                        android:src="@drawable/admin_icon"
-                        android:visibility="gone" />
+                        android:src="@android:drawable/ic_menu_edit"/>
 
                 </FrameLayout>
 
@@ -92,31 +61,43 @@
                     android:orientation="vertical"
                     android:padding="30dp">
 
-                    <TextView
-                        android:id="@+id/profile_fullname"
+                    <EditText
+                        android:id="@+id/profile_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:hint="Name"
                         android:padding="5dp"
-                        android:text="Full Name"
-                        android:textSize="20sp" />
+                        android:text="Suzan"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/profile_surname"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:hint="Surname"
+                        android:padding="5dp"
+                        android:text="Üsküdarlı"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/profile_username"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:paddingBottom="10dp"
-                        android:text="username"
+                        android:text="suzanuskudarli"
                         android:textSize="15sp" />
 
-                    <Button
-                        android:id="@+id/profile_call_button"
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/profile_info_visible"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Call" />
+                        android:paddingHorizontal="5dp"
+                        android:text="Profile Info Visible" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -142,10 +123,12 @@
                     android:padding="10dp"
                     android:src="@drawable/profession_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_proficiency"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:hint="Proficiency"
+                    android:textSize="11sp"
                     android:gravity="center_vertical"
                     android:padding="10dp"
                     android:text="Professor" />
@@ -165,10 +148,12 @@
                     android:padding="10dp"
                     android:src="@drawable/region_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_region"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:hint="Credibility Region"
+                    android:textSize="11sp"
                     android:gravity="center_vertical"
                     android:padding="10dp"
                     android:text="Marmara Region" />
@@ -210,12 +195,14 @@
                     android:padding="10dp"
                     android:src="@drawable/phone_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_phone_number"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:textSize="11sp"
                     android:padding="10dp"
+                    android:hint="Phone Number"
                     android:text="+90 555 555 55 55" />
 
                 <ImageView
@@ -240,13 +227,15 @@
                     android:padding="10dp"
                     android:src="@drawable/mail_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_email"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:textSize="11sp"
                     android:padding="10dp"
-                    android:text="emailadress@email.com" />
+                    android:hint="Email"
+                    android:text="suzan.uskudarli@boun.edu.tr" />
 
                 <ImageView
                     android:id="@+id/profile_email_verified_icon"
@@ -264,8 +253,7 @@
                 android:id="@+id/profile_birth_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -273,13 +261,15 @@
                     android:padding="10dp"
                     android:src="@drawable/birthday_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_birth"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:textSize="11sp"
                     android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:hint="Birthday"
+                    android:text="" />
             </LinearLayout>
 
             <!-- Nationality -->
@@ -287,8 +277,7 @@
                 android:id="@+id/profile_nationality_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -296,13 +285,15 @@
                     android:padding="10dp"
                     android:src="@drawable/nationality_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_nationality"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="11sp"
                     android:gravity="center_vertical"
                     android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:hint="Nationality"
+                    android:text="" />
             </LinearLayout>
 
             <!-- Id Number -->
@@ -310,8 +301,7 @@
                 android:id="@+id/profile_id_number_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -319,13 +309,14 @@
                     android:padding="10dp"
                     android:src="@drawable/id_number_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_id_number"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="11sp"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:hint="ID Number"
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Address -->
@@ -333,8 +324,7 @@
                 android:id="@+id/profile_address_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -342,13 +332,14 @@
                     android:padding="10dp"
                     android:src="@drawable/address_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_address"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="11sp"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:hint="Address"
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Education -->
@@ -356,8 +347,7 @@
                 android:id="@+id/profile_education_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -365,13 +355,14 @@
                     android:padding="10dp"
                     android:src="@drawable/education_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_education"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="11sp"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:hint="Education"
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Health Contition -->
@@ -379,8 +370,7 @@
                 android:id="@+id/profile_health_condition_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -388,13 +378,14 @@
                     android:padding="10dp"
                     android:src="@drawable/health_condition_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_health_condition"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="11sp"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:hint="Health Condition"
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Blood Type -->
@@ -402,8 +393,7 @@
                 android:id="@+id/profile_blood_type_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -411,18 +401,23 @@
                     android:padding="10dp"
                     android:src="@drawable/blood_type_icon" />
 
-                <TextView
+                <EditText
                     android:id="@+id/profile_blood_type"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="11sp"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:hint="Blood Type"
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Social Media -->
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
@@ -430,20 +425,40 @@
                 android:text="Social Media"
                 android:textSize="30sp" />
 
+                <ImageView
+                    android:id="@+id/profile_add_social_media_button"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="5dp"
+                    android:src="@android:drawable/ic_input_add" />
+            </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider" />
 
             <!-- Skills -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
                 android:text="Skills"
                 android:textSize="30sp" />
+            <ImageView
+                android:id="@+id/profile_add_skill_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_margin="5dp"
+                android:src="@android:drawable/ic_input_add" />
+        </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -451,6 +466,10 @@
                 android:background="?android:attr/listDivider" />
 
             <!-- Languages -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -459,6 +478,14 @@
                 android:paddingBottom="10dp"
                 android:text="Languages"
                 android:textSize="30sp" />
+            <ImageView
+                android:id="@+id/profile_add_language_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_margin="5dp"
+                android:src="@android:drawable/ic_input_add" />
+        </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -466,14 +493,26 @@
                 android:background="?android:attr/listDivider" />
 
             <!-- Professions -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
                 android:text="Professions"
                 android:textSize="30sp" />
+            <ImageView
+                android:id="@+id/profile_add_profession_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_margin="5dp"
+                android:src="@android:drawable/ic_input_add" />
+        </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -491,12 +530,12 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/profile_edit_button"
+        android:id="@+id/profile_edit_confirm_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:clickable="true"
-        android:src="@android:drawable/ic_menu_edit" />
+        android:src="@drawable/check" />
 
 </FrameLayout>

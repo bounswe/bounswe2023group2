@@ -164,7 +164,28 @@ class NetworkManager {
                     }
                 }
             }
-            else -> {}
+            else -> {
+                when (requestType) {
+                    RequestType.GET -> {
+                        Log.d("RESPONSE", callback.toString())
+                        val call = api.getData(endpoint.path, headers)
+                        call.enqueue(callback)
+                    }
+                    RequestType.POST -> {
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.PUT -> {
+                        requestBody?.let { api.putData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.DELETE -> {
+                        val call = api.deleteData(endpoint.path, headers)
+                        call.enqueue(callback)
+                    }
+                }
+            }
         }
     }
 
