@@ -65,7 +65,7 @@ class HomePageFragment : Fragment() {
         val list = mutableListOf<DummyActivity>()
         list.add(
             DummyActivity(ActivityEnum.Need,
-            PredefinedTypes.Food,"Gaziantep","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.89)
+            PredefinedTypes.Food,"Gaziantep","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.29)
         )
         list.add(
             DummyActivity(ActivityEnum.Resource,
@@ -82,7 +82,7 @@ class HomePageFragment : Fragment() {
         )
         list.add(
             DummyActivity(ActivityEnum.Emergency,
-            PredefinedTypes.Debris,"Kahramanmaraş","21.10.2023",1.00)
+            PredefinedTypes.Debris,"Kahramanmaraş","21.10.2023",0.15)
         )
         return list
     }
