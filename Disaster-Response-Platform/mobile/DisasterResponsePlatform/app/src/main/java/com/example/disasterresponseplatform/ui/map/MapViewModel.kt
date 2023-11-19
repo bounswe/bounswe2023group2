@@ -3,6 +3,7 @@ package com.example.disasterresponseplatform.ui.map
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
@@ -14,8 +15,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
+import javax.inject.Inject
 
-class MapViewModel {
+class MapViewModel@Inject constructor() : ViewModel() {
     private val networkManager = NetworkManager()
 
     private val liveDataNeedResponse = MutableLiveData<NeedBody.NeedResponse>()
