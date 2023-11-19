@@ -11,7 +11,7 @@ from Services.build_API_returns import create_json_for_error
 router = APIRouter()
 
 @router.post("/", status_code=201)
-def create_report(report: Report, current_user: str = Depends(authentication_service.get_current_username)):
+def create_report(report: Report, response:Response,current_user: str = Depends(authentication_service.get_current_username)):
     try:
         report.created_by = current_user
         report_result = report_service.create_report(report)
