@@ -161,19 +161,19 @@ class EditProfileFragment : Fragment() {
                 socialMediaCount++
             }
             for (socialMedia in user.socialMedia) {
-                val profileItemBinding1: ProfileEditItemBinding = ProfileEditItemBinding.inflate(LayoutInflater.from(requireContext()))
-                profileItemBinding1.profileItemText1.setText(socialMedia.platformName)
-                profileItemBinding1.profileItemText1.hint = "Platform Name"
-                profileItemBinding1.profileItemText2.setText(socialMedia.profileURL)
-                profileItemBinding1.profileItemText2.hint = "Profile URL"
-                profileItemBinding1.profileItemText3.visibility = View.GONE
-                profileItemBinding1.profileDeleteItemIcon.setOnClickListener {
-                    profileTopLayout.removeView(profileItemBinding1.root)
+                val profileItemBinding: ProfileEditItemBinding = ProfileEditItemBinding.inflate(LayoutInflater.from(requireContext()))
+                profileItemBinding.profileItemText1.setText(socialMedia.platformName)
+                profileItemBinding.profileItemText1.hint = "Platform Name"
+                profileItemBinding.profileItemText2.setText(socialMedia.profileURL)
+                profileItemBinding.profileItemText2.hint = "Profile URL"
+                profileItemBinding.profileItemText3.visibility = View.GONE
+                profileItemBinding.profileDeleteItemIcon.setOnClickListener {
+                    profileTopLayout.removeView(profileItemBinding.root)
                     networkManager.makeRequest(
                         endpoint=Endpoint.SOCIAL_MEDIA_DELETE,
                         requestType=RequestType.POST,
                         headers=headers,
-                        requestBody=gson.toJson(SocialMediaLink(user.username, profileItemBinding1.profileItemText1.text.toString(), profileItemBinding1.profileItemText2.text.toString())).toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        requestBody=gson.toJson(SocialMediaLink(user.username, profileItemBinding.profileItemText1.text.toString(), profileItemBinding.profileItemText2.text.toString())).toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
                         callback=object : retrofit2.Callback<ResponseBody> {
                             override fun onFailure(
                                 call: retrofit2.Call<ResponseBody>,
@@ -194,7 +194,7 @@ class EditProfileFragment : Fragment() {
                     )
                     socialMediaCount--
                 }
-                profileTopLayout.addView(profileItemBinding1.root, 16 + socialMediaCount)
+                profileTopLayout.addView(profileItemBinding.root, 16 + socialMediaCount)
                 socialMediaCount++
             }
 
@@ -351,6 +351,292 @@ class EditProfileFragment : Fragment() {
         }
     }
 
+    private fun saveChanges(user: AuthenticatedUser) {
+        binding.apply {
+            //                when (user) {
+//                    is CredibleUser -> user.region = profileRegion.text.toString()
+//                    is RoleBasedUser -> user.proficiency = profileProficiency.text.toString()
+//                }
+
+            val body = ProfileBody(
+                email = profileEmail.text.toString(),
+                firstName = profileName.text.toString(),
+                lastName = profileSurname.text.toString(),
+                phoneNumber = profilePhoneNumber.text.toString(),
+                privateAccount = !profileInfoVisible.isChecked
+            )
+            val json = gson.toJson(body)
+            val requestBody =
+                json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+            networkManager.makeRequest(
+                endpoint = Endpoint.ME_SET,
+                requestType = RequestType.PUT,
+                headers = headers,
+                requestBody = requestBody,
+                callback = object : retrofit2.Callback<ResponseBody> {
+                    override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Network error: ${t.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    override fun onResponse(
+                        call: retrofit2.Call<ResponseBody>,
+                        response: retrofit2.Response<ResponseBody>
+                    ) {
+                        if (response.isSuccessful) {
+//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
+                        } else {
+//                                Toast.makeText(requireContext(), "Me set Some error happened: ${response.message()}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            )
+            val obody = ProfileOptionalBody(
+                username = profileUsername.text.toString(),
+                dateOfBirth = if (profileBirth.text.isBlank()) null else profileBirth.text.toString(),
+                nationality = if (profileNationality.text.isBlank()) null else profileNationality.text.toString(),
+                identityNumber = if (profileIdNumber.text.isBlank()) null else profileIdNumber.text.toString(),
+                education = if (profileEducation.text.isBlank()) null else profileEducation.text.toString(),
+                healthCondition = if (profileHealthCondition.text.isBlank()) null else profileHealthCondition.text.toString(),
+                bloodType = if (profileBloodType.text.isBlank()) null else profileBloodType.text.toString(),
+                address = if (profileAddress.text.isBlank()) null else profileAddress.text.toString()
+            )
+            val json2 = gson.toJson(obody)
+            println(json2)
+            val requestBody2 =
+                json2.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+            networkManager.makeRequest(
+                endpoint = Endpoint.ME_OPTIONAL_SET,
+                requestType = RequestType.POST,
+                headers = headers,
+                requestBody = requestBody2,
+                callback = object : retrofit2.Callback<ResponseBody> {
+                    override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Network error: ${t.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    override fun onResponse(
+                        call: retrofit2.Call<ResponseBody>,
+                        response: retrofit2.Response<ResponseBody>
+                    ) {
+                    }
+                }
+            )
+
+
+            // social media
+            for (i in 0 until socialMediaCount) {
+                val socialMedia = binding.profileTopLayout.getChildAt(16 + i)
+                val socialMediaName =
+                    socialMedia.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text1).text.toString()
+                val socialMediaURL =
+                    socialMedia.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text2).text.toString()
+                val social_media_body =
+                    SocialMediaLink(user.username, socialMediaName, socialMediaURL)
+                val jsonSocialMedia = gson.toJson(social_media_body)
+                val requestBodySocialMedia =
+                    jsonSocialMedia.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                networkManager.makeRequest(
+                    endpoint = Endpoint.SOCIAL_MEDIA_SET,
+                    requestType = RequestType.POST,
+                    headers = headers,
+                    requestBody = requestBodySocialMedia,
+                    callback = object : retrofit2.Callback<ResponseBody> {
+                        override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Network error: ${t.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        override fun onResponse(
+                            call: retrofit2.Call<ResponseBody>,
+                            response: retrofit2.Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful) {
+//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
+                            } else {
+//                                Toast.makeText(
+//                                    requireContext(),
+//                                    "Social media set Some error happened: ${response.message()}",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+                            }
+                        }
+                    }
+                )
+            }
+
+            // skills
+            for (i in 0 until skillCount) {
+                val skill = binding.profileTopLayout.getChildAt(18 + socialMediaCount + i)
+                val skillDefinition =
+                    skill.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text1).text.toString()
+                val skillLevel =
+                    skill.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text2).text.toString()
+                val skillDocument =
+                    skill.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text3).text.toString()
+                val skill_body = Skill(user.username, skillDefinition, skillLevel)
+                val jsonSkill = gson.toJson(skill_body)
+                val requestBodySkill =
+                    jsonSkill.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                networkManager.makeRequest(
+                    endpoint = Endpoint.SKILL_SET,
+                    requestType = RequestType.POST,
+                    headers = headers,
+                    requestBody = requestBodySkill,
+                    callback = object : retrofit2.Callback<ResponseBody> {
+                        override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Network error: ${t.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        override fun onResponse(
+                            call: retrofit2.Call<ResponseBody>,
+                            response: retrofit2.Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful) {
+//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
+                            } else {
+//                                Toast.makeText(
+//                                    requireContext(),
+//                                    "Skill set Some error happened: ${response.message()}",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+                            }
+                        }
+                    }
+                )
+            }
+
+            // languages
+            for (i in 0 until languageCount) {
+                val language = binding.profileTopLayout.getChildAt(20 + socialMediaCount + skillCount + i)
+                val languageName =
+                    language.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text1).text.toString()
+                val languageLevel =
+                    language.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text2).text.toString()
+                val language_body = Language(user.username, languageName, languageLevel)
+                val jsonLanguage = gson.toJson(language_body)
+                println(jsonLanguage)
+                val requestBodyLanguage =
+                    jsonLanguage.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                networkManager.makeRequest(
+                    endpoint = Endpoint.LANGUAGE_SET,
+                    requestType = RequestType.POST,
+                    headers = headers,
+                    requestBody = requestBodyLanguage,
+                    callback = object : retrofit2.Callback<ResponseBody> {
+                        override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Network error: ${t.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        override fun onResponse(
+                            call: retrofit2.Call<ResponseBody>,
+                            response: retrofit2.Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful) {
+//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
+                            } else {
+                                println(response.body())
+                                println(response.errorBody())
+                            }
+                        }
+                    }
+                )
+            }
+            // profession
+            for (i in 0 until professionCount) {
+                val profession = binding.profileTopLayout.getChildAt(22 + socialMediaCount + skillCount + languageCount + i)
+                val professionName =
+                    profession.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text1).text.toString()
+                val professionLevel =
+                    profession.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text2).text.toString()
+                val profession_body = Profession(user.username, professionName, professionLevel)
+                val jsonProfession = gson.toJson(profession_body)
+                val requestBodyProfession =
+                    jsonProfession.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                networkManager.makeRequest(
+                    endpoint = Endpoint.PROFESSION_SET,
+                    requestType = RequestType.POST,
+                    headers = headers,
+                    requestBody = requestBodyProfession,
+                    callback = object : retrofit2.Callback<ResponseBody> {
+                        override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Network error: ${t.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        override fun onResponse(
+                            call: retrofit2.Call<ResponseBody>,
+                            response: retrofit2.Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful) {
+//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
+                            } else {
+//                                Toast.makeText(
+//                                    requireContext(),
+//                                    "Profession set Some error happened: ${response.message()}",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+                            }
+                        }
+                    }
+                )
+            }
+
+            parentFragmentManager.popBackStack()
+        }
+
+        Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun removeViews() {
+        binding.apply {
+
+            // social media
+            for (i in 0 until socialMediaCount) {
+                val socialMedia = binding.profileTopLayout.getChildAt(16)
+                binding.profileTopLayout.removeView(socialMedia)
+            }
+
+            // skills
+            for (i in 0 until skillCount) {
+                val skill = binding.profileTopLayout.getChildAt(18)
+                binding.profileTopLayout.removeView(skill)
+            }
+
+            // languages
+            for (i in 0 until languageCount) {
+                val language = binding.profileTopLayout.getChildAt(20)
+                binding.profileTopLayout.removeView(language)
+            }
+            // profession
+            for (i in 0 until professionCount) {
+                val profession = binding.profileTopLayout.getChildAt(22)
+                binding.profileTopLayout.removeView(profession)
+            }
+        }
+    }
+
     private fun setOnClicks(user: AuthenticatedUser) {
         binding.apply {
             profileImage.setOnClickListener {
@@ -363,230 +649,14 @@ class EditProfileFragment : Fragment() {
             }
 
             profileEditConfirmButton.setOnClickListener {
-//                when (user) {
-//                    is CredibleUser -> user.region = profileRegion.text.toString()
-//                    is RoleBasedUser -> user.proficiency = profileProficiency.text.toString()
-//                }
-
-                val body = ProfileBody(
-                    email = profileEmail.text.toString(),
-                    firstName = profileName.text.toString(),
-                    lastName = profileSurname.text.toString(),
-                    phoneNumber = profilePhoneNumber.text.toString(),
-                    privateAccount = !profileInfoVisible.isChecked
-                )
-                val json = gson.toJson(body)
-                val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-                networkManager.makeRequest(
-                    endpoint = Endpoint.ME_SET,
-                    requestType = RequestType.PUT,
-                    headers = headers,
-                    requestBody = requestBody,
-                    callback = object : retrofit2.Callback<ResponseBody> {
-                        override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                            Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
-                        }
-                        override fun onResponse(
-                            call: retrofit2.Call<ResponseBody>,
-                            response: retrofit2.Response<ResponseBody>
-                        ) {
-                            if (response.isSuccessful) {
-//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                            } else {
-//                                Toast.makeText(requireContext(), "Me set Some error happened: ${response.message()}", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                )
-                val obody = ProfileOptionalBody(
-                    username = profileUsername.text.toString(),
-                    dateOfBirth = if (profileBirth.text.isBlank()) null else profileBirth.text.toString(),
-                    nationality = if (profileNationality.text.isBlank()) null else profileNationality.text.toString(),
-                    identityNumber = if (profileIdNumber.text.isBlank()) null else profileIdNumber.text.toString(),
-                    education = if (profileEducation.text.isBlank()) null else profileEducation.text.toString(),
-                    healthCondition = if (profileHealthCondition.text.isBlank()) null else profileHealthCondition.text.toString(),
-                    bloodType = if (profileBloodType.text.isBlank()) null else profileBloodType.text.toString(),
-                    address = if (profileAddress.text.isBlank()) null else profileAddress.text.toString()
-                )
-                val json2 = gson.toJson(obody)
-                println(json2)
-                val requestBody2 = json2.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-                networkManager.makeRequest(
-                    endpoint = Endpoint.ME_OPTIONAL_SET,
-                    requestType = RequestType.POST,
-                    headers = headers,
-                    requestBody = requestBody2,
-                    callback = object : retrofit2.Callback<ResponseBody> {
-                        override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                            Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
-                        }
-                        override fun onResponse(
-                            call: retrofit2.Call<ResponseBody>,
-                            response: retrofit2.Response<ResponseBody>
-                        ) {}
-                    }
-                )
-
-                // languages
-                for (i in 0 until languageCount) {
-                    val language = binding.profileTopLayout.getChildAt(20 + socialMediaCount + skillCount + i)
-                    val languageName = language.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text1).text.toString()
-                    val languageLevel = language.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text2).text.toString()
-                    val language_body = Language(user.username, languageName, languageLevel)
-                    val jsonLanguage = gson.toJson(language_body)
-                    println(jsonLanguage)
-                    val requestBodyLanguage = jsonLanguage.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-                    networkManager.makeRequest(
-                        endpoint = Endpoint.LANGUAGE_SET,
-                        requestType = RequestType.POST,
-                        headers = headers,
-                        requestBody = requestBodyLanguage,
-                        callback = object : retrofit2.Callback<ResponseBody> {
-                            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Network error: ${t.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            override fun onResponse(
-                                call: retrofit2.Call<ResponseBody>,
-                                response: retrofit2.Response<ResponseBody>
-                            ) {
-                                if (response.isSuccessful) {
-//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    println(response.body())
-                                    println(response.errorBody())
-                                }
-                            }
-                        }
-                    )
-                }
-
-                // social media
-                for (i in 0 until socialMediaCount) {
-                    val socialMedia = binding.profileTopLayout.getChildAt(16 + i)
-                    val socialMediaName = socialMedia.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text1).text.toString()
-                    val socialMediaURL = socialMedia.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text2).text.toString()
-                    val social_media_body = SocialMediaLink(user.username, socialMediaName, socialMediaURL )
-                    val jsonSocialMedia = gson.toJson(social_media_body)
-                    val requestBodySocialMedia = jsonSocialMedia.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-                    networkManager.makeRequest(
-                        endpoint = Endpoint.SOCIAL_MEDIA_SET,
-                        requestType = RequestType.POST,
-                        headers = headers,
-                        requestBody = requestBodySocialMedia,
-                        callback = object : retrofit2.Callback<ResponseBody> {
-                            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Network error: ${t.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            override fun onResponse(
-                                call: retrofit2.Call<ResponseBody>,
-                                response: retrofit2.Response<ResponseBody>
-                            ) {
-                                if (response.isSuccessful) {
-//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                                } else {
-//                                Toast.makeText(
-//                                    requireContext(),
-//                                    "Social media set Some error happened: ${response.message()}",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-                                }
-                            }
-                        }
-                    )
-                }
-
-                // skills
-                for (i in 0 until skillCount) {
-                    val skill = binding.profileTopLayout.getChildAt(18 + socialMediaCount + i)
-                    val skillDefinition = skill.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text1).text.toString()
-                    val skillLevel = skill.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text2).text.toString()
-                    val skillDocument = skill.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text3).text.toString()
-                    val skill_body = Skill(user.username, skillDefinition, skillLevel)
-                    val jsonSkill = gson.toJson(skill_body)
-                    val requestBodySkill = jsonSkill.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-                    networkManager.makeRequest(
-                        endpoint = Endpoint.SKILL_SET,
-                        requestType = RequestType.POST,
-                        headers = headers,
-                        requestBody = requestBodySkill,
-                        callback = object : retrofit2.Callback<ResponseBody> {
-                            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Network error: ${t.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            override fun onResponse(
-                                call: retrofit2.Call<ResponseBody>,
-                                response: retrofit2.Response<ResponseBody>
-                            ) {
-                                if (response.isSuccessful) {
-//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                                } else {
-//                                Toast.makeText(
-//                                    requireContext(),
-//                                    "Skill set Some error happened: ${response.message()}",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-                                }
-                            }
-                        }
-                    )
-                }
-
-                // profession
-                for (i in 0 until professionCount) {
-                    val profession = binding.profileTopLayout.getChildAt(22 + socialMediaCount + skillCount + languageCount + i)
-                    val professionName = profession.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text1).text.toString()
-                    val professionLevel = profession.findViewById<AppCompatEditText>(com.example.disasterresponseplatform.R.id.profile_item_text2).text.toString()
-                    val profession_body = Profession(user.username, professionName, professionLevel)
-                    val jsonProfession = gson.toJson(profession_body)
-                    val requestBodyProfession = jsonProfession.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-                    networkManager.makeRequest(
-                        endpoint = Endpoint.PROFESSION_SET,
-                        requestType = RequestType.POST,
-                        headers = headers,
-                        requestBody = requestBodyProfession,
-                        callback = object : retrofit2.Callback<ResponseBody> {
-                            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Network error: ${t.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            override fun onResponse(
-                                call: retrofit2.Call<ResponseBody>,
-                                response: retrofit2.Response<ResponseBody>
-                            ) {
-                                if (response.isSuccessful) {
-//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                                } else {
-//                                Toast.makeText(
-//                                    requireContext(),
-//                                    "Profession set Some error happened: ${response.message()}",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-                                }
-                            }
-                        }
-                    )
-                }
-                parentFragmentManager.popBackStack()
+                saveChanges(user)
             }
         }
     }
+
+    override fun onPause() {
+        removeViews()
+        super.onPause()
+    }
+
 }
