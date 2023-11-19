@@ -12,12 +12,12 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/tvAddNeed"
+            android:id="@+id/tvEditNeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:gravity="center_vertical"
-            android:text="@string/add_need"
+            android:text="@string/edit_need"
             android:textSize="40sp"
             android:textStyle="bold" />
 
@@ -107,6 +107,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etNotes"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -123,14 +124,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSubmit"
+            android:id="@+id/btnSaveChanges"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:height="60dip"
-            android:text="@string/submit" />
+            android:text="@string/save_changes" />
 
     </LinearLayout>
 

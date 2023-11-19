@@ -17,7 +17,6 @@ import com.example.disasterresponseplatform.data.database.action.Action
 import com.example.disasterresponseplatform.data.database.event.Event
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
-import com.example.disasterresponseplatform.data.enums.ResourceCondition
 import com.example.disasterresponseplatform.data.enums.Urgency
 import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
@@ -34,6 +33,7 @@ import com.example.disasterresponseplatform.ui.map.MapFragment
 import com.example.disasterresponseplatform.ui.network.NetworkFragment
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import com.example.disasterresponseplatform.utils.DateUtil
+import com.example.disasterresponseplatform.utils.StringUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -113,20 +113,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun tryNeedViewModel(){
-        val need = Need(null,"Egecan",NeedTypes.Clothes,"T-Shirt",DateUtil.getDate("dd-MM-yy").toString(),50,"İstanbul",Urgency.CRITICAL.type)
+        val need = Need(StringUtil.generateRandomStringID(),"Egecan",NeedTypes.Clothes,"T-Shirt",DateUtil.getDate("dd-MM-yy").toString(),50,400.2,42.3,Urgency.CRITICAL.type)
         needViewModel.insertNeed(need)
         android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
-            val location = needViewModel.getLocation("Egecan")
-            Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+            val xCoordinate = needViewModel.getX("Egecan")
+            val yCoordinate = needViewModel.getY("Egecan")
+            val coordinates = "x: $xCoordinate , y:  $yCoordinate"
+            Toast.makeText(this,coordinates,Toast.LENGTH_SHORT).show()
         }, 200)
     }
 
     private fun tryResourceViewModel(){
-        val resource = Resource(null,"Mansur","new",400,NeedTypes.Food,"Soup",DateUtil.getDate("dd-MM-yy").toString(),"Ankara")
+        val resource = Resource(StringUtil.generateRandomStringID(),"Mansur","new",400,NeedTypes.Food,"Soup",DateUtil.getDate("dd-MM-yy").toString(), 500.2,432.3)
         resourceViewModel.insertResource(resource)
         android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
-            val location = resourceViewModel.getLocation("Mansur")
-            Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
+            val xCoordinate = resourceViewModel.getX("Mansur")
+            val yCoordinate = resourceViewModel.getY("Mansur")
+            val coordinates = "x: $xCoordinate , y:  $yCoordinate"
+            Toast.makeText(this,coordinates,Toast.LENGTH_SHORT).show()
         }, 200)
     }
 

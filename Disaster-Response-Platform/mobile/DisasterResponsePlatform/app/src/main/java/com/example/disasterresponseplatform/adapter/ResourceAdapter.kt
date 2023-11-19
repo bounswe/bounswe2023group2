@@ -1,5 +1,6 @@
 package com.example.disasterresponseplatform.adapter
 
+import android.annotation.SuppressLint
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.databinding.ResourceItemBinding
+import java.text.DecimalFormat
 
 class ResourceAdapter(private val resourceList: List<Resource>?): RecyclerView.Adapter<ResourceAdapter.ResourceViewHolder>() {
 
@@ -28,6 +30,7 @@ class ResourceAdapter(private val resourceList: List<Resource>?): RecyclerView.A
     /**
      * It adjusts every item on recyclerView (since it's an adapter of recyclerView)
      */
+    @SuppressLint("SetTextI18n")
     private fun adjustItems(holder: ResourceViewHolder, position: Int){
         val currentResource = resourceList?.get(position) // to get current item in resourceList
         val hb = holder.binding // to bind xml items
@@ -36,7 +39,7 @@ class ResourceAdapter(private val resourceList: List<Resource>?): RecyclerView.A
         hb.tvType.text = currentResource?.type.toString()
 
         hb.tvDate.text = currentResource?.creationTime
-        hb.tvLocation.text = currentResource?.location
+        hb.tvLocation.text = "x: ${String.format("%.2f", currentResource?.coordinateX).replace(',', '.')}, y: ${String.format("%.2f", currentResource?.coordinateY).replace(',', '.')}"
         hb.tvQuantity.text = currentResource?.quantity.toString()
         hb.tvCreator.text = currentResource?.creatorName
 
