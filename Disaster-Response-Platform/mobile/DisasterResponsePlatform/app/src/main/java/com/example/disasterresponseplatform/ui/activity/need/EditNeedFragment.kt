@@ -10,10 +10,12 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentEditNeedBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
 
 class EditNeedFragment(private val needViewModel: NeedViewModel, private val initData: Need) : Fragment() {
@@ -106,7 +108,7 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
                 return@setOnClickListener
             }
             binding.btnSaveChanges.isEnabled = false
-            if (validateFullName() and validateQuantity() and validateCoordinateX() and validateCoordinateY() and validateType() and validateSubType()) {
+            if (validateQuantity() and validateCoordinateX() and validateCoordinateY() and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
                     when(binding.boxNeedType.editText?.text.toString().trim()){
@@ -121,7 +123,7 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
                     }
 
                 // Extracting data from the UI
-                val creatorName = binding.etFullName.editText?.text.toString().trim()
+                val creatorName = DiskStorageManager.getKeyValue("username").toString()
                 val details = binding.spNeedSubType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
                 val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
@@ -145,10 +147,12 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
                 val needID = "/"+initData.ID // comes from older resource
                 needViewModel.postNeedRequest(updatedNeed,needID)
                 needViewModel.getLiveDataResourceID().observe(requireActivity!!){
-                    if (it == "null"){ // when updated id should be "" or empty
-                        Toast.makeText(context, "UPDATED", Toast.LENGTH_SHORT).show()
+                    if (it == "null" || it.isNullOrEmpty()){ // when updated id should be "" or empty
+                        if (isAdded)
+                            Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
                         Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                            parentFragmentManager.popBackStack()
+                            if (isAdded)
+                                parentFragmentManager.popBackStack("EditNeedFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                             binding.btnSaveChanges.isEnabled = true
                         }, 200)
                     }
@@ -229,39 +233,9 @@ class EditNeedFragment(private val needViewModel: NeedViewModel, private val ini
         }
     }
 
-    private fun validateFullName(): Boolean {
-        val etFullName = binding.etFullName
-        val fullName = etFullName.editText?.text.toString().trim()
-
-        return if (fullName.isEmpty()) {
-            etFullName.error = "Field can not be empty"
-            false
-        } else {
-            etFullName.error = null
-            etFullName.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun validatePhoneNumber(): Boolean {
-        val etPhoneNumber = binding.etPhoneNumber
-        val phoneNumber = etPhoneNumber.editText?.text.toString().trim()
-
-        return if (phoneNumber.isEmpty()) {
-            etPhoneNumber.error = "Field can not be empty$phoneNumber"
-            false
-        } else {
-            etPhoneNumber.error = null
-            etPhoneNumber.isErrorEnabled = false
-            true
-        }
-    }
-
-
     private fun fillFieldsWithData(need: Need) {
         // Fill the fields with data from the 'need' object
         binding.spNeedSubType.setText(need.details)
-        binding.etFullName.editText?.setText(need.creatorName)
         binding.etQuantity.editText?.setText(need.quantity.toString())
         binding.etCoordinateX.editText?.setText(need.coordinateX.toString())
         binding.etCoordinateY.editText?.setText(need.coordinateY.toString())

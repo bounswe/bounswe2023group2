@@ -11,13 +11,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.adapter.ActivityAdapter
 import com.example.disasterresponseplatform.adapter.NeedAdapter
 import com.example.disasterresponseplatform.data.database.need.Need
-import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.ui.activity.resource.AddResourceFragment
 
 class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
@@ -87,9 +84,9 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         val token = DiskStorageManager.getKeyValue("token")
         if (!token.isNullOrEmpty()) {
             if (need == null)
-                addFragment(AddNeedFragment(needViewModel))
+                addFragment(AddNeedFragment(needViewModel),"AddNeedFragment")
             else
-                addFragment(EditNeedFragment(needViewModel,need))
+                addFragment(EditNeedFragment(needViewModel,need),"EditNeedFragment")
         }
         else{
             Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
@@ -124,10 +121,10 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         }
     }
 
-    private fun addFragment(fragment: Fragment) {
+    private fun addFragment(fragment: Fragment, backStackName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack(backStackName)
         ft.commit()
     }
 }

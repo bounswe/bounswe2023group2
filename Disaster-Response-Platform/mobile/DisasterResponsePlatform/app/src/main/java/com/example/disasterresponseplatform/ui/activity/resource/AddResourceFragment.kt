@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
@@ -148,10 +149,16 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
                     resourceViewModel.postResourceRequest(newResource,resourceID)
                 }
                 resourceViewModel.getLiveDataResourceID().observe(requireActivity!!){
-                    if (isAdd)
-                        Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                    if (isAdded){ // to ensure it attached a context
+                        if (isAdd)
+                            Toast.makeText(requireContext(), "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                        else
+                            Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
+                    }
+
                     Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                        parentFragmentManager.popBackStack()
+                        if (isAdded) // to ensure it attached a parentFragmentManager
+                            parentFragmentManager.popBackStack("AddResourceFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                         // Re-enable the button after the background operation completes
                         binding.btnSubmit.isEnabled = true
                     }, 200)

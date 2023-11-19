@@ -14,6 +14,7 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddNeedBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
 import com.example.disasterresponseplatform.utils.StringUtil
 
@@ -104,8 +105,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
                 return@setOnClickListener
             }
             binding.btnSubmit.isEnabled = false
-            if (validateFullName() and validateQuantity() and validateCoordinateX() and validateCoordinateY()and validateType() and validateSubType()) {
-                Toast.makeText(context, "{'created_by': ${binding.etFullName.editText?.text.toString().trim()}, 'quantity': ${binding.etQuantity.editText?.text.toString().trim()}, 'type':  ${binding.boxNeedType.editText?.text.toString().trim()}}", Toast.LENGTH_SHORT).show()
+            if (validateQuantity() and validateCoordinateX() and validateCoordinateY()and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
                 when(binding.boxNeedType.editText?.text.toString().trim()){
@@ -118,7 +118,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
                     NeedTypes.Human.toString() -> NeedTypes.Human
                     else -> NeedTypes.Other
                 }
-                val creatorName = binding.etFullName.editText?.text.toString().trim()
+                val creatorName = DiskStorageManager.getKeyValue("username").toString()
                 val details = binding.spNeedSubType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
                 val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
@@ -130,15 +130,18 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
                 needViewModel.postNeedRequest(need)
                 needViewModel.getLiveDataResourceID().observe(requireActivity!!){
                     if (it != "null"){ // when it's not empty or null
-                        Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                        if (isAdded)
+                            Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
                         Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                            parentFragmentManager.popBackStack()
+                            if (isAdded)
+                                parentFragmentManager.popBackStack()
                             binding.btnSubmit.isEnabled = true
                         }, 200)
                     }
                 }
             } else {
-                Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
+                if (isAdded)
+                    Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
                 binding.btnSubmit.isEnabled = true
             }
         }
@@ -213,31 +216,4 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         }
     }
 
-    private fun validateFullName(): Boolean {
-        val etFullName = binding.etFullName
-        val fullName = etFullName.editText?.text.toString().trim()
-
-        return if (fullName.isEmpty()) {
-            etFullName.error = "Field can not be empty"
-            false
-        } else {
-            etFullName.error = null
-            etFullName.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun validatePhoneNumber(): Boolean {
-        val etPhoneNumber = binding.etPhoneNumber
-        val phoneNumber = etPhoneNumber.editText?.text.toString().trim()
-
-        return if (phoneNumber.isEmpty()) {
-            etPhoneNumber.error = "Field can not be empty$phoneNumber"
-            false
-        } else {
-            etPhoneNumber.error = null
-            etPhoneNumber.isErrorEnabled = false
-            true
-        }
-    }
 }
