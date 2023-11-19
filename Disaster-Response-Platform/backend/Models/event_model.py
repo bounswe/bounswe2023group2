@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Dict, Any
-from enum import Enum
+from typing import List
 from datetime import date, datetime
 
 # - ID: UUID
@@ -21,6 +20,8 @@ from datetime import date, datetime
 # - relatedActions: List<ActionIDs>
 # - relatedNeeds: List<NeedIDs>
 
+class EventKey(BaseModel):
+    _id: str = Field(default=None)
 class Event(BaseModel):
     _id: str = Field(default=None)
     event_type: str = Field(default=None)
@@ -46,3 +47,9 @@ class ActionRelations(BaseModel):
 class NeedRelations(BaseModel):
     need_id: str
     event_id: str
+
+class Events(BaseModel):
+    events: List[Event]
+
+class EventKeys(BaseModel):
+    events: List[EventKey]

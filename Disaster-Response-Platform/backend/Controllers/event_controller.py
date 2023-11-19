@@ -2,7 +2,10 @@ import json
 from http import HTTPStatus
 
 from fastapi import APIRouter, HTTPException, Response, Depends, Body
-from Models.event_model import Event, NeedRelations, ActionRelations
+from starlette import status
+
+from Models.event_model import Event, NeedRelations, ActionRelations, Events, EventKeys
+from Models.user_model import Error
 import Services.event_service as event_service
 import Services.authentication_service as authentication_service
 from Services.build_API_returns import create_json_for_error
@@ -12,7 +15,10 @@ from Services.build_API_returns import create_json_for_error
 
 router = APIRouter()
 
-@router.post("/", status_code=201)
+@router.post("/", responses={
+    status.HTTP_200_OK: {"model": Events},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}})
 def create_event(event:Event, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         event.created_by_user = current_user
@@ -25,7 +31,11 @@ def create_event(event:Event, response:Response, current_user: str = Depends(aut
         return json.loads(err_json)
 
 # Get the resource with the specified ID.
-@router.get("/{event_id}")
+@router.get("/{event_id}", responses={
+    status.HTTP_200_OK: {"model": Events},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}
+})
 def get_event(event_id: str, response: Response):
     try:
         event = event_service.get_event_by_id(event_id)
@@ -37,7 +47,10 @@ def get_event(event_id: str, response: Response):
         return json.loads(err_json)
 
 # Get all events.
-@router.get("/")
+@router.get("/", responses={
+    status.HTTP_200_OK: {"model": Events},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}})
 def get_all_events(response: Response):
     try:
         events = event_service.get_events()
@@ -49,7 +62,10 @@ def get_all_events(response: Response):
         return json.loads(err_json)
 
 
-@router.patch("/{event_id}")
+@router.patch("/{event_id}", responses={
+    status.HTTP_200_OK: {"model": Events},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}})
 def update_event(event_id: str, event:Event, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         updated_event = event_service.update_event(event_id, event)
@@ -65,7 +81,10 @@ def update_event(event_id: str, event:Event, response:Response, current_user: st
         return json.loads(err_json)
     
 # Response Body = {"quantity": 75}
-@router.delete("/{event_id}")
+@router.delete("/{event_id}", responses={
+    status.HTTP_200_OK: {"model": EventKeys},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}})
 def delete_event(event_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         event_list = event_service.delete_event(event_id)
