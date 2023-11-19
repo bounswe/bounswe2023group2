@@ -49,6 +49,7 @@ class EditProfileFragment : Fragment() {
     private var skillCount = 0
     private var languageCount = 0
     private var professionCount = 0
+    private var saveEndCount = 0
     private val networkManager = NetworkManager()
     private val headers = mapOf(
         "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
@@ -82,10 +83,11 @@ class EditProfileFragment : Fragment() {
         // get user from intent
         user = (arguments?.getSerializable("user") as AuthenticatedUser?)!!
 
-        socialMediaCount = 0;
-        skillCount = 0;
-        languageCount = 0;
-        professionCount = 0;
+        socialMediaCount = 0
+        skillCount = 0
+        languageCount = 0
+        professionCount = 0
+        saveEndCount = 0
 
         fillInformations(user)
         setOnClicks(user)
@@ -380,17 +382,14 @@ class EditProfileFragment : Fragment() {
                             "Network error: ${t.message}",
                             Toast.LENGTH_SHORT
                         ).show()
+                        saveEnded()
                     }
 
                     override fun onResponse(
                         call: retrofit2.Call<ResponseBody>,
                         response: retrofit2.Response<ResponseBody>
                     ) {
-                        if (response.isSuccessful) {
-//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                        } else {
-//                                Toast.makeText(requireContext(), "Me set Some error happened: ${response.message()}", Toast.LENGTH_SHORT).show()
-                        }
+                        saveEnded()
                     }
                 }
             )
@@ -409,10 +408,9 @@ class EditProfileFragment : Fragment() {
             val requestBody2 =
                 json2.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
             networkManager.makeRequest(
-                endpoint = Endpoint.ME_OPTIONAL_SET,
-                requestType = RequestType.POST,
+                endpoint = Endpoint.ME_OPTIONAL_DELETE,
+                requestType = RequestType.DELETE,
                 headers = headers,
-                requestBody = requestBody2,
                 callback = object : retrofit2.Callback<ResponseBody> {
                     override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
                         Toast.makeText(
@@ -420,12 +418,40 @@ class EditProfileFragment : Fragment() {
                             "Network error: ${t.message}",
                             Toast.LENGTH_SHORT
                         ).show()
+                        saveEnded()
                     }
 
                     override fun onResponse(
                         call: retrofit2.Call<ResponseBody>,
                         response: retrofit2.Response<ResponseBody>
                     ) {
+                        println("Delete response:")
+                        println(response.code())
+                        println(response.body())
+                        networkManager.makeRequest(
+                            endpoint = Endpoint.ME_OPTIONAL_SET,
+                            requestType = RequestType.POST,
+                            headers = headers,
+                            requestBody = requestBody2,
+                            callback = object : retrofit2.Callback<ResponseBody> {
+                                override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Network error: ${t.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
+                                    saveEnded()
+                                }
+
+                                override fun onResponse(
+                                    call: retrofit2.Call<ResponseBody>,
+                                    response: retrofit2.Response<ResponseBody>
+                                ) {
+                                    saveEnded()
+                                }
+                            }
+                        )
                     }
                 }
             )
@@ -455,21 +481,14 @@ class EditProfileFragment : Fragment() {
                                 "Network error: ${t.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            saveEnded()
                         }
 
                         override fun onResponse(
                             call: retrofit2.Call<ResponseBody>,
                             response: retrofit2.Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful) {
-//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                            } else {
-//                                Toast.makeText(
-//                                    requireContext(),
-//                                    "Social media set Some error happened: ${response.message()}",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-                            }
+                            saveEnded()
                         }
                     }
                 )
@@ -500,21 +519,14 @@ class EditProfileFragment : Fragment() {
                                 "Network error: ${t.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            saveEnded()
                         }
 
                         override fun onResponse(
                             call: retrofit2.Call<ResponseBody>,
                             response: retrofit2.Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful) {
-//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                            } else {
-//                                Toast.makeText(
-//                                    requireContext(),
-//                                    "Skill set Some error happened: ${response.message()}",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-                            }
+                            saveEnded()
                         }
                     }
                 )
@@ -544,6 +556,7 @@ class EditProfileFragment : Fragment() {
                                 "Network error: ${t.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            saveEnded()
                         }
 
                         override fun onResponse(
@@ -553,6 +566,7 @@ class EditProfileFragment : Fragment() {
                             if (response.isSuccessful) {
 //                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
                             } else {
+                                saveEnded()
                                 println(response.body())
                                 println(response.errorBody())
                             }
@@ -583,27 +597,18 @@ class EditProfileFragment : Fragment() {
                                 "Network error: ${t.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            saveEnded()
                         }
 
                         override fun onResponse(
                             call: retrofit2.Call<ResponseBody>,
                             response: retrofit2.Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful) {
-//                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-                            } else {
-//                                Toast.makeText(
-//                                    requireContext(),
-//                                    "Profession set Some error happened: ${response.message()}",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-                            }
+                            saveEnded()
                         }
                     }
                 )
             }
-
-            parentFragmentManager.popBackStack()
         }
 
         Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
@@ -651,6 +656,14 @@ class EditProfileFragment : Fragment() {
             profileEditConfirmButton.setOnClickListener {
                 saveChanges(user)
             }
+        }
+    }
+
+    private fun saveEnded() {
+        saveEndCount++
+        if (saveEndCount == 6) {
+            Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
         }
     }
 

@@ -65,7 +65,7 @@ class ProfileFragment : Fragment() {
         if (username == null) { // get self profile info
             if (!DiskStorageManager.hasKey("token")) {
                 binding.profileLoginFirstText.visibility = View.VISIBLE
-                binding.profileScrollView.visibility = View.GONE
+                binding.profileProgressBar.visibility = View.GONE
             } else {
                 user = AuthenticatedUser("","","","","")
                 val networkManager = NetworkManager()
@@ -80,7 +80,8 @@ class ProfileFragment : Fragment() {
                     callback = object : Callback<ResponseBody> {
                         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                             binding.profileLoginFirstText.visibility = View.VISIBLE
-                            binding.profileScrollView.visibility = View.GONE
+                            binding.profileProgressBar.visibility = View.GONE
+                            binding.profileLoginFirstText.text = "No Connection"
                         }
 
                         override fun onResponse(
@@ -141,10 +142,10 @@ class ProfileFragment : Fragment() {
                                     user.healthCondition = res.healthCondition
                                     user.bloodType = res.bloodType
                                     user.address = res.address
-                                    fillInformations(user)
                                 } else {
                                     println("res null")
                                 }
+                                fillInformations(user)
                             } else {
                                 println("response not successful")
                                 println(response.message())
@@ -374,6 +375,8 @@ class ProfileFragment : Fragment() {
         if (profileLevel < 6) return
         binding.apply {
             // read image from url and set it to profilePhoto
+            profileProgressBar.visibility = View.GONE
+            profileScrollView.visibility = View.VISIBLE
             if (user.profilePhoto != null) {
                 Picasso.get().load(user.profilePhoto!!.toUri()).into(profileImage)
             }
