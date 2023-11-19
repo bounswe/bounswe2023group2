@@ -1,5 +1,6 @@
 package com.example.disasterresponseplatform.data.models
 
+import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.google.gson.annotations.SerializedName
 
 class NeedBody {
@@ -47,7 +48,75 @@ class NeedBody {
         val x: Float?,
         val y: Float?,
         val _id: String
-    )
+    ) {
+        fun returnNeedType(): NeedTypes {
+            val needType: NeedTypes = when (type.lowercase()) {
+                "cloth" -> NeedTypes.Clothes
+                "clothes" -> NeedTypes.Clothes
+                "food" -> NeedTypes.Food
+                "shelter" -> NeedTypes.Shelter
+                "medication" -> NeedTypes.Medication
+                "transportation" -> NeedTypes.Transportation
+                "tools" -> NeedTypes.Tools
+                "human" -> NeedTypes.Human
+                else -> NeedTypes.Other
+            }
+            return needType
+        }
+
+         fun returnDetailsAsString(): String {
+            var detailsString = ""
+            if (!details.size.isNullOrEmpty()) {
+                detailsString += "size: ${details.size} "
+            }
+            if (!details.gender.isNullOrEmpty()) {
+                detailsString += "gender: ${details.gender} "
+            }
+            if (details.age != null) {
+                detailsString += "age: ${details.age} "
+            }
+            if (!details.subtype.isNullOrEmpty()) {
+                detailsString += "subtype: ${details.subtype} "
+            }
+            if (!details.expiration_date.isNullOrEmpty()) {
+                detailsString += "expiration_date: ${details.expiration_date} "
+            }
+            if (!details.allergens.isNullOrEmpty()) {
+                detailsString += "allergens: ${details.allergens} "
+            }
+            if (!details.disease_name.isNullOrEmpty()) {
+                detailsString += "disease_name: ${details.disease_name} "
+            }
+            if (!details.medicine_name.isNullOrEmpty()) {
+                detailsString += "medicine_name: ${details.medicine_name} "
+            }
+            if (!details.start_location.isNullOrEmpty()) {
+                detailsString += "start_location: ${details.start_location} "
+            }
+            if (!details.end_location.isNullOrEmpty()) {
+                detailsString += "end_location: ${details.end_location} "
+            }
+            if (details.number_of_people != null) {
+                detailsString += "number_of_people: ${details.number_of_people} "
+            }
+            if (!details.weather_condition.isNullOrEmpty()) {
+                detailsString += "weather_condition: ${details.weather_condition} "
+            }
+            if (!details.SKT.isNullOrEmpty()) {
+                detailsString += "SKT: ${details.SKT} "
+            }
+            return detailsString
+        }
+
+        fun getDescription(): String {
+            val needType = returnNeedType()
+            return "Need: ${needType.name}, Urgency: $urgency, Quantity: $initialQuantity"
+        }
+
+        fun getSubDescription(): String {
+            return returnDetailsAsString()
+        }
+    }
 
 
 }
