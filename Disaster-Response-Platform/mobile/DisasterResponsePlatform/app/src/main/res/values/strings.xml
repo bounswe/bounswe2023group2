@@ -90,6 +90,7 @@
     <string name="enter_expiration_date">Enter Expiration Date</string>
     <string name="username_or_email">Username or Email</string>
     <string name="edit_need">Edit Need</string>
+    <string name="edit_resource">Edit Resource</string>
     <string name="save_changes">Save Changes</string>
 
     <string-array name="need_types">

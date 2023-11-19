@@ -6,12 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disasterresponseplatform.data.database.need.Need
-import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
-import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.data.repositories.NeedRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
@@ -41,12 +39,6 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         }
     }
 
-    fun updateNeed(need: Need){
-        viewModelScope.launch(Dispatchers.IO){
-            needRepository.updateNeed(need)
-        }
-    }
-
     fun getX(creatorID: String): Double?{
         return needRepository.getX(creatorID)
     }
@@ -65,13 +57,13 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     fun getLiveDataResponse(): LiveData<NeedBody.NeedResponse> = liveDataResponse
 
     fun createNeedList(needResponse: NeedBody.NeedResponse): List<Need> {
-        Log.d("createNeedList", "resourceResponse: $needResponse")
+        Log.d("createNeedList", "needResponse: $needResponse")
         val currentList = needResponse.needs
-        Log.d("createResourceList", "currentList: $currentList")
+        Log.d("createNeedList", "currentList: $currentList")
         val lst = mutableListOf<Need>()
         currentList.forEach { responseItem ->
-            //Log.d("createResourceList", "responseItem: $responseItem")
-            //Log.d("createResourceList", "responseItemDetails: ${responseItem.details}")
+            //Log.d("createNeedList", "responseItem: $responseItem")
+            //Log.d("createNeedList", "responseItemDetails: ${responseItem.details}")
             val details = returnDetailsAsString(responseItem.details)
             val needType = returnNeedType(responseItem.type)
             val time = DateUtil.getDate("dd-MM-yy").toString()
@@ -108,46 +100,46 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         return needType
     }
 
-    private fun returnDetailsAsString(resourceDetails: NeedBody.NeedDetails): String {
+    private fun returnDetailsAsString(needDetails: NeedBody.NeedDetails): String {
         var detailsString = ""
-        if (!resourceDetails.size.isNullOrEmpty()) {
-            detailsString += "size: ${resourceDetails.size} "
+        if (!needDetails.size.isNullOrEmpty()) {
+            detailsString += "size: ${needDetails.size} "
         }
-        if (!resourceDetails.gender.isNullOrEmpty()) {
-            detailsString += "gender: ${resourceDetails.gender} "
+        if (!needDetails.gender.isNullOrEmpty()) {
+            detailsString += "gender: ${needDetails.gender} "
         }
-        if (resourceDetails.age != null) {
-            detailsString += "age: ${resourceDetails.age} "
+        if (needDetails.age != null) {
+            detailsString += "age: ${needDetails.age} "
         }
-        if (!resourceDetails.subtype.isNullOrEmpty()) {
-            detailsString += "subtype: ${resourceDetails.subtype} "
+        if (!needDetails.subtype.isNullOrEmpty()) {
+            detailsString += "subtype: ${needDetails.subtype} "
         }
-        if (!resourceDetails.expiration_date.isNullOrEmpty()) {
-            detailsString += "expiration_date: ${resourceDetails.expiration_date} "
+        if (!needDetails.expiration_date.isNullOrEmpty()) {
+            detailsString += "expiration_date: ${needDetails.expiration_date} "
         }
-        if (!resourceDetails.allergens.isNullOrEmpty()) {
-            detailsString += "allergens: ${resourceDetails.allergens} "
+        if (!needDetails.allergens.isNullOrEmpty()) {
+            detailsString += "allergens: ${needDetails.allergens} "
         }
-        if (!resourceDetails.disease_name.isNullOrEmpty()) {
-            detailsString += "disease_name: ${resourceDetails.disease_name} "
+        if (!needDetails.disease_name.isNullOrEmpty()) {
+            detailsString += "disease_name: ${needDetails.disease_name} "
         }
-        if (!resourceDetails.medicine_name.isNullOrEmpty()) {
-            detailsString += "medicine_name: ${resourceDetails.medicine_name} "
+        if (!needDetails.medicine_name.isNullOrEmpty()) {
+            detailsString += "medicine_name: ${needDetails.medicine_name} "
         }
-        if (!resourceDetails.start_location.isNullOrEmpty()) {
-            detailsString += "start_location: ${resourceDetails.start_location} "
+        if (!needDetails.start_location.isNullOrEmpty()) {
+            detailsString += "start_location: ${needDetails.start_location} "
         }
-        if (!resourceDetails.end_location.isNullOrEmpty()) {
-            detailsString += "end_location: ${resourceDetails.end_location} "
+        if (!needDetails.end_location.isNullOrEmpty()) {
+            detailsString += "end_location: ${needDetails.end_location} "
         }
-        if (resourceDetails.number_of_people != null) {
-            detailsString += "number_of_people: ${resourceDetails.number_of_people} "
+        if (needDetails.number_of_people != null) {
+            detailsString += "number_of_people: ${needDetails.number_of_people} "
         }
-        if (!resourceDetails.weather_condition.isNullOrEmpty()) {
-            detailsString += "weather_condition: ${resourceDetails.weather_condition} "
+        if (!needDetails.weather_condition.isNullOrEmpty()) {
+            detailsString += "weather_condition: ${needDetails.weather_condition} "
         }
-        if (!resourceDetails.SKT.isNullOrEmpty()) {
-            detailsString += "SKT: ${resourceDetails.SKT} "
+        if (!needDetails.SKT.isNullOrEmpty()) {
+            detailsString += "SKT: ${needDetails.SKT} "
         }
         return detailsString
     }
@@ -181,7 +173,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                                 if (needResponse != null) { // TODO check null
                                     Log.d(
                                         "ResponseSuccess",
-                                        "resourceResponse: $needResponse"
+                                        "needResponse: $needResponse"
                                     )
                                     liveDataResponse.postValue(needResponse)
                                 }
@@ -211,9 +203,9 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         )
     }
 
-    private val liveDataResourceID = MutableLiveData<String>()
+    private val liveDataNeedID = MutableLiveData<String>()
     // this is for updating LiveData, it can be observed from where it is called
-    fun getLiveDataResourceID(): LiveData<String> = liveDataResourceID
+    fun getLiveDataNeedID(): LiveData<String> = liveDataNeedID
 
     /**
      * It send POST or PUT request with respect to id, if there was an id it should be PUT
@@ -281,9 +273,9 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                                         NeedBody.PostNeedResponseList::class.java
                                     )
                                     val needID = needResponse.needs[0]._id
-                                    Log.i("Created Resource ", "ID: $needID ")
+                                    Log.i("Created Need ", "ID: $needID ")
                                     val currentID = "" + needID
-                                    liveDataResourceID.postValue(currentID)
+                                    liveDataNeedID.postValue(currentID)
 
                                 } catch (e: IOException) {
                                     // Handle IOException if reading the response body fails
@@ -308,7 +300,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                     }
 
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e("onFailure", "Post Resource Request")
+                        Log.e("onFailure", "Post Need Request")
                     }
                 }
             )

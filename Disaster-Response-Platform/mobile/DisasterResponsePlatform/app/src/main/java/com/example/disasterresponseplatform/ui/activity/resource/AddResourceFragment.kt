@@ -44,8 +44,8 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
     @SuppressLint("SetTextI18n")
     private fun fillParameters(resource: Resource?){
         if (resource != null){
-            binding.tvAddResource.text = "Edit Resource"
-            binding.btnSubmit.text = "Save Changes"
+            binding.tvAddResource.text = getString(R.string.edit_resource)
+            binding.btnSubmit.text = getString(R.string.save_changes)
             binding.spResourceType.setText(resource.type.toString())
             binding.spResourceSubType.setText(resource.details)
             binding.etQuantity.editText?.setText(resource.quantity.toString())

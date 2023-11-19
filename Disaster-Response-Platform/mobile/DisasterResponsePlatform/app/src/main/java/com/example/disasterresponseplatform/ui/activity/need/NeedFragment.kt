@@ -19,7 +19,6 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
     private lateinit var binding: FragmentNeedBinding
-    private lateinit var addNeedFragment: AddNeedFragment
     private lateinit var searchView: SearchView
     private var requireActivity: FragmentActivity? = null
 
@@ -37,16 +36,31 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     }
 
     private fun arrangeView(){
-        // add need clickable
         binding.btAddNeed.setOnClickListener {
             addOrEditNeed(null)
         }
+
         arrangeSearchView()
+        //arrangeRecyclerView()
         sendRequest()
     }
 
-    /** This function connects backend and get all resource requests, then it observes livedata from viewModel which is changed
-     * whenever all resources are fetched from backend. Then it creates a need list with this response and prepare recyclerView with this list
+    /** This function is called whenever need is created or edited
+     * If it is created need should be null, else need should be the clicked item
+     */
+    private fun addOrEditNeed(need: Need?){
+        val token = DiskStorageManager.getKeyValue("token")
+        if (!token.isNullOrEmpty()) {
+            val addNeedFragment = AddNeedFragment(needViewModel,need)
+            addFragment(addNeedFragment,"AddNeedFragment")
+        }
+        else{
+            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /** This function connects backend and get all need requests, then it observes livedata from viewModel which is changed
+     * whenever all needs are fetched from backend. Then it creates a need list with this response and prepare recyclerView with this list
      */
     private fun sendRequest(){
         if (requireActivity == null){ // to handle error when user enters this page twice
@@ -59,6 +73,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         }
     }
 
+
     /**
      * Arrange recycler view and its adapter
      */
@@ -68,28 +83,13 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.layoutManager = layoutManager
         }
-
-        val list = needViewModel.getAllNeeds() // from local db
+        // val list = needViewModel.getAllNeeds() // this is for local DB
         val adapter = NeedAdapter(needList)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
-            // Handle item click by navigating to EditNeedFragment
             addOrEditNeed(it)
-        }
-    }
-
-    private fun addOrEditNeed(need: Need?){
-        val token = DiskStorageManager.getKeyValue("token")
-        if (!token.isNullOrEmpty()) {
-            if (need == null)
-                addFragment(AddNeedFragment(needViewModel),"AddNeedFragment")
-            else
-                addFragment(EditNeedFragment(needViewModel,need),"EditNeedFragment")
-        }
-        else{
-            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -121,10 +121,10 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         }
     }
 
-    private fun addFragment(fragment: Fragment, backStackName: String) {
+    private fun addFragment(fragment: Fragment, fragmentName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(backStackName)
+        ft.addToBackStack(fragmentName)
         ft.commit()
     }
 }

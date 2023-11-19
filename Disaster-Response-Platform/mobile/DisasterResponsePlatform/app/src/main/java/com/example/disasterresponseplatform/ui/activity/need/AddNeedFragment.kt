@@ -1,5 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.NeedTypes
@@ -18,7 +20,7 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
 import com.example.disasterresponseplatform.utils.StringUtil
 
-class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
+class AddNeedFragment(private val needViewModel: NeedViewModel, private val need: Need?) : Fragment() {
 
     private lateinit var binding: FragmentAddNeedBinding
     private var requireActivity: FragmentActivity? = null
@@ -31,11 +33,27 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
         binding = FragmentAddNeedBinding.inflate(inflater, container, false)
         setUpNeedTypeSpinner()
-        submitAddNeed()
+        fillParameters(need)
+        submitNeed(need == null)
         return binding.root
     }
 
 
+    /** It fills the layout's fields corresponding data if it is editNeed
+     * It checks whether it is editNeed by checking if need is null, if it is not null then it should be edit form
+     */
+    @SuppressLint("SetTextI18n")
+    private fun fillParameters(need: Need?){
+        if (need != null){
+            binding.tvAddNeed.text = getString(R.string.edit_need)
+            binding.btnSubmit.text = getString(R.string.save_changes)
+            binding.spNeedType.setText(need.type.toString())
+            binding.spNeedSubType.setText(need.details)
+            binding.etQuantity.editText?.setText(need.quantity.toString())
+            binding.etCoordinateX.editText?.setText(String.format("%.2f", need.coordinateX).replace(',', '.'))
+            binding.etCoordinateY.editText?.setText(String.format("%.2f", need.coordinateY).replace(',', '.'))
+        }
+    }
     private fun setUpNeedTypeSpinner() {
 
         // Get the array of need types from needs
@@ -95,7 +113,10 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         }
     }
 
-    private fun submitAddNeed() {
+    /**
+     * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
+     */
+    private fun submitNeed(isAdd : Boolean) {
         if (requireActivity == null){ // to handle error when user enters this page twice
             requireActivity = requireActivity()
         }
@@ -124,20 +145,30 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
                 val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
                 val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
-                val need = Need(StringUtil.generateRandomStringID(),creatorName,type,details, date,quantity, coordinateX,coordinateY,1)
+                val newNeed = Need(StringUtil.generateRandomStringID(),creatorName,type, details, date,quantity, coordinateX,coordinateY,1)
 
-                //needViewModel.insertNeed(need)
-                needViewModel.postNeedRequest(need)
-                needViewModel.getLiveDataResourceID().observe(requireActivity!!){
-                    if (it != "null"){ // when it's not empty or null
-                        if (isAdded)
-                            Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
-                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                            if (isAdded)
-                                parentFragmentManager.popBackStack()
-                            binding.btnSubmit.isEnabled = true
-                        }, 200)
+                //needViewModel.insertNeed(need) insert local db
+                if (isAdd){
+                    needViewModel.postNeedRequest(newNeed)
+                } else {
+                    val needID = "/"+need!!.ID // comes from older need
+                    needViewModel.postNeedRequest(newNeed,needID)
+                }
+                needViewModel.getLiveDataNeedID().observe(requireActivity!!){
+
+                    if (isAdded){ // to ensure it attached a context
+                        if (isAdd)
+                            Toast.makeText(requireContext(), "Created Need ID: $it", Toast.LENGTH_LONG).show()
+                        else
+                            Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
                     }
+
+                    Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                        if (isAdded) // to ensure it attached a parentFragmentManager
+                            parentFragmentManager.popBackStack("AddNeedFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        // Re-enable the button after the background operation completes
+                        binding.btnSubmit.isEnabled = true
+                    }, 200)
                 }
             } else {
                 if (isAdded)
