@@ -66,11 +66,10 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             val details = returnDetailsAsString(responseItem.details)
             val needType = returnNeedType(responseItem.type)
             val time = DateUtil.getDate("dd-MM-yy").toString()
-            val id = BigInteger(responseItem._id.uppercase(), 16).toLong()
             val coordinateX = if (responseItem.x == null) 1.0 else responseItem.x.toDouble()
             val coordinateY = if (responseItem.y == null) 1.0 else responseItem.y.toDouble()
             val currentResource = Resource(
-                id,
+                responseItem._id,
                 responseItem.created_by,
                 responseItem.condition,
                 responseItem.currentQuantity,
@@ -98,17 +97,6 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             else -> NeedTypes.Other
         }
         return needType
-    }
-
-    private fun returnLocationAsString(x: Float?, y: Float?): String {
-        var location = " "
-        if (x != null) {
-            location += "x : $x "
-        }
-        if (y != null) {
-            location += "y: $y"
-        }
-        return location
     }
 
     private fun returnDetailsAsString(resourceDetails: ResourceBody.ResourceDetails): String {
@@ -218,7 +206,10 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResourceID(): LiveData<String> = liveDataResourceID
 
-    fun postResourceRequest(postRequest: Resource, requestType: RequestType) {
+    /**
+     * It send POST or PUT request with respect to id, if there was an id it should be PUT
+     */
+    fun postResourceRequest(postRequest: Resource, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
         Log.i("token", "Token $token")
         if (!token.isNullOrEmpty()) {
@@ -251,16 +242,17 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             )
             val gson = Gson()
             val json = gson.toJson(resourceRequestBody)
-            val requestBody =
-                json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+            val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+
+            val requestType = if (id == null) RequestType.POST else RequestType.PUT
 
             Log.d("requestBody", json.toString())
-
             networkManager.makeRequest(
                 endpoint = Endpoint.RESOURCE,
                 requestType = requestType,
                 headers = headers,
                 requestBody = requestBody,
+                id, // Resource's ID
                 callback = object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,
@@ -280,7 +272,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                                         ResourceBody.PostRegisterResponseList::class.java
                                     )
                                     val resourceID = registerResponse.resources[0]._id
-                                    Log.d("Created Resource ", "ID: $resourceID ")
+                                    Log.i("Created Resource ", "ID: $resourceID ")
                                     liveDataResourceID.postValue(resourceID)
 
                                 } catch (e: IOException) {
