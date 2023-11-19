@@ -44,6 +44,8 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         mapView = view.findViewById(R.id.mapView)
         mapView.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK)
         mapView.minZoomLevel = 6.0
+        mapView.setBuiltInZoomControls(true);
+        mapView.setMultiTouchControls(true);
 
         // Set the default zoom level and center of the map
         val mapController: IMapController = mapView.controller
