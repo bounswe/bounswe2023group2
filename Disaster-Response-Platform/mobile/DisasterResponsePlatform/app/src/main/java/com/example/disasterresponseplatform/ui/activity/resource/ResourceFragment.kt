@@ -1,9 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -55,7 +52,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         val token = DiskStorageManager.getKeyValue("token")
         if (!token.isNullOrEmpty()) {
             val addResourceFragment = AddResourceFragment(resourceViewModel,resource)
-            addFragment(addResourceFragment)
+            addFragment(addResourceFragment,"AddResourceFragment")
         }
         else{
             Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
@@ -86,16 +83,13 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.layoutManager = layoutManager
         }
-        val list = resourceViewModel.getAllResources()
+        // val list = resourceViewModel.getAllResources() // this is for local DB
         val adapter = ResourceAdapter(resourceList)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
             addOrEditResource(it)
-            val text = "ID: ${java.lang.Long.toUnsignedString(it.ID!!.toLong(), 16)}, Type: ${it?.type}, Details: ${it?.details}, x: ${it?.coordinateX}, y: ${it?.coordinateY},\" "+
-                    "Date: ${it?.creationTime}, Quantity: ${it?.quantity}, Condition: ${it?.condition}"
-            Toast.makeText(requireActivity(), text, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -127,10 +121,10 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         }
     }
 
-    private fun addFragment(fragment: Fragment) {
+    private fun addFragment(fragment: Fragment, fragmentName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack(fragmentName)
         ft.commit()
     }
 }
