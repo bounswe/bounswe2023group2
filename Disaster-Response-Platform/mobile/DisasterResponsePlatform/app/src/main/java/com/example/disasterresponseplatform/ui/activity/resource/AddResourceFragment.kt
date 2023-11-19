@@ -1,5 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -40,8 +41,11 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
     /** It fills the layout's fields corresponding data if it is editResource
      * It checks whether it is editResource by checking if resource is null, if it is not null then it should be edit form
      */
+    @SuppressLint("SetTextI18n")
     private fun fillParameters(resource: Resource?){
         if (resource != null){
+            binding.tvAddResource.text = "Edit Resource"
+            binding.btnSubmit.text = "Save Changes"
             binding.spResourceType.setText(resource.type.toString())
             binding.spResourceSubType.setText(resource.details)
             binding.etQuantity.editText?.setText(resource.quantity.toString())
