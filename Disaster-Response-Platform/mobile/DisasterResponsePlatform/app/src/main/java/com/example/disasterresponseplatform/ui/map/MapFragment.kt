@@ -85,12 +85,14 @@ class MapFragment : Fragment(R.layout.fragment_map) {
                 addNeedMarker(needItem)
             }
             mapView.overlays.add(needClusterer)
+            mapView.postInvalidate()
         }
         mapViewModel.getLiveDataResourceResponse().observe(viewLifecycleOwner) { resourceItems ->
             resourceItems.resources.forEach {resourceItem ->
                 addResourceMarker(resourceItem)
             }
             mapView.overlays.add(needClusterer)
+            mapView.postInvalidate()
         }
     }
 
