@@ -51,7 +51,7 @@ async def add_a_language_currentuser(user_profession: UserProfession, response: 
         err_json =  create_json_for_error("User profession not updated", str(err))
         return json.loads(err_json)
 
-@router.delete("/professions", responses= {status.HTTP_200_OK: {"model": UserProfession},
+@router.post("/professions", responses= {status.HTTP_200_OK: {"model": UserProfession},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
