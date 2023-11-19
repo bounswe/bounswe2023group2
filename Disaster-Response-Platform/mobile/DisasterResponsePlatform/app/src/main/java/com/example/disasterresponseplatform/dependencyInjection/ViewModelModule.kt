@@ -1,18 +1,19 @@
 package com.example.disasterresponseplatform.dependencyInjection
 
-import com.example.disasterresponseplatform.data.repositories.NeedRepository
-import com.example.disasterresponseplatform.data.repositories.UserDataRepository
 import com.example.disasterresponseplatform.data.repositories.ActionRepository
 import com.example.disasterresponseplatform.data.repositories.EmergencyRepository
 import com.example.disasterresponseplatform.data.repositories.EventRepository
+import com.example.disasterresponseplatform.data.repositories.NeedRepository
 import com.example.disasterresponseplatform.data.repositories.ResourceRepository
-import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
-import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
+import com.example.disasterresponseplatform.data.repositories.UserDataRepository
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
+import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
+import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
 import com.example.disasterresponseplatform.ui.authentication.AuthenticationViewModel
+import com.example.disasterresponseplatform.ui.map.MapViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,4 +65,8 @@ class ViewModelModule {
     @ViewModelScoped
     fun provideResourceViewModel(repository: ResourceRepository): ResourceViewModel =
         ResourceViewModel(repository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideMapViewModel(): MapViewModel = MapViewModel()
 }
