@@ -106,7 +106,7 @@ class ProfileFragment : Fragment() {
                                 fillInformations(user)
                             } else {
                                 binding.profileLoginFirstText.visibility = View.VISIBLE
-                                binding.profileScrollView.visibility = View.GONE
+                                binding.profileProgressBar.visibility = View.GONE
                             }
                         }
                     }
