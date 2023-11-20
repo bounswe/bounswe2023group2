@@ -1,5 +1,6 @@
 package com.example.disasterresponseplatform.adapter
 
+import android.annotation.SuppressLint
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,15 +31,15 @@ class NeedAdapter(private val needList: List<Need>?): RecyclerView.Adapter<NeedA
     /**
      * It adjusts every item on recyclerView (since it's an adapter of recyclerView)
      */
+    @SuppressLint("SetTextI18n")
     private fun adjustItems(holder: NeedViewHolder, position: Int){
         val currentNeed = needList?.get(position) // to get current item in activityList
         val hb = holder.binding // to bind xml items
 
 
         hb.tvType.text = currentNeed?.type.toString()
-
         hb.tvDate.text = currentNeed?.creationTime
-        hb.tvLocation.text = currentNeed?.location
+        hb.tvLocation.text = "x: ${String.format("%.2f", currentNeed?.coordinateX).replace(',', '.')}, y: ${String.format("%.2f", currentNeed?.coordinateY).replace(',', '.')}"
         hb.tvQuantity.text = currentNeed?.quantity.toString()
         hb.tvCreator.text = currentNeed?.creatorName
 

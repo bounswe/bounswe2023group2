@@ -1,21 +1,29 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddNeedBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
+import com.example.disasterresponseplatform.utils.StringUtil
 
-class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
+class AddNeedFragment(private val needViewModel: NeedViewModel, private val need: Need?) : Fragment() {
 
     private lateinit var binding: FragmentAddNeedBinding
+    private var requireActivity: FragmentActivity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,11 +33,27 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
         binding = FragmentAddNeedBinding.inflate(inflater, container, false)
         setUpNeedTypeSpinner()
-        submitAddNeed()
+        fillParameters(need)
+        submitNeed(need == null)
         return binding.root
     }
 
 
+    /** It fills the layout's fields corresponding data if it is editNeed
+     * It checks whether it is editNeed by checking if need is null, if it is not null then it should be edit form
+     */
+    @SuppressLint("SetTextI18n")
+    private fun fillParameters(need: Need?){
+        if (need != null){
+            binding.tvAddNeed.text = getString(R.string.edit_need)
+            binding.btnSubmit.text = getString(R.string.save_changes)
+            binding.spNeedType.setText(need.type.toString())
+            binding.spNeedSubType.setText(need.details)
+            binding.etQuantity.editText?.setText(need.quantity.toString())
+            binding.etCoordinateX.editText?.setText(String.format("%.2f", need.coordinateX).replace(',', '.'))
+            binding.etCoordinateY.editText?.setText(String.format("%.2f", need.coordinateY).replace(',', '.'))
+        }
+    }
     private fun setUpNeedTypeSpinner() {
 
         // Get the array of need types from needs
@@ -79,23 +103,30 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         val boxNeedSubType = binding.boxNeedSubType
 
         if (selectedType.isEmpty()) {
-            boxNeedSubType.visibility = View.GONE
             spNeedSubType.setText("")
             spNeedSubType.setAdapter(needEmptyAdapter)
         } else if (selectedType == "Food") {
-            boxNeedSubType.visibility = View.VISIBLE
             spNeedSubType.setAdapter(needFoodAdapter)
         } else {
-            boxNeedSubType.visibility = View.VISIBLE
             spNeedSubType.setText("")
             spNeedSubType.setAdapter(needEmptyAdapter)
         }
     }
 
-    private fun submitAddNeed() {
+    /**
+     * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
+     */
+    private fun submitNeed(isAdd : Boolean) {
+        if (requireActivity == null){ // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
+
         binding.btnSubmit.setOnClickListener {
-            if ((validateFullName() and validatePhoneNumber() and validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
-                Toast.makeText(context, "{'created_by': ${binding.etFullName.editText?.text.toString().trim()}, 'quantity': ${binding.etQuantity.editText?.text.toString().trim()}, 'type':  ${binding.boxNeedType.editText?.text.toString().trim()}}", Toast.LENGTH_SHORT).show()
+            if (!binding.btnSubmit.isEnabled) { // Prevent multiple clicks
+                return@setOnClickListener
+            }
+            binding.btnSubmit.isEnabled = false
+            if (validateQuantity() and validateCoordinateX() and validateCoordinateY()and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
                 when(binding.boxNeedType.editText?.text.toString().trim()){
@@ -108,18 +139,41 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
                     NeedTypes.Human.toString() -> NeedTypes.Human
                     else -> NeedTypes.Other
                 }
-                val creatorName = binding.etFullName.editText?.text.toString().trim()
+                val creatorName = DiskStorageManager.getKeyValue("username").toString()
                 val details = binding.spNeedSubType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val location = binding.etLocation.editText?.text.toString().trim()
+                val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
+                val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
-                val need = Need(null,creatorName,type,details, date,quantity,location,1)
-                //TODO do with token
-                needViewModel.insertNeed(need)
-                parentFragmentManager.popBackStack()
+                val newNeed = Need(StringUtil.generateRandomStringID(),creatorName,type, details, date,quantity, coordinateX,coordinateY,1)
 
+                //needViewModel.insertNeed(need) insert local db
+                if (isAdd){
+                    needViewModel.postNeedRequest(newNeed)
+                } else {
+                    val needID = "/"+need!!.ID // comes from older need
+                    needViewModel.postNeedRequest(newNeed,needID)
+                }
+                needViewModel.getLiveDataNeedID().observe(requireActivity!!){
+
+                    if (isAdded){ // to ensure it attached a context
+                        if (isAdd)
+                            Toast.makeText(requireContext(), "Created Need ID: $it", Toast.LENGTH_LONG).show()
+                        else
+                            Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
+                    }
+
+                    Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                        if (isAdded) // to ensure it attached a parentFragmentManager
+                            parentFragmentManager.popBackStack("AddNeedFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        // Re-enable the button after the background operation completes
+                        binding.btnSubmit.isEnabled = true
+                    }, 200)
+                }
             } else {
-                Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
+                if (isAdded)
+                    Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
+                binding.btnSubmit.isEnabled = true
             }
         }
     }
@@ -153,16 +207,28 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     }
 
 
-    private fun validateLocation(): Boolean {
-        val etLocation = binding.etLocation
-        val location = etLocation.editText?.text.toString().trim()
-
-        return if (location.isEmpty()) {
-            etLocation.error = "Field can not be empty"
+    private fun validateCoordinateX(): Boolean {
+        val etCoordinateX = binding.etCoordinateX
+        val coordinateX = etCoordinateX.editText?.text.toString().trim()
+        return if (coordinateX.isEmpty()) {
+            etCoordinateX.error = "Field can not be empty"
             false
         } else {
-            etLocation.error = null
-            etLocation.isErrorEnabled = false
+            etCoordinateX.error = null
+            etCoordinateX.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateCoordinateY(): Boolean {
+        val etCoordinateY = binding.etCoordinateY
+        val coordinateY = etCoordinateY.editText?.text.toString().trim()
+        return if (coordinateY.isEmpty()) {
+            etCoordinateY.error = "Field can not be empty"
+            false
+        } else {
+            etCoordinateY.error = null
+            etCoordinateY.isErrorEnabled = false
             true
         }
     }
@@ -181,31 +247,4 @@ class AddNeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         }
     }
 
-    private fun validateFullName(): Boolean {
-        val etFullName = binding.etFullName
-        val fullName = etFullName.editText?.text.toString().trim()
-
-        return if (fullName.isEmpty()) {
-            etFullName.error = "Field can not be empty"
-            false
-        } else {
-            etFullName.error = null
-            etFullName.isErrorEnabled = false
-            true
-        }
-    }
-
-    private fun validatePhoneNumber(): Boolean {
-        val etPhoneNumber = binding.etPhoneNumber
-        val phoneNumber = etPhoneNumber.editText?.text.toString().trim()
-
-        return if (phoneNumber.isEmpty()) {
-            etPhoneNumber.error = "Field can not be empty$phoneNumber"
-            false
-        } else {
-            etPhoneNumber.error = null
-            etPhoneNumber.isErrorEnabled = false
-            true
-        }
-    }
 }

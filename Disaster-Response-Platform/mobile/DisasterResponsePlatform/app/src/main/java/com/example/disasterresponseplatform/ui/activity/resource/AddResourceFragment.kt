@@ -1,5 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,15 +11,16 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.utils.DateUtil
+import com.example.disasterresponseplatform.utils.StringUtil.Companion.generateRandomStringID
 
-class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
+class AddResourceFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource?) : Fragment() {
 
     private lateinit var binding: FragmentAddResourceBinding
     private var requireActivity: FragmentActivity? = null
@@ -31,11 +33,26 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
 
         binding = FragmentAddResourceBinding.inflate(inflater, container, false)
         setUpResourceTypeSpinner()
-        submitAddResource()
+        fillParameters(resource)
+        submitResource(resource == null)
         return binding.root
     }
 
-
+    /** It fills the layout's fields corresponding data if it is editResource
+     * It checks whether it is editResource by checking if resource is null, if it is not null then it should be edit form
+     */
+    @SuppressLint("SetTextI18n")
+    private fun fillParameters(resource: Resource?){
+        if (resource != null){
+            binding.tvAddResource.text = getString(R.string.edit_resource)
+            binding.btnSubmit.text = getString(R.string.save_changes)
+            binding.spResourceType.setText(resource.type.toString())
+            binding.spResourceSubType.setText(resource.details)
+            binding.etQuantity.editText?.setText(resource.quantity.toString())
+            binding.etCoordinateX.editText?.setText(String.format("%.2f", resource.coordinateX).replace(',', '.'))
+            binding.etCoordinateY.editText?.setText(String.format("%.2f", resource.coordinateY).replace(',', '.'))
+        }
+    }
     private fun setUpResourceTypeSpinner() {
 
         // Get the array of resource types from resource
@@ -85,25 +102,29 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
         val boxResourceSubType = binding.boxResourceSubType
 
         if (selectedType.isEmpty()) {
-            boxResourceSubType.visibility = View.GONE
             spResourceSubType.setText("")
             spResourceSubType.setAdapter(resourceEmptyAdapter)
         } else if (selectedType == "Food") {
-            boxResourceSubType.visibility = View.VISIBLE
             spResourceSubType.setAdapter(resourceFoodAdapter)
         } else {
-            boxResourceSubType.visibility = View.VISIBLE
             spResourceSubType.setText("")
             spResourceSubType.setAdapter(resourceEmptyAdapter)
         }
     }
 
-    private fun submitAddResource() {
+    /**
+     * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
+     */
+    private fun submitResource(isAdd : Boolean) {
         if (requireActivity == null){ // to handle error when user enters this page twice
             requireActivity = requireActivity()
         }
         binding.btnSubmit.setOnClickListener {
-            if ((validateQuantity() and validateLocation()) and validateType() and validateSubType()) {
+            if (!binding.btnSubmit.isEnabled) { // Prevent multiple clicks
+                return@setOnClickListener
+            }
+            binding.btnSubmit.isEnabled = false
+            if (validateQuantity() and validateCoordinateY() and validateCoordinateX()  and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
                     when(binding.boxResourceType.editText?.text.toString().trim()){
@@ -119,22 +140,36 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
                 val creatorName = DiskStorageManager.getKeyValue("username").toString()
                 val details = binding.spResourceSubType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val location = binding.etLocation.editText?.text.toString().trim()
+                val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
+                val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
-                val resource = Resource(null,creatorName,"new",quantity,type,details,date,location)
+                val newResource = Resource(generateRandomStringID(),creatorName,"new",quantity,type,details,date,coordinateX,coordinateY)
 
                 //resourceViewModel.insertResource(resource) insert local db
-
-                resourceViewModel.arrangePostRequest(resource) // pass resource to view Model
-                resourceViewModel.postResourceRequest()
+                if (isAdd){
+                    resourceViewModel.postResourceRequest(newResource)
+                } else{
+                    val resourceID = "/"+resource!!.ID // comes from older resource
+                    resourceViewModel.postResourceRequest(newResource,resourceID)
+                }
                 resourceViewModel.getLiveDataResourceID().observe(requireActivity!!){
-                    Toast.makeText(context, "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                    if (isAdded){ // to ensure it attached a context
+                        if (isAdd)
+                            Toast.makeText(requireContext(), "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                        else
+                            Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
+                    }
+
                     Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                        parentFragmentManager.popBackStack()
+                        if (isAdded) // to ensure it attached a parentFragmentManager
+                            parentFragmentManager.popBackStack("AddResourceFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        // Re-enable the button after the background operation completes
+                        binding.btnSubmit.isEnabled = true
                     }, 200)
                 }
             } else {
                 Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
+                binding.btnSubmit.isEnabled = true
             }
         }
     }
@@ -168,16 +203,28 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel) : Fr
     }
 
 
-    private fun validateLocation(): Boolean {
-        val etLocation = binding.etLocation
-        val location = etLocation.editText?.text.toString().trim()
-
-        return if (location.isEmpty()) {
-            etLocation.error = "Field can not be empty"
+    private fun validateCoordinateX(): Boolean {
+        val etCoordinateX = binding.etCoordinateX
+        val coordinateX = etCoordinateX.editText?.text.toString().trim()
+        return if (coordinateX.isEmpty()) {
+            etCoordinateX.error = "Field can not be empty"
             false
         } else {
-            etLocation.error = null
-            etLocation.isErrorEnabled = false
+            etCoordinateX.error = null
+            etCoordinateX.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateCoordinateY(): Boolean {
+        val etCoordinateY = binding.etCoordinateY
+        val coordinateY = etCoordinateY.editText?.text.toString().trim()
+        return if (coordinateY.isEmpty()) {
+            etCoordinateY.error = "Field can not be empty"
+            false
+        } else {
+            etCoordinateY.error = null
+            etCoordinateY.isErrorEnabled = false
             true
         }
     }
