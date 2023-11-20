@@ -3,125 +3,171 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/selector_item_background">
+        android:layout_height="wrap_content">
 
-
-        <TextView
-            android:id="@+id/titleType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/type"
-            android:textSize="12sp"
+        <View
+            android:id="@+id/badge"
+            android:layout_width="10dp"
+            android:layout_height="0dp"
+            android:background="@color/colorResource"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/iconType"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toEndOf="@+id/badge"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/recyc_category" />
+
         <TextView
-            android:id="@+id/titleLocation"
+            android:id="@+id/tvActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/location"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_marginStart="10dp"
+            android:text="@string/resource"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/iconType"
+            app:layout_constraintTop_toTopOf="@+id/iconType" />
+
+        <TextView
+            android:id="@+id/sep1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="/"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/tvActivity"
+            app:layout_constraintTop_toTopOf="@+id/tvActivity" />
 
         <TextView
             android:id="@+id/tvType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="4dp"
             android:text="@string/clothes"
-            android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/titleLocation"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/sep1"
+            app:layout_constraintTop_toTopOf="@+id/sep1" />
+
+        <TextView
+            android:id="@+id/sep2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="/"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/tvType"
+            app:layout_constraintTop_toTopOf="@+id/tvType" />
+
+        <TextView
+            android:id="@+id/tvSubType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SubType"
+            android:layout_marginStart="4dp"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/sep2"
+            app:layout_constraintTop_toTopOf="@+id/sep2" />
+
+        <ImageView
+            android:id="@+id/iconLocation"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@+id/iconType"
+            app:layout_constraintTop_toBottomOf="@+id/sep1"
+            app:srcCompat="@drawable/recyc_location" />
 
         <TextView
             android:id="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="10dp"
             android:text="Gaziantep"
-            android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/titleLocation"
-            app:layout_constraintTop_toTopOf="@+id/titleLocation" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/iconLocation"
+            app:layout_constraintTop_toTopOf="@+id/iconLocation" />
 
-        <TextView
-            android:id="@+id/titleDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@string/date"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/tvDate"
-            app:layout_constraintTop_toTopOf="@+id/tvDate" />
+        <ImageView
+            android:id="@+id/iconDate"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/iconLocation"
+            app:layout_constraintTop_toBottomOf="@+id/iconLocation"
+            app:srcCompat="@drawable/recyc_date_time" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="16dp"
             android:text="22.10.2023 13:02"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginStart="10dp"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/iconDate"
+            app:layout_constraintTop_toTopOf="@+id/iconDate" />
 
-        <TextView
-            android:id="@+id/titleQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:text="Quantity:"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/tvQuantity"
-            app:layout_constraintTop_toTopOf="@+id/tvQuantity" />
+        <ImageView
+            android:id="@+id/iconQuantity"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvQuantity"
+            app:srcCompat="@drawable/recyc_quantity" />
 
         <TextView
             android:id="@+id/tvQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:text="50"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="123 pcs"
+            android:textSize="16sp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/iconQuantity"
+            app:layout_constraintTop_toTopOf="@+id/tvLocation" />
 
-        <TextView
-            android:id="@+id/titleCreatorName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Creator:"
-            app:layout_constraintBottom_toTopOf="@+id/titleLocation"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleType"/>
+        <ImageView
+            android:id="@+id/iconCreator"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvCreator"
+            app:srcCompat="@drawable/recyc_user" />
 
         <TextView
             android:id="@+id/tvCreator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="Mansur"
-            android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/titleLocation"
-            app:layout_constraintTop_toTopOf="@+id/titleCreatorName" />
-
+            android:text="Mehmet"
+            android:textSize="16sp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/iconCreator"
+            app:layout_constraintTop_toTopOf="@+id/tvDate" />
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="@color/separator"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/badge" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

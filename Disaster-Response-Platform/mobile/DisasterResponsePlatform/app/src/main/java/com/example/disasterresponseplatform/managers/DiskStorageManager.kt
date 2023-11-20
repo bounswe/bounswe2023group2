@@ -2,6 +2,7 @@ package com.example.disasterresponseplatform.managers
 
 import android.content.Context
 import android.content.SharedPreferences
+import java.io.Serializable
 
 object DiskStorageManager {
     private lateinit var sharedPreferences: SharedPreferences
