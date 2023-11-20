@@ -133,7 +133,7 @@ class ProfileFragment : Fragment() {
                                     }
                                 }
                                 if (res != null) {
-                                    if (res.dateOfBirth.isNotBlank()) {
+                                    if (res.dateOfBirth != null && res.dateOfBirth.isNotBlank()) {
                                         user.birth = res.dateOfBirth.split(" ")[0]
                                     }
                                     user.nationality = res.nationality
