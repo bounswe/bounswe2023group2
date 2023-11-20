@@ -1,16 +1,17 @@
 package com.example.disasterresponseplatform.data.database.need
 
-class NeedCols {
+class NeedResourceCols {
 
     companion object{
         const val id: String = "id"
         const val type: String = "type"
-        const val subTypeList: String = "subTypeList"
+        const val details: String = "details"
         const val creationTime: String = "creationTime"
-        const val creatorID: String = "creatorID"
-        const val location: String = "location"
+        const val creatorName: String = "creatorName"
+        const val coordinateX: String = "coordinateX"
+        const val coordinateY: String = "coordinateY"
         const val quantity: String = "quantity"
         const val urgency: String = "urgency"
-
+        const val condition: String = "condition"
     }
 }

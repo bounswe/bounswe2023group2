@@ -19,7 +19,7 @@ import com.example.disasterresponseplatform.databinding.FragmentHomePageBinding
 import com.example.disasterresponseplatform.utils.DateUtil
 
 
-class HomePageFragment(private val mainActivity: MainActivity) : Fragment() {
+class HomePageFragment : Fragment() {
 
     private lateinit var binding: FragmentHomePageBinding
     private lateinit var searchView: SearchView
@@ -54,10 +54,10 @@ class HomePageFragment(private val mainActivity: MainActivity) : Fragment() {
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
-        adapter.getLiveIntent().observe(mainActivity){
+        adapter.getLiveIntent().observe(requireActivity()){
             val text = "Action: ${it.activityType}, Type: ${it.predefinedTypes}, Location: ${it.location}, " +
                     "Date: ${it.date}, Reliability Scale: ${it.reliabilityScale},"
-            Toast.makeText(mainActivity, text, Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -65,7 +65,7 @@ class HomePageFragment(private val mainActivity: MainActivity) : Fragment() {
         val list = mutableListOf<DummyActivity>()
         list.add(
             DummyActivity(ActivityEnum.Need,
-            PredefinedTypes.Food,"Gaziantep","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.89)
+            PredefinedTypes.Food,"Gaziantep","${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",0.29)
         )
         list.add(
             DummyActivity(ActivityEnum.Resource,
@@ -82,7 +82,7 @@ class HomePageFragment(private val mainActivity: MainActivity) : Fragment() {
         )
         list.add(
             DummyActivity(ActivityEnum.Emergency,
-            PredefinedTypes.Debris,"Kahramanmaraş","21.10.2023",1.00)
+            PredefinedTypes.Debris,"Kahramanmaraş","21.10.2023",0.15)
         )
         return list
     }

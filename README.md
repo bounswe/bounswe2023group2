@@ -21,7 +21,7 @@ To address this issue, we are developing a platform to facilitate the organizati
     </td>
     <td>
       <div>
-        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Aziza-Mankenova"><img src="https://avatars.githubusercontent.com/u/60221908?v=4" width=150></a>
+        <a href="https://github.com/bounswe/bounswe2023group2/wiki/Aziza-Mankenova"><img src="https://user-images.githubusercontent.com/60221908/273561824-e0750621-c677-495a-be30-8090421a95d6.jpg" width=150 height=150></a>
       </div>
       <a href="https://github.com/bounswe/bounswe2023group2/wiki/Aziza-Mankenova"> Aziza <br>Mankenova </a>
     </td>

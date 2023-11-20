@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.disasterresponseplatform.MainActivity
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.databinding.FragmentNetworkBinding
@@ -17,7 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class NetworkFragment(val mainActivity: MainActivity) : Fragment() {
+class NetworkFragment : Fragment() {
 
     private lateinit var binding: FragmentNetworkBinding
 
@@ -49,17 +48,16 @@ class NetworkFragment(val mainActivity: MainActivity) : Fragment() {
                 headers = headers,
                 callback = object : Callback<ResponseBody> {
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Toast.makeText(mainActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
-
                     override fun onResponse(
                         call: Call<ResponseBody>,
                         response: Response<ResponseBody>
                     ) {
                         if (response.isSuccessful) {
-                            Toast.makeText(mainActivity, "Status Code: ${response.code()}, Successful Response!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Status Code: ${response.code()}, Successful Response!", Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(mainActivity, "Status Code: ${response.code()}, Error Message: ${response.message()}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Status Code: ${response.code()}, Error Message: ${response.message()}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

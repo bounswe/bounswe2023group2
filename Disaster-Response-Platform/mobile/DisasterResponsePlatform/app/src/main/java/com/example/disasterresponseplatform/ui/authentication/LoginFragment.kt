@@ -13,20 +13,17 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.databinding.FragmentLoginBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var authViewModel: AuthenticationViewModel
 
-    val registrationFragment = RegistrationFragment()
-    val forgotPasswordFragment = ForgotPasswordFragment()
+    private val registrationFragment = RegistrationFragment()
+    private val forgotPasswordFragment = ForgotPasswordFragment()
 
-    private val activityFragment =  ActivityFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
