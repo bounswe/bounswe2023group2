@@ -593,6 +593,7 @@ class EditProfileFragment : Fragment() {
                             "Network error: ${t.message}",
                             Toast.LENGTH_SHORT
                         ).show()
+                        println("zorunlu fail")
                         saveEnded()
                     }
 
@@ -600,6 +601,7 @@ class EditProfileFragment : Fragment() {
                         call: retrofit2.Call<ResponseBody>,
                         response: retrofit2.Response<ResponseBody>
                     ) {
+                        println("zorunlu response")
                         saveEnded()
                     }
                 }
@@ -632,6 +634,7 @@ class EditProfileFragment : Fragment() {
                             "Network error: ${t.message}",
                             Toast.LENGTH_SHORT
                         ).show()
+                        println("optional fail")
                         saveEnded()
                     }
 
@@ -655,6 +658,7 @@ class EditProfileFragment : Fragment() {
                                         Toast.LENGTH_SHORT
                                     ).show()
 
+                                    println("delete fail")
                                     saveEnded()
                                 }
 
@@ -662,6 +666,7 @@ class EditProfileFragment : Fragment() {
                                     call: retrofit2.Call<ResponseBody>,
                                     response: retrofit2.Response<ResponseBody>
                                 ) {
+                                    println("delete response")
                                     saveEnded()
                                 }
                             }
@@ -695,6 +700,7 @@ class EditProfileFragment : Fragment() {
                                 "Network error: ${t.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            println("social media fail")
                             saveEnded()
                         }
 
@@ -702,6 +708,7 @@ class EditProfileFragment : Fragment() {
                             call: retrofit2.Call<ResponseBody>,
                             response: retrofit2.Response<ResponseBody>
                         ) {
+                            println("social media response")
                             saveEnded()
                         }
                     }
@@ -732,6 +739,7 @@ class EditProfileFragment : Fragment() {
                                 "Network error: ${t.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            println("skill fail")
                             saveEnded()
                         }
 
@@ -739,6 +747,7 @@ class EditProfileFragment : Fragment() {
                             call: retrofit2.Call<ResponseBody>,
                             response: retrofit2.Response<ResponseBody>
                         ) {
+                            println("skill response")
                             saveEnded()
                         }
                     }
@@ -768,6 +777,7 @@ class EditProfileFragment : Fragment() {
                                 "Network error: ${t.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            println("language fail")
                             saveEnded()
                         }
 
@@ -778,10 +788,11 @@ class EditProfileFragment : Fragment() {
                             if (response.isSuccessful) {
 //                                Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
                             } else {
-                                saveEnded()
                                 println(response.body())
                                 println(response.errorBody())
                             }
+                            println("language response")
+                            saveEnded()
                         }
                     }
                 )
@@ -808,6 +819,7 @@ class EditProfileFragment : Fragment() {
                                 "Network error: ${t.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            println("profession fail")
                             saveEnded()
                         }
 
@@ -815,6 +827,7 @@ class EditProfileFragment : Fragment() {
                             call: retrofit2.Call<ResponseBody>,
                             response: retrofit2.Response<ResponseBody>
                         ) {
+                            println("profession response")
                             saveEnded()
                         }
                     }
@@ -889,7 +902,7 @@ class EditProfileFragment : Fragment() {
 
     private fun saveEnded() {
         saveEndCount++
-        if (saveEndCount == 6) {
+        if (saveEndCount == 2 + socialMediaCount + skillCount + languageCount + professionCount) {
             Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
         }
