@@ -4,15 +4,20 @@ import MainInfo from '@/components/profile/MainInfo';
 import OptionalInfo from '@/components/profile/OptionalInfo';
 import ActivityTable from '@/components/ActivityTable';
 import SkillList from '@/components/profile/SkillList';
+import SkillModal from '@/components/profile/SkillModal';
 import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useDisclosure } from "@nextui-org/react";
 
 export default function Profile({guest, expired, main_info, optional_info, list_info }) {
   const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { modalState, setModalState } = useState({});
+
   if (guest || expired) {
     useEffect(() => router.push("/login"));
     return (
@@ -44,10 +49,10 @@ export default function Profile({guest, expired, main_info, optional_info, list_
           <MainInfo className="w-60" info={main_info}/>
           <OptionalInfo className="w-80" fields={optional_info_tr} />
           <div>
-            <SkillList list={social.list} topic={social.topic} username={username}/>
-            <SkillList list={skills.list} topic={skills.topic} username={username} />
-            <SkillList list={languages.list} topic={languages.topic} username={username} />
-            <SkillList list={professions.list} topic={professions.topic} username={username} />
+            <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen}/>
+            <SkillList list={skills.list} topic={skills.topic} username={username} onOpen={onOpen} />
+            <SkillList list={languages.list} topic={languages.topic} username={username} onOpen={onOpen} />
+            <SkillList list={professions.list} topic={professions.topic} username={username} onOpen={onOpen} />
           </div>
         </div>
         <div class="my-10 w-full text-center">
@@ -56,6 +61,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
           </Link>
         </div>
         <ActivityTable />
+        <SkillModal isOpen={isOpen} onOpenChange={onOpenChange}/>
       </main>
     </>
   )
