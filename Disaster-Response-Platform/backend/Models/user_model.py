@@ -39,13 +39,15 @@ class CreateUserRequest(BaseModel):
     password: constr(
         min_length=8,
     )
-
+    role: str = "user"
+    
 class UserProfile(User):
     first_name: str
     last_name: str
     phone_number: str | None= None
     is_email_verified: bool = False
     private_account: bool = False
+    role: str = "user"
 
 
 class UserInfo(BaseModel):

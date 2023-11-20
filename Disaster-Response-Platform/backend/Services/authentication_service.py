@@ -39,6 +39,18 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
     return user
 
+def get_current_admin_user(current_user: UserProfile = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have access to this resource",
+        )
+    return current_user
+
+# should be used in he funcion params: (current_user: UserProfile = Depends(get_current_admin_user))
+
+
+
 def get_current_username(current_user: LoginUserRequest= Depends(get_current_user)):
     return current_user.username
 
