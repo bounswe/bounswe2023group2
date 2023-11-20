@@ -27,7 +27,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    print("get current user -1")
+  
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
@@ -41,7 +41,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     user = get_user(username)
     if user is None:
         raise credentials_exception
-    print(user)
+
     return user
 
 def get_current_username(current_user: LoginUserRequest= Depends(get_current_user)):
@@ -100,7 +100,7 @@ def create_jwt_token(data: dict, expires_delta: timedelta):
     return encoded_jwt
 
 def create_user(user: CreateUserRequest):
-    print("debug 1")
+
     if not (all([user.username,user.password, user.first_name, user.last_name] )) or not (user.phone_number or user.email) :
         raise ValueError("Please fill all mandatory fields")     
        
@@ -120,11 +120,11 @@ def create_user(user: CreateUserRequest):
         
     hash= get_password_hash(user.password)
     user.password=hash
-    print("debug 2")
+
     user.user_role= UserRole.AUTHENTICATED.value #default signed up user is authenticated
-    print(UserRole.AUTHENTICATED.value )
+  
     insert_result = userDb.insert_one(user.dict())
-    print("debug 4")
+
     if insert_result.inserted_id:
         success_response = SignUpSuccess(
             user=dict(user),
@@ -150,9 +150,8 @@ def get_user(username_or_email_or_phone: str):
             {"phone_number": username_or_email_or_phone}
         ]
     })
-    print("get  user -4")
+
     if user_document is not None:
-        print("get  user -5")
         return UserProfile(**user_document)
 
 def authenticate_user(username_or_email_or_phone: str, password: str):

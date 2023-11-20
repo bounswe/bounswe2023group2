@@ -30,6 +30,16 @@ class LoginUserRequest(BaseModel):
 class Error(BaseModel):
     ErrorMessage: str
     ErrorDetail: str
+class ProficiencyEnum(str, Enum):
+    bilingual = "bilingual"
+    doctor = "doctor"
+    pharmacist ="pharmacist"
+    rescue_member="rescue_member"
+    infrastructure_engineer="infrastructure_engineer"
+    it_specialist= "it_specialist"
+    #police, soldier, not for human resource but searching certain info, 
+
+
 
 class CreateUserRequest(BaseModel):
     username: str
@@ -48,23 +58,11 @@ class CreateUserRequest(BaseModel):
         min_length=8,
     )
     user_role: UserRole = Field(default=None)
-    #user_role: str | None= None
-
-class ProficiencyEnum(str, Enum):
-    bilingual = "bilingual"
-    doctor = "doctor"
-    pharmacist ="pharmacist"
-    rescue_member="rescue_member"
-    infrastructure_engineer="infrastructure_engineer"
-    it_specialist= "it_specialist"
-    #police, soldier, not for human resource but searching certain info, 
-
-
+    proficiency: ProficiencyEnum = Field(default=None)
 
 
 
 class ProfRequest(BaseModel):
-    username: str | None= None
     proficiency: ProficiencyEnum
     details: str
 
@@ -75,6 +73,8 @@ class UserProfile(User):
     is_email_verified: bool = False
     private_account: bool = False
     user_role: UserRole = Field(default=None)
+    proficiency: ProfRequest= Field(default=None)
+
 
 
 class UserInfo(BaseModel):
@@ -85,6 +85,7 @@ class UserInfo(BaseModel):
     phone_number: str | None= None
     is_email_verified: bool = False
     private_account: bool = False
+    
 
 
 class UpdateUserRequest(BaseModel):
@@ -104,7 +105,7 @@ class SignUpSuccess(BaseModel):
     inserted_id: str
 
 class ProfReqSuccess(BaseModel):
-    proficiency: dict
+    proficiency: ProfRequest= Field(default=None)
     inserted_id: str
 
 class UserRoleResponse(BaseModel):
