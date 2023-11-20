@@ -16,7 +16,11 @@ import { useDisclosure } from "@nextui-org/react";
 export default function Profile({guest, expired, main_info, optional_info, list_info }) {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { modalState, setModalState } = useState({});
+  const [ modalState, setModalState ] = useState({"api_url": "Yükleniyor...", "key": "Yükleniyor...",
+        "title": "Yükleniyor...", "primary": "Yükleniyor...", "secondary": "Yükleniyor...", "is_link": false,
+        "add_title": "Yükleniyor...", "primary_label": "Yükleniyor...", "secondary_label": "Yükleniyor...",
+        "post": "Yükleniyor...", "delete": "Yükleniyor...",
+        "options": ["Yükleniyor..."]});
 
   if (guest || expired) {
     useEffect(() => router.push("/login"));
@@ -49,10 +53,10 @@ export default function Profile({guest, expired, main_info, optional_info, list_
           <MainInfo className="w-60" info={main_info}/>
           <OptionalInfo className="w-80" fields={optional_info_tr} />
           <div>
-            <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen}/>
-            <SkillList list={skills.list} topic={skills.topic} username={username} onOpen={onOpen} />
-            <SkillList list={languages.list} topic={languages.topic} username={username} onOpen={onOpen} />
-            <SkillList list={professions.list} topic={professions.topic} username={username} onOpen={onOpen} />
+            <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen} setModalState={setModalState}/>
+            <SkillList list={skills.list} topic={skills.topic} username={username} onOpen={onOpen} setModalState={setModalState} />
+            <SkillList list={languages.list} topic={languages.topic} username={username} onOpen={onOpen} setModalState={setModalState} />
+            <SkillList list={professions.list} topic={professions.topic} username={username} onOpen={onOpen} setModalState={setModalState} />
           </div>
         </div>
         <div class="my-10 w-full text-center">
@@ -61,7 +65,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
           </Link>
         </div>
         <ActivityTable />
-        <SkillModal isOpen={isOpen} onOpenChange={onOpenChange}/>
+        <SkillModal isOpen={isOpen} onOpenChange={onOpenChange} topic={modalState}/>
       </main>
     </>
   )
@@ -111,16 +115,23 @@ export const getServerSideProps = withIronSessionSsr(
     const topics = [
       {"api_url": "professions", "key": "user_professions",
         "title": "Meslekler", "primary": "profession", "secondary": "profession_level", "is_link": false,
-        "post": "/add-profession", "delete": ""},
+        "add_title": "Meslek Ekle", "primary_label": "Meslek", "secondary_label": "Seviye",
+        "post": "/add-profession", "delete": "",
+        "options": ["amateur", "pro", "certified pro"]},
       {"api_url": "languages", "key": "user_languages",
         "title": "Diller", "primary": "language", "secondary": "language_level", "is_link": false,
-        "post": "/add-language", "delete": "/delete-language"},
+        "add_title": "Dil Ekle", "primary_label": "Dil", "secondary_label": "Seviye",
+        "post": "/add-language", "delete": "/delete-language",
+        "options": ["beginner", "intermediate", "advanced", "native"]},
       {"api_url": "socialmedia-links", "key": "user_socialmedia_links",
         "title": "Sosyal Medya", "text": "platform_name", "url": "profile_URL", "is_link": true,
+        "add_title": "Sosyal Medya Hesabı Ekle", "primary_label": "Site ismi", "secondary_label": "Profil linki",
         "post": "/add-social-media-link", "delete": ""},
       {"api_url": "skills", "key": "user_skills",
         "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", "is_link": false,
-        "post": "/add-skill", "delete": ""},
+        "add_title": "Yetenek Ekle", "primary_label": "Yetenek tanımı", "secondary_label": "Seviye",
+        "post": "/add-skill", "delete": "",
+        "options": ["beginner", "basic", "intermediate", "skilled", "expert"]},
     ]
 
     for (let topic of topics) {

@@ -10,10 +10,11 @@ async function addSkillRoute(req, res) {
         res.status(401).json({});
         return;
     }
-    await api.post(`/api/profiles/${topic.api_url}${topic.post}`, req.body, {
+    const {url, skill} = req.body;
+    await api.post(`/api/profiles/${url}`, skill, {
         headers: {
             'Authorization': `Bearer ${user.accessToken}` 
         }
     });
-    res.status(200).json({});
+    res.status(200).json({})
 }
