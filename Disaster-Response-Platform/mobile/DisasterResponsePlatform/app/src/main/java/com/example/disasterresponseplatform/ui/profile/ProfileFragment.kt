@@ -426,8 +426,10 @@ class ProfileFragment : Fragment() {
             }
 
             if (user.education != null) {
+                val backendLevelArray: Array<String> = arrayOf("ilk", "orta", "lise", "yuksekokul", "universite")
+                val showArray = resources.getStringArray(R.array.education)
                 profileEducationLayout.visibility = View.VISIBLE
-                profileEducation.text = user.education
+                profileEducation.text = showArray[backendLevelArray.indexOf(user.education)]
             }
 
             if (user.healthCondition != null) {
