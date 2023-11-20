@@ -1,8 +1,10 @@
 package com.example.disasterresponseplatform.ui.profile
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -45,6 +48,7 @@ import com.squareup.picasso.Picasso
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
+import java.time.LocalDate
 
 class EditProfileFragment : Fragment() {
 
@@ -58,6 +62,7 @@ class EditProfileFragment : Fragment() {
     private var saveEndCount = 0
     private var bloodType = -1
     private var education = -1
+    private var date = ""
     private val networkManager = NetworkManager()
     private var map: HashMap<String, String> = hashMapOf()
     private val headers = mapOf(
@@ -99,6 +104,7 @@ class EditProfileFragment : Fragment() {
         saveEndCount = 0
         bloodType = -1
         education = -1
+        date = ""
         map = hashMapOf()
 
         fillInformations(user)
@@ -133,7 +139,8 @@ class EditProfileFragment : Fragment() {
 
             if (user.birth != null) {
                 profileBirthLayout.visibility = View.VISIBLE
-                profileBirth.setText(user.birth.toString())
+                date = user.birth!!.split(" ")[0]
+                profileBirthButton.text = date
             }
 
             if (user.nationality != null) {
@@ -601,7 +608,7 @@ class EditProfileFragment : Fragment() {
             val backendLevelArray: Array<String> = arrayOf("ilk", "orta", "lise", "yuksekokul", "universite")
             val obody = ProfileOptionalBody(
                 username = profileUsername.text.toString(),
-                dateOfBirth = if (profileBirth.text.isBlank()) null else profileBirth.text.toString(),
+                dateOfBirth = date.ifBlank { null },
                 nationality = if (profileNationality.text.isBlank()) null else profileNationality.text.toString(),
                 identityNumber = if (profileIdNumber.text.isBlank()) null else profileIdNumber.text.toString(),
                 education = if (spEducation.text.isBlank()) null else backendLevelArray[education],
@@ -859,6 +866,23 @@ class EditProfileFragment : Fragment() {
 
             profileEditConfirmButton.setOnClickListener {
                 saveChanges(user)
+            }
+
+            profileBirthButton.setOnClickListener {
+                var year = 2000
+                var month = 1
+                var day = 1
+                if (date.isNotBlank()) {
+                    year = date.split("-")[0].toInt()
+                    month = date.split("-")[1].toInt()
+                    day = date.split("-")[2].toInt()
+                }
+                val datePickerDialog = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener {
+                        _, year, month, dayOfMonth ->
+                    date = "$year-${month+1}-$dayOfMonth"
+                    profileBirthButton.text = date
+                }, year, month, day)
+                datePickerDialog.show()
             }
         }
     }

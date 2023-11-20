@@ -133,9 +133,9 @@ class ProfileFragment : Fragment() {
                                     }
                                 }
                                 if (res != null) {
-                                    try {
-                                        user.birth = LocalDate.parse(res.dateOfBirth)
-                                    } catch (_: Exception) {}
+                                    if (res.dateOfBirth.isNotBlank()) {
+                                        user.birth = res.dateOfBirth.split(" ")[0]
+                                    }
                                     user.nationality = res.nationality
                                     user.idNumber = res.identityNumber
                                     user.education = res.education

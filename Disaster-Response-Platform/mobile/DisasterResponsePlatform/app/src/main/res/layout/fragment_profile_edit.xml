@@ -297,20 +297,13 @@
                     android:padding="10dp"
                     android:src="@drawable/birthday_icon" />
 
-                <com.google.android.material.textfield.TextInputLayout
+                <Button
+                    android:id="@+id/profileBirthButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Birthday">
-                <EditText
-                    android:id="@+id/profile_birth"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:textSize="15sp"
+                    android:layout_gravity="center_vertical"
                     android:padding="10dp"
-                    android:text="" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <!-- Nationality -->
