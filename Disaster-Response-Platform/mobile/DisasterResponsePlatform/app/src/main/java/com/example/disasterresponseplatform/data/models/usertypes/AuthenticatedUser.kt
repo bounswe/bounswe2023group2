@@ -14,7 +14,7 @@ open class AuthenticatedUser(var username: String, var email: String, var phone:
     var verificationLevel: Int = 0
     var profileInfoShared: Boolean = false
     var verifiedBy: String = ""
-    var birth: LocalDate? = null
+    var birth: String? = null
     var nationality: String? = null
     var idNumber: String? = null
     var address: String? = null
