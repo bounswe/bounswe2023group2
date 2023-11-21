@@ -2,7 +2,7 @@ import React from "react";
 
 
 
-export default function ActivityTable({ resource, needFilter, resourceFilter }) {
+export default function ActivityTable({resource, need, needFilter, resourceFilter, filters}) {
     return (
 
         <div class="w-full overflow-x-auto shadow-md sm:rounded my-10">
@@ -52,7 +52,7 @@ export default function ActivityTable({ resource, needFilter, resourceFilter }) 
                             </tr>
                         </>
                     )) }
-                    {needFilter && [].map((resource) => (
+                    {needFilter && [].map((need) => (
                         <>
                             <tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-500">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
