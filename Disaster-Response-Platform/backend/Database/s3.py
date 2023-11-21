@@ -20,8 +20,8 @@ def upload_file_using_client():
 def get_file(file):
 
   s3 = boto3.client("s3", 
-                aws_access_key_id='AKIAZ5XGZRMHMYTNYB6T',
-                aws_secret_access_key='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')
+                aws_access_key_id=config.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=   config.AWS_SECRET_ACCESS_KEY)
   bucket_name = 'files.practice-app.online'
   object_name = "deneme.txt"
   file_name = os.path.join(pathlib.Path(__file__).parent.resolve(), "deneme.txt")
