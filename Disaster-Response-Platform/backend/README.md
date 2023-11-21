@@ -29,3 +29,4 @@ pip3 freeze > requirements.txt
 docker-compose up -d --build backend
 
 - To run tests
+pytest "test file"
