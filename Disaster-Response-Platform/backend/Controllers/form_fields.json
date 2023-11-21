@@ -23,6 +23,16 @@
             {"name": "y", "label": "Y Coordinate", "type": "number"}
         ]
     },
+    "action": {
+        "fields": [
+            {"name": "_id", "label": "ID", "type": "text"},
+            {"name": "created_by", "label": "Created By", "type": "text"},
+            {"name": "x", "label": "X Coordinate", "type": "number"},
+            {"name": "y", "label": "Y Coordinate", "type": "number"},
+            {"name": "resources", "label": "List of Resources", "type": "array", "subtype": "resource"},
+            {"name": "needs", "label": "List of Needs", "type": "array", "subtype": "need"}
+        ]
+    },
     "subtype": {
         "cloth": {
             "fields": [
