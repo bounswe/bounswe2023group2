@@ -521,9 +521,9 @@ class EditProfileFragment : Fragment() {
                 dateOfBirth = date.ifBlank { null },
                 nationality = if (profileNationality.text.isBlank()) null else profileNationality.text.toString(),
                 identityNumber = if (profileIdNumber.text.isBlank()) null else profileIdNumber.text.toString(),
-                education = if (spEducation.text.isBlank()) null else backendLevelArray[education],
+                education = if (spEducation.text.isBlank() || education == -1) null else backendLevelArray[education],
                 healthCondition = if (profileHealthCondition.text.isBlank()) null else profileHealthCondition.text.toString(),
-                bloodType = if (spBloodType.text.isBlank()) null else resources.getStringArray(R.array.blood_types)[bloodType],
+                bloodType = if (spBloodType.text.isBlank() || bloodType == -1) null else resources.getStringArray(R.array.blood_types)[bloodType],
                 address = if (profileAddress.text.isBlank()) null else profileAddress.text.toString()
             )
             val json2 = gson.toJson(obody)
