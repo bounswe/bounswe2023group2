@@ -4,7 +4,7 @@ from Database.mongo import MongoDB
 client = TestClient(app)
 db = MongoDB.getInstance()
 
-
+import json
 
 correct_signup_body= {
   "username": "begummm",
@@ -16,6 +16,14 @@ correct_signup_body= {
   "phone_number": "05531420999",
   "is_email_verified": False,
   "private_account": True
+}
+
+correct_update_body= {
+  "email": "begumarslan2@outlook.de",
+  "first_name": "Begum",
+  "last_name": "Arslan",
+  "phone_number": "05531420999",
+  "private_account": False
 }
 
 missing_field_signup_body= {
@@ -96,7 +104,8 @@ merve_singup_body={
   "last_name": "gurbuz",
   "password": "12345merve",
   "phone_number": "05527934742",
-  "email": "merve16gurbuz@gmail.com"
+  "email": "merve16gurbuz@gmail.com",
+  "private_account": True
 }
 
 email_login_body= {
@@ -116,6 +125,8 @@ wrong_login_body= {
     "password": "a2345678"
 
 }
+
+
 def test_signup1():
     response = client.post("/api/users/signup", json=
     correct_signup_body)
@@ -181,3 +192,101 @@ def test_login4():
     response = client.post("/api/users/login", json=
     wrong_login_body)
     assert response.status_code == 401
+
+
+def test_refresh_token1():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    response = client.post("/api/users/refresh-token", headers=headers)
+    assert response.status_code == 200
+
+def test_refresh_token2():
+    token="dkfrgos"
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    response = client.post("/api/users/refresh-token", headers=headers)
+    assert response.status_code == 401
+def test_get_me():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    response = client.get("/api/users/me", headers=headers)
+    assert response.status_code == 200
+def test_get_username():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    endpoint= "/api/users/" + "begum4"
+    response = client.get(endpoint, headers=headers)
+    assert response.status_code == 200
+
+def test_get_username2():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    endpoint= "/api/users/" + "merve"
+    response = client.get(endpoint, headers=headers)
+    assert response.status_code == 403
+
+def test_get_username3():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    endpoint= "/api/users/" + "merve22p3"
+    response = client.get(endpoint, headers=headers)
+    assert response.status_code == 404
+
+def test_update_user():
+    response = client.post("/api/users/login", json=
+    phone_login_body)
+    response_data = response.json()
+    token = response_data.get('access_token')
+
+    token = "Bearer " + token
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+    }
+    response = client.put("/api/users/update-user", json=
+    correct_update_body, headers=headers)
+    assert response.status_code == 200
+
