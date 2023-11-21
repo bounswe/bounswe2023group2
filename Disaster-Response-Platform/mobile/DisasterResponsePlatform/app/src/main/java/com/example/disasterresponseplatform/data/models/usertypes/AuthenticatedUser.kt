@@ -1,10 +1,11 @@
 package com.example.disasterresponseplatform.data.models.usertypes
 
+import java.io.Serializable
 import java.time.LocalDate
 import java.util.UUID
 
 open class AuthenticatedUser(var username: String, var email: String, var phone: String,
-                             var name: String, var surname: String ) {
+                             var name: String, var surname: String ) : Serializable {
     var id: UUID = UUID.randomUUID()
     var isEmailVerified: Boolean = false
     var isPhoneVerified: Boolean = false
@@ -13,7 +14,7 @@ open class AuthenticatedUser(var username: String, var email: String, var phone:
     var verificationLevel: Int = 0
     var profileInfoShared: Boolean = false
     var verifiedBy: String = ""
-    var birth: LocalDate? = null
+    var birth: String? = null
     var nationality: String? = null
     var idNumber: String? = null
     var address: String? = null

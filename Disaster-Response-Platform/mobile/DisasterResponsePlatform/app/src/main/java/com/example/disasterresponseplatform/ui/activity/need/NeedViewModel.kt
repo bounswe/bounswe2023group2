@@ -64,8 +64,8 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         currentList.forEach { responseItem ->
             //Log.d("createNeedList", "responseItem: $responseItem")
             //Log.d("createNeedList", "responseItemDetails: ${responseItem.details}")
-            val details = returnDetailsAsString(responseItem.details)
-            val needType = returnNeedType(responseItem.type)
+            val details = responseItem.returnDetailsAsString()
+            val needType = responseItem.returnNeedType()
             val time = DateUtil.getDate("dd-MM-yy").toString()
             val coordinateX = if (responseItem.x == null) 1.0 else responseItem.x.toDouble()
             val coordinateY = if (responseItem.y == null) 1.0 else responseItem.y.toDouble()
@@ -83,65 +83,6 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
             lst.add(currentNeed)
         }
         return lst.toList()
-    }
-
-    private fun returnNeedType(type: String): NeedTypes {
-        val needType: NeedTypes = when (type.lowercase()) {
-            "cloth" -> NeedTypes.Clothes
-            "clothes" -> NeedTypes.Clothes
-            "food" -> NeedTypes.Food
-            "shelter" -> NeedTypes.Shelter
-            "medication" -> NeedTypes.Medication
-            "transportation" -> NeedTypes.Transportation
-            "tools" -> NeedTypes.Tools
-            "human" -> NeedTypes.Human
-            else -> NeedTypes.Other
-        }
-        return needType
-    }
-
-    private fun returnDetailsAsString(needDetails: NeedBody.NeedDetails): String {
-        var detailsString = ""
-        if (!needDetails.size.isNullOrEmpty()) {
-            detailsString += "size: ${needDetails.size} "
-        }
-        if (!needDetails.gender.isNullOrEmpty()) {
-            detailsString += "gender: ${needDetails.gender} "
-        }
-        if (needDetails.age != null) {
-            detailsString += "age: ${needDetails.age} "
-        }
-        if (!needDetails.subtype.isNullOrEmpty()) {
-            detailsString += "subtype: ${needDetails.subtype} "
-        }
-        if (!needDetails.expiration_date.isNullOrEmpty()) {
-            detailsString += "expiration_date: ${needDetails.expiration_date} "
-        }
-        if (!needDetails.allergens.isNullOrEmpty()) {
-            detailsString += "allergens: ${needDetails.allergens} "
-        }
-        if (!needDetails.disease_name.isNullOrEmpty()) {
-            detailsString += "disease_name: ${needDetails.disease_name} "
-        }
-        if (!needDetails.medicine_name.isNullOrEmpty()) {
-            detailsString += "medicine_name: ${needDetails.medicine_name} "
-        }
-        if (!needDetails.start_location.isNullOrEmpty()) {
-            detailsString += "start_location: ${needDetails.start_location} "
-        }
-        if (!needDetails.end_location.isNullOrEmpty()) {
-            detailsString += "end_location: ${needDetails.end_location} "
-        }
-        if (needDetails.number_of_people != null) {
-            detailsString += "number_of_people: ${needDetails.number_of_people} "
-        }
-        if (!needDetails.weather_condition.isNullOrEmpty()) {
-            detailsString += "weather_condition: ${needDetails.weather_condition} "
-        }
-        if (!needDetails.SKT.isNullOrEmpty()) {
-            detailsString += "SKT: ${needDetails.SKT} "
-        }
-        return detailsString
     }
 
     fun sendGetAllRequest() {

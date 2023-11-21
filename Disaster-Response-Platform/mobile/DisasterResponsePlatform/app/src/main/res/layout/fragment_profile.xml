@@ -7,9 +7,30 @@
     android:orientation="vertical"
     tools:context=".ui.profile.ProfileFragment">
 
-    <ScrollView
+    <ProgressBar
+        android:id="@+id/profile_progress_bar"
+        style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="100dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="You need to log in first"
+        android:textSize="30sp"
+        android:padding="20dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/profile_login_first_text"/>
+
+    <ScrollView
+        android:id="@+id/profile_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+
 
         <LinearLayout
             android:id="@+id/profile_top_layout"
@@ -77,7 +98,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:padding="5dp"
-                        android:text="Suzan Üsküdarlı"
+                        android:text="Full Name"
                         android:textSize="20sp" />
 
                     <TextView
@@ -87,7 +108,7 @@
                         android:layout_weight="1"
                         android:paddingLeft="5dp"
                         android:paddingBottom="10dp"
-                        android:text="suzanuskudarli"
+                        android:text="username"
                         android:textSize="15sp" />
 
                     <Button
@@ -225,7 +246,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:padding="10dp"
-                    android:text="suzan.uskudarli@boun.edu.tr" />
+                    android:text="emailadress@email.com" />
 
                 <ImageView
                     android:id="@+id/profile_email_verified_icon"
@@ -470,7 +491,7 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/profile_edit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

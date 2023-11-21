@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.disasterresponseplatform.MainActivity
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.databinding.FragmentNetworkBinding
@@ -51,7 +50,6 @@ class NetworkFragment : Fragment() {
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                         Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
-
                     override fun onResponse(
                         call: Call<ResponseBody>,
                         response: Response<ResponseBody>
