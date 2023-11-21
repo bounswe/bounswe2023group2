@@ -220,18 +220,21 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
 
                                 } catch (e: IOException) {
                                     // Handle IOException if reading the response body fails
+                                    liveDataNeedID.postValue("-1")
                                     Log.e(
                                         "ResponseError",
                                         "Error reading response body: ${e.message}"
                                     )
                                 }
                             } else {
+                                liveDataNeedID.postValue("-1")
                                 Log.d("ResponseSuccess", "Body is null")
                             }
                         } else {
                             val errorBody = response.errorBody()?.string()
                             if (errorBody != null) {
                                 val responseCode = response.code()
+                                liveDataNeedID.postValue("-1")
                                 Log.d(
                                     "ResponseSuccess",
                                     "Body: $errorBody Response Code: $responseCode"
