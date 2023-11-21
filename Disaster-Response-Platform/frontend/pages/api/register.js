@@ -8,12 +8,6 @@ export default withIronSessionApiRoute(
     try {
 
       const { data } = await api.post('/api/users/signup',  req.body );
-      req.session.user = {
-        accessToken: data?.payload?.tokens?.accessToken,
-        refreshToken: data?.payload?.tokens?.refreshToken,
-        languages: 'tr'
-      };
-      await req.session.save();
 
       res.status(200).json(data);
     } catch (error) {

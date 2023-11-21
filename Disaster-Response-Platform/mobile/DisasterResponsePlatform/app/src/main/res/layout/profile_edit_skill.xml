@@ -35,15 +35,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="100"
-        android:padding="3dp">
+        android:padding="3dp"
+        android:hint="Level">
 
-        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="13sp"
-            android:inputType="text" />
+    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/profile_item_hint3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_weight="100"
+        android:padding="3dp"
+        android:hint="Birthday">
+    <EditText
+        android:id="@+id/profile_item_text3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:ems="10"
+        android:textSize="13sp"
+        android:gravity="center_vertical"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

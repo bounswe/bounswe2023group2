@@ -1,0 +1,75 @@
+{
+    "resource": {
+        "fields": [
+            {"name": "_id", "label": "ID", "type": "text"},
+            {"name": "created_by", "label": "Created By", "type": "text"},
+            {"name": "condition", "label": "Condition", "type": "select", "options": ["new", "used"]},
+            {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
+            {"name": "currentQuantity", "label": "Current Quantity", "type": "number"},
+            {"name": "type", "label": "Type", "type": "text"},
+            {"name": "x", "label": "X Coordinate", "type": "number"},
+            {"name": "y", "label": "Y Coordinate", "type": "number"}
+        ]
+    },
+    "need": {
+        "fields": [
+            {"name": "_id", "label": "ID", "type": "text"},
+            {"name": "created_by", "label": "Created By", "type": "text"},
+            {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
+            {"name": "urgency", "label": "Urgency", "type": "number"},
+            {"name": "unsuppliedQuantity", "label": "Unsupplied Quantity", "type": "number"},
+            {"name": "type", "label": "Type", "type": "text"},
+            {"name": "x", "label": "X Coordinate", "type": "number"},
+            {"name": "y", "label": "Y Coordinate", "type": "number"}
+        ]
+    },
+    "subtype": {
+        "cloth": {
+            "fields": [
+                {"name": "size", "label": "Size", "type": "text"},
+                {"name": "gender", "label": "Gender", "type": "text"},
+                {"name": "age", "label": "Age", "type": "text"},
+                {"name": "subtype", "label": "Subtype", "type": "text"}
+            ]
+        },
+        "food": {
+            "fields": [
+                {"name": "expiration_date", "label": "Expiration Date", "type": "date"},
+                {"name": "allergens", "label": "Allergens", "type": "text"},
+                {"name": "subtype", "label": "Subtype", "type": "text"}
+            ]
+        },
+        "shelter": {
+            "fields": [
+                {"name": "number_of_people", "label": "Number of People", "type": "number"},
+                {"name": "weather_condition", "label": "Weather Condition", "type": "text"}
+            ]
+        },
+        "medication": {
+            "fields": [
+                {"name": "disease_name", "label": "Disease Name", "type": "text"},
+                {"name": "medicine_name", "label": "Medicine Name", "type": "text"},
+                {"name": "age", "label": "Age", "type": "number"}
+            ]
+        },
+        "transportation": {
+            "fields": [
+                {"name": "start_location", "label": "Start Location", "type": "text"},
+                {"name": "end_location", "label": "End Location", "type": "text"}
+            ]
+        },
+        "tool": {
+            "fields": [
+                {"name": "tool_type", "label": "Tool Type", "type": "text"},
+                {"name": "estimated_weight", "label": "Estimated Weight", "type": "number"}
+            ]
+        },
+        "human": {
+            "fields": [
+                {"name": "proficiency", "label": "Proficiency", "type": "text"},
+                {"name": "number_of_people", "label": "Number of People", "type": "number"},
+                {"name": "subtype", "label": "Subtype", "type": "text"}
+            ]
+        }
+    }
+}
