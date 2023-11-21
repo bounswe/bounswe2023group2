@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.ui.activity.need
+package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,44 +8,39 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.need.Need
-import com.example.disasterresponseplatform.databinding.FragmentNeedItemBinding
+import com.example.disasterresponseplatform.data.database.resource.Resource
+import com.example.disasterresponseplatform.databinding.FragmentResourceItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 
+class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource) : Fragment() {
 
-class NeedItemFragment(private val needViewModel: NeedViewModel, private val need: Need) : Fragment() {
+    private lateinit var binding: FragmentResourceItemBinding
 
-    private lateinit var binding: FragmentNeedItemBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentNeedItemBinding.inflate(inflater,container,false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentResourceItemBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fillTexts(need)
+        fillTexts()
         arrangeButtons()
     }
 
-    private fun fillTexts(need: Need){
-        binding.etCreatedBy.text = need.creatorName
-        binding.etType.text = need.type.toString()
-        binding.etInitialQuantity.text = need.quantity.toString()
-        binding.etUnSuppliedQuantity.text = need.quantity.toString()
-        binding.etUrgency.text = need.urgency.toString()
-        binding.etCoordinateX.text = need.coordinateX.toString()
-        binding.etCoordinateY.text = need.coordinateY.toString()
-        binding.etDetails.text = need.details
+    private fun fillTexts(){
+        binding.etCreatedBy.text = resource.creatorName
+        binding.etType.text = resource.type.toString()
+        binding.etInitialQuantity.text = resource.quantity.toString()
+        binding.etUnSuppliedQuantity.text = resource.quantity.toString()
+        binding.etCondition.text = resource.condition.toString()
+        binding.etCoordinateX.text = resource.coordinateX.toString()
+        binding.etCoordinateY.text = resource.coordinateY.toString()
+        binding.etDetails.text = resource.details
     }
 
     private fun arrangeButtons(){
         binding.btnEdit.setOnClickListener {
-            editNeed()
+            editResource()
         }
         binding.btnDelete.setOnClickListener {
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
@@ -64,15 +59,15 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         }
     }
 
-    /** This function is called whenever need is created or edited
+    /** This function is called whenever resource is created or edited
      * If it is created need should be null, else need should be the clicked item
      */
-    private fun editNeed(){
+    private fun editResource(){
         val token = DiskStorageManager.getKeyValue("token")
-        val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (!token.isNullOrEmpty() and (username == need.creatorName)) {
-            val addNeedFragment = AddNeedFragment(needViewModel,need)
-            addFragment(addNeedFragment,"AddNeedFragment")
+        val username = DiskStorageManager.getKeyValue("username").toString()
+        if (!token.isNullOrEmpty() and (username == resource.creatorName)) {
+            val addResourceFragment = AddResourceFragment(resourceViewModel,resource)
+            addFragment(addResourceFragment,"AddResourceFragment")
         }
         else{
             Toast.makeText(context, "You don't have enough authority to edit it!", Toast.LENGTH_SHORT).show()

@@ -216,15 +216,18 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
 
                                 } catch (e: IOException) {
                                     // Handle IOException if reading the response body fails
+                                    liveDataResourceID.postValue("-1")
                                     Log.e(
                                         "ResponseError",
                                         "Error reading response body: ${e.message}"
                                     )
                                 }
                             } else {
+                                liveDataResourceID.postValue("-1")
                                 Log.d("ResponseSuccess", "Body is null")
                             }
                         } else {
+                            liveDataResourceID.postValue("-1")
                             val errorBody = response.errorBody()?.string()
                             if (errorBody != null) {
                                 var responseCode = response.code()
