@@ -25,6 +25,7 @@ roleRequestsDb = MongoDB.get_collection('role_verification_requests')
     status.HTTP_400_BAD_REQUEST: {"model": Error}
 })
 async def proficiency_request(prof_request : ProfRequest, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+
     try:
         result= create_proficiency_request(prof_request, current_user)
         response.status_code=status.HTTP_201_CREATED

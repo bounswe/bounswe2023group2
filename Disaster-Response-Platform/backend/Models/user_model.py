@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, constr, Field
 from enum import Enum, auto
 from typing import Dict, Any
-
+from typing import Optional, List
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -37,9 +37,12 @@ class ProficiencyEnum(str, Enum):
     rescue_member="rescue_member"
     infrastructure_engineer="infrastructure_engineer"
     it_specialist= "it_specialist"
+    other="other"
     #police, soldier, not for human resource but searching certain info, 
 
-
+class ProfRequest(BaseModel):
+    proficiency: Optional[ProficiencyEnum] = None
+    details: str=None
 
 class CreateUserRequest(BaseModel):
     username: str
@@ -58,13 +61,11 @@ class CreateUserRequest(BaseModel):
         min_length=8,
     )
     user_role: UserRole = Field(default=None)
-    proficiency: ProficiencyEnum = Field(default=None)
+    proficiency: Optional[List[ProfRequest]] = None
 
 
 
-class ProfRequest(BaseModel):
-    proficiency: ProficiencyEnum
-    details: str
+
 
 class UserProfile(User):
     first_name: str
@@ -73,7 +74,7 @@ class UserProfile(User):
     is_email_verified: bool = False
     private_account: bool = False
     user_role: UserRole = Field(default=None)
-    proficiency: ProfRequest= Field(default=None)
+    proficiency: Optional[List[ProfRequest]] = None
 
 
 
@@ -105,8 +106,8 @@ class SignUpSuccess(BaseModel):
     inserted_id: str
 
 class ProfReqSuccess(BaseModel):
-    proficiency: ProfRequest= Field(default=None)
-    inserted_id: str
+    proficiency: ProficiencyEnum= Field(default=None)
+
 
 class UserRoleResponse(BaseModel):
     user_role: str

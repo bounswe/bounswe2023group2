@@ -22,21 +22,37 @@ def create_proficiency_request(prof_request : ProfRequest, username: str):
     #         inserted_id=str(insert_result.inserted_id)  # Assuming 'result' is the inserted_id
     #     )
     #     return success_response
-    result = userDb.update_one(
-        {"username": username},
-        {"$set": {"user_role": UserRole.ROLE_BASED.value, "proficiency": ProfRequest}},
-    )
-    if result.inserted_id:
+    query = {"username": username}
+    update_operation = {"$set": {"user_role": UserRole.ROLE_BASED.value}}
+    result= userDb.update_one(query, update_operation)
+
+    existing_user = userDb.find_one({"username": username, "proficiency": {"$elemMatch": {"proficiency": prof_request.proficiency.value}}})
+    if existing_user:
+        userDb.update_one(
+            {"username": username, "proficiency.proficiency": prof_request.proficiency.value},
+            {"$set": {"proficiency.$.details": prof_request.details}}
+        )
         success_response = ProfReqSuccess(
-            proficiency=dict(prof_request),
-            inserted_id=str(result.inserted_id)  # Assuming 'result' is the inserted_id
+            proficiency=prof_request.proficiency
         )
         return success_response
-
-    # Check if the user was found and updated
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="User not found")
-
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This proficiency already exists for the user.",
+        )
+    result = userDb.update_one(
+        {"username": username},
+        {"$push": {"proficiency": {"$each": [prof_request.dict()]}}},
+        upsert=True,
+    )
+    if result.modified_count > 0 :
+        success_response = ProfReqSuccess(
+            proficiency=prof_request.proficiency
+        )
+        return success_response
     else:
         raise ValueError("Proficiency could not be added")
+  
+        
     
