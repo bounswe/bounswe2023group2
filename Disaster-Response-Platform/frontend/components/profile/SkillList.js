@@ -13,7 +13,7 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
     	const newSkill = {
     		...formData,
     		username: username
-    	}
+    	};
 
     	const response = await fetch('/api/add-skill', {
 	      method: 'POST',
@@ -37,6 +37,7 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
 		setSkills(newSkills);
 
 	}
+	
 	async function deleteSkill(event, skill) {
     	event.preventDefault();
 
@@ -55,6 +56,7 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
 
 		setSkills(skills.filter(other => (skill[topic.primary] != other[topic.primary])));
 	}
+
 	return (
 		<GrayBox key={topic.key} className="mb-6 w-54">
 			<h3 class="object-top text-lg"> {topic.title} </h3>
