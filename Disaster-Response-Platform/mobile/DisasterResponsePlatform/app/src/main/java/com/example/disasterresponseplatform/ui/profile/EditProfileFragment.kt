@@ -203,29 +203,6 @@ class EditProfileFragment : Fragment() {
                 profileItemBinding.profileItemHint2.hint = "Profile URL"
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
                     profileTopLayout.removeView(profileItemBinding.root)
-                    networkManager.makeRequest(
-                        endpoint=Endpoint.SOCIAL_MEDIA_DELETE,
-                        requestType=RequestType.POST,
-                        headers=headers,
-                        requestBody=gson.toJson(SocialMediaLink(user.username, profileItemBinding.profileItemText1.text.toString(), map[profileItemBinding.profileItemText1.text.toString()]!!)).toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
-                        callback=object : retrofit2.Callback<ResponseBody> {
-                            override fun onFailure(
-                                call: retrofit2.Call<ResponseBody>,
-                                t: Throwable
-                            ) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Network error: ${t.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            override fun onResponse(
-                                call: retrofit2.Call<ResponseBody>,
-                                response: retrofit2.Response<ResponseBody>
-                            ) {}
-                        }
-                    )
                     socialMediaCount--
                 }
                 profileTopLayout.addView(profileItemBinding.root, 16 + socialMediaCount)
@@ -238,7 +215,6 @@ class EditProfileFragment : Fragment() {
                 profileItemBinding.profileItemText2.setText(socialMedia.profileURL)
                 profileItemBinding.profileItemHint2.hint = "Profile URL"
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
-                    profileTopLayout.removeView(profileItemBinding.root)
                     networkManager.makeRequest(
                         endpoint=Endpoint.SOCIAL_MEDIA_DELETE,
                         requestType=RequestType.POST,
@@ -262,6 +238,7 @@ class EditProfileFragment : Fragment() {
                             ) {}
                         }
                     )
+                    profileTopLayout.removeView(profileItemBinding.root)
                     socialMediaCount--
                 }
                 profileTopLayout.addView(profileItemBinding.root, 16 + socialMediaCount)
@@ -286,29 +263,6 @@ class EditProfileFragment : Fragment() {
                 profileItemBinding.profileItemHint3.hint = "Document Link"
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
                     profileTopLayout.removeView(profileItemBinding.root)
-                    networkManager.makeRequest(
-                        endpoint=Endpoint.SKILL_DELETE,
-                        requestType=RequestType.POST,
-                        headers=headers,
-                        requestBody=gson.toJson(Skill(user.username, profileItemBinding.profileItemText1.text.toString(), map[profileItemBinding.profileItemText1.text.toString()]!!)).toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
-                        callback=object : retrofit2.Callback<ResponseBody> {
-                            override fun onFailure(
-                                call: retrofit2.Call<ResponseBody>,
-                                t: Throwable
-                            ) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Network error: ${t.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            override fun onResponse(
-                                call: retrofit2.Call<ResponseBody>,
-                                response: retrofit2.Response<ResponseBody>
-                            ) {}
-                        }
-                    )
                     skillCount--
                 }
                 profileTopLayout.addView(profileItemBinding.root, 18 + socialMediaCount + skillCount)
@@ -336,7 +290,6 @@ class EditProfileFragment : Fragment() {
                 map[skill.definition] = skill.level
                 profileItemBinding.profileItemHint3.hint = "Document Link"
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
-                    profileTopLayout.removeView(profileItemBinding.root)
                     networkManager.makeRequest(
                         endpoint=Endpoint.SKILL_DELETE,
                         requestType=RequestType.POST,
@@ -360,6 +313,7 @@ class EditProfileFragment : Fragment() {
                             ) {}
                         }
                     )
+                    profileTopLayout.removeView(profileItemBinding.root)
                     skillCount--
                 }
                 profileTopLayout.addView(profileItemBinding.root, 18 + socialMediaCount + skillCount)
@@ -383,29 +337,6 @@ class EditProfileFragment : Fragment() {
                 }
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
                     profileTopLayout.removeView(profileItemBinding.root)
-                    networkManager.makeRequest(
-                        endpoint=Endpoint.LANGUAGE_DELETE,
-                        requestType=RequestType.POST,
-                        headers=headers,
-                        requestBody=gson.toJson(Language(user.username, profileItemBinding.profileItemText1.text.toString(), map[profileItemBinding.profileItemText1.text.toString()]!!)).toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
-                        callback=object : retrofit2.Callback<ResponseBody> {
-                            override fun onFailure(
-                                call: retrofit2.Call<ResponseBody>,
-                                t: Throwable
-                            ) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Network error: ${t.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            override fun onResponse(
-                                call: retrofit2.Call<ResponseBody>,
-                                response: retrofit2.Response<ResponseBody>
-                            ) {}
-                        }
-                    )
                     languageCount--
                 }
                 profileTopLayout.addView(profileItemBinding.root, 20 + socialMediaCount + skillCount + languageCount)
@@ -436,7 +367,6 @@ class EditProfileFragment : Fragment() {
                 profileItemBinding.spinner.hint = language.level
                 map[language.language] = language.level
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
-                    profileTopLayout.removeView(profileItemBinding.root)
                     networkManager.makeRequest(
                         endpoint=Endpoint.LANGUAGE_DELETE,
                         requestType=RequestType.POST,
@@ -460,6 +390,7 @@ class EditProfileFragment : Fragment() {
                             ) {}
                         }
                     )
+                    profileTopLayout.removeView(profileItemBinding.root)
                     languageCount--
                 }
                 profileTopLayout.addView(profileItemBinding.root, 20 + socialMediaCount + skillCount + languageCount)
@@ -483,29 +414,6 @@ class EditProfileFragment : Fragment() {
                 }
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
                     profileTopLayout.removeView(profileItemBinding.root)
-                    networkManager.makeRequest(
-                        endpoint=Endpoint.PROFESSION_DELETE,
-                        requestType=RequestType.POST,
-                        headers=headers,
-                        requestBody=gson.toJson(Profession(user.username, profileItemBinding.profileItemText1.text.toString(), map[profileItemBinding.profileItemText1.text.toString()]!!)).toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
-                        callback=object : retrofit2.Callback<ResponseBody> {
-                            override fun onFailure(
-                                call: retrofit2.Call<ResponseBody>,
-                                t: Throwable
-                            ) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Network error: ${t.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            override fun onResponse(
-                                call: retrofit2.Call<ResponseBody>,
-                                response: retrofit2.Response<ResponseBody>
-                            ) {}
-                        }
-                    )
                     professionCount--
                 }
                 profileTopLayout.addView(profileItemBinding.root, 22 + socialMediaCount + skillCount + languageCount + professionCount)
@@ -531,7 +439,6 @@ class EditProfileFragment : Fragment() {
                 profileItemBinding.spinner.hint = profession.level
                 map[profession.profession] = profession.level
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
-                    profileTopLayout.removeView(profileItemBinding.root)
                     networkManager.makeRequest(
                         endpoint=Endpoint.PROFESSION_DELETE,
                         requestType=RequestType.POST,
@@ -555,6 +462,7 @@ class EditProfileFragment : Fragment() {
                             ) {}
                         }
                     )
+                    profileTopLayout.removeView(profileItemBinding.root)
                     professionCount--
                 }
                 profileTopLayout.addView(profileItemBinding.root, 22 + socialMediaCount + skillCount + languageCount + professionCount)
