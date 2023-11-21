@@ -11,10 +11,16 @@ async function addSkillRoute(req, res) {
         return;
     }
     const {url, skill} = req.body;
-    await api.post(`/api/profiles/${url}`, skill, {
-        headers: {
-            'Authorization': `Bearer ${user.accessToken}` 
-        }
-    });
-    res.status(200).json({})
+    
+    try {
+        await api.post(`/api/profiles/${url}`, skill, {
+            headers: {
+                'Authorization': `Bearer ${user.accessToken}` 
+            }
+        });
+    } catch (error) {
+        console.log('Error in add-skill.js: ', error);
+        res.status(error?.response?.status ?? 403).json({});
+    }
+    res.status(200).json({});
 }

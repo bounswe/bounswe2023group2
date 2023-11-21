@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from "react";
 import { useDisclosure } from "@nextui-org/react";
+import { ToastContainer } from 'react-toastify';
 
 export default function Profile({guest, expired, main_info, optional_info, list_info }) {
   const router = useRouter();
@@ -66,6 +67,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
         </div>
         <ActivityTable />
         <SkillModal isOpen={isOpen} onOpenChange={onOpenChange} topic={modalState}/>
+        <ToastContainer />
       </main>
     </>
   )

@@ -10,10 +10,19 @@ async function deleteSkillRoute(req, res) {
         res.status(401).json({});
         return;
     }
-    await api.delete(`/api/profiles/${topic.api_url}${topic.delete}`, req.body, {
-        headers: {
-            'Authorization': `Bearer ${user.accessToken}` 
-        }
-    });
+    const {url, skill} = req.body;
+
+    try {
+        await api.delete(`/api/profiles/${url}`, {
+            data: skill,
+            headers: {
+                'Authorization': `Bearer ${user.accessToken}`,
+                'Content-Type': 'application/json',
+            }
+        });
+    } catch (error) {
+        console.log('Error in delete-skill.js: ', error);
+        res.status(error?.response?.status ?? 403).json({});
+    }
     res.status(200).json({});
 }

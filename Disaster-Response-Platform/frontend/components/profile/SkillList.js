@@ -37,14 +37,28 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
 		setSkills(newSkills);
 
 	}
-	async function deleteSkill(event) {
+	async function deleteSkill(event, skill) {
     	event.preventDefault();
-		setSkills(skills.filter(skill => (skill[topic.primary] != key)))
+
+    	const response = await fetch('/api/delete-skill', {
+	      method: 'POST',
+	      headers: {
+	        "Content-Type": "application/json",
+	      }, body: JSON.stringify({skill: skill, url: `${topic.api_url}${topic.delete}`})
+	    });
+
+	    if (!response.ok) {
+	    	toast("Bir hata oluştu :(");
+	    	return;
+	    }
+	    toast("Başarıyla kaldırıldı");
+
+		setSkills(skills.filter(other => (skill[topic.primary] != other[topic.primary])));
 	}
 	return (
 		<GrayBox key={topic.key} className="mb-6 w-54">
 			<h3 class="object-top text-lg"> {topic.title} </h3>
-			{ skills.map(skill => Skill({skill: skill, topic: topic, deleteSelf: () => (deleteSkill(skill[topic.primary]))})) }
+			{ skills.map(skill => Skill({skill: skill, topic: topic, deleteSelf: (event) => (deleteSkill(event, skill))})) }
 			<Button
 				onPress={() => { setModalState({...topic, addSkill:addSkill}); onOpen() }}
 			    className="mx-auto block mt-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-bold rounded-full h-6 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
