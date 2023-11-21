@@ -1,4 +1,5 @@
 import bson
+import pydantic
 from pydantic import BaseModel, Field
 from typing import Dict, Any, List
 from enum import Enum
@@ -61,7 +62,7 @@ class UserSkill(BaseModel):
     username: str = Field(default=None)
     skill_definition: str
     skill_level: SkillLevel = Field(default=None)
-    #skill_document: bson = Field(default=None)
+    skill_document: pydantic.AnyUrl = Field(default=None)
 
 class UserLanguage(BaseModel):
     username: str = Field(default=None)

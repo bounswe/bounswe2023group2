@@ -37,7 +37,7 @@ async def get_user_skill_level(response: Response, anyuser:str= None, skill:str 
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def add_a_language_currentuser(user_skill: UserSkill, response: Response, anyuser:str= None, current_username: str = Depends(authentication_service.get_current_username)):
+async def add_a_language_currentuser(user_skill: UserSkill, response: Response, current_username: str = Depends(authentication_service.get_current_username)):
     try:
         user_skill.username = current_username
         result = uprofile_skills_service.add_user_skill(user_skill)
@@ -53,7 +53,7 @@ async def add_a_language_currentuser(user_skill: UserSkill, response: Response, 
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def delete_current_users_language(user_skill: UserSkill, response: Response, anyuser:str= None, current_username: str = Depends(authentication_service.get_current_username)):
+async def delete_current_users_language(user_skill: UserSkill, response: Response, current_username: str = Depends(authentication_service.get_current_username)):
 
     try:
         user_skill.username = current_username
