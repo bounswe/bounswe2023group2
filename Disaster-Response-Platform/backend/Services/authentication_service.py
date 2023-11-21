@@ -47,7 +47,7 @@ def get_current_admin_user(current_user: UserProfile = Depends(get_current_user)
         )
     return current_user
 
-# should be used in he funcion params: (current_user: UserProfile = Depends(get_current_admin_user))
+# should be used in he funcion params: (current_user: UserProfile = Depends(authentication_service.get_current_admin_user))
 
 
 
