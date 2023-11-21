@@ -4,7 +4,7 @@ import Services.authentication_service as authentication_service
 from Services import resource_service
 from Services.build_API_returns import *
 
-from Controllers import resource_controller, user_controller, uprofile_optinfo_controller, uprofile_languages_controller, uprofile_SocMed_controller, uprofile_professions_controller, uprofile_skills_controller, need_controller
+from Controllers import resource_controller, user_controller, uprofile_optinfo_controller, uprofile_languages_controller, uprofile_SocMed_controller, uprofile_professions_controller, uprofile_skills_controller, need_controller, form_fields_controller
 
 
 from fastapi.responses import JSONResponse
@@ -32,6 +32,7 @@ app.include_router(uprofile_languages_controller.router, prefix= "/api/profiles"
 app.include_router(uprofile_SocMed_controller.router, prefix= "/api/profiles", tags=["User Profiles Social Media Links"])
 app.include_router(uprofile_professions_controller.router, prefix= "/api/profiles", tags=["User Profiles Professions"])
 app.include_router(uprofile_skills_controller.router, prefix= "/api/profiles", tags=["User Profiles Skills"])
+app.include_router(form_fields_controller.router, prefix="/api/form_fields", tags=["Need Resource Form Fields"])
 
 
 @app.get("/")

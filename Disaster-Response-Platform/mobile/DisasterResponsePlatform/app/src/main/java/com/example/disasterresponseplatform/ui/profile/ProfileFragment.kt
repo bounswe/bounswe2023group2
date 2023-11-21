@@ -106,7 +106,7 @@ class ProfileFragment : Fragment() {
                                 fillInformations(user)
                             } else {
                                 binding.profileLoginFirstText.visibility = View.VISIBLE
-                                binding.profileScrollView.visibility = View.GONE
+                                binding.profileProgressBar.visibility = View.GONE
                             }
                         }
                     }
@@ -133,9 +133,9 @@ class ProfileFragment : Fragment() {
                                     }
                                 }
                                 if (res != null) {
-                                    try {
-                                        user.birth = LocalDate.parse(res.dateOfBirth)
-                                    } catch (_: Exception) {}
+                                    if (res.dateOfBirth != null && res.dateOfBirth.isNotBlank()) {
+                                        user.birth = res.dateOfBirth.split(" ")[0]
+                                    }
                                     user.nationality = res.nationality
                                     user.idNumber = res.identityNumber
                                     user.education = res.education
@@ -426,8 +426,10 @@ class ProfileFragment : Fragment() {
             }
 
             if (user.education != null) {
+                val backendLevelArray: Array<String> = arrayOf("ilk", "orta", "lise", "yuksekokul", "universite")
+                val showArray = resources.getStringArray(R.array.education)
                 profileEducationLayout.visibility = View.VISIBLE
-                profileEducation.text = user.education
+                profileEducation.text = showArray[backendLevelArray.indexOf(user.education)]
             }
 
             if (user.healthCondition != null) {
