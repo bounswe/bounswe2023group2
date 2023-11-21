@@ -144,6 +144,46 @@
         <item>Other</item>
     </string-array>
 
+    <string-array name="language_level_types">
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Advanced</item>
+        <item>Native</item>
+    </string-array>
+
+    <string-array name="profession_level_types">
+        <item>Amateur</item>
+        <item>Pro</item>
+        <item>Certified Pro</item>
+    </string-array>
+    
+    <string-array name="skill_level_types">
+        <item>Beginner</item>
+        <item>Basic</item>
+        <item>Intermediate</item>
+        <item>Skilled</item>
+        <item>Expert</item>
+    </string-array>
+
+    <string-array name="blood_types">
+        <item>A Rh+</item>
+        <item>B Rh+</item>
+        <item>AB Rh+</item>
+        <item>0 Rh+</item>
+        <item>A Rh-</item>
+        <item>B Rh-</item>
+        <item>AB Rh-</item>
+        <item>0 Rh-</item>
+    </string-array>
+
+    <string-array name="education">
+        <item>Primary School</item>
+        <item>Secondary School</item>
+        <item>High School</item>
+        <item>College</item>
+        <item>University</item>
+    </string-array>
+
     <string-array name="resource_empty_sub_types"></string-array>
 
 </resources>
