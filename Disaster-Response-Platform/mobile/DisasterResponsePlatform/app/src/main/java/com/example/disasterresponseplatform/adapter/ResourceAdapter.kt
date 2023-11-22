@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.databinding.ResourceItemBinding
+import java.text.DecimalFormat
 
 class ResourceAdapter(private val resourceList: List<Resource>?): RecyclerView.Adapter<ResourceAdapter.ResourceViewHolder>() {
 
@@ -38,7 +39,7 @@ class ResourceAdapter(private val resourceList: List<Resource>?): RecyclerView.A
         hb.tvType.text = currentResource?.type.toString()
 
         hb.tvDate.text = currentResource?.creationTime
-        hb.tvLocation.text = "x: ${currentResource?.coordinateX.toString()}, y: ${currentResource?.coordinateY.toString()}"
+        hb.tvLocation.text = "x: ${String.format("%.2f", currentResource?.coordinateX).replace(',', '.')}, y: ${String.format("%.2f", currentResource?.coordinateY).replace(',', '.')}"
         hb.tvQuantity.text = currentResource?.quantity.toString()
         hb.tvCreator.text = currentResource?.creatorName
 

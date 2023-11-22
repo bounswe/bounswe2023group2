@@ -6,4 +6,13 @@
     <color name="secondary">#D84315</color>
     <color name="secondaryVariant">#F4511E</color>
     <color name="onSecondary">#FFFFFF</color>
+
+    <color name="colorAction">#761EB5</color>
+    <color name="colorEmergency">#A80C0C</color>
+    <color name="colorEvent">#CD9B02</color>
+    <color name="colorNeed">#0677AA</color>
+    <color name="colorResource">#067A47</color>
+    <color name="colorActivity">#656565</color>
+    <color name="separator">#6A6A6A</color>
+
 </resources>

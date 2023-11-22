@@ -1,9 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +12,11 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ResourceAdapter
+import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.databinding.FragmentResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.need.NeedItemFragment
 
 class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
 
@@ -40,7 +39,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
 
     private fun arrangeView(){
         binding.btAddResource.setOnClickListener {
-            addOrEditResource(null)
+            addResource()
         }
 
         arrangeSearchView()
@@ -51,11 +50,11 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
     /** This function is called whenever resource is created or edited
      * If it is created resource should be null, else resource should be the clicked item
      */
-    private fun addOrEditResource(resource: Resource?){
+    private fun addResource(){
         val token = DiskStorageManager.getKeyValue("token")
         if (!token.isNullOrEmpty()) {
-            val addResourceFragment = AddResourceFragment(resourceViewModel,resource)
-            addFragment(addResourceFragment)
+            val addResourceFragment = AddResourceFragment(resourceViewModel,null)
+            addFragment(addResourceFragment,"AddResourceFragment")
         }
         else{
             Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
@@ -81,21 +80,18 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
      * Whenever an item is clicked, it make toast and opens edit resource page
      */
     private fun arrangeRecyclerView(resourceList : List<Resource>){
-        val recyclerView = binding.recyclerViewNeeds
+        val recyclerView = binding.recyclerViewResources
         if (recyclerView.layoutManager == null){
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.layoutManager = layoutManager
         }
-        val list = resourceViewModel.getAllResources()
+        // val list = resourceViewModel.getAllResources() // this is for local DB
         val adapter = ResourceAdapter(resourceList)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
-            addOrEditResource(it)
-            val text = "ID: ${java.lang.Long.toUnsignedString(it.ID!!.toLong(), 16)}, Type: ${it?.type}, Details: ${it?.details}, x: ${it?.coordinateX}, y: ${it?.coordinateY},\" "+
-                    "Date: ${it?.creationTime}, Quantity: ${it?.quantity}, Condition: ${it?.condition}"
-            Toast.makeText(requireActivity(), text, Toast.LENGTH_LONG).show()
+            openResourceItemFragment(it)
         }
     }
 
@@ -127,10 +123,19 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         }
     }
 
-    private fun addFragment(fragment: Fragment) {
+    /** This function is called whenever resource item is selected
+     * It opens a resource page that contains details about it and users can edit, delete, upvote and downvote this item from this page
+     * if they have the authority
+     */
+    private fun openResourceItemFragment(resource: Resource){
+        val resourceItemFragment = ResourceItemFragment(resourceViewModel,resource)
+        addFragment(resourceItemFragment,"ResourceItemFragment")
+    }
+
+    private fun addFragment(fragment: Fragment, fragmentName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack(fragmentName)
         ft.commit()
     }
 }

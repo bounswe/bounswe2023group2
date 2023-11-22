@@ -37,7 +37,7 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
     }
 
     if (Object.keys(optionalData).length > 0) {
-      await api.post("/api/profiles/set-user-optional-info", optionalData, {
+      await api.post("/api/profiles/user-optional-infos/add-user-optional-info", optionalData, {
         headers: {
           'Authorization': `Bearer ${accessToken}`
         }
@@ -65,7 +65,6 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
   }
 
   const optional_tr = {
-    "username": "Kullanıcı Adı",
     "date_of_birth": "Doğum Tarihi",
     "nationality": "Ülke",
     "identity_number": "Kimlik No",
@@ -101,7 +100,7 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
                     'required': (key === "username")}))}
           </GrayBox>
         </div>
-        <div class="my-6 w-full text-center">
+        <div class="my-3 w-full text-center">
           <button type="submit" class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Güncelle</button>
         </div>
       </form>
@@ -141,12 +140,12 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { expired: true } };
     }
 
-    const { data: { user_optional_infos: current_optional_fields_list } } = await api.get('/api/profiles/get-user-optional-info', {
+    const { data: { user_optional_infos: current_optional_fields_list } } = await api.get('/api/profiles/user-optional-infos', {
       headers: {
         'Authorization': `Bearer ${user.accessToken}`
       }
     });
-    const current_optional_fields = current_optional_fields_list.length > 0 ? current_main_fields_list[0] : {}
+    const current_optional_fields = current_optional_fields_list.length > 0 ? current_optional_fields_list[0] : {}
 
     return {"props":
       {
