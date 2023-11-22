@@ -13,6 +13,7 @@ class Action(BaseModel):
     y: float = Field(default=0.0)
     needs: Optional[List[Need]] = None
     resources: Optional[List[Resource]] = None
+    comment: str = None
 
 
 class ActionSuccess(BaseModel):
