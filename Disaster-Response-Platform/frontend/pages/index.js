@@ -25,7 +25,7 @@ export default function home() {
       <ToastContainer position="bottom-center" />
       <div className='flex flex-row m-3'>
         <Button color='warning' className='mr-5' onClick={(e) => { setNeedFilter(true); setResourceFilter(false) }}>İhtiyaç</Button>
-        <Button color='success' onClick={(e) => { setResourceFilter(true); setNeedFilter(true) }} >Kaynaklar</Button>
+        <Button color='success' onClick={(e) => { setResourceFilter(true); setNeedFilter(false) }} >Kaynaklar</Button>
       </div>
       <ActivityTable needFilter={needFilter} resourceFilter={resourceFilter} />
 
