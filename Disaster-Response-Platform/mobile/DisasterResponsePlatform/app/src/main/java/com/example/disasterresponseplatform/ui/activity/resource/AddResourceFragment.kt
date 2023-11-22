@@ -163,6 +163,9 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
                     Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                         if (isAdded) // to ensure it attached a parentFragmentManager
                             parentFragmentManager.popBackStack("AddResourceFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        if (!isAdd){
+                            parentFragmentManager.popBackStack("ResourceItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        }
                         // Re-enable the button after the background operation completes
                         binding.btnSubmit.isEnabled = true
                     }, 200)
