@@ -1,11 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Filter from "./Filter";
+import Sort from "./Sort";
 
 
 
-export default function ActivityTable({resource, need, needFilter, resourceFilter, filters}) {
+export default function ActivityTable({ needFilter, resourceFilter }) {
+    const [filters, setFilters] = useState({})
+    const [resources, setResources] = useState([]);
+    const [needs, setNeeds] = useState([]);
+    const [selectedKeys, setSelectedKeys] = useState(new Set(["text"]));
+  
+    const getResources = async () => {
+        const response = await fetch('/api/resource', { method: 'GET', headers: { "Content-Type": "application/json" } });
+        let res = await response.json();
+        if (response.ok) {
+    
+          setResources(res.resources)
+        } else {
+          toast.error("An unexpected error occurred while saving, please try again")
+        }
+      }
+      const getNeeds = async () => {
+        const response = await fetch('/api/need/get', { method: 'GET', headers: { "Content-Type": "application/json" } });
+        let res = await response.json();
+        if (response.ok) {
+    
+          setNeeds(res.needs)
+        } else {
+    
+          toast.error("An unexpected error occurred while saving, please try again")
+        }
+      }
+    useEffect(() => {
+        getResources();
+        getNeeds();
+    
+      }, [])
+    
+    const filterActivities = async () => {
+        let response
+        if (needFilter) {
+            response = await fetch('/api/need/filter', { method: 'POST', headers: { "Content-Type": "application/json" }, body: JSON.stringify(filters) });
+            let res = await response.json();
+            if (response.ok) {
+                setNeeds(res.needs)
+            } else {
+                // unknown error
+                toast.error("An unexpected error occurred while saving, please try again")
+            }
+        }
+        if (resourceFilter) {
+            response = await fetch('/api/resource/filter', { method: 'POST', headers: { "Content-Type": "application/json" }, body: JSON.stringify(filters) });
+            let res = await response.json();
+            if (response.ok) {
+                setResources(res.resources)
+            } else {
+                // unknown error
+                toast.error("An unexpected error occurred while saving, please try again")
+            }
+        }
+    }
     return (
-
+        
         <div class="w-full overflow-x-auto shadow-md sm:rounded my-10">
+            <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} />
+            <Sort needFilter={needFilter}  resourceFilter={resourceFilter} setSelectedKeys={setSelectedKeys} selectedKeys={selectedKeys} filterActivities={filterActivities} />
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-white dark:bg-slate-400 dark:text-black">
                     <tr>
@@ -34,7 +93,7 @@ export default function ActivityTable({resource, need, needFilter, resourceFilte
                     </tr>
                 </thead>
                 <tbody>
-                    {resourceFilter && resource && resource.map((resource) => (
+                    {resourceFilter && resources && resources.map((resource) => (
                         <>
                             <tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-500">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
@@ -47,30 +106,30 @@ export default function ActivityTable({resource, need, needFilter, resourceFilte
                                     {resource.created_by}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {resource.details.subtype ?? resource.details.tool_type }
+                                    {resource.details.subtype ?? resource.details.tool_type}
                                 </td>
                             </tr>
                         </>
-                    )) }
-                    {needFilter && [].map((need) => (
+                    ))}
+                    {needFilter && needs && needs.map((need) => (
                         <>
                             <tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-500">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
-                                    {resource.type}
+                                    {need.type}
                                 </th>
                                 <td class="px-6 py-4">
-                                    {resource.condition}
+                                    {need.condition}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {resource.created_by}
+                                    {need.created_by}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {resource.details.subtype ?? resource.details.tool_type }
+                                    {need.details.subtype ?? need.details.tool_type}
                                 </td>
                             </tr>
                         </>
-                    )) }
-                   
+                    ))}
+
                 </tbody>
             </table>
         </div>
