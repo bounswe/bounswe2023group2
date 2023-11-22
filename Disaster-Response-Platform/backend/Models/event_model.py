@@ -27,7 +27,7 @@ class Event(BaseModel):
     event_type: str = Field(default=None)
     event_time: datetime = Field(default=None)
     end_time: datetime = Field(default=None)
-    is_active:bool = Field(default=None)
+    is_active: bool = Field(default=None)
     center_location_x: float = Field(default=None)
     center_location_y: float = Field(default=None)
 

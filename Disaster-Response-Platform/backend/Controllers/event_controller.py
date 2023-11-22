@@ -72,7 +72,7 @@ def update_event(event_id: str, event:Event, response:Response, current_user: st
 
         if updated_event:
             response.status_code = HTTPStatus.OK
-            return {"events": [updated_event]}
+            return json.loads(updated_event)
         else:
             raise ValueError(f"Event id {event_id} not updated")
     except ValueError as err:

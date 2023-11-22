@@ -74,10 +74,11 @@ def get_events(event_id:str = None) -> list[dict]:
             raise ValueError(f"No event exists")
         else:
             raise ValueError(f"Event {event_id} does not exist")
+
     result_list = create_json_for_successful_data_fetch(events_data, "events")
     return result_list
     
-def update_event(event_id: str, event:Event) -> Event:
+def update_event(event_id: str, event:Event) -> list[dict]:
     # Fetch the existing resource
     existing_event = events_collection.find_one({"_id": ObjectId(event_id)})
     new_event = event.dict()
@@ -87,8 +88,11 @@ def update_event(event_id: str, event:Event) -> Event:
 
         events_collection.update_one({"_id": ObjectId(event_id)}, {"$set": update_data})
 
-        updated_event_data = events_collection.find_one({"_id": ObjectId(event_id)})
-        return Event(**updated_event_data)
+        updated_event_data = events_collection.find({"_id": ObjectId(event_id)})
+        result_list = create_json_for_successful_data_fetch(updated_event_data, "events")
+        return result_list
+
+        #return Event(**updated_event_data)
     else:
         raise ValueError(f"Event id {event_id} not found")
 
