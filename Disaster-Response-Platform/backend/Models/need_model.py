@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Dict, Any
 from enum import Enum
-
+import datetime
 
 class Need(BaseModel):
     _id: str = Field(default=None)
@@ -15,6 +15,8 @@ class Need(BaseModel):
     y: float = Field(default=0.0)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
+    created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     
 class QuantityUpdate(BaseModel):
     quantity: int

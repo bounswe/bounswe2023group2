@@ -155,20 +155,26 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                     needViewModel.postNeedRequest(newNeed,needID)
                 }
                 needViewModel.getLiveDataNeedID().observe(requireActivity!!){
+                    if (it != "-1"){ // in error cases it returns this
+                        if (isAdded){ // to ensure it attached a context
+                            if (isAdd)
+                                Toast.makeText(requireContext(), "Created Need ID: $it", Toast.LENGTH_LONG).show()
+                            else
+                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
+                        }
 
-                    if (isAdded){ // to ensure it attached a context
-                        if (isAdd)
-                            Toast.makeText(requireContext(), "Created Need ID: $it", Toast.LENGTH_LONG).show()
-                        else
-                            Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
-                    }
-
-                    Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                        if (isAdded) // to ensure it attached a parentFragmentManager
-                            parentFragmentManager.popBackStack("AddNeedFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                        // Re-enable the button after the background operation completes
+                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                            if (isAdded) // to ensure it attached a parentFragmentManager
+                                parentFragmentManager.popBackStack("AddNeedFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            if (!isAdd)
+                                parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            // Re-enable the button after the background operation completes
+                            binding.btnSubmit.isEnabled = true
+                        }, 200)
+                    } else{
+                        Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
                         binding.btnSubmit.isEnabled = true
-                    }, 200)
+                    }
                 }
             } else {
                 if (isAdded)

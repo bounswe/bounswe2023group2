@@ -12,9 +12,11 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ResourceAdapter
+import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.databinding.FragmentResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.need.NeedItemFragment
 
 class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
 
@@ -37,7 +39,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
 
     private fun arrangeView(){
         binding.btAddResource.setOnClickListener {
-            addOrEditResource(null)
+            addResource()
         }
 
         arrangeSearchView()
@@ -48,10 +50,10 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
     /** This function is called whenever resource is created or edited
      * If it is created resource should be null, else resource should be the clicked item
      */
-    private fun addOrEditResource(resource: Resource?){
+    private fun addResource(){
         val token = DiskStorageManager.getKeyValue("token")
         if (!token.isNullOrEmpty()) {
-            val addResourceFragment = AddResourceFragment(resourceViewModel,resource)
+            val addResourceFragment = AddResourceFragment(resourceViewModel,null)
             addFragment(addResourceFragment,"AddResourceFragment")
         }
         else{
@@ -89,7 +91,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
-            addOrEditResource(it)
+            openResourceItemFragment(it)
         }
     }
 
@@ -119,6 +121,15 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
             //clearSearchResults()
             false // Return true if you want to consume the event, otherwise return false
         }
+    }
+
+    /** This function is called whenever resource item is selected
+     * It opens a resource page that contains details about it and users can edit, delete, upvote and downvote this item from this page
+     * if they have the authority
+     */
+    private fun openResourceItemFragment(resource: Resource){
+        val resourceItemFragment = ResourceItemFragment(resourceViewModel,resource)
+        addFragment(resourceItemFragment,"ResourceItemFragment")
     }
 
     private fun addFragment(fragment: Fragment, fragmentName: String) {
