@@ -49,7 +49,7 @@ async def add_a_socialmedia_currentuser(user_socialmedia:UserSocialMediaLink, re
         err_json =  create_json_for_error("User profile not updated", str(err))
         return json.loads(err_json)
 
-@router.delete("/socialmedia-links", responses={
+@router.post("/socialmedia-links", responses={
     status.HTTP_200_OK: {"model": UserSocialMediaLinks},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
