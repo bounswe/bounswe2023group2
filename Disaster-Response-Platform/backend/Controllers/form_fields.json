@@ -6,7 +6,7 @@
             {"name": "condition", "label": "Condition", "type": "select", "options": ["new", "used"]},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
             {"name": "currentQuantity", "label": "Current Quantity", "type": "number"},
-            {"name": "type", "label": "Type", "type": "text"},
+            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "shelter", "medication", "transportation", "tool", "human", "other"]},
             {"name": "x", "label": "X Coordinate", "type": "number"},
             {"name": "y", "label": "Y Coordinate", "type": "number"}
         ]
