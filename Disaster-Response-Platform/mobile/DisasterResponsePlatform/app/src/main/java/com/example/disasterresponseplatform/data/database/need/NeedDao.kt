@@ -17,7 +17,7 @@ interface NeedDao {
     @Query("SELECT ${NeedResourceCols.coordinateY} FROM ${DatabaseInfo.NEED}  WHERE ${NeedResourceCols.creatorName} = :creatorID")
     fun getY(creatorID: String): Double?
 
-    @Query("SELECT * FROM ${DatabaseInfo.NEED} ORDER BY ${NeedResourceCols.id}")
+    @Query("SELECT * FROM ${DatabaseInfo.NEED}")
     fun getAllNeeds(): List<Need>?
 
     @Update

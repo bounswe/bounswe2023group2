@@ -38,7 +38,7 @@ async def get_user_socialmedia(response: Response, anyuser:str= None, platform_n
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def add_a_socialmedia_currentuser(user_socialmedia:UserSocialMediaLink, response: Response, anyuser:str= None, current_username: str = Depends(authentication_service.get_current_username)):
+async def add_a_socialmedia_currentuser(user_socialmedia:UserSocialMediaLink, response: Response, current_username: str = Depends(authentication_service.get_current_username)):
     try:
         user_socialmedia.username = current_username
         result = uprofile_SocMed_service.add_user_socialmedia(user_socialmedia)
@@ -54,7 +54,7 @@ async def add_a_socialmedia_currentuser(user_socialmedia:UserSocialMediaLink, re
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def delete_current_users_socialmedia_links(user_socialmedia:UserSocialMediaLink, response: Response, anyuser:str= None, current_username: str = Depends(authentication_service.get_current_username)):
+async def delete_current_users_socialmedia_links(user_socialmedia:UserSocialMediaLink, response: Response, current_username: str = Depends(authentication_service.get_current_username)):
     try:
         user_socialmedia.username = current_username
         result = uprofile_SocMed_service.delete_user_language(user_socialmedia)

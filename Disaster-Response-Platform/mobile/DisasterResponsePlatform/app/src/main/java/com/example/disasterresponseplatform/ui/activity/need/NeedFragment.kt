@@ -11,14 +11,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.adapter.ActivityAdapter
 import com.example.disasterresponseplatform.adapter.NeedAdapter
+import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 
 class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
     private lateinit var binding: FragmentNeedBinding
-    private lateinit var addNeedFragment: AddNeedFragment
     private lateinit var searchView: SearchView
     private var requireActivity: FragmentActivity? = null
 
@@ -36,38 +36,69 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     }
 
     private fun arrangeView(){
-        // add need clickable
         binding.btAddNeed.setOnClickListener {
-            addNeedFragment = AddNeedFragment(needViewModel)
-            addFragment(addNeedFragment)
+            addNeed()
         }
+
         arrangeSearchView()
-        arrangeRecyclerView()
+        //arrangeRecyclerView()
+        sendRequest()
     }
+
+    /** This function is called whenever clicked add need button
+     * It opens add Need fragment if user is authenticated, else warns the user
+     */
+    private fun addNeed(){
+        val token = DiskStorageManager.getKeyValue("token")
+        if (!token.isNullOrEmpty()) {
+            val addNeedFragment = AddNeedFragment(needViewModel,null)
+            addFragment(addNeedFragment,"AddNeedFragment")
+        }
+        else{
+            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /** This function is called whenever need item is selected
+     * It opens a need page that contains details about it and users can edit, delete, upvote and downvote this item from this page
+     * if they have the authority
+     */
+    private fun openNeedItemFragment(need: Need){
+        val needItemFragment = NeedItemFragment(needViewModel,need)
+        addFragment(needItemFragment,"NeedItemFragment")
+    }
+
+    /** This function connects backend and get all need requests, then it observes livedata from viewModel which is changed
+     * whenever all needs are fetched from backend. Then it creates a need list with this response and prepare recyclerView with this list
+     */
+    private fun sendRequest(){
+        if (requireActivity == null){ // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
+        needViewModel.sendGetAllRequest()
+        needViewModel.getLiveDataResponse().observe(requireActivity!!){ needResponse ->
+            val lst = needViewModel.createNeedList(needResponse)
+            arrangeRecyclerView(lst)
+        }
+    }
+
 
     /**
      * Arrange recycler view and its adapter
      */
-    private fun arrangeRecyclerView(){
-
-        if (requireActivity == null){ // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
+    private fun arrangeRecyclerView(needList : List<Need>){
         val recyclerView = binding.recyclerViewNeeds
         if (recyclerView.layoutManager == null){
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.layoutManager = layoutManager
         }
-
-        val list = needViewModel.getAllNeeds()
-        val adapter = NeedAdapter(list)
+        // val list = needViewModel.getAllNeeds() // this is for local DB
+        val adapter = NeedAdapter(needList)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
-            // Handle item click by navigating to EditNeedFragment
-            val editNeedFragment = EditNeedFragment(needViewModel, it)
-            addFragment(editNeedFragment)
+            openNeedItemFragment(it)
         }
     }
 
@@ -99,10 +130,10 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         }
     }
 
-    private fun addFragment(fragment: Fragment) {
+    private fun addFragment(fragment: Fragment, fragmentName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack(fragmentName)
         ft.commit()
     }
 }

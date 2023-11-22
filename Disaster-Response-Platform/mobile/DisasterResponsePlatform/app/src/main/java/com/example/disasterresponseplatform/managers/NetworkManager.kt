@@ -65,7 +65,8 @@ class NetworkManager {
         requestType: RequestType,
         headers: Map<String, String>,
         requestBody: RequestBody? = null,
-        callback: Callback<ResponseBody>
+        id: String? = null, // If it is not empty, send request endpoint.path + /id -> send id as /<id> for now
+        callback: Callback<ResponseBody>,
     ) {
         when (endpoint) {
             Endpoint.DATA -> {
@@ -131,6 +132,51 @@ class NetworkManager {
                     }
                     RequestType.PUT -> {
                         Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.putData(endpoint.path+id, headers, it) } // TODO endpoint.path, resource ID içermeli şimdilik dummy çözüm
+                            ?.enqueue(callback)
+                    }
+                    RequestType.DELETE -> {
+                        val call = api.deleteData(endpoint.path, headers)
+                        call.enqueue(callback)
+                    }
+                }
+            }
+            Endpoint.NEED -> {
+                when (requestType) {
+                    RequestType.GET -> {
+                        Log.d("RESPONSE", callback.toString())
+                        val call = api.getData(endpoint.path, headers)
+                        call.enqueue(callback)
+                    }
+                    RequestType.POST -> {
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.PUT -> {
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.putData(endpoint.path+id, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.DELETE -> {
+                        val call = api.deleteData(endpoint.path, headers)
+                        call.enqueue(callback)
+                    }
+                }
+            }
+            else -> {
+                when (requestType) {
+                    RequestType.GET -> {
+                        Log.d("RESPONSE", callback.toString())
+                        val call = api.getData(endpoint.path, headers)
+                        call.enqueue(callback)
+                    }
+                    RequestType.POST -> {
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.PUT -> {
                         requestBody?.let { api.putData(endpoint.path, headers, it) }
                             ?.enqueue(callback)
                     }
@@ -140,8 +186,6 @@ class NetworkManager {
                     }
                 }
             }
-
-            else -> {}
         }
     }
 

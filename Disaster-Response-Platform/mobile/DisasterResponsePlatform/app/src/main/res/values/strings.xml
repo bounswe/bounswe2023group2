@@ -84,13 +84,16 @@
     <string name="enter_allergens">Enter Allergens</string>
     <string name="enter_additional_notes">Enter Additional Notes</string>
     <string name="enter_full_name">Enter Full Name <font color='#B00020'>*</font></string>
-    <string name="enter_phone_number">Enter Phone Number <font color='#B00020'>*</font></string>
+    <string name="enter_phone_number">Enter Phone Number</string>
     <string name="submit">Submit</string>
     <string name="select_resource_type">Select or Enter Resource Type <font color='#B00020'>*</font></string>
     <string name="enter_expiration_date">Enter Expiration Date</string>
     <string name="username_or_email">Username or Email</string>
     <string name="edit_need">Edit Need</string>
+    <string name="edit_resource">Edit Resource</string>
     <string name="save_changes">Save Changes</string>
+    <string name="condition">Condition</string>
+    <string name="navigate">Navigate</string>
 
     <string-array name="need_types">
         <item>Clothes</item>
@@ -141,6 +144,46 @@
         <item>Driver</item>
         <item>Translator</item>
         <item>Other</item>
+    </string-array>
+
+    <string-array name="language_level_types">
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Advanced</item>
+        <item>Native</item>
+    </string-array>
+
+    <string-array name="profession_level_types">
+        <item>Amateur</item>
+        <item>Pro</item>
+        <item>Certified Pro</item>
+    </string-array>
+    
+    <string-array name="skill_level_types">
+        <item>Beginner</item>
+        <item>Basic</item>
+        <item>Intermediate</item>
+        <item>Skilled</item>
+        <item>Expert</item>
+    </string-array>
+
+    <string-array name="blood_types">
+        <item>A Rh+</item>
+        <item>B Rh+</item>
+        <item>AB Rh+</item>
+        <item>0 Rh+</item>
+        <item>A Rh-</item>
+        <item>B Rh-</item>
+        <item>AB Rh-</item>
+        <item>0 Rh-</item>
+    </string-array>
+
+    <string-array name="education">
+        <item>Primary School</item>
+        <item>Secondary School</item>
+        <item>High School</item>
+        <item>College</item>
+        <item>University</item>
     </string-array>
 
     <string-array name="resource_empty_sub_types"></string-array>

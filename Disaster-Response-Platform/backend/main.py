@@ -6,8 +6,7 @@ from Services.build_API_returns import *
 
 from Controllers import (resource_controller, user_controller, uprofile_optinfo_controller,
                          uprofile_languages_controller, uprofile_SocMed_controller, uprofile_professions_controller,
-                         uprofile_skills_controller, need_controller, event_controller)
-
+                         uprofile_skills_controller, need_controller, event_controller, user_roles_controller, form_fields_controller)
 
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
@@ -29,12 +28,14 @@ app.add_middleware(
 app.include_router(resource_controller.router, prefix = "/api/resource", tags=["resource"])
 app.include_router(need_controller.router, prefix="/api/needs", tags=["needs"])
 app.include_router(user_controller.router, prefix= "/api/users", tags=["users"])
+app.include_router(user_roles_controller.router, prefix= "/api/userroles", tags=["user-roles"])
 app.include_router(uprofile_optinfo_controller.router, prefix= "/api/profiles", tags=["User Profiles Optional Information"])
 app.include_router(uprofile_languages_controller.router, prefix= "/api/profiles", tags=["User Profiles Language Skills"])
 app.include_router(uprofile_SocMed_controller.router, prefix= "/api/profiles", tags=["User Profiles Social Media Links"])
 app.include_router(uprofile_professions_controller.router, prefix= "/api/profiles", tags=["User Profiles Professions"])
 app.include_router(uprofile_skills_controller.router, prefix= "/api/profiles", tags=["User Profiles Skills"])
 app.include_router(event_controller.router, prefix= "/api/events", tags=["Events"])
+app.include_router(form_fields_controller.router, prefix="/api/form_fields", tags=["Need Resource Form Fields"])
 
 
 @app.get("/")

@@ -25,7 +25,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
-import java.math.BigInteger
 import javax.inject.Inject
 
 @HiltViewModel
@@ -63,14 +62,13 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
         currentList.forEach { responseItem ->
             //Log.d("createResourceList", "responseItem: $responseItem")
             //Log.d("createResourceList", "responseItemDetails: ${responseItem.details}")
-            val details = returnDetailsAsString(responseItem.details)
-            val needType = returnNeedType(responseItem.type)
+            val details = responseItem.returnDetailsAsString()
+            val needType = responseItem.returnNeedType()
             val time = DateUtil.getDate("dd-MM-yy").toString()
-            val id = BigInteger(responseItem._id.uppercase(), 16).toLong()
             val coordinateX = if (responseItem.x == null) 1.0 else responseItem.x.toDouble()
             val coordinateY = if (responseItem.y == null) 1.0 else responseItem.y.toDouble()
             val currentResource = Resource(
-                id,
+                responseItem._id,
                 responseItem.created_by,
                 responseItem.condition,
                 responseItem.currentQuantity,
@@ -84,77 +82,6 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
         }
         return lst.toList()
     }
-
-    private fun returnNeedType(type: String): NeedTypes {
-        val needType: NeedTypes = when (type.lowercase()) {
-            "cloth" -> NeedTypes.Clothes
-            "clothes" -> NeedTypes.Clothes
-            "food" -> NeedTypes.Food
-            "shelter" -> NeedTypes.Shelter
-            "medication" -> NeedTypes.Medication
-            "transportation" -> NeedTypes.Transportation
-            "tools" -> NeedTypes.Tools
-            "human" -> NeedTypes.Human
-            else -> NeedTypes.Other
-        }
-        return needType
-    }
-
-    private fun returnLocationAsString(x: Float?, y: Float?): String {
-        var location = " "
-        if (x != null) {
-            location += "x : $x "
-        }
-        if (y != null) {
-            location += "y: $y"
-        }
-        return location
-    }
-
-    private fun returnDetailsAsString(resourceDetails: ResourceBody.ResourceDetails): String {
-        var detailsString = ""
-        if (!resourceDetails.size.isNullOrEmpty()) {
-            detailsString += "size: ${resourceDetails.size} "
-        }
-        if (!resourceDetails.gender.isNullOrEmpty()) {
-            detailsString += "gender: ${resourceDetails.gender} "
-        }
-        if (resourceDetails.age != null) {
-            detailsString += "age: ${resourceDetails.age} "
-        }
-        if (!resourceDetails.subtype.isNullOrEmpty()) {
-            detailsString += "subtype: ${resourceDetails.subtype} "
-        }
-        if (!resourceDetails.expiration_date.isNullOrEmpty()) {
-            detailsString += "expiration_date: ${resourceDetails.expiration_date} "
-        }
-        if (!resourceDetails.allergens.isNullOrEmpty()) {
-            detailsString += "allergens: ${resourceDetails.allergens} "
-        }
-        if (!resourceDetails.disease_name.isNullOrEmpty()) {
-            detailsString += "disease_name: ${resourceDetails.disease_name} "
-        }
-        if (!resourceDetails.medicine_name.isNullOrEmpty()) {
-            detailsString += "medicine_name: ${resourceDetails.medicine_name} "
-        }
-        if (!resourceDetails.start_location.isNullOrEmpty()) {
-            detailsString += "start_location: ${resourceDetails.start_location} "
-        }
-        if (!resourceDetails.end_location.isNullOrEmpty()) {
-            detailsString += "end_location: ${resourceDetails.end_location} "
-        }
-        if (resourceDetails.number_of_people != null) {
-            detailsString += "number_of_people: ${resourceDetails.number_of_people} "
-        }
-        if (!resourceDetails.weather_condition.isNullOrEmpty()) {
-            detailsString += "weather_condition: ${resourceDetails.weather_condition} "
-        }
-        if (!resourceDetails.SKT.isNullOrEmpty()) {
-            detailsString += "SKT: ${resourceDetails.SKT} "
-        }
-        return detailsString
-    }
-
     fun sendGetAllRequest() {
         val headers = mapOf(
             "Content-Type" to "application/json"
@@ -218,7 +145,10 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResourceID(): LiveData<String> = liveDataResourceID
 
-    fun postResourceRequest(postRequest: Resource, requestType: RequestType) {
+    /**
+     * It send POST or PUT request with respect to id, if there was an id it should be PUT
+     */
+    fun postResourceRequest(postRequest: Resource, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
         Log.i("token", "Token $token")
         if (!token.isNullOrEmpty()) {
@@ -251,16 +181,17 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             )
             val gson = Gson()
             val json = gson.toJson(resourceRequestBody)
-            val requestBody =
-                json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+            val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+
+            val requestType = if (id == null) RequestType.POST else RequestType.PUT
 
             Log.d("requestBody", json.toString())
-
             networkManager.makeRequest(
                 endpoint = Endpoint.RESOURCE,
                 requestType = requestType,
                 headers = headers,
                 requestBody = requestBody,
+                id, // Resource's ID
                 callback = object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,
@@ -280,20 +211,23 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                                         ResourceBody.PostRegisterResponseList::class.java
                                     )
                                     val resourceID = registerResponse.resources[0]._id
-                                    Log.d("Created Resource ", "ID: $resourceID ")
+                                    Log.i("Created Resource ", "ID: $resourceID ")
                                     liveDataResourceID.postValue(resourceID)
 
                                 } catch (e: IOException) {
                                     // Handle IOException if reading the response body fails
+                                    liveDataResourceID.postValue("-1")
                                     Log.e(
                                         "ResponseError",
                                         "Error reading response body: ${e.message}"
                                     )
                                 }
                             } else {
+                                liveDataResourceID.postValue("-1")
                                 Log.d("ResponseSuccess", "Body is null")
                             }
                         } else {
+                            liveDataResourceID.postValue("-1")
                             val errorBody = response.errorBody()?.string()
                             if (errorBody != null) {
                                 var responseCode = response.code()
