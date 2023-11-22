@@ -49,8 +49,8 @@ class Resource(BaseModel):
     currentQuantity: int = Field(default=None)
     type: str = Field(default=None)
     details: Dict[str, Any] = Field(default=None)
-    x: float = Field(default=0.0)
-    y: float = Field(default=0.0)
+    x: float = Field(default=None)
+    y: float = Field(default=None)
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     

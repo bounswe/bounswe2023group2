@@ -25,7 +25,7 @@ app.add_middleware(
 
 
 # ROUTES
-app.include_router(resource_controller.router, prefix = "/api/resource", tags=["resource"])
+app.include_router(resource_controller.router, prefix = "/api/resources", tags=["resources"])
 app.include_router(need_controller.router, prefix="/api/needs", tags=["needs"])
 app.include_router(user_controller.router, prefix= "/api/users", tags=["users"])
 app.include_router(user_roles_controller.router, prefix= "/api/userroles", tags=["user-roles"])

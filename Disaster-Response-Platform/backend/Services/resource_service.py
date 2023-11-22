@@ -8,12 +8,23 @@ from datetime import datetime
 # Get the resources collection using the MongoDB class
 resources_collection = MongoDB.get_collection('resources')
 
+def validate_coordinates(x, y):
+    if  (resource.x < -90 or resource.x > 90 )  or (resource.y < -180 or resource.y > 180 ):
+        raise ValueError("X coordinates should be within -90 and 90 and y coordinates within -180 and 180")
+    
+def validate_quantities(initial_quantity, currentQuantity):
+    if resource.initialQuantity <= 0 or resource.currentQuantity <= 0:
+        raise ValueError("Quantities can't be less than or equal to 0")    
+
 def create_resource(resource: Resource) -> str:
     # Manual validation for required fields during creation
     if not all([resource.created_by, resource.condition,
                 resource.initialQuantity, resource.currentQuantity,
-                resource.type, resource.details, resource.x, resource.y]):
+                resource.type, resource.details, resource.x is not None, resource.y is not None]):
         raise ValueError("All fields are mandatory for creation.")
+    validate_coordinates(resource.x, resource.y)
+    validate_quantities(resource.initialQuantity, resource.currentQuantity)
+        
     insert_result = resources_collection.insert_one(resource.dict())
     #check the result to change from
     if insert_result.inserted_id:

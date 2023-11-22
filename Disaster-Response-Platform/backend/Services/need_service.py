@@ -8,12 +8,24 @@ from datetime import datetime
 # Get the needs collection using the MongoDB class
 needs_collection = MongoDB.get_collection('needs')
 
+def validate_coordinates(x, y):
+    if (x < -90 or x > 90) or (y < -180 or y > 180):
+        raise ValueError("X coordinates should be within -90 and 90 and y coordinates within -180 and 180")
+
+def validate_quantities(initial_quantity, unsupplied_quantity):
+    if initial_quantity <= 0 or unsupplied_quantity <= 0:
+        raise ValueError("Quantities can't be less than or equal to 0")
+
 def create_need(need: Need) -> str:
     # Manual validation for required fields during creation
     if not all([need.created_by, need.urgency, 
                 need.initialQuantity, need.unsuppliedQuantity, 
-                need.type, need.details]):
+                need.type, need.details, need.x is not None, need.y is not None]):
         raise ValueError("All fields are mandatory for creation.")
+    validate_coordinates(need.x, need.y)
+    validate_quantities(need.initialQuantity, need.unsuppliedQuantity)
+    if need.initialQuantity <= 0 or need.unsuppliedQuantity <= 0:
+        raise ValueError("Quantities can't be less than or equal to 0")
     insert_result = needs_collection.insert_one(need.dict())
     if insert_result.inserted_id:
         result = "{\"needs\":[{\"_id\":" + f"\"{insert_result.inserted_id}\""+"}]}"
@@ -78,6 +90,8 @@ def update_need(need_id: str, need: Need) -> Need:
 
         # Set 'last_updated_at' to the current time
         update_data['last_updated_at'] = datetime.now()
+        
+        
 
         needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": update_data})
 
