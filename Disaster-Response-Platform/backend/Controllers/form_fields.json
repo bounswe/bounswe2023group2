@@ -23,7 +23,7 @@
             {"name": "y", "label": "Y Coordinate", "type": "number"}
         ]
     },
-    "subtype": {
+    "type": {
         "cloth": {
             "fields": [
                 {"name": "size", "label": "Size", "type": "text"},

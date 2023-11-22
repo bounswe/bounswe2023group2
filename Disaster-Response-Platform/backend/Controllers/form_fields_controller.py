@@ -11,19 +11,19 @@ router = APIRouter()
 FORM_FIELDS_FILE_PATH = '/app/Controllers/form_fields.json'
 
 @router.get("/resource")
-async def get_resource_subtype():
+async def get_resource_fields():
     form_fields = load_fields(FORM_FIELDS_FILE_PATH)
     return form_fields.get('resource', {})
 
 @router.get("/need")
-async def get_need_subtype():
+async def get_need_fields():
     form_fields = load_fields(FORM_FIELDS_FILE_PATH)
     return form_fields.get('need', {})
 
-@router.get("/subtype/{subtype_name}")
-async def get_subtype_details(subtype_name: str):
+@router.get("/type/{type_name}")
+async def get_type_details(subtype_name: str):
     form_fields = load_fields(FORM_FIELDS_FILE_PATH)
-    subtype_details = form_fields.get('subtype', {})
-    if subtype_name not in subtype_details:
-        raise HTTPException(status_code=404, detail="Subtype not found")
-    return subtype_details[subtype_name]
+    type_details = form_fields.get('type', {})
+    if type_name not in type_details:
+        raise HTTPException(status_code=404, detail="Type not found")
+    return type_details[type_name]
