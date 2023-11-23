@@ -4,7 +4,7 @@
             {"name": "description", "label": "Description", "type": "text"},
             {"name": "condition", "label": "Condition", "type": "select", "options": ["new", "used"]},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
-            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "shelter", "medication", "transportation", "tool", "human", "other"]},
+            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "drink", "shelter", "medication", "transportation", "tool", "human", "other"]},
             {"name": "x", "label": "X Coordinate", "type": "number"},
             {"name": "y", "label": "Y Coordinate", "type": "number"},
             {"name": "occur_at", "label": "Occur At", "type": "date"},
@@ -39,6 +39,11 @@
                 {"name": "expiration_date", "label": "Expiration Date", "type": "date"},
                 {"name": "allergens", "label": "Allergens", "type": "text"},
                 {"name": "subtype", "label": "Subtype", "type": "select", "options": ["grains", "vegetables", "fruits", "meats", "dairy", "baby food", "conserved food"]}
+            ]
+        },
+        "drink": {
+            "fields": [
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["water", "juice", "milk", "soda", "tea", "coffee", "cola", "yellow cola"]},
             ]
         },
         "shelter": {
