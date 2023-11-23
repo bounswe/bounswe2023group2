@@ -2,6 +2,11 @@ from pydantic import BaseModel, Field
 from typing import Dict, Any
 from enum import Enum
 
+class EntityTypeEnum(str, Enum):
+    needs = "needs"
+    resources = "resources"
+    actions = "actions"
+    events = "events"
 
 class Feedback(BaseModel):
     _id: str = Field(default=None)
@@ -13,8 +18,6 @@ class Feedback(BaseModel):
     
     
 class VoteUpdate(BaseModel):
-    entityType: str
+    entityType: EntityTypeEnum = Field(default=None)
     entityID: str
     
-# class UrgencyUpdate(BaseModel):
-#     urgency: int

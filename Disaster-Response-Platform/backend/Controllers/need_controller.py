@@ -123,3 +123,23 @@ def get_unsupplied_quantity(need_id: str, response: Response):
         return json.loads(err_json)
     
 
+def set_urgency(need_id: str, urgency_data: UrgencyUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        need_service.set_urgency(need_id, urgency_data.urgency)
+        response.status_code = HTTPStatus.OK
+        return {"message": f"Urgency of need {need_id} is set to {urgency_data.urgency}"}
+    except ValueError as err:
+        err_json = create_json_for_error("Need urgency set update error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+
+@router.get("/{need_id}/urgency")
+def get_urgency(need_id: str, response: Response):
+    try:
+        urgency = need_service.get_urgency(need_id)
+        response.status_code = HTTPStatus.OK
+        return {"Urgency": urgency}
+    except ValueError as err:
+        err_json = create_json_for_error("Need urgency get error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
