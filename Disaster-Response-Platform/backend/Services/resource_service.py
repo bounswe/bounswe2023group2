@@ -33,8 +33,12 @@ def get_resources(resource_id:str = None) -> list[dict]:
                   "currentQuantity": 1,
                   "type": 1,
                   "details":1,
+                  "recurrence_id": 1,
+                  "recurrence_rate": 1,
+                  "recurrence_deadline": 1,
                   "x":1,
                   "y":1,
+                  "occur_at": 1,
                   "created_at":1,
                   "last_updated_at":1
                   }

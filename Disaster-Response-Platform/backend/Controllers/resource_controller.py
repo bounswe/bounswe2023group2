@@ -27,6 +27,8 @@ router = APIRouter()
 #        "age": "Adult",
 #        "subtype": "Shirt"
 #   },
+#   "recurrence_rate": "Every 2 days",
+#   "recurrence_deadline": date3,
 #   "x": 48.7634,
 #   "y": 21.3466,
 #   "created_at": date1,
