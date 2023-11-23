@@ -8,12 +8,19 @@ class statusEnum(str, Enum):
     active= "Active"
     inactive= "Inactive"
 
+class ActionType(str,Enum):
+    moving="Moving" #resource ya da need taşımak
+    search_for_survivors="Search for survivors"
+    dispatch_of_a_relief_team="dispatch of a relief team"
+    need_resource="need_resource"
+
 class Action(BaseModel):
     _id: str = Field(default=None)
     created_by: str = Field(default=None)
+    creation_time: float 
     details: Dict[str, Any] = Field(default=None)
-    needs: Optional[List[Need]] = None
-    resources: Optional[List[Resource]] = None
+    related_needs: Optional[List[Need]] = None
+    related_resources: Optional[List[Resource]] = None
     comment: str = None
     recur: bool= None # recur ediyosa resource
     start_location_x: float = Field(default=0.0)
@@ -21,7 +28,8 @@ class Action(BaseModel):
     endLocation_x: float = Field(default=0.0)
     endLocation_y: float = Field(default=0.0)
     status: statusEnum = None
-
+    type: ActionType= None
+    
 
 class ActionSuccess(BaseModel):
     action_id: int
