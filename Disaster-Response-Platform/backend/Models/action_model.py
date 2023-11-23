@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional, List
 from enum import Enum
-from resource_model import *
-from need_model import *
+from Models.resource_model import *
+from Models.need_model import *
 
 class statusEnum(str, Enum):
     created="Created"
@@ -24,23 +24,23 @@ class Action(BaseModel):
     start_location_y: float = Field(default=0.0)
     endLocation_x: float = Field(default=0.0)
     endLocation_y: float = Field(default=0.0)
-    status: statusEnum = None
-    occur_at: datetime.date = Field(default_factory=datetime.date.today)
+    status: statusEnum = Field(statusEnum.created)
+    occur_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
-    related_needs: Optional[List[Need]] #need_resource type ı için en az bir tane olmalı
-    related_resources: Optional[List[Resource]] #en az bir tane olmalı
-    end_at: datetime.date = Field(default=None) #recurrence ise, girilen date min(resource, need) den büyük ise user a action bilgisi tarih içererek dönülür
+    related_needs: Optional[List[str]] #need_resource type ı için en az bir tane olmalı
+    related_resources: Optional[List[str]] #en az bir tane olmalı
+    end_at: datetime.datetime = Field(default_factory=datetime.datetime.now) #recurrence ise, girilen date min(resource, need) den büyük ise user a action bilgisi tarih içererek dönülür
+   
 
 
-    
     
 
 
 class ActionSuccess(BaseModel):
-    action_id: int
+    action_id: str
 
 class ActivityInfo(BaseModel):
     text: str
