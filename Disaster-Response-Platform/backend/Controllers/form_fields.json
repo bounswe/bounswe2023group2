@@ -1,6 +1,7 @@
 {
     "resource": {
         "fields": [
+            {"name": "description", "label": "Description", "type": "text"},
             {"name": "condition", "label": "Condition", "type": "select", "options": ["new", "used"]},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
             {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "shelter", "medication", "transportation", "tool", "human", "other"]},
@@ -10,8 +11,9 @@
     },
     "need": {
         "fields": [
+            {"name": "description", "label": "Description", "type": "text"},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
-            {"name": "urgency", "label": "Urgency", "type": "number"},
+            {"name": "urgency", "label": "Urgency", "type": "select", "options": [1, 2, 3, 4, 5]},
             {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "shelter", "medication", "transportation", "tool", "human", "other"]},
             {"name": "x", "label": "X Coordinate", "type": "number"},
             {"name": "y", "label": "Y Coordinate", "type": "number"}
