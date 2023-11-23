@@ -28,3 +28,90 @@ def create_action(action: Action, response:Response, current_user: str = Depends
         response.response_model= Error
         return error
     
+
+@router.get("/{resource_id}",responses={
+    status.HTTP_200_OK: {"model": ActionSuccess},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
+def get_resource_info(resource_id: str, response: Response):
+    try:
+        resource_text = action_service.get_resource_info_by_id(resource_id)
+        response.status_code = HTTPStatus.OK
+        return json.loads(resource_text)
+    except ValueError as err:
+        error= Error(ErrorMessage="Resource could not be found", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error
+
+@router.get("/{need_id}",responses={
+    status.HTTP_200_OK: {"model": ActivityInfo},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
+def get_need_info(need_id: str, response: Response):
+    try:
+        need_text = action_service.get_need_info_by_id(need_id)
+        response.status_code = HTTPStatus.OK
+        return json.loads(need_text)
+    except ValueError as err:
+        error= Error(ErrorMessage="Need could not be found", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error
+    
+@router.get("/",responses={
+    status.HTTP_200_OK: {"model": ActionSuccess},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
+def get_all_actions(response: Response):
+    try:
+        actions = action_service.get_actions()
+        response.status_code = HTTPStatus.OK
+        return json.loads(actions)
+    except ValueError as err:
+        error= Error(ErrorMessage="Action error", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error
+    
+
+@router.put("/{raction_id}", responses={
+    status.HTTP_201_CREATED: {"model": updateResponse},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
+def update_action(action_id: str,action: Action, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        action.created_by= current_user
+        updated_action = action_service.update_action(action_id, action)
+        if updated_action:
+            response.status_code = HTTPStatus.OK
+            return {"actions": [updated_action]}
+        else:
+            raise ValueError(f"Action id {action_id} not updated")
+    except ValueError as err:
+        err_json = create_json_for_error("Action error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+    
+@router.delete("/{action_id}")
+def delete_action(action_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        res_list = action_service.delete_action(action_id, current_user)
+        response.status_code=HTTPStatus.OK
+        return json.loads(res_list)
+    except ValueError as err:
+        err_json = create_json_for_error("Action could not be deleted", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+
+#this is for making an action inactive 
+@router.delete("/{action_id}")
+def cancel_action(action_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        res_list = action_service.delete_action(action_id, current_user)
+        response.status_code=HTTPStatus.OK
+        return json.loads(res_list)
+    except ValueError as err:
+        err_json = create_json_for_error("Action could not be cancelled", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
