@@ -21,7 +21,7 @@ async def get_need_fields():
     return form_fields.get('need', {})
 
 @router.get("/type/{type_name}")
-async def get_type_details(subtype_name: str):
+async def get_type_details(type_name: str):
     form_fields = load_fields(FORM_FIELDS_FILE_PATH)
     type_details = form_fields.get('type', {})
     if type_name not in type_details:
