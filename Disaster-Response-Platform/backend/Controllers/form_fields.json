@@ -1,7 +1,6 @@
 {
     "resource": {
         "fields": [
-            {"name": "_id", "label": "ID", "type": "text"},
             {"name": "created_by", "label": "Created By", "type": "text"},
             {"name": "condition", "label": "Condition", "type": "select", "options": ["new", "used"]},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
@@ -13,7 +12,6 @@
     },
     "need": {
         "fields": [
-            {"name": "_id", "label": "ID", "type": "text"},
             {"name": "created_by", "label": "Created By", "type": "text"},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
             {"name": "urgency", "label": "Urgency", "type": "number"},
