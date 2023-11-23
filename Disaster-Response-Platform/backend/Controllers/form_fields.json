@@ -27,12 +27,13 @@
     },
     "action": {
         "fields": [
-            {"name": "_id", "label": "ID", "type": "text"},
-            {"name": "created_by", "label": "Created By", "type": "text"},
-            {"name": "x", "label": "X Coordinate", "type": "number"},
-            {"name": "y", "label": "Y Coordinate", "type": "number"},
-            {"name": "resources", "label": "List of Resources", "type": "array", "subtype": "resource"},
-            {"name": "needs", "label": "List of Needs", "type": "array", "subtype": "need"}
+            {"name": "description", "label": "Description", "type": "text"},
+            {"name": "type", "label": "Type", "type": "select", "options": ["resource_need_match"]},
+            {"name": "related_resources", "label": "List of Resources", "type": "array", "subtype": "resource"},
+            {"name": "related_needs", "label": "List of Needs", "type": "array", "subtype": "need"},
+            {"name": "occur_date", "label": "Occur date", "type": "date"},
+            {"name": "end_date", "label": "End date", "type": "date"}
+
         ]
     },
     "type": {

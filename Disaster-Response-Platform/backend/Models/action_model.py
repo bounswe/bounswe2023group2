@@ -47,3 +47,6 @@ class ActivityInfo(BaseModel):
 
 class AllActionsResponse(BaseModel):
     notsure: str
+
+class updateResponse(BaseModel):
+    actions: List[Action]
