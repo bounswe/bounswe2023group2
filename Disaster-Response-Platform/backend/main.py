@@ -5,7 +5,7 @@ from Services import resource_service
 from Services.build_API_returns import *
 from Controllers import (resource_controller, user_controller, uprofile_optinfo_controller,
                          uprofile_languages_controller, uprofile_SocMed_controller, uprofile_professions_controller,
-                         uprofile_skills_controller, need_controller, event_controller, user_roles_controller, form_fields_controller, report_controller)
+                         uprofile_skills_controller, need_controller, event_controller, user_roles_controller, form_fields_controller, report_controller, feedback_controller)
 
 
 from fastapi.responses import JSONResponse
@@ -37,6 +37,7 @@ app.include_router(uprofile_skills_controller.router, prefix= "/api/profiles", t
 app.include_router(report_controller.router, prefix= "/api/reports", tags=["Reports"])
 app.include_router(event_controller.router, prefix= "/api/events", tags=["Events"])
 app.include_router(form_fields_controller.router, prefix="/api/form_fields", tags=["Need Resource Form Fields"])
+app.include_router(feedback_controller.router, prefix="/api/feedback", tags=["Feedback System"])
 
 
 @app.get("/")

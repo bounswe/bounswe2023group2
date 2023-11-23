@@ -111,3 +111,7 @@ class ProfReqSuccess(BaseModel):
 
 class UserRoleResponse(BaseModel):
     user_role: str
+    
+class ProfResponse(BaseModel):
+    user_role: str
+    proficiency: Optional[List[ProfRequest]] = None
