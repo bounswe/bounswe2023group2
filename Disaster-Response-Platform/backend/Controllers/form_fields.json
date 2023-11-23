@@ -43,7 +43,7 @@
         },
         "drink": {
             "fields": [
-                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["water", "juice", "milk", "soda", "tea", "coffee", "cola", "yellow cola"]},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["water", "juice", "milk", "soda", "tea", "coffee", "cola", "yellow cola"]}
             ]
         },
         "shelter": {
