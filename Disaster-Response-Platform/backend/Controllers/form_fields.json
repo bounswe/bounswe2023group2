@@ -21,7 +21,7 @@
             {"name": "x", "label": "X Coordinate", "type": "number"},
             {"name": "y", "label": "Y Coordinate", "type": "number"},
             {"name": "occur_at", "label": "Occur At", "type": "date"},
-            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": ["none", "daily", "every 2 days", "every 3 days", "weekly"]},
+            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": ["none", "daily", "weekly"]},
             {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
         ]
     },
