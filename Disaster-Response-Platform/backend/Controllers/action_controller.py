@@ -21,9 +21,24 @@ def create_action(action: Action, response:Response, current_user: str = Depends
         action.created_by = current_user
         action_result = action_service.create_action(action)
         response.status_code = HTTPStatus.OK
-        return json.loads(action_result)
+        return action_result
     except ValueError as err:
         error= Error(ErrorMessage="Action could not be created", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error
+    
+@router.put("/", responses={
+    status.HTTP_201_CREATED: {"model": ActionSuccess},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
+def do_action(action_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        action_result = action_service.do_action(action_id, current_user)
+        response.status_code = HTTPStatus.OK
+        return action_result
+    except ValueError as err:
+        error= Error(ErrorMessage="Action could not be done", ErrorDetail= str(err))
         response.status_code= HTTPStatus.BAD_REQUEST
         response.response_model= Error
         return error
