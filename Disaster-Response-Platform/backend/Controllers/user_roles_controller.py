@@ -53,3 +53,20 @@ async def get_user_role(response : Response, current_user: UserProfile = Depends
         response.status_code= HTTPStatus.BAD_REQUEST
         #response.response_model= Error
         return error
+    
+@router.get("/proficiencies", responses={
+    status.HTTP_200_OK: {"model": UserRoleResponse},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+
+})
+async def get_user_prof(response : Response, current_user: UserProfile = Depends(authentication_service.get_current_user)):
+    user_role_str = current_user.user_role.value   
+    if user_role_str:
+        response.status_code= HTTPStatus.OK
+        return ProfResponse(user_role=user_role_str, proficiency= current_user.proficiency)
+ 
+    else:
+        error= Error(ErrorMessage="Could not find user role", ErrorDetail="User role is null")
+        response.status_code= HTTPStatus.BAD_REQUEST
+        #response.response_model= Error
+        return error
