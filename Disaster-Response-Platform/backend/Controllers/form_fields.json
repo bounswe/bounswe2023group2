@@ -1,74 +1,85 @@
 {
     "resource": {
         "fields": [
-            {"name": "_id", "label": "ID", "type": "text"},
-            {"name": "created_by", "label": "Created By", "type": "text"},
+            {"name": "description", "label": "Description", "type": "text"},
             {"name": "condition", "label": "Condition", "type": "select", "options": ["new", "used"]},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
-            {"name": "currentQuantity", "label": "Current Quantity", "type": "number"},
-            {"name": "type", "label": "Type", "type": "text"},
+            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "drink", "shelter", "medication", "transportation", "tool", "human", "other"]},
             {"name": "x", "label": "X Coordinate", "type": "number"},
-            {"name": "y", "label": "Y Coordinate", "type": "number"}
+            {"name": "y", "label": "Y Coordinate", "type": "number"},
+            {"name": "occur_at", "label": "Occur At", "type": "date"},
+            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": ["none", "daily", "weekly"]},
+            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
         ]
     },
     "need": {
         "fields": [
-            {"name": "_id", "label": "ID", "type": "text"},
-            {"name": "created_by", "label": "Created By", "type": "text"},
+            {"name": "description", "label": "Description", "type": "text"},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
-            {"name": "urgency", "label": "Urgency", "type": "number"},
-            {"name": "unsuppliedQuantity", "label": "Unsupplied Quantity", "type": "number"},
-            {"name": "type", "label": "Type", "type": "text"},
+            {"name": "urgency", "label": "Urgency", "type": "select", "options": [1, 2, 3, 4, 5]},
+            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "shelter", "medication", "transportation", "tool", "human", "other"]},
             {"name": "x", "label": "X Coordinate", "type": "number"},
-            {"name": "y", "label": "Y Coordinate", "type": "number"}
+            {"name": "y", "label": "Y Coordinate", "type": "number"},
+            {"name": "occur_at", "label": "Occur At", "type": "date"},
+            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": ["none", "daily", "weekly"]},
+            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
         ]
     },
-    "subtype": {
+    "type": {
         "cloth": {
             "fields": [
                 {"name": "size", "label": "Size", "type": "text"},
                 {"name": "gender", "label": "Gender", "type": "text"},
-                {"name": "age", "label": "Age", "type": "text"},
-                {"name": "subtype", "label": "Subtype", "type": "text"}
+                {"name": "age group", "label": "Age", "type": "select", "options": ["baby", "child", "teen", "adult", "elder", "mixed"]},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["pants", "shirt", "t-shirt", "coat", "boots", "shoes"]}
             ]
         },
         "food": {
             "fields": [
                 {"name": "expiration_date", "label": "Expiration Date", "type": "date"},
                 {"name": "allergens", "label": "Allergens", "type": "text"},
-                {"name": "subtype", "label": "Subtype", "type": "text"}
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["grains", "vegetables", "fruits", "meats", "dairy", "baby food", "conserved food"]}
+            ]
+        },
+        "drink": {
+            "fields": [
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["water", "juice", "milk", "soda", "tea", "coffee", "cola", "yellow cola"]},
             ]
         },
         "shelter": {
             "fields": [
                 {"name": "number_of_people", "label": "Number of People", "type": "number"},
-                {"name": "weather_condition", "label": "Weather Condition", "type": "text"}
+                {"name": "weather_condition", "label": "Weather Condition", "type": "text"},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["tent", "temporary structure", "permanent structure"]}
             ]
         },
         "medication": {
             "fields": [
                 {"name": "disease_name", "label": "Disease Name", "type": "text"},
                 {"name": "medicine_name", "label": "Medicine Name", "type": "text"},
-                {"name": "age", "label": "Age", "type": "number"}
+                {"name": "age", "label": "Age", "type": "number"},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["antibiotics", "analgesics", "antivirals", "vaccines"]}
             ]
         },
         "transportation": {
             "fields": [
                 {"name": "start_location", "label": "Start Location", "type": "text"},
-                {"name": "end_location", "label": "End Location", "type": "text"}
+                {"name": "end_location", "label": "End Location", "type": "text"},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["car", "bus", "train", "airplane"]}
             ]
         },
         "tool": {
             "fields": [
                 {"name": "tool_type", "label": "Tool Type", "type": "text"},
-                {"name": "estimated_weight", "label": "Estimated Weight", "type": "number"}
+                {"name": "estimated_weight", "label": "Estimated Weight", "type": "number"},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["hand tools", "power tools", "gardening tools", "construction tools", "rescue tools"]}
             ]
         },
         "human": {
             "fields": [
                 {"name": "proficiency", "label": "Proficiency", "type": "text"},
                 {"name": "number_of_people", "label": "Number of People", "type": "number"},
-                {"name": "subtype", "label": "Subtype", "type": "text"}
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["doctor", "engineer", "teacher", "laborer"]}
             ]
         }
     }
