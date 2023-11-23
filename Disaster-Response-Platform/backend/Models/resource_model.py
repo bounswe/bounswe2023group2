@@ -53,6 +53,8 @@ class Resource(BaseModel):
     y: float = Field(default=0.0)
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    upvote: int = Field(default=0)
+    downvote: int = Field(default=0)
     
 # Update Body Models
 class QuantityUpdate(BaseModel):
