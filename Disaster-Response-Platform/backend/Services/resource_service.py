@@ -27,6 +27,7 @@ def get_resource_by_id(resource_id: str) -> list[dict]:
 def get_resources(resource_id:str = None) -> list[dict]:
     projection = {"_id": {"$toString": "$_id"},
                   "created_by": 1,
+                  "description": 1,
                   "condition": 1,
                   "initialQuantity": 1,
                   "currentQuantity": 1,

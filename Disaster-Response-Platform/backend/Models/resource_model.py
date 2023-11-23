@@ -44,6 +44,7 @@ class human(BaseModel):
 class Resource(BaseModel):
     _id: str = Field(default=None)
     created_by: str = Field(default=None)
+    description: str = Field(default=None)
     condition: ConditionEnum = Field(default=None)
     initialQuantity: int = Field(default=None)
     currentQuantity: int = Field(default=None)

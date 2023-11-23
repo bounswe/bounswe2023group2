@@ -32,6 +32,7 @@ def get_needs(need_id:str = None) -> list[dict]:
     projection = {
             "_id": {"$toString": "$_id"},
             "created_by": 1,
+            "description": 1,
             "urgency": 1,
             "initialQuantity": 1,
             "unsuppliedQuantity": 1,

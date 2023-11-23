@@ -6,6 +6,7 @@ import datetime
 class Need(BaseModel):
     _id: str = Field(default=None)
     created_by: str = Field(default=None)
+    description: str = Field(default=None)
     initialQuantity: int = Field(default=None)
     urgency: int = Field(default=None)
     unsuppliedQuantity: int = Field(default=None)

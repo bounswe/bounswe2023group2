@@ -13,10 +13,11 @@ from Services.build_API_returns import create_json_for_error
 
 router = APIRouter()
 
-# Does require all fields except created_by (handled by "Depends").
+# Does require all fields except created_by (handled by "Depends") and date fields.
 #
 # Body = {
 #   "condition" : "new",
+#   "description": "we need this and that there",
 #   "initialQuantity" : 65,
 #   "currentQuantity" : 35,
 #    "type": "Cloth",
@@ -27,7 +28,9 @@ router = APIRouter()
 #        "subtype": "Shirt"
 #   },
 #   "x": 48.7634,
-#   "y": 21.3466
+#   "y": 21.3466,
+#   "created_at": date1,
+#   "last_updated_at": date2
 # }
 @router.post("/", status_code=201)
 def create_resource(resource: Resource, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
