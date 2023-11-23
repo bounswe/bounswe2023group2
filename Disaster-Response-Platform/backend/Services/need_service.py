@@ -3,7 +3,7 @@ from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 
 from Services.build_API_returns import *
-
+from datetime import datetime
 
 # Get the needs collection using the MongoDB class
 needs_collection = MongoDB.get_collection('needs')
@@ -32,13 +32,20 @@ def get_needs(need_id:str = None) -> list[dict]:
     projection = {
             "_id": {"$toString": "$_id"},
             "created_by": 1,
+            "description": 1,
             "urgency": 1,
             "initialQuantity": 1,
             "unsuppliedQuantity": 1,
             "type": 1,
             "details": 1,
+            "recurrence_id": 1,
+            "recurrence_rate": 1,
+            "recurrence_deadline": 1,
             "x": 1,
-            "y": 1
+            "y": 1,
+            "occur_at": 1,
+            "created_at": 1,
+            "last_updated_at": 1
         }
     
     if (need_id is None):
@@ -70,6 +77,13 @@ def update_need(need_id: str, need: Need) -> Need:
 
         update_data = {k: v for k, v in need.dict(exclude_none=True).items()}
 
+        # Retain the original 'created_at' field from the existing need
+        if 'created_at' in existing_need:
+            update_data['created_at'] = existing_need['created_at']
+
+        # Set 'last_updated_at' to the current time
+        update_data['last_updated_at'] = datetime.now()
+
         needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": update_data})
 
         updated_need_data = needs_collection.find_one({"_id": ObjectId(need_id)})
@@ -89,7 +103,7 @@ def delete_need(need_id: str):
         raise ValueError(f"Need {need_id} cannot be deleted")    
     
 def set_initial_quantity(need_id: str, quantity: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"initialQuantity": quantity}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"initialQuantity": quantity, "last_updated_at": datetime.now()}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True
@@ -102,7 +116,7 @@ def get_initial_quantity(need_id: str) -> int:
         raise ValueError(f"Need id {need_id} not found")
     
 def set_unsupplied_quantity(need_id: str, quantity: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"unsuppliedQuantity": quantity}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"unsuppliedQuantity": quantity, "last_updated_at": datetime.now()}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True
@@ -115,7 +129,7 @@ def get_unsupplied_quantity(need_id: str) -> int:
         raise ValueError(f"Need id {need_id} not found")
     
 def set_urgency(need_id: str, urgency: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"urgency": urgency}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"urgency": urgency, "last_updated_at": datetime.now()}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True

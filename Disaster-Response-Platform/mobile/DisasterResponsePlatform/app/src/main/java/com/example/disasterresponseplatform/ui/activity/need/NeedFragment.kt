@@ -37,7 +37,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
     private fun arrangeView(){
         binding.btAddNeed.setOnClickListener {
-            addOrEditNeed(null)
+            addNeed()
         }
 
         arrangeSearchView()
@@ -45,18 +45,27 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         sendRequest()
     }
 
-    /** This function is called whenever need is created or edited
-     * If it is created need should be null, else need should be the clicked item
+    /** This function is called whenever clicked add need button
+     * It opens add Need fragment if user is authenticated, else warns the user
      */
-    private fun addOrEditNeed(need: Need?){
+    private fun addNeed(){
         val token = DiskStorageManager.getKeyValue("token")
         if (!token.isNullOrEmpty()) {
-            val addNeedFragment = AddNeedFragment(needViewModel,need)
+            val addNeedFragment = AddNeedFragment(needViewModel,null)
             addFragment(addNeedFragment,"AddNeedFragment")
         }
         else{
             Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
         }
+    }
+
+    /** This function is called whenever need item is selected
+     * It opens a need page that contains details about it and users can edit, delete, upvote and downvote this item from this page
+     * if they have the authority
+     */
+    private fun openNeedItemFragment(need: Need){
+        val needItemFragment = NeedItemFragment(needViewModel,need)
+        addFragment(needItemFragment,"NeedItemFragment")
     }
 
     /** This function connects backend and get all need requests, then it observes livedata from viewModel which is changed
@@ -89,7 +98,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
-            addOrEditNeed(it)
+            openNeedItemFragment(it)
         }
     }
 

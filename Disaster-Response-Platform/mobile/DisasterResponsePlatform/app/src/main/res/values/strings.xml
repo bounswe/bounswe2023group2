@@ -92,6 +92,8 @@
     <string name="edit_need">Edit Need</string>
     <string name="edit_resource">Edit Resource</string>
     <string name="save_changes">Save Changes</string>
+    <string name="condition">Condition</string>
+    <string name="navigate">Navigate</string>
 
     <string-array name="need_types">
         <item>Clothes</item>

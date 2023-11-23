@@ -4,6 +4,7 @@ from http import HTTPStatus
 from fastapi import APIRouter, HTTPException, Response, Depends
 from Models.need_model import Need, QuantityUpdate,UrgencyUpdate
 import Services.need_service as need_service
+import Services.feedback_service as feedback_service
 
 import Services.authentication_service as authentication_service
 from Services.build_API_returns import create_json_for_error
@@ -121,7 +122,7 @@ def get_unsupplied_quantity(need_id: str, response: Response):
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
     
-@router.put("/{need_id}/urgency")
+
 def set_urgency(need_id: str, urgency_data: UrgencyUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         need_service.set_urgency(need_id, urgency_data.urgency)
@@ -131,7 +132,7 @@ def set_urgency(need_id: str, urgency_data: UrgencyUpdate, response: Response, c
         err_json = create_json_for_error("Need urgency set update error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
-    
+
 @router.get("/{need_id}/urgency")
 def get_urgency(need_id: str, response: Response):
     try:
