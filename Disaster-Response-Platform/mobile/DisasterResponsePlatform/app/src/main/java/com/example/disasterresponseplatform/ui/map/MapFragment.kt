@@ -16,7 +16,9 @@ import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
+import com.example.disasterresponseplatform.ui.activity.need.NeedItemFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
+import com.example.disasterresponseplatform.ui.activity.resource.ResourceItemFragment
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
 import org.osmdroid.api.IMapController
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
@@ -108,7 +110,9 @@ class MapFragment(
         if (isNeedValidLocation(needItem)) {
             val point = GeoPoint(needItem.x!!.toDouble(), needItem.y!!.toDouble())
             val marker = Marker(mapView)
-            marker.setInfoWindow(BubbleInfoView(mapView, parentFragmentManager, needViewModel, needItem.getNeed()))
+            marker.setInfoWindow(BubbleInfoView(mapView, View.OnClickListener {
+                addFragment(NeedItemFragment(needViewModel, needItem.getNeed()))
+            }))
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = needItem.getDescription()
@@ -121,6 +125,9 @@ class MapFragment(
         if (isResourceValidLocation(resourceItem)) {
             val point = GeoPoint(resourceItem.x!!.toDouble(), resourceItem.y!!.toDouble())
             val marker = Marker(mapView)
+            marker.setInfoWindow(BubbleInfoView(mapView) {
+                addFragment(ResourceItemFragment(resourceViewModel, resourceItem.getResource()))
+            })
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = resourceItem.getDescription()
@@ -128,8 +135,15 @@ class MapFragment(
             // Apply a color filter to the default marker
             val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon
             defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
-            marker.setIcon(defaultDrawable)
+            marker.icon = defaultDrawable
             needClusterer.add(marker)
         }
+    }
+
+    private fun addFragment(fragment: Fragment) {
+        val ft = parentFragmentManager.beginTransaction()
+        ft.replace(R.id.container, fragment)
+        ft.addToBackStack(null)
+        ft.commit()
     }
 }

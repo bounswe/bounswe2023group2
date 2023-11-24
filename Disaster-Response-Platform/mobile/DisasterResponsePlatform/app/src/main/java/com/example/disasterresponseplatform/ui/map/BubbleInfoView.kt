@@ -12,21 +12,13 @@ import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow
 
-class BubbleInfoView(mapView: MapView?, val parentFragmentManager: FragmentManager,
-                     val needViewModel: NeedViewModel, val needItem: Need) : MarkerInfoWindow(R.layout.map_bubble, mapView) {
+class BubbleInfoView(mapView: MapView?, val listener: View.OnClickListener)
+    : MarkerInfoWindow(R.layout.map_bubble, mapView) {
 
     override fun onOpen(item: Any?) {
         super.onOpen(item)
         val button = mView.findViewById<View>(R.id.more)
-        button.setOnClickListener {
-            addFragment(NeedItemFragment(needViewModel, needItem), "NeedItemFragment")
-        }
+        button.setOnClickListener(listener)
     }
 
-    private fun addFragment(fragment: Fragment, fragmentName: String) {
-        val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
-        ft.replace(R.id.container, fragment)
-        ft.addToBackStack(fragmentName)
-        ft.commit()
-    }
 }
