@@ -47,15 +47,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var emergencyViewModel: EmergencyViewModel
     private lateinit var resourceViewModel: ResourceViewModel
 
-    private val homePageFragment = HomePageFragment()
     private val networkFragment = NetworkFragment()
     private lateinit var mapFragment: MapFragment
     private val profileFragment = ProfileFragment()
     private val loginFragment = LoginFragment()
-    private lateinit var activityFragment: ActivityFragment
-
-
-
+    private lateinit var homeFragment: HomeFragment
 
     private lateinit var toggle: ActionBarDrawerToggle
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -17,10 +17,8 @@ class BubbleInfoView(mapView: MapView?, val parentFragmentManager: FragmentManag
 
     override fun onOpen(item: Any?) {
         super.onOpen(item)
-        Toast.makeText(mView.context, "Bubble created", Toast.LENGTH_LONG).show()
         val button = mView.findViewById<View>(R.id.more)
         button.setOnClickListener {
-            Toast.makeText(mView.context, "Clicked bubble", Toast.LENGTH_LONG).show()
             addFragment(NeedItemFragment(needViewModel, needItem), "NeedItemFragment")
         }
     }
