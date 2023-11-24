@@ -7,6 +7,11 @@ class ConditionEnum(str, Enum):
     new = "new"
     used = "used"
 
+class Recurrence(Enum):
+    Daily= 1
+    Weekly= 7
+   
+
 class Resource(BaseModel):
     _id: str = Field(default=None)
     created_by: str = Field(default=None)
@@ -17,7 +22,7 @@ class Resource(BaseModel):
     type: str = Field(default=None)
     details: Dict[str, Any] = Field(default=None)
     recurrence_id: str = Field(default=None)
-    recurrence_rate: str = Field(default=None)
+    recurrence_rate: Recurrence = Field(default=None)
     recurrence_deadline: datetime.datetime = Field(default=None)
     x: float = Field(default=0.0)
     y: float = Field(default=0.0)
