@@ -15,6 +15,10 @@ class ActionType(str,Enum):
     dispatch_of_a_relief_team="dispatch of a relief team"
     need_resource="need_resource"
 
+class ActionGroup(BaseModel):
+    related_needs: Optional[List[str]]
+    related_resources: Optional[List[str]]
+    
 class Action(BaseModel):
     _id: str = Field(default=None)
     created_by: str = Field(default=None)
@@ -30,13 +34,13 @@ class Action(BaseModel):
     last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
-    related_needs: Optional[List[str]] #need_resource type ı için en az bir tane olmalı
-    related_resources: Optional[List[str]] #en az bir tane olmalı
+    related_groups: Optional[List[ActionGroup]]= None
+ 
     end_at: datetime.datetime = Field(default_factory=datetime.datetime.now) #recurrence ise, girilen date min(resource, need) den büyük ise user a action bilgisi tarih içererek dönülür
    
 
 
-    
+
 
 
 class ActionSuccess(BaseModel):
