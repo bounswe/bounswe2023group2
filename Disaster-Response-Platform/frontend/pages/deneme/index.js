@@ -15,6 +15,6 @@ export default function deneme() {
   </> 
 }
 
-login.getLayout = function getLayout(page) {
+deneme.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
