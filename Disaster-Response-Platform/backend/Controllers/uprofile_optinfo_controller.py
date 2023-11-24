@@ -1,10 +1,14 @@
-from fastapi import APIRouter, Response, Depends, status
+from fastapi import APIRouter, Response, Depends, status, UploadFile
 from http import HTTPStatus
 from Models.user_profile_model import UserOptionalInfo, UserOptionalInfos
 from Models.user_model import Error
 import Services.uprofile_optinfo_service as user_profile_service
 from Services.build_API_returns import *
 import Services.authentication_service as authentication_service
+import os
+from Database.s3 import upload_file_using_client
+import shutil
+import uuid
 
 router = APIRouter()
 
@@ -83,9 +87,24 @@ async def delete_user_optional_info(response: Response, username: str = Depends(
         json_result = create_json_for_error("Optional user info delete failed", str(val_error))
         return json.loads(json_result)
 
-# Will be written seperately - the model will not include BSON
-@router.post("/upload-user-profile-picture", )
-async def upload_user_profile_picture(response: Response, username: str = Depends(authentication_service.get_current_username)):
-    json_result = create_json_for_simple("Not ready API",
-                                         "PICTUREID")
+
+
+@router.post("/upload-user-picture/")
+async def create_upload_file(file: UploadFile, response:Response, username: str = Depends(authentication_service.get_current_username)):
+    upload_dir = os.path.join(os.getcwd(), "tmpupload")
+    # Create the upload directory if it doesn't exist
+    if not os.path.exists(upload_dir):
+        os.makedirs(upload_dir)
+
+    local_file_name = str(uuid.uuid4())
+    # get the destination path
+
+    dest = os.path.join(upload_dir, local_file_name)
+    print(dest)
+
+    # copy the file contents
+    with open(dest, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    json_result = user_profile_service.upload_user_picture(username, upload_dir, local_file_name)
     return json.loads(json_result)

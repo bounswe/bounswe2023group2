@@ -4,6 +4,7 @@ from Models.user_profile_model import UserOptionalInfo
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 from Services.build_API_returns import *
+from Database.s3 import upload_file_using_client
 
 profile_optional_infos = MongoDB.get_collection('user_optional_infos')
 
@@ -104,3 +105,19 @@ def delete_user_optional_info(username:str) -> str:
         return json.dumps(info_from_db)
     else:
         raise ValueError("User optional cannot be deleted")
+
+def upload_user_picture(username:str, upload_dir:str, local_file_name:str):
+    url = upload_file_using_client(upload_dir, local_file_name)
+
+    query = {"username": username}
+    info_from_db = profile_optional_infos.find_one(query)
+
+    if (info_from_db is None):
+            raise ValueError("User optional info should be added before uploading picture")
+    else:
+        result = profile_optional_infos.update_one(query, {"$set": {'user_picture':url}})
+        if result.modified_count > 0:
+            strjson = f'{{ "user_optional_infos": [{{"user_picture": "{url}"}}]}}'
+            return strjson
+        else:
+            raise ValueError("Unable to update")
