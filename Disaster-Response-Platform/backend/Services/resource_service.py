@@ -57,7 +57,17 @@ def get_resources(resource_id:str = None) -> list[dict]:
         if resource_id is None:
             resource_id = ""
         raise ValueError(f"Resource {resource_id} does not exist")
-    result_list = create_json_for_successful_data_fetch(resources_data, "resources")
+
+    # Convert and format datetime fields
+    formatted_resources_data = []
+    for resource in resources_data:
+        if 'created_at' in resource:
+            resource['created_at'] = resource['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+        if 'last_updated_at' in resource:
+            resource['last_updated_at'] = resource['last_updated_at'].strftime('%Y-%m-%d %H:%M:%S')
+        formatted_resources_data.append(resource)
+
+    result_list = create_json_for_successful_data_fetch(formatted_resources_data, "resources")
     return result_list
     
 def update_resource(resource_id: str, resource: Resource) -> Resource:
