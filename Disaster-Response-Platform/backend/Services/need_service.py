@@ -22,6 +22,7 @@ def create_need(need: Need) -> str:
         insert_result = needs_collection.insert_one(need.dict())
         print("need added ", insert_result, need.recurrence_id, need.occur_at)
         insert_ids=create_recurrent_needs(need)
+        print(insert_ids)
         r_id+=1
     else:
         insert_result = needs_collection.insert_one(need.dict())
