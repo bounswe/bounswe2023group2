@@ -62,7 +62,17 @@ def get_needs(need_id:str = None) -> list[dict]:
         if need_id is None:
             need_id = ""
         raise ValueError(f"Need {need_id} does not exist")
-    result_list = create_json_for_successful_data_fetch(needs_data, "needs")
+
+    # Convert and format datetime fields
+    formatted_needs_data = []
+    for need in needs_data:
+        if 'created_at' in need:
+            need['created_at'] = need['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+        if 'last_updated_at' in need:
+            need['last_updated_at'] = need['last_updated_at'].strftime('%Y-%m-%d %H:%M:%S')
+        formatted_needs_data.append(need)
+
+    result_list = create_json_for_successful_data_fetch(formatted_needs_data, "needs")
     return result_list
 
     
