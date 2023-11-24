@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from typing import Dict, Any
 from enum import Enum
 import datetime
@@ -23,6 +23,15 @@ class Need(BaseModel):
     downvote: int = Field(default=0)
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+
+    @validator('recurrence_deadline', 'occur_at', pre=True)
+    def convert_str_to_datetime(cls, value):
+        if isinstance(value, str):
+            try:
+                return datetime.datetime.strptime(value, '%Y-%m-%d')
+            except ValueError:
+                raise ValueError("Incorrect date format, should be YYYY-MM-DD")
+        return value
     
 class QuantityUpdate(BaseModel):
     quantity: int
