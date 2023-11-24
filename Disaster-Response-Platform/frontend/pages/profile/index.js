@@ -24,7 +24,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
         "options": ["Yükleniyor..."]});
 
   if (guest || expired) {
-    useEffect(() => router.push("/login"));
+    useEffect(() => {router.push("/login")});
     return (
       <div class="text-center text-xl">
         <br /><br /><br />
@@ -45,7 +45,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
     "blood_type": "Kan Grubu",
     "Address": "Adres"
   }
-  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val])
+  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val]);
   optional_info_tr.sort();
   return (
     <>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from "@nextui-org/react";
 import { toast } from 'react-toastify';
 
-export default function SkillList({ list, topic, username, onOpen, setModalState }) {
+export default function SkillList({ list, topic, username, onOpen, setModalState, noedit }) {
 	let [ skills, setSkills ] = useState(list);
 	async function addSkill(event) {
     	event.preventDefault();
@@ -55,6 +55,15 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
 	    toast("Başarıyla kaldırıldı");
 
 		setSkills(skills.filter(other => (skill[topic.primary] != other[topic.primary])));
+	}
+
+	if (noedit) {
+		return (
+			<GrayBox key={topic.key} className="mb-6 w-54">
+				<h3 class="object-top text-lg"> {topic.title} </h3>
+				{ skills.map(skill => Skill({skill: skill, topic: topic, noedit: true})) }
+			</GrayBox>
+		);
 	}
 
 	return (
