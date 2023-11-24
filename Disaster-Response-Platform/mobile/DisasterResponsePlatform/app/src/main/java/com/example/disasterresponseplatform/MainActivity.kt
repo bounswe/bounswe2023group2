@@ -20,8 +20,7 @@ import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.Urgency
 import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.ui.HomePageFragment
-import com.example.disasterresponseplatform.ui.activity.ActivityFragment
+import com.example.disasterresponseplatform.ui.activity.HomeFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
@@ -41,12 +40,11 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val homePageFragment = HomePageFragment()
     private val networkFragment = NetworkFragment()
     private val mapFragment = MapFragment()
     private val profileFragment = ProfileFragment()
     private val loginFragment = LoginFragment()
-    private lateinit var activityFragment: ActivityFragment
+    private lateinit var homeFragment: HomeFragment
 
     private lateinit var needViewModel: NeedViewModel
     private lateinit var userDataViewModel: UserDataViewModel
@@ -93,8 +91,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeFragments(){
-        activityFragment = ActivityFragment(needViewModel,resourceViewModel)
-        replaceFragment(homePageFragment)
+        homeFragment = HomeFragment(needViewModel,resourceViewModel, this)
+        replaceFragment(homeFragment)
     }
 
     private fun arrangeVisibility(){
@@ -208,8 +206,7 @@ class MainActivity : AppCompatActivity() {
     private fun navBarListener(){
         binding.bottomNavigationView.setOnItemSelectedListener {menuItem ->
             when (menuItem.itemId){
-                R.id.miHome -> replaceNavFragment(homePageFragment)
-                R.id.miActivities -> replaceNavFragment(activityFragment)
+                R.id.miHome -> replaceNavFragment(homeFragment)
                 R.id.miMap -> replaceNavFragment(mapFragment)
                 R.id.miProfile -> replaceNavFragment(profileFragment)
             }
