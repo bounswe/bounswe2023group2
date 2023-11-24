@@ -8,9 +8,13 @@ import SkillList from '@/components/profile/SkillList';
 import { useRouter } from 'next/router';
 import { useEffect } from "react";
 import { api } from '@/lib/apiUtils';
+import { useDisclosure } from "@nextui-org/react";
+import ReportModal from '@/components/profile/ReportModal';
+import { Button } from "@nextui-org/react";
 
 export default function OtherProfile({ guest, expired, main_info, optional_info, list_info }) {
 	const router = useRouter();
+	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	if (guest || expired) {
 		useEffect(() => {router.push("/login")});
@@ -40,7 +44,7 @@ export default function OtherProfile({ guest, expired, main_info, optional_info,
 	<>
 	  <main>
 	    <div class="flex justify-around space-x-8">
-	      <MainInfo className="w-60" info={main_info}/>
+	      <MainInfo className="w-60" info={main_info} onOpen={onOpen} report/>
 	      <OptionalInfo className="w-80" fields={optional_info_tr} />
 	      <div>
 	        <SkillList list={social.list} topic={social.topic} username={username} noedit/>
@@ -50,6 +54,7 @@ export default function OtherProfile({ guest, expired, main_info, optional_info,
 	      </div>
 	    </div>
 	    <ActivityTable />
+			<ReportModal isOpen={isOpen} onOpenChange={onOpenChange} />
 	  </main>
 	</>
 	)
