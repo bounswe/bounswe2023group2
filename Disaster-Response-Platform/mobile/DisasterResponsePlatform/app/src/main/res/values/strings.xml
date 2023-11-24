@@ -95,6 +95,11 @@
     <string name="condition">Condition</string>
     <string name="navigate">Navigate</string>
 
+
+    <string name="nav_home">Home</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_profile">Profile</string>
+
     <string-array name="need_types">
         <item>Clothes</item>
         <item>Food</item>
