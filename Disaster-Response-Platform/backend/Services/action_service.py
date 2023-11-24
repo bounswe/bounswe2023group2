@@ -2,15 +2,16 @@ from Models.resource_model import ConditionEnum
 from Models.action_model import *
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
-
+from datetime import datetime, timezone, timedelta
 from Services.build_API_returns import *
 from Services.resource_service import *
 from Services.need_service import *
 
 # Get the resources collection using the MongoDB class
 actions_collection = MongoDB.get_collection('actions')
+resources_collection= MongoDB.get_collection('resources')
 
-
+needs_collection= MongoDB.get_collection('needs')
 def create_action(action: Action) -> str:
     # Manual validation for required fields during creation
     #can there be actions without a resource
@@ -27,21 +28,66 @@ def create_action(action: Action) -> str:
         #action ın need ve resource larına bakalım while içinde listin tüm elemanlarını tarverse edip need ve resource un recur untilinden uzun olamasın
         # burda recurrence ı anlayınca tüm seriyi listeye ekleyeyim en iyisi
         # buraya need ve resource type , detail check koyalım aynı type ta değilse hata versin
-        min_datetime = datetime.datetime.max
-        for id in action.related_resources:
-            related_resource = resources_collection.find_one({"_id": ObjectId(id)})
-            if(related_resource.recurrence_id is not None):
-                action.recurrence=True
-                if(min_datetime> related_resource.recurrence_deadline):
-                    min_datetime=related_resource.recurrence_deadline
-        for id in action.related_needs:
-            related_need= needs_collection.find_one({"_id": ObjectId(id)})
-            if(related_need.recurrence_id is not None):
-                action.recurrence=True
-                if(min_datetime> related_need.recurrence_deadline):
-                    min_datetime=related_need.recurrence_deadline
-        if(action.end_at > min_datetime):
-            raise ValueError("Action end time should be set properly")
+        i=0
+        for group in action.related_groups:
+
+            min_datetime = datetime.now(timezone.utc)
+        
+
+            #to check resource type and need type match
+            id= group.related_resources[0]
+            resource=resources_collection.find_one({"_id": ObjectId(id)})
+            print(resource)
+            type= resource["type"]
+            id_list=[]
+            for id in group.related_resources:
+                print(id)
+                related_resource = resources_collection.find_one({"_id": ObjectId(id)})
+                if related_resource["type"] != type:
+                    raise ValueError("You can only take action between resource and needs that has the same type")
+      
+                print("debug2",related_resource["created_by"])
+                print("groups",action.related_groups)
+                if(related_resource.get("recurrence_id") is not None):
+                    #find all recurrences with r_id 
+                    print("resource recurrence id is not none")
+                    query = {"recurrence_id": related_resource["recurrence_id"]}
+                    matching_resources = resources_collection.find(query, {"_id": 1})
+                    rid_list = [str(resource["_id"]) for resource in matching_resources]
+                    id_list.extend(rid_list)
+                  
+                    if(min_datetime> related_resource["recurrence_deadline"]):
+                        min_datetime=related_resource["recurrence_deadline"]
+            #add recuuring resource list to action's mentioned resource list
+            action.related_groups[i].related_resources.extend(id_list)
+            for id in group.related_needs:
+                print(id)
+                print("groups",action.related_groups)
+                if related_resource["type"] != type:
+                    raise ValueError("You can only take action between resource and needs that has the same type")
+                related_need= needs_collection.find_one({"_id": ObjectId(id)})
+                if(related_need.get("recurrence_id") is not None):
+                    print("need recurrence id is not none")
+                    print(related_need.get("recurrence_id"))
+                    print("end date of action",action.end_at)
+                    print("min date_Time",min_datetime)
+                    #find all recurrences with r_id 
+                    query = {"recurrence_id": related_need["recurrence_id"]}
+                    matching_needs = needs_collection.find(query, {"_id": 1})
+                    nid_list = [str(need["_id"]) for need in matching_needs]
+                    id_list.extend(nid_list)
+                    #add recuuring resource list to action's mentioned resource list
+                    
+                    #TODO burda date leri kıyaslayamıyom kafayı yiycem
+                    # if(min_datetime> related_need["recurrence_deadline"]):
+                    #     min_datetime=related_need["recurrence_deadline"]
+                    
+            action.related_groups[i].related_needs.extend(id_list)
+            i+=1
+        print("end date of action",action.end_at)
+        if(action.end_at is not None):
+            if(action.end_at > min_datetime):
+                raise ValueError("Action end time should be set properly")
         
         insert_result = actions_collection.insert_one(action.dict())
    
