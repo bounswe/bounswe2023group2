@@ -13,6 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.ResourceBody
+import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
+import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
+import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
+import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
+import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
 import org.osmdroid.api.IMapController
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.config.Configuration
@@ -23,7 +28,10 @@ import org.osmdroid.views.overlay.Marker
 
 
 
-class MapFragment : Fragment(R.layout.fragment_map) {
+class MapFragment(
+    var needViewModel: NeedViewModel, var resourceViewModel: ResourceViewModel,
+    var actionViewModel: ActionViewModel, var eventViewModel: EventViewModel,
+    var emergencyViewModel: EmergencyViewModel) : Fragment(R.layout.fragment_map) {
 
     private lateinit var mapView: MapView
     private lateinit var mapViewModel: MapViewModel
@@ -100,6 +108,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         if (isNeedValidLocation(needItem)) {
             val point = GeoPoint(needItem.x!!.toDouble(), needItem.y!!.toDouble())
             val marker = Marker(mapView)
+            marker.setInfoWindow(BubbleInfoView(mapView, parentFragmentManager, needViewModel, needItem.getNeed()))
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = needItem.getDescription()
