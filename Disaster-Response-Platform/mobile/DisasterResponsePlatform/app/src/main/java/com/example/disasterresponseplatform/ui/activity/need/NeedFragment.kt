@@ -1,12 +1,19 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
+import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +22,7 @@ import com.example.disasterresponseplatform.adapter.NeedAdapter
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
@@ -33,6 +41,10 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arrangeView()
+        val btFilter = binding.btFilter
+        btFilter.setOnClickListener {
+            showFilterDialog()
+        }
     }
 
     private fun arrangeView(){
@@ -128,6 +140,22 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
             //clearSearchResults()
             false // Return true if you want to consume the event, otherwise return false
         }
+    }
+
+
+
+    /**
+     * Arrange filter and sort
+     */
+    private fun showFilterDialog(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.sort_and_filter)
+        dialog.window?.setLayout(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        dialog.show()
     }
 
     private fun addFragment(fragment: Fragment, fragmentName: String) {
