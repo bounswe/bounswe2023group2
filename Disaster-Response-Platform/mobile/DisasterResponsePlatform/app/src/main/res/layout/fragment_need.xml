@@ -66,5 +66,17 @@
             app:layout_constraintBottom_toTopOf="@+id/recyclerViewNeeds"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:src="@drawable/filter_alt"
+            app:layout_constraintBottom_toBottomOf="@+id/recyclerViewNeeds"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

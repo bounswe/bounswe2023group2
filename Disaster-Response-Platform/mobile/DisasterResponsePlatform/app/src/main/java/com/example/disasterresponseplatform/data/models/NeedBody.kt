@@ -1,9 +1,21 @@
 package com.example.disasterresponseplatform.data.models
 
+import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.google.gson.annotations.SerializedName
 
 class NeedBody {
+
+    data class NeedFormFieldsResponse(
+        @SerializedName("fields") val fields: List<NeedFormFields>,
+    )
+
+    data class NeedFormFields(
+        @SerializedName("name") val name: String,
+        @SerializedName("label") val label: String,
+        @SerializedName("type") val type: String,
+        @SerializedName("options") val options: List<String>? = null
+    )
 
     data class NeedRequestBody(
         @SerializedName("created_by") val created_by: String,
@@ -109,12 +121,22 @@ class NeedBody {
         }
 
         fun getDescription(): String {
-            val needType = returnNeedType()
-            return "Need: ${needType.name}, Urgency: $urgency, Quantity: $initialQuantity"
+//            val needType = returnNeedType()
+//            return "Need: ${needType.name}, Urgency: $urgency, Quantity: $initialQuantity"
+            return "Need"
         }
 
         fun getSubDescription(): String {
-            return returnDetailsAsString()
+            return if (details.subtype.isNullOrEmpty()) {
+                returnNeedType().name
+            } else {
+                details.subtype
+            }
+//            return returnDetailsAsString()
+        }
+
+        fun getNeed(): Need {
+            return Need(_id, created_by, returnNeedType(), returnDetailsAsString(), null, initialQuantity, x!!.toDouble(), y!!.toDouble(), urgency)
         }
     }
 

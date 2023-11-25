@@ -40,12 +40,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val networkFragment = NetworkFragment()
-    private val mapFragment = MapFragment()
-    private val profileFragment = ProfileFragment()
-    private val loginFragment = LoginFragment()
-    private lateinit var homeFragment: HomeFragment
-
     private lateinit var needViewModel: NeedViewModel
     private lateinit var userDataViewModel: UserDataViewModel
     private lateinit var actionViewModel: ActionViewModel
@@ -53,6 +47,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var emergencyViewModel: EmergencyViewModel
     private lateinit var resourceViewModel: ResourceViewModel
 
+    private val networkFragment = NetworkFragment()
+    private lateinit var mapFragment: MapFragment
+    private val profileFragment = ProfileFragment()
+    private val loginFragment = LoginFragment()
+    private lateinit var homeFragment: HomeFragment
 
     private lateinit var toggle: ActionBarDrawerToggle
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         createViewModels()
+        mapFragment = MapFragment(needViewModel, resourceViewModel, actionViewModel, eventViewModel, emergencyViewModel)
         navBarListener()
         toggleListener()
         arrangeVisibility()
