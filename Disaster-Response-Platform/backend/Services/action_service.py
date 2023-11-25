@@ -25,9 +25,6 @@ def create_action(action: Action) -> str:
             raise ValueError("All fields are mandatory for creation.")
         #if(not all([action.endLocation_x,action.start_location_x, action.start_location_y, action.endLocation_y])):
         #    raise ValueError("All fields are mandatory for creation.")
-        #action ın need ve resource larına bakalım while içinde listin tüm elemanlarını tarverse edip need ve resource un recur untilinden uzun olamasın
-        # burda recurrence ı anlayınca tüm seriyi listeye ekleyeyim en iyisi
-        # buraya need ve resource type , detail check koyalım aynı type ta değilse hata versin
         i=0
         for group in action.related_groups:
             if not group.related_resources:
@@ -39,10 +36,9 @@ def create_action(action: Action) -> str:
 
             #TODO resource need active mi check i ekle
             type= resource["type"]
+
             id_list=[]
             for id in group.related_resources:
-                
-      
                 related_resource = resources_collection.find_one({"_id": ObjectId(id)})
                 if related_resource["type"] != type:
                     raise ValueError("You can only take action between resource and needs that has the same type")
@@ -52,6 +48,7 @@ def create_action(action: Action) -> str:
                 if(related_resource.get("recurrence_id") is not None):
                     #find all recurrences with r_id 
                     id_list.extend(get_resource_list_by_id(id))
+                    action.related_groups[i].recurrence=True
                     if( normalize_date(related_resource["recurrence_deadline"]) < normalize_date(action.end_at)):
                         raise ValueError("Action end date cant be longer than the resource recurrence deadline")
                 else:
@@ -75,7 +72,7 @@ def create_action(action: Action) -> str:
                 
                 if(related_need.get("recurrence_id") is not None):
                     id_list.extend(get_need_list_by_id(id))
-    
+                    action.related_groups[i].recurrence=True
                     if(normalize_date(related_need["recurrence_deadline"]) < normalize_date(action.end_at)):
                         raise ValueError("Action end date cant be longer than the need recurrence deadline")
                 else:
@@ -83,6 +80,8 @@ def create_action(action: Action) -> str:
                     if( not(normalize_date(related_need["occur_at"]) <= normalize_date(action.end_at) and normalize_date(related_need["occur_at"])>= normalize_date(action.occur_at)) ):
                         raise ValueError("Action and need should occur at the same date")     
             action.related_groups[i].related_needs=(id_list)
+            action.related_groups[i].group_type=type
+            
             i+=1
         insert_result = actions_collection.insert_one(action.dict())
    
@@ -109,28 +108,24 @@ def do_action(action_id:str, current_user:str):
         #get need objects
         current_date = action['occur_at']
         totalQuantityMet=0
+
+        related_needs_object_ids = [ObjectId(id_str) for id_str in related_needs]
+        related_resources_object_ids = [ObjectId(id_str) for id_str in related_resources]
+        checkTotalQuantity(related_needs,related_resources, current_date, group["group_type"])
         #for each action day query for that days need and resources
-        while(current_date <= action['end_at']):
-            # Query to find documents with matching IDs and occur_at time
-            end_date= current_date + timedelta(days=1)
-            start_date= current_date- timedelta(days=1)
-            needs= []
-            for id in related_needs:
+        if group["recurrence"]==True:
+            while(current_date <= action['end_at']):
+                # Query to find documents with matching IDs and occur_at time
+                end_date= current_date + timedelta(days=1)
                 query = {
-                "_id":  ObjectId(id),
+                "_id": {"$in": related_needs_object_ids},
                 'occur_at': current_date,
                 'active':True
                 }
-                need= needs_collection.find_one(query)
-                if need :
-                    needs.append(need)
+                needs= needs_collection.find(query)
+                needs= list(needs)
                 
-
-            if len(needs)!=0:
-                need= needs[0]
-                checkTotalQuantity(related_needs,related_resources, current_date, need['type'])
                 #get resource objects that occurs at date of action
-                related_resources_object_ids = [ObjectId(id_str) for id_str in related_resources]
                 query = {
                     "_id": {"$in": related_resources_object_ids},
                     'occur_at': {'$gte': current_date, '$lt': end_date},
@@ -138,41 +133,19 @@ def do_action(action_id:str, current_user:str):
                 }
                 resources= resources_collection.find(query)
                 resources= list(resources)
-                r=0
-                i=0
-                if len(resources)!=0:
-                    while(i<len(needs) and r< len(resources)):
-                        resource= resources[r]
-                        need= needs[i]
-                        if need['unsuppliedQuantity']<resource['currentQuantity']:
-                            left= resource['currentQuantity']- need['unsuppliedQuantity']
-                            totalQuantityMet+= need['unsuppliedQuantity']
-                            update_need(need, False, left,need['unsuppliedQuantity'])
-                            
-                            i+=1
-                            
-                        elif need['unsuppliedQuantity']>resource['currentQuantity']:
-                            left= need['unsuppliedQuantity']-resource['currentQuantity']
-                            update_resource(resource, False, left,resource['currentQuantity'])  
-                            r+=1
-                        else:
-                            left=0
-                            totalQuantityMet+= need['unsuppliedQuantity']
-                            update_need(need, False, left, need['unsuppliedQuantity'])
-                            update_resource(resource, False,left,resource['currentQuantity'])
-                            i+=1
-                            r+=1
-                    
-                    if len(needs)<= i:
-                        i-=1
-                    if len(resources)<=r:
-                        r-=1
-                    if resources[r]['active']==False:
-                        totalQuantityMet+= need['unsuppliedQuantity']
-                        update_need(need, True, left, need['unsuppliedQuantity']-left)
-                    if needs[i]['active']==False:
-                        update_resource(resource, True, left, resource['currentQuantity']-left)
-            current_date += timedelta(days=1) #this can be optimized to min recurrence rate
+                totalQuantityMet+= update_need_resources(resources,needs)
+                current_date += timedelta(days=1) #this can be optimized to min recurrence rate
+        else:
+            query = {"_id": {"$in": related_needs_object_ids}}
+            needs= needs_collection.find(query)
+            needs= list(needs)
+
+            query = {"_id": {"$in": related_resources_object_ids}}
+            resources= resources_collection.find(query)
+            resources= list(resources)
+            totalQuantityMet+= update_need_resources(resources,needs)
+            
+
         if(totalQuantityMet==0):
             raise ValueError("There is either no need for this resource or no resource for this need")
         met_needs.append(totalQuantityMet)
@@ -185,7 +158,44 @@ def get_action(action_id:str):
         return Action(**action)   
     else:
         raise ValueError("Action not found")
-
+def update_need_resources(resources,needs):
+    r=0
+    i=0
+    totalQuantityMet=0
+    if len(resources)!=0 and len(needs)!=0:
+                
+        while(i<len(needs) and r< len(resources)):
+            resource= resources[r]
+            need= needs[i]
+            if need['unsuppliedQuantity']<resource['currentQuantity']:
+                left= resource['currentQuantity']- need['unsuppliedQuantity']
+                totalQuantityMet+= need['unsuppliedQuantity']
+                update_need(need, False, left,need['unsuppliedQuantity'])
+                
+                i+=1
+                
+            elif need['unsuppliedQuantity']>resource['currentQuantity']:
+                left= need['unsuppliedQuantity']-resource['currentQuantity']
+                update_resource(resource, False, left,resource['currentQuantity'])  
+                r+=1
+            else:
+                left=0
+                totalQuantityMet+= need['unsuppliedQuantity']
+                update_need(need, False, left, need['unsuppliedQuantity'])
+                update_resource(resource, False,left,resource['currentQuantity'])
+                i+=1
+                r+=1
+        if len(needs)<= i:
+            i-=1
+        if len(resources)<=r:
+            r-=1
+        if resources[r]['active']==False:
+            totalQuantityMet+= need['unsuppliedQuantity']
+            update_need(need, True, left, need['unsuppliedQuantity']-left)
+        if needs[i]['active']==False:
+            update_resource(resource, True, left, resource['currentQuantity']-left)
+    return totalQuantityMet
+   
 def update_need(need, active, left, action_used):
     need['active']=active
     

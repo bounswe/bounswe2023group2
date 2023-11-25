@@ -29,6 +29,8 @@ class ActivityType(str,Enum):
 
 
 class ActionGroup(BaseModel):
+    recurrence: bool= None
+    group_type: str= None
     related_needs: Optional[List[str]]
     related_resources: Optional[List[str]]
     
