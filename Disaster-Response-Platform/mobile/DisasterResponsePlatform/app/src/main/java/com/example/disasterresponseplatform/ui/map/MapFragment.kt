@@ -90,19 +90,41 @@ class MapFragment(
         mapViewModel.sendGetAllResourceRequest()
         needClusterer = RadiusMarkerClusterer(context)
         resourceClusterer = RadiusMarkerClusterer(context)
+        needClusterer.items.clear()
         mapViewModel.getLiveDataNeedResponse().observe(viewLifecycleOwner) { needItems ->
             needItems.needs.forEach { needItem ->
-                addNeedMarker(needItem)
+                if (!needClusterer.items.any { marker -> marker.id == needItem._id }) {
+                    addNeedMarker(needItem)
+                }
             }
             mapView.overlays.add(needClusterer)
             mapView.postInvalidate()
         }
         mapViewModel.getLiveDataResourceResponse().observe(viewLifecycleOwner) { resourceItems ->
             resourceItems.resources.forEach {resourceItem ->
-                addResourceMarker(resourceItem)
+                if (!needClusterer.items.any { marker -> marker.id == resourceItem._id }) {
+                    addResourceMarker(resourceItem)
+                }
             }
             mapView.overlays.add(needClusterer)
             mapView.postInvalidate()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Save current map state
+        mapViewModel.saveMapState(mapView.zoomLevel, mapView.mapCenter)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Restore map state if available
+        val savedState: MapState? = mapViewModel.getMapState()
+        val mapController: IMapController = mapView.controller
+        if (savedState != null) {
+            mapController.setZoom(savedState.zoomLevel)
+            mapController.setCenter(savedState.centerPoint)
         }
     }
 
@@ -113,6 +135,7 @@ class MapFragment(
             marker.setInfoWindow(BubbleInfoView(mapView, View.OnClickListener {
                 addFragment(NeedItemFragment(needViewModel, needItem.getNeed()))
             }))
+            marker.id = needItem._id
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = needItem.getDescription()
@@ -128,6 +151,7 @@ class MapFragment(
             marker.setInfoWindow(BubbleInfoView(mapView) {
                 addFragment(ResourceItemFragment(resourceViewModel, resourceItem.getResource()))
             })
+            marker.id = resourceItem._id
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = resourceItem.getDescription()
