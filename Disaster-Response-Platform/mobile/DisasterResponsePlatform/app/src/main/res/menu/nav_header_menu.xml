@@ -20,29 +20,4 @@
 <!--        android:id="@+id/miRegister"-->
 <!--        android:title="@string/register"/>-->
 
-    <item
-        android:id="@+id/miNetwork"
-        android:title="@string/network_request"/>
-
-
-    <item
-        android:id="@+id/miAddNeed"
-        android:title="@string/add_need"/>
-
-    <item
-        android:id="@+id/miAddUserData"
-        android:title="@string/add_example_user_data"/>
-
-    <item
-        android:id="@+id/miAddAction"
-        android:title="@string/add_action"/>
-
-    <item
-        android:id="@+id/miAddEvent"
-        android:title="@string/add_event"/>
-
-    <item
-        android:id="@+id/miAddResource"
-        android:title="@string/add_resource"/>
-
 </menu>
