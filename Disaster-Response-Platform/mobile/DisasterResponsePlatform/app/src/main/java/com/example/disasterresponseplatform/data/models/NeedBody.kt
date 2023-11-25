@@ -6,6 +6,17 @@ import com.google.gson.annotations.SerializedName
 
 class NeedBody {
 
+    data class NeedFormFieldsResponse(
+        @SerializedName("fields") val fields: List<NeedFormFields>,
+    )
+
+    data class NeedFormFields(
+        @SerializedName("name") val name: String,
+        @SerializedName("label") val label: String,
+        @SerializedName("type") val type: String,
+        @SerializedName("options") val options: List<String>? = null
+    )
+
     data class NeedRequestBody(
         @SerializedName("created_by") val created_by: String,
         @SerializedName("initialQuantity") val initialQuantity: Int,
