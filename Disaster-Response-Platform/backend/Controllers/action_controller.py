@@ -20,7 +20,7 @@ def create_action(action: Action, response:Response, current_user: str = Depends
     try:
         action.created_by = current_user
         action_result = action_service.create_action(action)
-        response.status_code = HTTPStatus.OK
+        response.status_code = HTTPStatus.CREATED
         return action_result
     except ValueError as err:
         error= Error(ErrorMessage="Action could not be created", ErrorDetail= str(err))
@@ -28,8 +28,8 @@ def create_action(action: Action, response:Response, current_user: str = Depends
         response.response_model= Error
         return error
     
-@router.put("/", responses={
-    status.HTTP_201_CREATED: {"model": ActionSuccess},
+@router.put("/do/{action_id}", responses={
+    status.HTTP_201_CREATED: {"model": doActionResponse},
     status.HTTP_400_BAD_REQUEST: {"model": Error}
 })
 def do_action(action_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
@@ -44,35 +44,35 @@ def do_action(action_id: str, response:Response, current_user: str = Depends(aut
         return error
     
 
-@router.get("/{resource_id}",responses={
+@router.get("/group",responses={
     status.HTTP_200_OK: {"model": ActionSuccess},
     status.HTTP_400_BAD_REQUEST: {"model": Error}
 })
-def get_resource_info(resource_id: str, response: Response):
+def get_group_info(related_group: ActionGroup , response: Response):
     try:
-        resource_text = action_service.get_resource_info_by_id(resource_id)
+        resource_text = action_service.get_group_info(related_group)
         response.status_code = HTTPStatus.OK
-        return json.loads(resource_text)
+        return resource_text
     except ValueError as err:
-        error= Error(ErrorMessage="Resource could not be found", ErrorDetail= str(err))
+        error= Error(ErrorMessage="Group check fails", ErrorDetail= str(err))
         response.status_code= HTTPStatus.BAD_REQUEST
         response.response_model= Error
         return error
 
-@router.get("/{need_id}",responses={
-    status.HTTP_200_OK: {"model": ActivityInfo},
-    status.HTTP_400_BAD_REQUEST: {"model": Error}
-})
-def get_need_info(need_id: str, response: Response):
-    try:
-        need_text = action_service.get_need_info_by_id(need_id)
-        response.status_code = HTTPStatus.OK
-        return json.loads(need_text)
-    except ValueError as err:
-        error= Error(ErrorMessage="Need could not be found", ErrorDetail= str(err))
-        response.status_code= HTTPStatus.BAD_REQUEST
-        response.response_model= Error
-        return error
+# @router.get("/{need_id}",responses={
+#     status.HTTP_200_OK: {"model": ActivityInfo},
+#     status.HTTP_400_BAD_REQUEST: {"model": Error}
+# })
+# def get_need_info(need_id: str, response: Response):
+#     try:
+#         need_text = action_service.get_need_info_by_id(need_id)
+#         response.status_code = HTTPStatus.OK
+#         return json.loads(need_text)
+#     except ValueError as err:
+#         error= Error(ErrorMessage="Need could not be found", ErrorDetail= str(err))
+#         response.status_code= HTTPStatus.BAD_REQUEST
+#         response.response_model= Error
+#         return error
     
 @router.get("/",responses={
     status.HTTP_200_OK: {"model": ActionSuccess},
@@ -90,7 +90,7 @@ def get_all_actions(response: Response):
         return error
     
 
-@router.put("/{raction_id}", responses={
+@router.put("/{action_id}", responses={
     status.HTTP_201_CREATED: {"model": updateResponse},
     status.HTTP_400_BAD_REQUEST: {"model": Error}
 })
