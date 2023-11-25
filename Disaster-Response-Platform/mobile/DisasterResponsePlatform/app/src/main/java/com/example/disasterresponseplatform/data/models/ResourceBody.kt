@@ -1,5 +1,6 @@
 package com.example.disasterresponseplatform.data.models
 
+import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.google.gson.annotations.SerializedName
 
@@ -114,6 +115,20 @@ class ResourceBody {
 
         fun getSubDescription(): String {
             return returnDetailsAsString()
+        }
+
+        fun getResource(): Resource {
+            return Resource(
+                _id,
+                created_by,
+                condition,
+                initialQuantity,
+                returnNeedType(),
+                returnDetailsAsString(),
+                null,
+                x!!.toDouble(),
+                y!!.toDouble()
+            )
         }
     }
 

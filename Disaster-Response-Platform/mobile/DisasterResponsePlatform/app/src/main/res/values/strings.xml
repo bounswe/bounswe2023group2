@@ -187,5 +187,6 @@
     </string-array>
 
     <string-array name="resource_empty_sub_types"></string-array>
+    <string name="more">More</string>
 
 </resources>
