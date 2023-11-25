@@ -59,20 +59,21 @@ def get_group_info(related_group: ActionGroup , response: Response):
         response.response_model= Error
         return error
 
-# @router.get("/{need_id}",responses={
-#     status.HTTP_200_OK: {"model": ActivityInfo},
-#     status.HTTP_400_BAD_REQUEST: {"model": Error}
-# })
-# def get_need_info(need_id: str, response: Response):
-#     try:
-#         need_text = action_service.get_need_info_by_id(need_id)
-#         response.status_code = HTTPStatus.OK
-#         return json.loads(need_text)
-#     except ValueError as err:
-#         error= Error(ErrorMessage="Need could not be found", ErrorDetail= str(err))
-#         response.status_code= HTTPStatus.BAD_REQUEST
-#         response.response_model= Error
-#         return error
+@router.get("/{action_id}",responses={
+    status.HTTP_200_OK: {"model": Action},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
+def get_action_by_id(action_id: str , response: Response):
+    try:
+        action = action_service.get_action(action_id)
+        response.status_code = HTTPStatus.OK
+        return action
+    except ValueError as err:
+        error= Error(ErrorMessage="Action get error", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error
+
     
 @router.get("/",responses={
     status.HTTP_200_OK: {"model": ActionSuccess},

@@ -2,6 +2,7 @@ from Models.resource_model import ConditionEnum
 from Models.action_model import *
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
+from bson import json_util
 from datetime import datetime, timezone, timedelta
 from Services.build_API_returns import *
 from Services.resource_service import *
@@ -174,6 +175,12 @@ def do_action(action_id:str, current_user:str):
 
     ret= doActionResponse(met_needs=met_needs)
     return ret
+def get_action(action_id:str):
+    action = actions_collection.find_one({"_id": ObjectId(action_id)})
+    if action:
+        return Action(**action)   
+    else:
+        raise ValueError("Action not found")
 
 def update_need(need, active, left):
     need['active']=active
