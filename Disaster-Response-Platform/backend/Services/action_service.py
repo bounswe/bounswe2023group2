@@ -41,12 +41,13 @@ def create_action(action: Action) -> str:
             type= resource["type"]
             id_list=[]
             for id in group.related_resources:
+                
       
                 related_resource = resources_collection.find_one({"_id": ObjectId(id)})
                 if related_resource["type"] != type:
                     raise ValueError("You can only take action between resource and needs that has the same type")
-                if not related_resource["active"]:
-                    raise ValueError("You have entered a inactive need id")
+                if related_resource["active"]==False:
+                    raise ValueError("You have entered a inactive resource id")
 
                 if(related_resource.get("recurrence_id") is not None):
                     #find all recurrences with r_id 
@@ -62,13 +63,16 @@ def create_action(action: Action) -> str:
             action.related_groups[i].related_resources= id_list
             id_list=[]
             for id in group.related_needs:
-                if not group.related_resources:
+                if not group.related_needs:
                     raise ValueError("Please enter need ids")
-                if related_resource["type"] != type:
-                    raise ValueError("You can only take action between resource and needs that has the same type")
-                if not related_resource["active"]:
-                    raise ValueError("You have entered a inactive resource id")
                 related_need= needs_collection.find_one({"_id": ObjectId(id)})
+                
+                if related_need["type"] != type:
+                    raise ValueError("You can only take action between resource and needs that has the same type")
+                
+                if related_need["active"]==False:
+                    raise ValueError("You have entered a inactive need id")
+                
                 if(related_need.get("recurrence_id") is not None):
                     id_list.extend(get_need_list_by_id(id))
     
@@ -120,6 +124,7 @@ def do_action(action_id:str, current_user:str):
                 need= needs_collection.find_one(query)
                 if need :
                     needs.append(need)
+                
 
             if len(needs)!=0:
                 need= needs[0]
@@ -131,7 +136,6 @@ def do_action(action_id:str, current_user:str):
                     'occur_at': {'$gte': current_date, '$lt': end_date},
                     'active': True
                 }
-                
                 resources= resources_collection.find(query)
                 resources= list(resources)
                 r=0
@@ -143,19 +147,19 @@ def do_action(action_id:str, current_user:str):
                         if need['unsuppliedQuantity']<resource['currentQuantity']:
                             left= resource['currentQuantity']- need['unsuppliedQuantity']
                             totalQuantityMet+= need['unsuppliedQuantity']
-                            update_need(need, False, left)
+                            update_need(need, False, left,need['unsuppliedQuantity'])
                             
                             i+=1
                             
                         elif need['unsuppliedQuantity']>resource['currentQuantity']:
                             left= need['unsuppliedQuantity']-resource['currentQuantity']
-                            update_resource(resource, False, left)  
+                            update_resource(resource, False, left,resource['currentQuantity'])  
                             r+=1
                         else:
                             left=0
                             totalQuantityMet+= need['unsuppliedQuantity']
-                            update_need(need, False, left)
-                            update_resource(resource, False,left)
+                            update_need(need, False, left, need['unsuppliedQuantity'])
+                            update_resource(resource, False,left,resource['currentQuantity'])
                             i+=1
                             r+=1
                     
@@ -165,9 +169,9 @@ def do_action(action_id:str, current_user:str):
                         r-=1
                     if resources[r]['active']==False:
                         totalQuantityMet+= need['unsuppliedQuantity']
-                        update_need(need, True, left)
+                        update_need(need, True, left, need['unsuppliedQuantity']-left)
                     if needs[i]['active']==False:
-                        update_resource(resource, True, left)
+                        update_resource(resource, True, left, resource['currentQuantity']-left)
             current_date += timedelta(days=1) #this can be optimized to min recurrence rate
         if(totalQuantityMet==0):
             raise ValueError("There is either no need for this resource or no resource for this need")
@@ -182,24 +186,25 @@ def get_action(action_id:str):
     else:
         raise ValueError("Action not found")
 
-def update_need(need, active, left):
+def update_need(need, active, left, action_used):
     need['active']=active
+    
     q=left
     if not active:
         q=0
     update_result = needs_collection.update_one(
         {"_id": need['_id']},
-        {"$set": {"active": active, "unsuppliedQuantity": q}}
+        {"$set": {"active": active, "unsuppliedQuantity": q, "action_used": action_used}}
     )
     return
-def update_resource(resource, active, left):
+def update_resource(resource, active, left, action_used):
     resource['active']=active
     q=left
     if not active:
         q=0
     update_result = resources_collection.update_one(
         {"_id": resource['_id']},
-        {"$set": {"active": active, "currentQuantity": q}}
+        {"$set": {"active": active, "currentQuantity": q, "action_used":action_used}}
     )
     return
 
@@ -207,7 +212,6 @@ def update_resource(resource, active, left):
     #burda da aynı date teki aynı tipteki resource ve needleri birleştireyim (RESOURCE u eksiltelim, need i karşılayalım)
     # resource need den az ise: 
     # TODO (aynı date te birden fazla resource caseini inceler)
-    # TODO farklı date lerdeki totali bulmuşuum yanlış olmuş
 def checkTotalQuantity(related_needs,related_resources, currentdate, type):
     related_needs_object_ids = [ObjectId(id_str) for id_str in related_needs]
     related_resources_object_ids = [ObjectId(id_str) for id_str in related_resources]
@@ -263,7 +267,7 @@ def get_group_info(related_group: ActionGroup):
     resource=resources_collection.find_one({"_id": id})
     if not resource:
         raise ValueError(f"Cant found the resource with id: {id}")
-
+    
     type= resource["type"]
     resourceTexts=[]
     needTexts=[]
@@ -271,6 +275,8 @@ def get_group_info(related_group: ActionGroup):
         related_resource = resources_collection.find_one({"_id": ObjectId(id)})
         if not related_resource:
             raise ValueError(f"Cant found the reosurce with id: {id}")
+        if related_resource['active']==False:
+            raise ValueError("You have entered an inactive resource id")
         if related_resource["type"] != type:
             raise ValueError("You can only take action between resource and needs that has the same type")
         if(related_resource.get("recurrence_id") is not None):
@@ -281,6 +287,8 @@ def get_group_info(related_group: ActionGroup):
         related_need = needs_collection.find_one({"_id": ObjectId(id)})
         if not related_need:
             raise ValueError(f"Cant found the need with id: {id}")
+        if related_need['active']==False:
+            raise ValueError("You have entered an inactive need id")
         if related_need["type"] != type:
             raise ValueError("You can only take action between resource and needs that has the same type")
         if(related_need.get("recurrence_id") is not None):

@@ -32,6 +32,7 @@ class Resource(BaseModel):
     last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
+    action_used: int = Field(default=0)
 
     @validator('recurrence_deadline', 'occur_at', pre=True)
     def convert_str_to_datetime(cls, value):
