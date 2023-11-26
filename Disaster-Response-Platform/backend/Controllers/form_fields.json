@@ -28,9 +28,8 @@
     "action": {
         "fields": [
             {"name": "description", "label": "Description", "type": "text"},
-            {"name": "type", "label": "Type", "type": "select", "options": ["resource_need_match"]},
-            {"name": "related_resources", "label": "List of Resources", "type": "array", "subtype": "resource"},
-            {"name": "related_needs", "label": "List of Needs", "type": "array", "subtype": "need"},
+            {"name": "type", "label": "Type", "type": "select", "options": ["need_resource"]},
+            {"name": "related_groups", "label": "List of Action Group", "type": "array"},
             {"name": "occur_date", "label": "Occur date", "type": "date"},
             {"name": "end_date", "label": "End date", "type": "date"}
 
