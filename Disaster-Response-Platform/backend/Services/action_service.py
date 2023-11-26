@@ -64,7 +64,8 @@ def create_action(action: Action) -> str:
                 if not group.related_needs:
                     raise ValueError("Please enter need ids")
                 related_need= needs_collection.find_one({"_id": ObjectId(id)})
-                
+                if not related_need:
+                    raise ValueError("Not a valid need id")
                 if related_need["type"] != type:
                     raise ValueError("You can only take action between resource and needs that has the same type")
                 
@@ -419,7 +420,7 @@ def update_action(action_id: str, action: Action) -> Action:
         raise ValueError(f"Action id {action_id} not found")
     
 
-def delete_action(action_id: str, current_user: str, delete: bool):
+def cancel_action(action_id: str, current_user: str):
     
     action = actions_collection.find_one({"_id": ObjectId(action_id)})
     if action:
@@ -436,13 +437,24 @@ def delete_action(action_id: str, current_user: str, delete: bool):
         {"_id": ObjectId(action_id)},
         {"$set": {"status": statusEnum.inactive}}
         )
-    if delete:
-        d = actions_collection.delete_one({"_id": ObjectId(action_id)})
-        if d.deleted_count == 0:
-            raise ValueError('Could not delete action')
+   
     return "{\"actions\":[{\"_id\":" + f"\"{action_id}\"" + "}]}"
 
-  
+def delete_action(action_id, current_user:str):
+    action = actions_collection.find_one({"_id": ObjectId(action_id)})
+    if action:
+        action= Action(**action) 
+    else:
+        raise ValueError('There is no action with this id: {action_id}')
+    if action.created_by!= current_user:
+        raise ValueError('Only user that created the action can cancel it')
+    if action.status== statusEnum.active:
+        raise ValueError('Cant delete an active action, cancel it first')
+    d = actions_collection.delete_one({"_id": ObjectId(action_id)})
+    if d.deleted_count == 0:
+        raise ValueError('Could not delete action')
+    return "{\"actions\":[{\"_id\":" + f"\"{action_id}\"" + "}]}"
+    
 
 def restore_needs(related_needs: List[str]):
     related_needs_object_ids = [ObjectId(id_str) for id_str in related_needs]
