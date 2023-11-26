@@ -11,6 +11,7 @@ import { api } from '@/lib/apiUtils';
 import { useDisclosure } from "@nextui-org/react";
 import ReportModal from '@/components/profile/ReportModal';
 import { Button } from "@nextui-org/react";
+import { ToastContainer } from 'react-toastify';
 
 export default function OtherProfile({ guest, expired, main_info, optional_info, list_info }) {
 	const router = useRouter();
@@ -26,7 +27,7 @@ export default function OtherProfile({ guest, expired, main_info, optional_info,
 		);
 	}
 
-	const username = router.query.user;
+	const username = router.query.username;
 	const {professions, languages, "socialmedia-links": social, skills} = list_info;
 	const dictionary_tr = {
 	"username": "Kullanıcı Adı",
@@ -54,7 +55,8 @@ export default function OtherProfile({ guest, expired, main_info, optional_info,
 	      </div>
 	    </div>
 	    <ActivityTable />
-			<ReportModal isOpen={isOpen} onOpenChange={onOpenChange} />
+			<ReportModal isOpen={isOpen} onOpenChange={onOpenChange} reported={username}/>
+			<ToastContainer />
 	  </main>
 	</>
 	)
