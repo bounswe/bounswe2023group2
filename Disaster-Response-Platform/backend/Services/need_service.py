@@ -32,13 +32,18 @@ def get_needs(need_id:str = None) -> list[dict]:
     projection = {
             "_id": {"$toString": "$_id"},
             "created_by": 1,
+            "description": 1,
             "urgency": 1,
             "initialQuantity": 1,
             "unsuppliedQuantity": 1,
             "type": 1,
             "details": 1,
+            "recurrence_id": 1,
+            "recurrence_rate": 1,
+            "recurrence_deadline": 1,
             "x": 1,
             "y": 1,
+            "occur_at": 1,
             "created_at": 1,
             "last_updated_at": 1
         }
@@ -57,7 +62,17 @@ def get_needs(need_id:str = None) -> list[dict]:
         if need_id is None:
             need_id = ""
         raise ValueError(f"Need {need_id} does not exist")
-    result_list = create_json_for_successful_data_fetch(needs_data, "needs")
+
+    # Convert and format datetime fields
+    formatted_needs_data = []
+    for need in needs_data:
+        if 'created_at' in need:
+            need['created_at'] = need['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+        if 'last_updated_at' in need:
+            need['last_updated_at'] = need['last_updated_at'].strftime('%Y-%m-%d %H:%M:%S')
+        formatted_needs_data.append(need)
+
+    result_list = create_json_for_successful_data_fetch(formatted_needs_data, "needs")
     return result_list
 
     

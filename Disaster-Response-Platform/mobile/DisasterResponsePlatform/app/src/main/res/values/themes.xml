@@ -10,7 +10,14 @@
         <item name="colorSecondaryVariant">@color/secondaryVariant</item>
         <item name="colorOnSecondary">@color/onSecondary</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/onPrimary</item>
+        <item name="android:statusBarColor">@color/primary</item>
         <!-- Customize your theme here. -->
+        <item name="customTextInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+        <item name="customDropDownStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
 </resources>

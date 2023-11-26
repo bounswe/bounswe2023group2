@@ -39,6 +39,8 @@ class Event(BaseModel):
 
     last_confirmed_time: datetime = Field(default=None)
     confirmed_by_user: str = Field(default=None)
+    upvote: int = Field(default=0)
+    downvote: int = Field(default=0)
 
 class ActionRelations(BaseModel):
     action_id: str

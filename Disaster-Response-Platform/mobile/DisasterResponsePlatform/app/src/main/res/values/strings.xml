@@ -95,16 +95,14 @@
     <string name="condition">Condition</string>
     <string name="navigate">Navigate</string>
 
-    <string-array name="need_types">
-        <item>Clothes</item>
-        <item>Food</item>
-        <item>Shelter</item>
-        <item>Medication</item>
-        <item>Transportation</item>
-        <item>Tools</item>
-        <item>Human</item>
-        <item>Other</item>
-    </string-array>
+    <string name="field_need_type">Need Type (Select or Enter)</string>
+    <string name="field_resource_type">Resource Type (Select or Enter)</string>
+    <string name="field_sub_type">Sub-Type (Select or Enter)</string>
+    <string name="field_location">Select or Enter Location</string>
+    <string name="field_quantity">Quantity</string>
+    <string name="field_coordinate_x">X Coordinate</string>
+    <string name="field_coordinate_y">Y Coordinate</string>
+
 
     <string-array name="resource_types">
         <item>Clothes</item>
@@ -116,17 +114,7 @@
         <item>Human</item>
         <item>Other</item>
     </string-array>
-
-    <string-array name="need_food_sub_types">
-        <item>Pasta</item>
-        <item>Rice</item>
-        <item>Canned Good</item>
-        <item>Baby Food</item>
-        <item>Other</item>
-    </string-array>
-
-    <string-array name="need_empty_sub_types"></string-array>
-
+    
     <string-array name="resource_food_sub_types">
         <item>Pasta</item>
         <item>Rice</item>
@@ -187,5 +175,6 @@
     </string-array>
 
     <string-array name="resource_empty_sub_types"></string-array>
+    <string name="more">More</string>
 
 </resources>

@@ -27,13 +27,18 @@ def get_resource_by_id(resource_id: str) -> list[dict]:
 def get_resources(resource_id:str = None) -> list[dict]:
     projection = {"_id": {"$toString": "$_id"},
                   "created_by": 1,
+                  "description": 1,
                   "condition": 1,
                   "initialQuantity": 1,
                   "currentQuantity": 1,
                   "type": 1,
                   "details":1,
+                  "recurrence_id": 1,
+                  "recurrence_rate": 1,
+                  "recurrence_deadline": 1,
                   "x":1,
                   "y":1,
+                  "occur_at": 1,
                   "created_at":1,
                   "last_updated_at":1
                   }
@@ -52,7 +57,17 @@ def get_resources(resource_id:str = None) -> list[dict]:
         if resource_id is None:
             resource_id = ""
         raise ValueError(f"Resource {resource_id} does not exist")
-    result_list = create_json_for_successful_data_fetch(resources_data, "resources")
+
+    # Convert and format datetime fields
+    formatted_resources_data = []
+    for resource in resources_data:
+        if 'created_at' in resource:
+            resource['created_at'] = resource['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+        if 'last_updated_at' in resource:
+            resource['last_updated_at'] = resource['last_updated_at'].strftime('%Y-%m-%d %H:%M:%S')
+        formatted_resources_data.append(resource)
+
+    result_list = create_json_for_successful_data_fetch(formatted_resources_data, "resources")
     return result_list
     
 def update_resource(resource_id: str, resource: Resource) -> Resource:

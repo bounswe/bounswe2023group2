@@ -16,9 +16,4 @@
         android:title="Profile"
         android:icon="@drawable/ic_profile"/>
 
-    <item
-        android:id="@+id/miActivities"
-        android:title="Activities"
-        android:icon="@drawable/ic_activity"/>
-
 </menu>

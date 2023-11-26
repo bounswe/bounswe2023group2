@@ -6,10 +6,13 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/layAddNeed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="@drawable/empty_divider_h"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:showDividers="middle">
 
         <TextView
             android:id="@+id/tvAddNeed"
@@ -21,116 +24,138 @@
             android:textSize="40sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/boxNeedType"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <LinearLayout
+            android:id="@+id/layFirst"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/select_need_type"
-            app:endIconMode="dropdown_menu"
-            android:layout_marginBottom="10dp"
-            >
+            android:divider="@drawable/empty_divider_h"
+            android:orientation="vertical"
+            android:showDividers="middle">
 
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/spNeedType"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:divider="@drawable/empty_divider_v"
+                android:orientation="horizontal"
+                android:showDividers="middle">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etCoordinateX"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/field_coordinate_x">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etCoordinateY"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/field_coordinate_y">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/boxNeedSubType"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/boxNeedType"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/field_need_type"
+                app:endIconMode="dropdown_menu">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/spNeedType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/boxNeedSubType"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/field_sub_type"
+                app:endIconMode="dropdown_menu">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/spNeedSubType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etQuantity"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/field_quantity"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/laySpecific"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/select_sub_type"
-            app:endIconMode="dropdown_menu">
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/spNeedSubType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:divider="@drawable/empty_divider_h"
+            android:orientation="vertical"
+            android:showDividers="middle">
+        </LinearLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etCoordinateX"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
+            android:id="@+id/layOthers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/select_or_enter_coordinate_x"
-            app:endIconDrawable="@android:drawable/ic_dialog_map"
-            app:endIconMode="custom"
-            android:layout_marginBottom="10dp">
+            android:divider="@drawable/empty_divider_h"
+            android:orientation="vertical"
+            android:showDividers="middle">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="3dp"
+                android:background="?android:attr/listDivider"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etCoordinateY"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/select_or_enter_coordinate_y"
-            app:endIconDrawable="@android:drawable/ic_dialog_map"
-            app:endIconMode="custom"
-            android:layout_marginBottom="10dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etQuantity"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/enter_quantity"
-            app:endIconMode="clear_text"
-            android:layout_marginBottom="10dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etNotes"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/enter_additional_notes"
-            app:endIconMode="clear_text"
-            android:layout_marginBottom="10dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:height="60dip"
             android:text="@string/submit" />
+
 
     </LinearLayout>
 
