@@ -3,6 +3,7 @@ from http import HTTPStatus
 
 from fastapi import APIRouter, HTTPException, Response, Depends
 from Models.report_model import Report
+from Models.user_model import UserProfile
 import Services.report_service as report_service
 
 import Services.authentication_service as authentication_service
@@ -23,7 +24,7 @@ def create_report(report: Report, response:Response,current_user: str = Depends(
         return json.loads(err_json)
 
 @router.get("/{report_id}")
-def get_report(report_id: str, response:Response):
+def get_report(report_id: str, response:Response, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
     try:
         report = report_service.get_report_by_id(report_id)
         response.status_code = HTTPStatus.OK
@@ -35,7 +36,7 @@ def get_report(report_id: str, response:Response):
     
 
 @router.get("/")
-def get_all_reports(response:Response):
+def get_all_reports(response:Response, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
     try:
         reports = report_service.get_reports()
         response.status_code = HTTPStatus.OK
@@ -63,7 +64,7 @@ def update_report(report_id: str, report: Report, response:Response, current_use
 
     
 @router.delete("/{report_id}")
-def delete_report(report_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+def delete_report(report_id: str, response:Response, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
     try:
         res = report_service.delete_report(report_id)
         response.status_code=HTTPStatus.OK
