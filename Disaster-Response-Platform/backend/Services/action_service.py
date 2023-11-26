@@ -171,9 +171,11 @@ def update_need_resources(resources,needs, action_id):
     totalQuantityMet=0
     if len(resources)!=0 and len(needs)!=0:
         resourceUsed=0
+        initResource=0
         while(i<len(needs) and r< len(resources)):
             resource= resources[r]
             need= needs[i]
+            initResource= resource['currentQuantity']
             if need['unsuppliedQuantity']<resource['currentQuantity']:
                 left= resource['currentQuantity']- need['unsuppliedQuantity']
                 resourceUsed+=need['unsuppliedQuantity']
@@ -185,6 +187,7 @@ def update_need_resources(resources,needs, action_id):
             elif need['unsuppliedQuantity']>resource['currentQuantity']:
                 left= need['unsuppliedQuantity']-resource['currentQuantity']
                 update_resource(resource, False, left,resource['currentQuantity'],action_id)
+                resourceUsed=0
                 r+=1
 
             else:
@@ -192,6 +195,7 @@ def update_need_resources(resources,needs, action_id):
                 totalQuantityMet+= need['unsuppliedQuantity']
                 update_need(need, False, left, need['unsuppliedQuantity'])
                 update_resource(resource, False,left,resource['currentQuantity'], action_id)
+                resourceUsed=0
                 i+=1
                 r+=1
     
@@ -200,7 +204,8 @@ def update_need_resources(resources,needs, action_id):
         if len(resources)<=r:
             r-=1
         if needs[i]['active']==False:
-            update_resource(resource, True, left, resourceUsed ,action_id)
+
+            update_resource(resource, True, initResource-resourceUsed, resourceUsed ,action_id)
     return totalQuantityMet
    
 def update_need(need, active, left, action_used):
