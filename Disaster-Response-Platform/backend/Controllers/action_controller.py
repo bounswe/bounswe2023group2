@@ -29,7 +29,7 @@ def create_action(action: Action, response:Response, current_user: str = Depends
         return error
     
 @router.put("/do/{action_id}", responses={
-    status.HTTP_201_CREATED: {"model": doActionResponse},
+    status.HTTP_200_OK: {"model": doActionResponse},
     status.HTTP_400_BAD_REQUEST: {"model": Error}
 })
 def do_action(action_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
