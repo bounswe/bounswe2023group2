@@ -14,7 +14,14 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tabMode="scrollable"/>
+            app:tabMode="scrollable"
+            android:background="@color/primary"
+            app:tabTextColor="@color/tabNotSelected"
+            app:tabSelectedTextColor="@color/white"
+            app:tabIndicatorColor="@color/white"
+            android:elevation="10dp"
+            app:tabTextAppearance="@style/TextTabLayout"
+            />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"

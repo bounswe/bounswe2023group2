@@ -11,17 +11,29 @@ import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.google.gson.Gson
 import okhttp3.ResponseBody
+import org.osmdroid.api.IGeoPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
 
+data class MapState(val zoomLevel: Int, val centerPoint: IGeoPoint)
 class MapViewModel@Inject constructor() : ViewModel() {
+
     private val networkManager = NetworkManager()
 
     private val liveDataNeedResponse = MutableLiveData<NeedBody.NeedResponse>()
     private val liveDataResourceResponse = MutableLiveData<ResourceBody.ResourceResponse>()
+    private var savedMapState: MapState? = null
+
+    fun saveMapState(zoomLevel: Int, center: IGeoPoint) {
+        savedMapState = MapState(zoomLevel, center)
+    }
+
+    fun getMapState(): MapState? {
+        return savedMapState
+    }
 
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataNeedResponse(): LiveData<NeedBody.NeedResponse> = liveDataNeedResponse

@@ -13,6 +13,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.ResourceBody
+import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
+import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
+import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
+import com.example.disasterresponseplatform.ui.activity.need.NeedItemFragment
+import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
+import com.example.disasterresponseplatform.ui.activity.resource.ResourceItemFragment
+import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
 import org.osmdroid.api.IMapController
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.config.Configuration
@@ -23,7 +30,10 @@ import org.osmdroid.views.overlay.Marker
 
 
 
-class MapFragment : Fragment(R.layout.fragment_map) {
+class MapFragment(
+    var needViewModel: NeedViewModel, var resourceViewModel: ResourceViewModel,
+    var actionViewModel: ActionViewModel, var eventViewModel: EventViewModel,
+    var emergencyViewModel: EmergencyViewModel) : Fragment(R.layout.fragment_map) {
 
     private lateinit var mapView: MapView
     private lateinit var mapViewModel: MapViewModel
@@ -80,19 +90,41 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         mapViewModel.sendGetAllResourceRequest()
         needClusterer = RadiusMarkerClusterer(context)
         resourceClusterer = RadiusMarkerClusterer(context)
+        needClusterer.items.clear()
         mapViewModel.getLiveDataNeedResponse().observe(viewLifecycleOwner) { needItems ->
             needItems.needs.forEach { needItem ->
-                addNeedMarker(needItem)
+                if (!needClusterer.items.any { marker -> marker.id == needItem._id }) {
+                    addNeedMarker(needItem)
+                }
             }
             mapView.overlays.add(needClusterer)
             mapView.postInvalidate()
         }
         mapViewModel.getLiveDataResourceResponse().observe(viewLifecycleOwner) { resourceItems ->
             resourceItems.resources.forEach {resourceItem ->
-                addResourceMarker(resourceItem)
+                if (!needClusterer.items.any { marker -> marker.id == resourceItem._id }) {
+                    addResourceMarker(resourceItem)
+                }
             }
             mapView.overlays.add(needClusterer)
             mapView.postInvalidate()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Save current map state
+        mapViewModel.saveMapState(mapView.zoomLevel, mapView.mapCenter)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Restore map state if available
+        val savedState: MapState? = mapViewModel.getMapState()
+        val mapController: IMapController = mapView.controller
+        if (savedState != null) {
+            mapController.setZoom(savedState.zoomLevel)
+            mapController.setCenter(savedState.centerPoint)
         }
     }
 
@@ -100,6 +132,10 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         if (isNeedValidLocation(needItem)) {
             val point = GeoPoint(needItem.x!!.toDouble(), needItem.y!!.toDouble())
             val marker = Marker(mapView)
+            marker.setInfoWindow(BubbleInfoView(mapView, View.OnClickListener {
+                addFragment(NeedItemFragment(needViewModel, needItem.getNeed()))
+            }))
+            marker.id = needItem._id
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = needItem.getDescription()
@@ -112,6 +148,10 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         if (isResourceValidLocation(resourceItem)) {
             val point = GeoPoint(resourceItem.x!!.toDouble(), resourceItem.y!!.toDouble())
             val marker = Marker(mapView)
+            marker.setInfoWindow(BubbleInfoView(mapView) {
+                addFragment(ResourceItemFragment(resourceViewModel, resourceItem.getResource()))
+            })
+            marker.id = resourceItem._id
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = resourceItem.getDescription()
@@ -119,8 +159,15 @@ class MapFragment : Fragment(R.layout.fragment_map) {
             // Apply a color filter to the default marker
             val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon
             defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
-            marker.setIcon(defaultDrawable)
+            marker.icon = defaultDrawable
             needClusterer.add(marker)
         }
+    }
+
+    private fun addFragment(fragment: Fragment) {
+        val ft = parentFragmentManager.beginTransaction()
+        ft.replace(R.id.container, fragment)
+        ft.addToBackStack(null)
+        ft.commit()
     }
 }

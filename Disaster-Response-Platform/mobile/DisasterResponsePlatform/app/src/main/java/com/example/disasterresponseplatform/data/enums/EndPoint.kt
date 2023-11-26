@@ -25,4 +25,7 @@ enum class Endpoint(val path: String) {
     PROFESSION_GET("profiles/professions"),
     PROFESSION_SET("profiles/professions/add-profession"),
     PROFESSION_DELETE("profiles/professions"),
+    FORM_FIELDS_RESOURCE("form_fields/resource"),
+    FORM_FIELDS_NEED("form_fields/need"),
+    FORM_FIELDS_TYPE("form_fields/type"),
 }
