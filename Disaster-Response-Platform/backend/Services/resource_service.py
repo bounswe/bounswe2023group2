@@ -5,22 +5,60 @@ from pymongo import ASCENDING, DESCENDING
 from Services.build_API_returns import *
 from datetime import datetime
 from typing import Optional
+from datetime import datetime, timedelta
 
 # Get the resources collection using the MongoDB class
 resources_collection = MongoDB.get_collection('resources')
-
+r_id=0
 def create_resource(resource: Resource) -> str:
+    global r_id
     # Manual validation for required fields during creation
     if not all([resource.created_by, resource.condition,
                 resource.initialQuantity, resource.currentQuantity,
                 resource.type, resource.details, resource.x, resource.y]):
         raise ValueError("All fields are mandatory for creation.")
-    insert_result = resources_collection.insert_one(resource.dict())
+    
+    if(resource.recurrence_rate!= None):
+        if not all([resource.recurrence_deadline, resource.occur_at]):
+            raise ValueError("Recurrence fields need to be entered")
+        resource.recurrence_id=r_id
+        resource.recurrence_rate = resource.recurrence_rate.value
+        insert_result = resources_collection.insert_one(resource.dict())
+ 
+        insert_ids=create_recurrent_resources(resource)
+
+        r_id+=1
+    else:
+        insert_result = resources_collection.insert_one(resource.dict())
+ 
+
+    
+    
     #check the result to change from
     if insert_result.inserted_id:
         return "{\"resources\":[{\"_id\":" + f"\"{insert_result.inserted_id}\"" + "}]}"
     else:
         raise ValueError("Resource could not be created")
+    
+def create_recurrent_resources(resource: Resource):
+
+    current_date = resource.occur_at
+    current_date += timedelta(days=resource.recurrence_rate)
+    insert_ids=[]
+
+    def normalize_date(dt):
+        return datetime(dt.year, dt.month, dt.day)
+    while normalize_date(current_date) <= normalize_date(resource.recurrence_deadline):
+        resource.occur_at=current_date
+        resource.recurrence_id=r_id
+        insert_result = resources_collection.insert_one(resource.dict())
+        print("resource added ", insert_result, r_id, resource.occur_at)
+        if(insert_result):
+            insert_ids.append(insert_result)
+            current_date += timedelta(days=resource.recurrence_rate)
+        else:
+            raise ValueError("Resource could not be created")
+    return insert_ids
 
 def get_resource_by_id(resource_id: str) -> list[dict]:
     return get_resources(resource_id)

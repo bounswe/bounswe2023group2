@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Disaster Response Platform</string>
+    <string name="app_name">Disaster Aid Provision Platform</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login_page">Login Page</string>
@@ -104,6 +104,21 @@
     <string name="field_coordinate_y">Y Coordinate</string>
 
 
+    <string name="nav_home">Home</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_profile">Profile</string>
+
+    <string-array name="need_types">
+        <item>Clothes</item>
+        <item>Food</item>
+        <item>Shelter</item>
+        <item>Medication</item>
+        <item>Transportation</item>
+        <item>Tools</item>
+        <item>Human</item>
+        <item>Other</item>
+    </string-array>
+
     <string-array name="resource_types">
         <item>Clothes</item>
         <item>Food</item>
@@ -114,7 +129,7 @@
         <item>Human</item>
         <item>Other</item>
     </string-array>
-    
+
     <string-array name="resource_food_sub_types">
         <item>Pasta</item>
         <item>Rice</item>
