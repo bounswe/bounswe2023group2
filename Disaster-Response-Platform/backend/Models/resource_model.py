@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, validator
-from typing import Dict, Any
+from typing import Dict, Any, List
 from enum import Enum
 import datetime
 
@@ -10,7 +10,10 @@ class ConditionEnum(str, Enum):
 class Recurrence(Enum):
     Daily= 1
     Weekly= 7
-   
+
+class ActionHistory(BaseModel):
+    quantity: int = Field(default=0)
+    action_id: str= Field(None)
 
 class Resource(BaseModel):
     _id: str = Field(default=None)
@@ -32,7 +35,7 @@ class Resource(BaseModel):
     last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
-    action_used: int = Field(default=0)
+    actions_used: List[ActionHistory]= Field(default=None)
 
     @validator('recurrence_deadline', 'occur_at', pre=True)
     def convert_str_to_datetime(cls, value):
@@ -49,3 +52,4 @@ class QuantityUpdate(BaseModel):
 
 class ConditionUpdate(BaseModel):
     condition: ConditionEnum
+
