@@ -109,25 +109,26 @@ def get_all_actions(response: Response):
 #         response.status_code = HTTPStatus.NOT_FOUND
 #         return json.loads(err_json)
     
-# @router.delete("/{action_id}")
-# def delete_action(action_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
-#     try:
-#         res_list = action_service.delete_action(action_id, current_user)
-#         response.status_code=HTTPStatus.OK
-#         return json.loads(res_list)
-#     except ValueError as err:
-#         err_json = create_json_for_error("Action could not be deleted", str(err))
-#         response.status_code = HTTPStatus.NOT_FOUND
-#         return json.loads(err_json)
+@router.delete("/{action_id}")
+def delete_action(action_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        res_list = action_service.delete_action(action_id, current_user,True)
+        response.status_code=HTTPStatus.OK
+        return json.loads(res_list)
+    except ValueError as err:
+        err_json = create_json_for_error("Action could not be deleted", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
 
-# #this is for making an action inactive 
-# @router.put("/{action_id}")
-# def cancel_action(action_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
-#     try:
-#         res_list = action_service.delete_action(action_id, current_user)
-#         response.status_code=HTTPStatus.OK
-#         return json.loads(res_list)
-#     except ValueError as err:
-#         err_json = create_json_for_error("Action could not be cancelled", str(err))
-#         response.status_code = HTTPStatus.NOT_FOUND
-#         return json.loads(err_json)
+#this is for making an action inactive 
+@router.put("/cancel/{action_id}")
+def cancel_action(action_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        res_list = action_service.delete_action(action_id, current_user, False)
+        response.status_code=HTTPStatus.OK
+        return json.loads(res_list)
+    except ValueError as err:
+        error= Error(ErrorMessage="Action Cancel Error", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error

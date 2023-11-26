@@ -11,7 +11,7 @@ from Services.need_service import *
 # Get the resources collection using the MongoDB class
 actions_collection = MongoDB.get_collection('actions')
 resources_collection= MongoDB.get_collection('resources')
-
+users_collection= MongoDB.get_collection('authenticated_user')
 needs_collection= MongoDB.get_collection('needs')
 def create_action(action: Action) -> str:
     # Manual validation for required fields during creation
@@ -33,7 +33,8 @@ def create_action(action: Action) -> str:
                 return datetime(dt.year, dt.month, dt.day)
             id= group.related_resources[0]
             resource=resources_collection.find_one({"_id": ObjectId(id)})
-
+            if not resource:
+                raise ValueError(f"This is not a valis resource id {id}")
             #TODO resource need active mi check i ekle
             type= resource["type"]
 
@@ -83,6 +84,7 @@ def create_action(action: Action) -> str:
             action.related_groups[i].group_type=type
             
             i+=1
+        action.status= statusEnum.created
         insert_result = actions_collection.insert_one(action.dict())
    
         #check the result to change from
@@ -133,7 +135,8 @@ def do_action(action_id:str, current_user:str):
                 }
                 resources= resources_collection.find(query)
                 resources= list(resources)
-                totalQuantityMet+= update_need_resources(resources,needs)
+                print(current_date)
+                totalQuantityMet+= update_need_resources(resources,needs, action_id)
                 current_date += timedelta(days=1) #this can be optimized to min recurrence rate
         else:
             query = {"_id": {"$in": related_needs_object_ids}}
@@ -143,13 +146,16 @@ def do_action(action_id:str, current_user:str):
             query = {"_id": {"$in": related_resources_object_ids}}
             resources= resources_collection.find(query)
             resources= list(resources)
-            totalQuantityMet+= update_need_resources(resources,needs)
+            totalQuantityMet+= update_need_resources(resources,needs, action_id)
             
 
         if(totalQuantityMet==0):
             raise ValueError("There is either no need for this resource or no resource for this need")
         met_needs.append(totalQuantityMet)
-
+    update_result = actions_collection.update_one(
+        {"_id": action['_id']},
+        {"$set": {"status": statusEnum.active}}
+        )
     ret= doActionResponse(met_needs=met_needs)
     return ret
 def get_action(action_id:str):
@@ -158,7 +164,7 @@ def get_action(action_id:str):
         return Action(**action)   
     else:
         raise ValueError("Action not found")
-def update_need_resources(resources,needs):
+def update_need_resources(resources,needs, action_id):
     r=0
     i=0
     totalQuantityMet=0
@@ -176,13 +182,13 @@ def update_need_resources(resources,needs):
                 
             elif need['unsuppliedQuantity']>resource['currentQuantity']:
                 left= need['unsuppliedQuantity']-resource['currentQuantity']
-                update_resource(resource, False, left,resource['currentQuantity'])  
+                update_resource(resource, False, left,resource['currentQuantity'],action_id)
                 r+=1
             else:
                 left=0
                 totalQuantityMet+= need['unsuppliedQuantity']
                 update_need(need, False, left, need['unsuppliedQuantity'])
-                update_resource(resource, False,left,resource['currentQuantity'])
+                update_resource(resource, False,left,resource['currentQuantity'], action_id)
                 i+=1
                 r+=1
         if len(needs)<= i:
@@ -193,7 +199,7 @@ def update_need_resources(resources,needs):
             totalQuantityMet+= need['unsuppliedQuantity']
             update_need(need, True, left, need['unsuppliedQuantity']-left)
         if needs[i]['active']==False:
-            update_resource(resource, True, left, resource['currentQuantity']-left)
+            update_resource(resource, True, left, resource['currentQuantity']-left, action_id)
     return totalQuantityMet
    
 def update_need(need, active, left, action_used):
@@ -207,14 +213,23 @@ def update_need(need, active, left, action_used):
         {"$set": {"active": active, "unsuppliedQuantity": q, "action_used": action_used}}
     )
     return
-def update_resource(resource, active, left, action_used):
+def update_resource(resource, active, left, action_used, action_id):
     resource['active']=active
+    print(resource['_id'])
+   # Ensure actions_used is initialized as an empty list if it's None
+    if resource and resource.get('actions_used') is None:
+        
+        resource['actions_used'] = []
+
+    # Append the new ActionHistory to the list
+    ah= ActionHistory(quantity=action_used, action_id=action_id).dict()
+    resource['actions_used'].append(ah)
     q=left
     if not active:
         q=0
     update_result = resources_collection.update_one(
         {"_id": resource['_id']},
-        {"$set": {"active": active, "currentQuantity": q, "action_used":action_used}}
+        {"$set": {"active": active, "currentQuantity": q, "actions_used": resource['actions_used']}}
     )
     return
 
@@ -404,12 +419,63 @@ def update_action(action_id: str, action: Action) -> Action:
         raise ValueError(f"Action id {action_id} not found")
     
 
-def delete_action(action_id: str):
-    try:
+def delete_action(action_id: str, current_user: str, delete: bool):
+    
+    action = actions_collection.find_one({"_id": ObjectId(action_id)})
+    if action:
+        action= Action(**action) 
+    else:
+        raise ValueError('There is no action with this id: {action_id}')
+    if action.created_by!= current_user:
+        raise ValueError('Only user that created the action can cancel it')
+    
+    for group in action.related_groups:
+        restore_needs(group.related_needs)
+        restore_resources(group.related_resources, action_id)
+    update_result = actions_collection.update_one(
+        {"_id": ObjectId(action_id)},
+        {"$set": {"status": statusEnum.inactive}}
+        )
+    if delete:
         d = actions_collection.delete_one({"_id": ObjectId(action_id)})
         if d.deleted_count == 0:
-            raise
-        return "{\"actions\":[{\"_id\":" + f"\"{action_id}\"" + "}]}"
-        # Returning the deleted id would be nice
-    except:
-        raise ValueError(f"Actions {action_id} cannot be deleted")
+            raise ValueError('Could not delete action')
+    return "{\"actions\":[{\"_id\":" + f"\"{action_id}\"" + "}]}"
+
+  
+
+def restore_needs(related_needs: List[str]):
+    related_needs_object_ids = [ObjectId(id_str) for id_str in related_needs]
+    query = {"_id": {"$in": related_needs_object_ids}}
+    needs= needs_collection.find(query)
+    needs= list(needs)
+    for need in needs:
+        if need['active']==True:
+            raise ValueError('This action is already cancelled')
+        unSuppliedQuantity= need['action_used']
+        update_result = needs_collection.update_one(
+        {"_id": need['_id']},
+        {"$set": {"active": True, "unsuppliedQuantity": unSuppliedQuantity, "action_used": 0}}
+        )
+    
+
+def restore_resources(related_resources: List[str], action_id):
+    related_resources_object_ids = [ObjectId(id_str) for id_str in related_resources]
+    query = {"_id": {"$in": related_resources_object_ids}}
+    resources= resources_collection.find(query)
+    resources= list(resources)
+   
+
+    for resource in resources:
+        ah_list= resource['actions_used']
+        quantity_found = next((ah_list.get('quantity', 0) for ah_list in resource['actions_used'] if ah_list.get('action_id') == action_id), 0)
+        resource['actions_used'] = [ah_list for ah_list in resource['actions_used'] if ah_list.get('action_id') != action_id]
+        quantity= quantity_found+ resource['currentQuantity']
+        update_result = resources_collection.update_one(
+        {"_id": resource['_id']},
+        {"$set": {"active": True, "currentQuantity": quantity, "actions_used": resource['actions_used']}}
+        )
+        if update_result.modified_count <= 0:
+            raise ValueError(f"No ActionHistory found with action_id '{action_id}'.")
+    return
+                
