@@ -17,16 +17,18 @@ def create_resource(resource: Resource) -> str:
         raise ValueError("All fields are mandatory for creation.")
     
     if(resource.recurrence_rate!= None):
+        if not all([resource.recurrence_deadline, resource.occur_at]):
+            raise ValueError("Recurrence fields need to be entered")
         resource.recurrence_id=r_id
         resource.recurrence_rate = resource.recurrence_rate.value
         insert_result = resources_collection.insert_one(resource.dict())
-        print("resource added ", insert_result, resource.recurrence_id, resource.occur_at)
+ 
         insert_ids=create_recurrent_resources(resource)
-        print(insert_ids)
+
         r_id+=1
     else:
         insert_result = resources_collection.insert_one(resource.dict())
-        print("resource added ", insert_result, resource.recurrence_id, resource.occur_at)
+ 
 
     
     
