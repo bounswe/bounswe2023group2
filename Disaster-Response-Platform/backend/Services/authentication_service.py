@@ -203,7 +203,7 @@ def verify_user(username: str):
     
     update_result = userDb.update_one(
     {"username": username},
-    {"$set": {"is_verified": "CREDIBLE"}}
+    {"$set": {"user_role": "CREDIBLE"}}
     )    
     return True
 
@@ -214,8 +214,18 @@ def unverify_user(username: str):
     
     update_result = userDb.update_one(
     {"username": username},
-    {"$set": {"user_role": "GUEST"}}
+    {"$set": {"user_role": "AUTHENTICATED"}}
     )    
     return True
     
+def unauthorize_user(username: str):
+    user = get_user(username)
+    if not user:
+        raise ValueError(f"No such user with username {username}")
+    
+    update_result = userDb.update_one(
+    {"username": username},
+    {"$set": {"user_role": "GUEST"}}
+    )    
+    return True
     
