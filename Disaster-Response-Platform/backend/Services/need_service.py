@@ -17,6 +17,8 @@ def create_need(need: Need) -> str:
         raise ValueError("All fields are mandatory for creation.")
     
     if(need.recurrence_rate!= None):
+        if not all([need.recurrence_deadline, need.occur_at]):
+            raise ValueError("Recurrence fields need to be entered")
         need.recurrence_id=r_id
         need.recurrence_rate = need.recurrence_rate.value
         insert_result = needs_collection.insert_one(need.dict())
