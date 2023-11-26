@@ -27,12 +27,30 @@
     },
     "action": {
         "fields": [
+            {"name": "created_by", "label": "Created By", "type": "text"},
             {"name": "description", "label": "Description", "type": "text"},
             {"name": "type", "label": "Type", "type": "select", "options": ["need_resource"]},
-            {"name": "related_groups", "label": "List of Action Group", "type": "array"},
-            {"name": "occur_date", "label": "Occur date", "type": "date"},
-            {"name": "end_date", "label": "End date", "type": "date"}
-
+            {"name": "occur_at", "label": "Occur date", "type": "date"},
+            {"name": "end_at", "label": "End date", "type": "date"},
+            {
+                "name": "related_groups",
+                "label": "List of Action Group",
+                "type": "array",
+                "fields": [
+                    {
+                        "name": "related_needs",
+                        "label": "Related Needs",
+                        "type": "array",
+                        "fields": [{"name": "id", "label": "ID", "type": "text"}]
+                    },
+                    {
+                        "name": "related_resources",
+                        "label": "Related Resources",
+                        "type": "array",
+                        "fields": [{"name": "id", "label": "ID", "type": "text"}]
+                    }
+                ]
+            }
         ]
     },
     "type": {
