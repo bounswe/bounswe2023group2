@@ -1,9 +1,10 @@
 from Models.resource_model import Resource, ConditionEnum
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
-
+from pymongo import ASCENDING, DESCENDING
 from Services.build_API_returns import *
 from datetime import datetime
+from typing import Optional
 
 # Get the resources collection using the MongoDB class
 resources_collection = MongoDB.get_collection('resources')
@@ -24,7 +25,17 @@ def create_resource(resource: Resource) -> str:
 def get_resource_by_id(resource_id: str) -> list[dict]:
     return get_resources(resource_id)
 
-def get_resources(resource_id:str = None) -> list[dict]:
+def get_resources(
+    resource_id: str = None,
+    active: Optional[bool] = None,
+    types: list = None, 
+    subtypes: list = None, 
+    x: float = None,
+    y: float = None,
+    distance_max: float = None,
+    sort_by: str = 'created_at',
+    order: Optional[str] = 'asc'
+) -> list[dict]:
     projection = {"_id": {"$toString": "$_id"},
                   "created_by": 1,
                   "description": 1,
@@ -38,27 +49,43 @@ def get_resources(resource_id:str = None) -> list[dict]:
                   "recurrence_deadline": 1,
                   "x":1,
                   "y":1,
+                  "active": 1,
                   "occur_at": 1,
                   "created_at":1,
-                  "last_updated_at":1
+                  "last_updated_at":1,
+                  "upvote":1,
+                  "downvote":1
                   }
-    #projection["_id"] = {"$toString": "$_id"}
-    if (resource_id is None):
-        query = {}
-    else:
-        if (ObjectId.is_valid(resource_id)):
-            query = {"_id": ObjectId(resource_id)}
+    
+    sort_order = ASCENDING if order == 'asc' else DESCENDING
+    query = {}
+    if resource_id:
+        if ObjectId.is_valid(resource_id):
+            query['_id'] = ObjectId(resource_id)
         else:
             raise ValueError(f"Resource id {resource_id} is invalid")
+    else:
+        # Apply general filters only when no specific resource ID is provided
+        
+        if active is not None:
+            query['active'] = active
+        else: 
+            query['active'] = True
+        
+        if types:
+            query['type'] = {'$in': types}
+        if subtypes:
+            query['details.subtype'] = {'$in': subtypes}
+    
+    # Apply the query and sort order to the database call
+    resources_cursor = resources_collection.find(query, projection).sort(sort_by, sort_order)
+    resources_data = list(resources_cursor)  # Convert cursor to list
 
-    resources_data = resources_collection.find(query, projection)
-
-    if (resources_data.explain()["executionStats"]["nReturned"] == 0):
-        if resource_id is None:
-            resource_id = ""
-        raise ValueError(f"Resource {resource_id} does not exist")
-
-    # Convert and format datetime fields
+    # Filter by distance if necessary
+    if x is not None and y is not None and distance_max is not None:
+        resources_data = [res for res in resources_data if ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
+    
+    # Format the resource data
     formatted_resources_data = []
     for resource in resources_data:
         if 'created_at' in resource:
@@ -67,7 +94,9 @@ def get_resources(resource_id:str = None) -> list[dict]:
             resource['last_updated_at'] = resource['last_updated_at'].strftime('%Y-%m-%d %H:%M:%S')
         formatted_resources_data.append(resource)
 
-    result_list = create_json_for_successful_data_fetch(formatted_resources_data, "resources")
+
+    # Generate the result list
+    result_list = create_json_for_successful_data_fetch(resources_data, "resources")
     return result_list
     
 def update_resource(resource_id: str, resource: Resource) -> Resource:
