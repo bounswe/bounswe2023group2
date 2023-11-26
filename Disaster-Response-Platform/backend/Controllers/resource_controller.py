@@ -72,11 +72,21 @@ def get_all_resources(
     sort_by: str = Query('created_at', description="Field to sort by"),
     order: Optional[str] = Query('asc', description="Sort order")
 ):
+    if types:
+        types_list = types[0].split(',')
+    else:
+        types_list = []
+
+    if subtypes:
+        subtypes_list = subtypes[0].split(',')
+    else:
+        subtypes_list = []
+
     try:
         resources = resource_service.get_resources(
             active=active,
-            types=types,
-            subtypes=subtypes,
+            types=types_list,
+            subtypes=subtypes_list,
             x=x,
             y=y,
             distance_max=distance_max,

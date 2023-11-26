@@ -68,10 +68,7 @@ def get_resources(
         # Apply general filters only when no specific resource ID is provided
         
         if active is not None:
-            query['active'] = active
-        else: 
-            query['active'] = True
-        
+            query['active'] = active    
         if types:
             query['type'] = {'$in': types}
         if subtypes:
@@ -93,7 +90,6 @@ def get_resources(
         if 'last_updated_at' in resource:
             resource['last_updated_at'] = resource['last_updated_at'].strftime('%Y-%m-%d %H:%M:%S')
         formatted_resources_data.append(resource)
-
 
     # Generate the result list
     result_list = create_json_for_successful_data_fetch(resources_data, "resources")
