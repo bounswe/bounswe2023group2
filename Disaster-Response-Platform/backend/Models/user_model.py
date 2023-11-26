@@ -115,3 +115,6 @@ class UserRoleResponse(BaseModel):
 class ProfResponse(BaseModel):
     user_role: str
     proficiency: Optional[List[ProfRequest]] = None
+
+class VerifyUser(BaseModel):
+    username: str

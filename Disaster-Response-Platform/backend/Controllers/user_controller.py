@@ -138,3 +138,26 @@ async def get_user_info(response:Response,username: str, current_user: UserProfi
                         private_account=user.private_account)
 
     return user_info
+
+
+@router.put("/verify")
+def verify_user(response:Response,user_to_be_verified: VerifyUser, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+    try:
+        verified = authentication_service.verify_user(user_to_be_verified.username)
+        response.status_code = HTTPStatus.OK
+        return {f'{user_to_be_verified.username} is verified'}    
+    except ValueError as err:
+        err_json = create_json_for_error("Verification error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+
+@router.put("/unverify")
+def unverify_user(response:Response,user_to_be_verified: VerifyUser, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+    try:
+        unverified = authentication_service.unverify_user(user_to_be_verified.username)
+        response.status_code = HTTPStatus.OK
+        return {f'{user_to_be_verified.username} is unverified'}   
+    except ValueError as err:
+        err_json = create_json_for_error("Unverification error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
