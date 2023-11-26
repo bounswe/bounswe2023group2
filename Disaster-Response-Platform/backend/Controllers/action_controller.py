@@ -45,7 +45,7 @@ def do_action(action_id: str, response:Response, current_user: str = Depends(aut
     
 
 @router.get("/group",responses={
-    status.HTTP_200_OK: {"model": ActionSuccess},
+    status.HTTP_200_OK: {"model": GroupSuccess},
     status.HTTP_400_BAD_REQUEST: {"model": Error}
 })
 def get_group_info(related_group: ActionGroup , response: Response):
