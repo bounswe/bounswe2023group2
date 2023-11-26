@@ -289,7 +289,7 @@ def get_group_info(related_group: ActionGroup):
     related_needs= related_group.related_needs
     related_resources= related_group.related_resources
     id= related_resources[0]
-    resource=resources_collection.find_one({"_id": id})
+    resource=resources_collection.find_one({"_id": ObjectId(id)})
     if not resource:
         raise ValueError(f"Cant found the resource with id: {id}")
     
