@@ -89,4 +89,13 @@ class UserSocialMediaLinks(BaseModel):
 class UserOptionalInfos(BaseModel):
     user_optional_infos: List[UserOptionalInfo]
 
+class UserProfileComplete(BaseModel):
+    professions: Professions
+    languages: Languages
+    user_skills: UserSkills
+    user_socialmedia_links: UserSocialMediaLinks
+    user_optional_infos: UserOptionalInfos
+
+#test = UserProfileComplete()
+
 
