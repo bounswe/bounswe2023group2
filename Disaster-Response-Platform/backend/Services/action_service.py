@@ -136,7 +136,7 @@ def do_action(action_id:str, current_user:str):
                 }
                 resources= resources_collection.find(query)
                 resources= list(resources)
-                print(current_date)
+              
                 totalQuantityMet+= update_need_resources(resources,needs, action_id)
                 current_date += timedelta(days=1) #this can be optimized to min recurrence rate
         else:
@@ -170,37 +170,49 @@ def update_need_resources(resources,needs, action_id):
     i=0
     totalQuantityMet=0
     if len(resources)!=0 and len(needs)!=0:
-                
+        
         while(i<len(needs) and r< len(resources)):
             resource= resources[r]
+            print(resources[r]['currentQuantity'])
             need= needs[i]
+            resource_used=0
+            print(need['_id'],need['unsuppliedQuantity'],resource['_id'],resource['currentQuantity'])
             if need['unsuppliedQuantity']<resource['currentQuantity']:
                 left= resource['currentQuantity']- need['unsuppliedQuantity']
+                print(resources[r]['currentQuantity'])
+                resources[r]['currentQuantity']=left
+                print(resources[r]['currentQuantity'])
+              
                 totalQuantityMet+= need['unsuppliedQuantity']
                 update_need(need, False, left,need['unsuppliedQuantity'])
-                
                 i+=1
                 
             elif need['unsuppliedQuantity']>resource['currentQuantity']:
                 left= need['unsuppliedQuantity']-resource['currentQuantity']
+                used_resource=0
+                need['unsuppliedQuantity']=left
                 update_resource(resource, False, left,resource['currentQuantity'],action_id)
                 r+=1
+
             else:
                 left=0
                 totalQuantityMet+= need['unsuppliedQuantity']
+                used_resource=0
                 update_need(need, False, left, need['unsuppliedQuantity'])
                 update_resource(resource, False,left,resource['currentQuantity'], action_id)
                 i+=1
                 r+=1
+    
         if len(needs)<= i:
             i-=1
         if len(resources)<=r:
             r-=1
         if resources[r]['active']==False:
             totalQuantityMet+= need['unsuppliedQuantity']
-            update_need(need, True, left, need['unsuppliedQuantity']-left)
+            update_need(need, True, left, need['unsuppliedQuantity'])
         if needs[i]['active']==False:
-            update_resource(resource, True, left, resource['currentQuantity']-left, action_id)
+            print(resources[r]['currentQuantity'])
+            update_resource(resource, True, left, resources[r]['currentQuantity'], action_id)
     return totalQuantityMet
    
 def update_need(need, active, left, action_used):
@@ -216,7 +228,7 @@ def update_need(need, active, left, action_used):
     return
 def update_resource(resource, active, left, action_used, action_id):
     resource['active']=active
-    print(resource['_id'])
+    print(action_used)
    # Ensure actions_used is initialized as an empty list if it's None
     if resource and resource.get('actions_used') is None:
         
@@ -476,8 +488,6 @@ def restore_resources(related_resources: List[str], action_id):
     query = {"_id": {"$in": related_resources_object_ids}}
     resources= resources_collection.find(query)
     resources= list(resources)
-   
-
     for resource in resources:
         ah_list= resource['actions_used']
         quantity_found = next((ah_list.get('quantity', 0) for ah_list in resource['actions_used'] if ah_list.get('action_id') == action_id), 0)
