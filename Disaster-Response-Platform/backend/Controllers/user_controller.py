@@ -141,23 +141,34 @@ async def get_user_info(response:Response,username: str, current_user: UserProfi
 
 
 @router.put("/verify")
-def verify_user(response:Response,user_to_be_verified: VerifyUser, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+def verify_user(response:Response,user: UserUsername, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
     try:
-        verified = authentication_service.verify_user(user_to_be_verified.username)
+        verified = authentication_service.verify_user(user.username)
         response.status_code = HTTPStatus.OK
-        return {f'{user_to_be_verified.username} is verified'}    
+        return {f'{user.username} is verified'}    
     except ValueError as err:
         err_json = create_json_for_error("Verification error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
 
 @router.put("/unverify")
-def unverify_user(response:Response,user_to_be_verified: VerifyUser, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+def unverify_user(response:Response,user: UserUsername, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
     try:
-        unverified = authentication_service.unverify_user(user_to_be_verified.username)
+        unverified = authentication_service.unverify_user(user.username)
         response.status_code = HTTPStatus.OK
-        return {f'{user_to_be_verified.username} is unverified'}   
+        return {f'{user.username} is unverified'}   
     except ValueError as err:
         err_json = create_json_for_error("Unverification error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+
+@router.put("/unauthorize")
+def unverify_user(response:Response,user: UserUsername, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+    try:
+        unverified = authentication_service.unauthorize_user(user.username)
+        response.status_code = HTTPStatus.OK
+        return {f'{user.username} is unauthorized'}   
+    except ValueError as err:
+        err_json = create_json_for_error("Unauthorization error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
