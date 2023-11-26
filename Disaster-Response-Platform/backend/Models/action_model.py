@@ -82,3 +82,8 @@ class updateResponse(BaseModel):
 
 class doActionResponse(BaseModel):
     met_needs: List[int]
+
+class GroupSuccess(BaseModel):
+    type: str
+    resourceTexts: List[str]
+    needTexts: List[str]
