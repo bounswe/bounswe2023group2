@@ -3,18 +3,35 @@ from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 
 from Services.build_API_returns import *
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Get the needs collection using the MongoDB class
 needs_collection = MongoDB.get_collection('needs')
-
+r_id=0
 def create_need(need: Need) -> str:
+    global r_id
     # Manual validation for required fields during creation
     if not all([need.created_by, need.urgency, 
                 need.initialQuantity, need.unsuppliedQuantity, 
                 need.type, need.details]):
         raise ValueError("All fields are mandatory for creation.")
-    insert_result = needs_collection.insert_one(need.dict())
+    
+    if(need.recurrence_rate!= None):
+        if not all([need.recurrence_deadline, need.occur_at]):
+            raise ValueError("Recurrence fields need to be entered")
+        need.recurrence_id=r_id
+        need.recurrence_rate = need.recurrence_rate.value
+        insert_result = needs_collection.insert_one(need.dict())
+        print("need added ", insert_result, need.recurrence_id, need.occur_at)
+        insert_ids=create_recurrent_needs(need)
+        print(insert_ids)
+        r_id+=1
+    else:
+        insert_result = needs_collection.insert_one(need.dict())
+        print("need added ", insert_result, need.recurrence_id, need.occur_at)
+
+    
+    
     if insert_result.inserted_id:
         result = "{\"needs\":[{\"_id\":" + f"\"{insert_result.inserted_id}\""+"}]}"
         return result
@@ -26,7 +43,26 @@ def create_need(need: Need) -> str:
 def get_need_by_id(need_id: str) -> list[dict]:
     return get_needs(need_id)
 
+def create_recurrent_needs(need:Need):
 
+    current_date = need.occur_at
+    current_date += timedelta(days=need.recurrence_rate)
+    insert_ids=[]
+
+    def normalize_date(dt):
+        return datetime(dt.year, dt.month, dt.day)
+    while normalize_date(current_date) <= normalize_date(need.recurrence_deadline):
+        need.occur_at=current_date
+        need.recurrence_id=r_id
+        insert_result = needs_collection.insert_one(need.dict())
+        print("need added ", insert_result, r_id, need.occur_at)
+        if(insert_result):
+            insert_ids.append(insert_result)
+            current_date += timedelta(days=need.recurrence_rate)
+        else:
+            raise ValueError("Need could not be created")
+    return insert_ids
+    
 
 def get_needs(need_id:str = None) -> list[dict]:
     projection = {

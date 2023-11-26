@@ -18,7 +18,7 @@ db = MongoDB.getInstance()
 # Secret key to sign and verify the JWT token
 SECRET_KEY = config.SECRET_KEY
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 120
+ACCESS_TOKEN_EXPIRE_MINUTES = 1200
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 userDb = MongoDB.get_collection('authenticated_user')
 
