@@ -54,7 +54,7 @@ def create_action(action: Action) -> str:
                         raise ValueError("Action end date cant be longer than the resource recurrence deadline")
                 else:
                     id_list.append(id)
-                    if( not (normalize_date(related_resource["occur_at"]) <= normalize_date(action.end_at)) and (normalize_date(related_resource["occur_at"])>= normalize_date(action.occur_at)) ):
+                    if( related_resource.get('occur_at') and not (normalize_date(related_resource["occur_at"]) <= normalize_date(action.end_at)) and (normalize_date(related_resource["occur_at"])>= normalize_date(action.occur_at)) ):
                         #print(normalize_date(related_resource["occur_at"]),normalize_date(action.end_at), normalize_date(related_resource["occur_at"]),normalize_date(action.occur_at)  )
                         raise ValueError("Action and resource should occur at the same date")
             #add recuuring resource list to action's mentioned resource list
@@ -79,7 +79,7 @@ def create_action(action: Action) -> str:
                         raise ValueError("Action end date cant be longer than the need recurrence deadline")
                 else:
                     id_list.append(id)
-                    if( not(normalize_date(related_need["occur_at"]) <= normalize_date(action.end_at) and normalize_date(related_need["occur_at"])>= normalize_date(action.occur_at)) ):
+                    if( related_need.get('occur_at')  and not(normalize_date(related_need["occur_at"]) <= normalize_date(action.end_at) and normalize_date(related_need["occur_at"])>= normalize_date(action.occur_at)) ):
                         raise ValueError("Action and need should occur at the same date")     
             action.related_groups[i].related_needs=(id_list)
             action.related_groups[i].group_type=type
@@ -179,25 +179,19 @@ def update_need_resources(resources,needs, action_id):
             print(need['_id'],need['unsuppliedQuantity'],resource['_id'],resource['currentQuantity'])
             if need['unsuppliedQuantity']<resource['currentQuantity']:
                 left= resource['currentQuantity']- need['unsuppliedQuantity']
-                print(resources[r]['currentQuantity'])
-                resources[r]['currentQuantity']=left
-                print(resources[r]['currentQuantity'])
-              
+                resources[r]['currentQuantity']=left    
                 totalQuantityMet+= need['unsuppliedQuantity']
                 update_need(need, False, left,need['unsuppliedQuantity'])
                 i+=1
                 
             elif need['unsuppliedQuantity']>resource['currentQuantity']:
                 left= need['unsuppliedQuantity']-resource['currentQuantity']
-                used_resource=0
-                need['unsuppliedQuantity']=left
                 update_resource(resource, False, left,resource['currentQuantity'],action_id)
                 r+=1
 
             else:
                 left=0
                 totalQuantityMet+= need['unsuppliedQuantity']
-                used_resource=0
                 update_need(need, False, left, need['unsuppliedQuantity'])
                 update_resource(resource, False,left,resource['currentQuantity'], action_id)
                 i+=1
@@ -207,9 +201,6 @@ def update_need_resources(resources,needs, action_id):
             i-=1
         if len(resources)<=r:
             r-=1
-        if resources[r]['active']==False:
-            totalQuantityMet+= need['unsuppliedQuantity']
-            update_need(need, True, left, need['unsuppliedQuantity'])
         if needs[i]['active']==False:
             print(resources[r]['currentQuantity'])
             update_resource(resource, True, left, resources[r]['currentQuantity'], action_id)

@@ -30,7 +30,7 @@ class Resource(BaseModel):
     x: float = Field(default=0.0)
     y: float = Field(default=0.0)
     active: bool = Field(default=True)
-    occur_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    occur_at: datetime.datetime = Field(default=None)
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
     upvote: int = Field(default=0)
