@@ -18,7 +18,8 @@ router = APIRouter()
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def get_user_profession_level(response: Response, profession:str = None, anyuser: str = None, current_username: str = Depends(authentication_service.get_current_username)):
+async def get_user_profession_level(response: Response, profession:str = None, anyuser: str = None,
+                                    current_username: str = Depends(authentication_service.get_current_username)):
     if anyuser is None:
         if profession is None:
             username = current_username
