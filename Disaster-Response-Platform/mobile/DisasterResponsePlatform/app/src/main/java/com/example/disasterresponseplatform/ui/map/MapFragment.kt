@@ -1,9 +1,11 @@
 package com.example.disasterresponseplatform.ui.map
 
 
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +28,9 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-
-
+import org.osmdroid.views.overlay.Polyline
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class MapFragment(
@@ -38,6 +41,8 @@ class MapFragment(
     private lateinit var mapView: MapView
     private lateinit var mapViewModel: MapViewModel
     private lateinit var needClusterer: RadiusMarkerClusterer
+    private lateinit var allClusters: RadiusMarkerClusterer
+
     private lateinit var resourceClusterer: RadiusMarkerClusterer
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,29 +91,104 @@ class MapFragment(
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapViewModel.sendGetAllNeedRequest()
-        mapViewModel.sendGetAllResourceRequest()
         needClusterer = RadiusMarkerClusterer(context)
         resourceClusterer = RadiusMarkerClusterer(context)
+        allClusters = RadiusMarkerClusterer(context)
         needClusterer.items.clear()
+        mapViewModel.sendGetAllNeedRequest()
+        mapViewModel.sendGetAllResourceRequest()
+        mapViewModel.sendGetAllActionsRequest()
         mapViewModel.getLiveDataNeedResponse().observe(viewLifecycleOwner) { needItems ->
             needItems.needs.forEach { needItem ->
-                if (!needClusterer.items.any { marker -> marker.id == needItem._id }) {
+                val currentDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+                if (!needClusterer.items.any { marker -> marker.id == needItem._id }
+                // UnComment them if you only want to see today's needs
+                    //&& needItem.occur_at?.startsWith(currentDate) != false
+                    //&& needItem.active
+                    )
+                {
                     addNeedMarker(needItem)
+                    mapView.postInvalidate()
                 }
+                val marker = Marker(mapView)
+                marker.id = needItem._id
+                val point = GeoPoint(needItem.x, needItem.y)
+                marker.position = point
+                allClusters.add(marker)
+                mapView.postInvalidate()
+                mapView.invalidate()
             }
             mapView.overlays.add(needClusterer)
             mapView.postInvalidate()
         }
         mapViewModel.getLiveDataResourceResponse().observe(viewLifecycleOwner) { resourceItems ->
             resourceItems.resources.forEach {resourceItem ->
-                if (!needClusterer.items.any { marker -> marker.id == resourceItem._id }) {
+                val currentDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+                if (!needClusterer.items.any { marker -> marker.id == resourceItem._id }
+                    // UnComment them if you only want to see today's resources
+                    //&& resourceItem.occur_at?.startsWith(currentDate) != false
+                    //&& resourceItem.active
+                    )
+                {
                     addResourceMarker(resourceItem)
+                    mapView.postInvalidate()
+                }
+                val marker = Marker(mapView)
+                marker.id = resourceItem._id
+                val point = GeoPoint(resourceItem.x, resourceItem.y)
+                marker.position = point
+                allClusters.add(marker)
+                mapView.overlays.add(needClusterer)
+                mapView.postInvalidate()
+            }
+            //mapView.overlays.add(needClusterer)
+            mapView.postInvalidate()
+            mapView.invalidate()
+        }
+
+        mapViewModel.getLiveDataActionsResponse().observe(viewLifecycleOwner) { actions ->
+            actions.actions.forEach { actionItem ->
+                actionItem.relatedGroups.forEach { group ->
+                    group.relatedNeeds.forEach { needId ->
+                        group.relatedResources.forEach { resourceId ->
+                            drawLineBetweenMarkers(needId, resourceId)
+                            mapView.postInvalidate()
+                            mapView.invalidate()
+                        }
+                    }
                 }
             }
-            mapView.overlays.add(needClusterer)
             mapView.postInvalidate()
+            mapView.invalidate()
         }
+    }
+
+    private fun drawLineBetweenMarkers(markerId1: String, markerId2: String) {
+        val marker1 = findMarkerById(markerId1)
+        val marker2 = findMarkerById(markerId2)
+
+        if (marker1 != null && marker2 != null) {
+            Log.d("yess","no ERRORRR")
+            val line = Polyline() // Create a new Polyline
+            line.setColor(Color.RED) // Set the color of the line
+            line.setWidth(4.0f) // Set the width of the line
+
+            val geoPoints = arrayListOf(marker1.position, marker2.position)
+            line.setPoints(geoPoints) // Set the points of the line
+
+            mapView.overlays.add(line) // Add the line to the MapView
+            mapView.postInvalidate()
+            mapView.invalidate()
+        } else {
+
+        }
+    }
+
+    private fun findMarkerById(markerId: String): Marker? {
+        // Assuming needClusterer and resourceClusterer contain all markers
+        val allMarkers = allClusters.items
+
+        return allMarkers.firstOrNull { marker -> marker.id == markerId }
     }
 
     override fun onPause() {
@@ -143,6 +223,7 @@ class MapFragment(
             needClusterer.add(marker)
         }
     }
+
 
     private fun addResourceMarker(resourceItem: ResourceBody.ResourceItem) {
         if (isResourceValidLocation(resourceItem)) {
