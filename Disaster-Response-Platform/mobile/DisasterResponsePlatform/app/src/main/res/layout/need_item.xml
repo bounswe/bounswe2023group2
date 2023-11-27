@@ -30,12 +30,13 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/recyc_category" />
 
+
         <TextView
-            android:id="@+id/tvActivity"
+            android:id="@+id/tvType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@string/need"
+            android:text="@string/clothes"
             android:textAllCaps="true"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -47,28 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="/"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/tvActivity"
-            app:layout_constraintTop_toTopOf="@+id/tvActivity" />
-
-        <TextView
-            android:id="@+id/tvType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="@string/clothes"
-            android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/sep1"
-            app:layout_constraintTop_toTopOf="@+id/sep1" />
-
-        <TextView
-            android:id="@+id/sep2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="/"
+            android:text=">"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/tvType"
@@ -78,11 +58,12 @@
             android:id="@+id/tvSubType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SubType"
+            android:text="pants"
             android:layout_marginStart="4dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/sep2"
-            app:layout_constraintTop_toTopOf="@+id/sep2" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/sep1"
+            app:layout_constraintTop_toTopOf="@+id/sep1" />
 
         <ImageView
             android:id="@+id/iconLocation"
@@ -90,7 +71,7 @@
             android:layout_height="22dp"
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="@+id/iconType"
-            app:layout_constraintTop_toBottomOf="@+id/sep1"
+            app:layout_constraintTop_toBottomOf="@+id/iconType"
             app:srcCompat="@drawable/recyc_location" />
 
         <TextView

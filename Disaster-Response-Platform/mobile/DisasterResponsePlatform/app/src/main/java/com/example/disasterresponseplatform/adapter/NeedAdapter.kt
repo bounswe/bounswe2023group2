@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.databinding.NeedItemBinding
 
@@ -43,6 +42,7 @@ class NeedAdapter(private val needList: List<NeedBody.NeedItem>?): RecyclerView.
         hb.tvLocation.text = "x: ${String.format("%.2f", currentNeed?.x).replace(',', '.')}, y: ${String.format("%.2f", currentNeed?.y).replace(',', '.')}"
         hb.tvQuantity.text = currentNeed?.initialQuantity.toString()
         hb.tvCreator.text = currentNeed?.created_by
+        hb.tvSubType.text = currentNeed?.details?.get("subtype").toString()
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->
