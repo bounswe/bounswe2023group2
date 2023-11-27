@@ -42,6 +42,14 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         arrangeView()
     }
 
+    /**
+     * It refresh the recycler view whenever returned this page (i.e after adding/editing/deleting item)
+     */
+    override fun onResume() {
+        super.onResume()
+        sendRequest()
+    }
+
     private fun arrangeView(){
         binding.btFilter.setOnClickListener {
             showFilterDialog()

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.NeedAdapter
 import com.example.disasterresponseplatform.data.database.need.Need
+import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -42,6 +43,14 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arrangeView()
+    }
+
+    /**
+     * It refresh the recycler view whenever returned this page (i.e after adding/editing/deleting item)
+     */
+    override fun onResume() {
+        super.onResume()
+        sendRequest()
     }
 
     private fun arrangeView(){
@@ -102,7 +111,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
      * It opens a need page that contains details about it and users can edit, delete, upvote and downvote this item from this page
      * if they have the authority
      */
-    private fun openNeedItemFragment(need: Need){
+    private fun openNeedItemFragment(need: NeedBody.NeedItem){
         val needItemFragment = NeedItemFragment(needViewModel,need)
         addFragment(needItemFragment,"NeedItemFragment")
     }
@@ -116,16 +125,14 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         }
         needViewModel.sendGetAllRequest()
         needViewModel.getLiveDataResponse().observe(requireActivity!!){ needResponse ->
-            val lst = needViewModel.createNeedList(needResponse)
-            arrangeRecyclerView(lst)
+            arrangeRecyclerView(needResponse.needs)
         }
     }
-
 
     /**
      * Arrange recycler view and its adapter
      */
-    private fun arrangeRecyclerView(needList : List<Need>){
+    private fun arrangeRecyclerView(needList : List<NeedBody.NeedItem>){
         val recyclerView = binding.recyclerViewNeeds
         if (recyclerView.layoutManager == null){
             val layoutManager = LinearLayoutManager(requireContext())

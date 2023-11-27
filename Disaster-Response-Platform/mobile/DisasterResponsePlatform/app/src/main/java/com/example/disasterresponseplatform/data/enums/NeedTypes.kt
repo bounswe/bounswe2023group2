@@ -1,12 +1,13 @@
 package com.example.disasterresponseplatform.data.enums
 
 enum class NeedTypes(val type: Int) {
-    Clothes(0),
+    Cloth(0),
     Food(1),
-    Shelter(2),
-    Medication(3),
-    Transportation(4),
-    Tools(5),
-    Human(6),
-    Other(7)
+    Drink(2),
+    Shelter(3),
+    Medication(4),
+    Transportation(5),
+    Tools(6),
+    Human(7),
+    Other(8)
 }

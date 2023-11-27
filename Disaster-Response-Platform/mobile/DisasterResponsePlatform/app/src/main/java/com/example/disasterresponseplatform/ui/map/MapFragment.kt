@@ -130,16 +130,16 @@ class MapFragment(
 
     private fun addNeedMarker(needItem: NeedBody.NeedItem) {
         if (isNeedValidLocation(needItem)) {
-            val point = GeoPoint(needItem.x!!.toDouble(), needItem.y!!.toDouble())
+            val point = GeoPoint(needItem.x, needItem.y)
             val marker = Marker(mapView)
             marker.setInfoWindow(BubbleInfoView(mapView, View.OnClickListener {
-                addFragment(NeedItemFragment(needViewModel, needItem.getNeed()))
+                addFragment(NeedItemFragment(needViewModel, needItem),"NeedItemFragment")
             }))
             marker.id = needItem._id
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = needItem.getDescription()
-            marker.subDescription = needItem.getSubDescription()
+            marker.title = needItem.type
+            marker.subDescription = needItem.details["Sub Type"]
             needClusterer.add(marker)
         }
     }
@@ -149,7 +149,7 @@ class MapFragment(
             val point = GeoPoint(resourceItem.x!!.toDouble(), resourceItem.y!!.toDouble())
             val marker = Marker(mapView)
             marker.setInfoWindow(BubbleInfoView(mapView) {
-                addFragment(ResourceItemFragment(resourceViewModel, resourceItem.getResource()))
+                addFragment(ResourceItemFragment(resourceViewModel, resourceItem.getResource()),"ResourceItemFragment")
             })
             marker.id = resourceItem._id
             marker.position = point
@@ -164,10 +164,10 @@ class MapFragment(
         }
     }
 
-    private fun addFragment(fragment: Fragment) {
+    private fun addFragment(fragment: Fragment,fragmentName: String) {
         val ft = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack(fragmentName)
         ft.commit()
     }
 }

@@ -158,8 +158,9 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             )
 
             val type: String = when (postRequest.type) {
-                NeedTypes.Clothes -> "Clothes"
+                NeedTypes.Cloth -> "Clothes"
                 NeedTypes.Food -> "Food"
+                NeedTypes.Drink -> "Drink"
                 NeedTypes.Shelter -> "Shelter"
                 NeedTypes.Medication -> "Medication"
                 NeedTypes.Transportation -> "Transportation"
