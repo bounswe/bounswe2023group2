@@ -3,6 +3,10 @@ from typing import Dict, Any, List
 from enum import Enum
 import datetime
 
+# Function to get current time in GMT+3
+def current_time_gmt3():
+    return datetime.datetime.now() + datetime.timedelta(hours=3)
+    
 class ConditionEnum(str, Enum):
     new = "new"
     used = "used"
@@ -31,8 +35,8 @@ class Resource(BaseModel):
     y: float = Field(default=0.0)
     active: bool = Field(default=True)
     occur_at: datetime.datetime = Field(default=None)
-    created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
-    last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    created_at: datetime.datetime = Field(default_factory=current_time_gmt3)
+    last_updated_at: datetime.datetime = Field(default_factory=current_time_gmt3)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
     actions_used: List[ActionHistory]= Field(default=None)
