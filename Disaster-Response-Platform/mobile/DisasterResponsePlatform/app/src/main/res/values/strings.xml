@@ -189,8 +189,20 @@
         <item>University</item>
     </string-array>
 
-    <string-array name="resource_empty_sub_types"></string-array>
     <string name="more">More</string>
     <string name="sort_filter">Sort\nFilter</string>
+    <string name="sf_title">Sort &amp; Filter</string>
+    <string name="sf_sort_by">Sort By:</string>
+    <string name="sf_types">Select a Type:</string>
+    <string name="sf_subtypes">Select Sub-Types:</string>
+    <string name="sf_cancel">Cancel</string>
+    <string name="sf_apply">Apply</string>
+    <string name="sf_date">Date</string>
+    <string name="sf_reliability">Reliability</string>
+    <string name="sf_urgency">Urgency</string>
+    <string name="sf_ascending">Ascending</string>
+    <string name="sf_descending">Descending</string>
+    <string name="sf_distance">Distance (0–1000 km):</string>
+    <string name="sf_sort_order">Sort Order:</string>
 
 </resources>
