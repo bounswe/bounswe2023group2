@@ -164,7 +164,8 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                             binding.btnSubmit.isEnabled = true
                         }, 200)
                     } else {
-                        Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
+                        if (isAdded)
+                            Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
                         binding.btnSubmit.isEnabled = true
                     }
                 }
