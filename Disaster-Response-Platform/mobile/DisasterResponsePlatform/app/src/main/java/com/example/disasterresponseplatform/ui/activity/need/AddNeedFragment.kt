@@ -68,7 +68,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
             binding.tvAddNeed.text = getString(R.string.edit_need)
             binding.btnSubmit.text = getString(R.string.save_changes)
             binding.spNeedType.setText(need.type)
-            binding.spNeedSubType.setText(need.details["Sub Type"])
+            binding.spNeedSubType.setText(need.details["subtype"])
             binding.etQuantity.editText?.setText(need.initialQuantity.toString())
             binding.etCoordinateX.editText?.setText(
                 String.format("%.2f", need.x).replace(',', '.')
@@ -123,7 +123,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
 
                 val subtypeAsLst = mutableListOf<NeedBody.DetailedFields>()
                 val subType = binding.spNeedSubType.text.toString().trim()
-                subtypeAsLst.add(NeedBody.DetailedFields("Sub Type",subType))
+                subtypeAsLst.add(NeedBody.DetailedFields("subtype",subType))
                 val detailedList = getDetailsList(subtypeAsLst)
                 val detailsMap = mutableMapOf<String, String>()
                 for (item in detailedList) {

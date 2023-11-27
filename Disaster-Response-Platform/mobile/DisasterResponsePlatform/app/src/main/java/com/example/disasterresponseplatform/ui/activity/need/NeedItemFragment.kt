@@ -54,7 +54,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         binding.tvUpvoteCount.text = need.upvote.toString()
         binding.tvDownVoteCount.text = need.downvote.toString()
         binding.tvDescription.text = need.description.toString()
-        binding.etSubType.text = need.details["Sub Type"]
+        binding.etSubType.text = need.details["subtype"]
         fillDetails(need.details)
         fillRecurrence(need)
     }
@@ -68,7 +68,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         val linearLayout = binding.layDetails
         // Loop through each key-value pair in the map
         for ((fieldName, value) in details) {
-            if (fieldName != "Sub Type"){
+            if (fieldName != "subtype"){
                 val textView = TextView(requireContext())
                 textView.text = "$fieldName: $value"
                 linearLayout.addView(textView)
