@@ -6,10 +6,7 @@ import Services.uprofile_SocMed_service as uprofile_SocMed_service
 from Services.build_API_returns import *
 import Services.authentication_service as authentication_service
 
-
-
 router = APIRouter()
-
 
 @router.get("/socialmedia-links", responses={
     status.HTTP_200_OK: {"model": UserSocialMediaLinks},
