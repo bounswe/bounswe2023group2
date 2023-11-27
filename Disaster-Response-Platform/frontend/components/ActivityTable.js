@@ -72,16 +72,20 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
     }
     return (
 
-        <div class="w-full overflow-x-auto shadow-md sm:rounded my-10">
-
-            <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} />
-
+        <div class="w-full">
+            <div className=' '>
             <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} />
             <Sort needFilter={needFilter} resourceFilter={resourceFilter} filterActivities={filterActivities}  setFilters={setFilters} filters={filters} />
+            </div>
+                
+            <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType= {resourceFilter ? "resources" :"needs"} />
+
             <Table
+            isHeaderSticky
                 selectionMode="single"
                 defaultSelectedKeys={["2"]}
                 aria-label="activity table"
+                className='flex w-full overflow-x-auto shadow-md sm:rounded my-10 max-h-[300px] overflow-scroll'
             >
                 <TableHeader>
                     <TableColumn>Type</TableColumn>
