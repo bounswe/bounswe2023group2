@@ -44,6 +44,14 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         arrangeView()
     }
 
+    /**
+     * It refresh the recycler view whenever returned this page (i.e after adding/editing/deleting item)
+     */
+    override fun onResume() {
+        super.onResume()
+        sendRequest()
+    }
+
     private fun arrangeView(){
         binding.btFilter.setOnClickListener {
             showFilterDialog()
@@ -119,7 +127,6 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
             arrangeRecyclerView(needResponse.needs)
         }
     }
-
 
     /**
      * Arrange recycler view and its adapter
