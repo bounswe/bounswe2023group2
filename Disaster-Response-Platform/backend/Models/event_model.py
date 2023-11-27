@@ -22,7 +22,7 @@ from datetime import date, datetime
 # - relatedActions: List<ActionIDs>
 # - relatedNeeds: List<NeedIDs>
 class EventTypesEnum(str, Enum):
-    new = "Debris"
+    debris = "Debris"
     infrastructure = "Infrastructure"
     disaster = "Disaster"
     helparrived = "Help-Arrived"
