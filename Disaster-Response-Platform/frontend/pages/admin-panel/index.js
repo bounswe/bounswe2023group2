@@ -37,7 +37,7 @@ export default function AdminPanel({ unauthorized, reports, userList, bannedList
                                 (
                                   {created_by: reporter, description, type, _id, "details": {reported_user_id: reported}}
                                 ) => (
-                                  {"key": _id, reporter, description, reported, "actions": <div class="flex">{banButton(_id, reported)}{dismissButton(_id)}</div>}
+                                  {"key": _id, "reporter": <Link href={`user/${reporter}`}>reporter</Link>, description, "reported": <Link href={`user/${reported}`}>reported</Link>, "actions": <div class="flex">{banButton(_id, reported)}{dismissButton(_id)}</div>}
                                 )
                               )
   );
@@ -47,7 +47,7 @@ export default function AdminPanel({ unauthorized, reports, userList, bannedList
                                     (
                                       {created_by: reporter, description, type, _id, "details": {reported_activity_id: reported}}
                                     ) => (
-                                      {"key": _id, reporter, description, reported, "actions": <div class="flex">{removeButton(_id, reported)}{dismissButton(_id)}</div>}
+                                      {"key": _id, "reporter": <Link href={`user/${reporter}`}>reporter</Link>, description, reported, "actions": <div class="flex">{removeButton(_id, reported)}{dismissButton(_id)}</div>}
                                     )
                                   )
   );
