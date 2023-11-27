@@ -59,6 +59,15 @@ class AddNeedFragment(
     ): View {
 
         binding = FragmentAddNeedBinding.inflate(inflater, container, false)
+        mapFunction()
+        fillParameters(need)
+        getFormFieldsFromBackend()
+        typeFieldListener()
+        submitNeed(need == null)
+        return binding.root
+    }
+
+    private fun mapFunction(){
         parentFragmentManager.setFragmentResultListener(
             "coordinatesKey",
             viewLifecycleOwner
@@ -123,11 +132,6 @@ class AddNeedFragment(
         binding.etCoordinate.setEndIconOnClickListener {
             navigateToMapFragment()
         }
-        fillParameters(need)
-        getFormFieldsFromBackend()
-        typeFieldListener()
-        submitNeed(need == null)
-        return binding.root
     }
 
     private fun navigateToMapFragment() {
@@ -150,12 +154,54 @@ class AddNeedFragment(
             binding.spNeedType.setText(need.type)
             binding.spNeedSubType.setText(need.details["subtype"])
             binding.etQuantity.editText?.setText(need.initialQuantity.toString())
+            coordinateToAddress()
+        }
+    }
 
-            coordinateToAddress(
-                selectedLocationX!!,
-                selectedLocationY!!,
-                object : okhttp3.Callback {
-                    override fun onFailure(call: okhttp3.Call, e: IOException) {
+    private fun coordinateToAddress(){
+        coordinateToAddress(
+            selectedLocationX!!,
+            selectedLocationY!!,
+            object : okhttp3.Callback {
+                override fun onFailure(call: okhttp3.Call, e: IOException) {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        binding.etCoordinate.editText?.setText(
+                            "%.2f, %.2f".format(
+                                selectedLocationX,
+                                selectedLocationY
+                            )
+                        )
+                    }
+                }
+
+                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body?.string()
+                        if (responseBody == null) {
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(
+                                    "%.2f, %.2f".format(
+                                        selectedLocationX,
+                                        selectedLocationY
+                                    )
+                                )
+                            }
+                        } else {
+                            var address = responseBody.subSequence(
+                                responseBody.indexOf("display_name") + 15,
+                                responseBody.length
+                            )
+                            address = address.subSequence(0, address.indexOf("\""))
+
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(address)
+                            }
+                        }
+                    } else {
+
                         val handler = Handler(Looper.getMainLooper())
                         handler.post {
                             binding.etCoordinate.editText?.setText(
@@ -166,50 +212,10 @@ class AddNeedFragment(
                             )
                         }
                     }
+                }
 
-                    override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                        if (response.isSuccessful) {
-                            val responseBody = response.body?.string()
-                            if (responseBody == null) {
-                                val handler = Handler(Looper.getMainLooper())
-                                handler.post {
-                                    binding.etCoordinate.editText?.setText(
-                                        "%.2f, %.2f".format(
-                                            selectedLocationX,
-                                            selectedLocationY
-                                        )
-                                    )
-                                }
-                            } else {
-                                var address = responseBody.subSequence(
-                                    responseBody.indexOf("display_name") + 15,
-                                    responseBody.length
-                                )
-                                address = address.subSequence(0, address.indexOf("\""))
-
-                                val handler = Handler(Looper.getMainLooper())
-                                handler.post {
-                                    binding.etCoordinate.editText?.setText(address)
-                                }
-                            }
-                        } else {
-
-                            val handler = Handler(Looper.getMainLooper())
-                            handler.post {
-                                binding.etCoordinate.editText?.setText(
-                                    "%.2f, %.2f".format(
-                                        selectedLocationX,
-                                        selectedLocationY
-                                    )
-                                )
-                            }
-                        }
-                    }
-
-                })
-        }
+            })
     }
-
 
     /**
      * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.

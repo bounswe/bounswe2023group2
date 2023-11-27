@@ -146,15 +146,15 @@ class MapFragment(
 
     private fun addResourceMarker(resourceItem: ResourceBody.ResourceItem) {
         if (isResourceValidLocation(resourceItem)) {
-            val point = GeoPoint(resourceItem.x!!.toDouble(), resourceItem.y!!.toDouble())
+            val point = GeoPoint(resourceItem.x.toDouble(), resourceItem.y.toDouble())
             val marker = Marker(mapView)
             marker.setInfoWindow(BubbleInfoView(mapView) {
-                addFragment(ResourceItemFragment(resourceViewModel, resourceItem.getResource()),"ResourceItemFragment")
+                addFragment(ResourceItemFragment(resourceViewModel, resourceItem),"ResourceItemFragment")
             })
             marker.id = resourceItem._id
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = resourceItem.getDescription()
+            marker.title = resourceItem.type
 
             // Apply a color filter to the default marker
             val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon

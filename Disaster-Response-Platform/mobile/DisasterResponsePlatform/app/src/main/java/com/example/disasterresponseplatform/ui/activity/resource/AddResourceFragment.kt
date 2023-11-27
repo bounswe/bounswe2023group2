@@ -22,6 +22,7 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
+import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
@@ -40,17 +41,18 @@ import okhttp3.Response
 import okhttp3.ResponseBody
 import okio.IOException
 import java.util.Calendar
+import kotlin.properties.Delegates
 
 class AddResourceFragment(
     private val resourceViewModel: ResourceViewModel,
-    private val resource: Resource?
+    private val resource: ResourceBody.ResourceItem?
 ) : Fragment(),
     OnCoordinatesSelectedListener {
 
     private lateinit var binding: FragmentAddResourceBinding
     private var requireActivity: FragmentActivity? = null
-    private var selectedLocationX: Double? = null
-    private var selectedLocationY: Double? = null
+    private var selectedLocationX by Delegates.notNull<Double>()
+    private var selectedLocationY by Delegates.notNull<Double>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,8 +68,8 @@ class AddResourceFragment(
             selectedLocationX = bundle.getDouble("x_coord")
             selectedLocationY = bundle.getDouble("y_coord")
             coordinateToAddress(
-                selectedLocationX!!,
-                selectedLocationY!!,
+                selectedLocationX,
+                selectedLocationY,
                 object : Callback {
                     override fun onFailure(call: Call, e: java.io.IOException) {
                         val handler = Handler(Looper.getMainLooper())
@@ -143,17 +145,19 @@ class AddResourceFragment(
      * It checks whether it is editResource by checking if resource is null, if it is not null then it should be edit form
      */
     @SuppressLint("SetTextI18n")
-    private fun fillParameters(resource: Resource?) {
+    private fun fillParameters(resource: ResourceBody.ResourceItem?) {
         if (resource != null) {
             binding.tvAddResource.text = getString(R.string.edit_resource)
             binding.btnSubmit.text = getString(R.string.save_changes)
             binding.spResourceType.setText(resource.type.toString())
             binding.spResourceSubType.setText(resource.details["subtype"])
-            binding.etQuantity.editText?.setText(resource.quantity.toString())
+            binding.etQuantity.editText?.setText(resource.currentQuantity.toString())
 
+            selectedLocationX = resource.x
+            selectedLocationY = resource.y
             coordinateToAddress(
-                selectedLocationX!!,
-                selectedLocationY!!,
+                selectedLocationX,
+                selectedLocationY,
                 object : Callback {
                     override fun onFailure(call: Call, e: java.io.IOException) {
                         val handler = Handler(Looper.getMainLooper())
@@ -231,12 +235,12 @@ class AddResourceFragment(
                 var occurAt: String? = ""
                 var recurrenceRate: Int? = null
                 var recurrenceDeadline: String? = ""
-                var urgency: Int = 1
+                var condition: String = "new"
                 for (field in othersList) {
                     Log.i("NEW VALUE", "fieldname: ${field.fieldName}")
                     when (field.fieldName) {
                         "Description" -> description = field.input
-                        "Urgency" -> urgency = field.input.toInt()
+                        "Condition" -> condition = field.input
                         "Occur At" -> occurAt = field.input
                         "Recurrence Rate" -> {
                             if (field.input.isNotEmpty())
@@ -249,11 +253,7 @@ class AddResourceFragment(
 
                 if (description == "") description = null
                 occurAt = if (occurAt == "") null else DateUtil.dateForBackend(occurAt!!)
-                recurrenceDeadline =
-                    if (recurrenceDeadline == "") null else DateUtil.dateForBackend(
-                        recurrenceDeadline!!
-                    )
-                Log.i("occurAt", "occurAt: $occurAt")
+                recurrenceDeadline = if (recurrenceDeadline == "") null else DateUtil.dateForBackend(recurrenceDeadline!!)
 
                 val subtypeAsLst = mutableListOf<ResourceBody.DetailedFields>()
                 val subType = binding.spResourceSubType.text.toString().trim()
@@ -272,9 +272,9 @@ class AddResourceFragment(
                 //val newResource = Resource(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
                 //resourceViewModel.insertResource(resource) insert local db
                 val resourcePost = ResourceBody.ResourceRequestBody(
-                    description, quantity, urgency, quantity, type2, detailsMap,
+                    description, quantity, quantity, type2, detailsMap,
                     coordinateX, coordinateY, occurAt, recurrenceRate, recurrenceDeadline
-                )
+                ) //TODO edit
 
                 if (isAdd) {
                     resourceViewModel.postResourceRequest(resourcePost)
@@ -286,38 +286,22 @@ class AddResourceFragment(
                     if (it != "-1") { // in error cases it returns this
                         if (isAdded) { // to ensure it attached a context
                             if (isAdd)
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Created Resource ID: $it",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                Toast.makeText(requireContext(), "Created Resource ID: $it", Toast.LENGTH_LONG).show()
                             else
-                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
                         }
 
                         Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                             if (isAdded) // to ensure it attached a parentFragmentManager
-                                parentFragmentManager.popBackStack(
-                                    "AddResourceFragment",
-                                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                                )
+                                parentFragmentManager.popBackStack("AddResourceFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                             if (!isAdd)
-                                parentFragmentManager.popBackStack(
-                                    "ResourceItemFragment",
-                                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                                )
+                                parentFragmentManager.popBackStack("ResourceItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                             // Re-enable the button after the background operation completes
                             binding.btnSubmit.isEnabled = true
                         }, 200)
                     } else {
                         if (isAdded)
-                            Toast.makeText(
-                                requireContext(),
-                                "Error Check Logs",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                            Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
                         binding.btnSubmit.isEnabled = true
                     }
                 }
@@ -494,18 +478,11 @@ class AddResourceFragment(
                                                     )
                                                     textInputLayout.hint = label
                                                     textInputLayout.isEndIconVisible = true
-                                                    textInputLayout.endIconMode =
-                                                        TextInputLayout.END_ICON_CLEAR_TEXT
-                                                    textInputLayout.layoutParams =
-                                                        LinearLayout.LayoutParams(
-                                                            LinearLayout.LayoutParams.MATCH_PARENT,
-                                                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                                                        )
+                                                    textInputLayout.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
+                                                    textInputLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
 
-                                                    val textInputEditText =
-                                                        TextInputEditText(textInputLayout.context)
-                                                    textInputEditText.inputType =
-                                                        InputType.TYPE_CLASS_NUMBER
+                                                    val textInputEditText = TextInputEditText(textInputLayout.context)
+                                                    textInputEditText.inputType = InputType.TYPE_CLASS_NUMBER
                                                     textInputLayout.addView(textInputEditText)
                                                     othersLayout.addView(textInputLayout)
                                                 }
@@ -515,82 +492,47 @@ class AddResourceFragment(
                                                 if (name == "type") {
                                                     // Create Spinner for select type
                                                     val options = field.options ?: emptyList()
-                                                    val optionsAdapter = ArrayAdapter(
-                                                        requireContext(),
-                                                        android.R.layout.simple_dropdown_item_1line,
-                                                        options
-                                                    )
+                                                    val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
                                                     val spResourceType = binding.spResourceType
                                                     spResourceType.setAdapter(optionsAdapter)
                                                 } else {
-                                                    val textInputLayout = TextInputLayout(
-                                                        requireContext(),
-                                                        null,
-                                                        R.attr.customDropDownStyle
-                                                    )
+                                                    val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customDropDownStyle)
                                                     textInputLayout.hint = label
                                                     textInputLayout.isEndIconVisible = true
-                                                    textInputLayout.endIconMode =
-                                                        TextInputLayout.END_ICON_DROPDOWN_MENU
+                                                    textInputLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
                                                     textInputLayout.layoutParams =
-                                                        LinearLayout.LayoutParams(
-                                                            LinearLayout.LayoutParams.MATCH_PARENT,
-                                                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                                                        )
+                                                        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
 
                                                     val materialAutoCompleteTextView =
-                                                        MaterialAutoCompleteTextView(
-                                                            textInputLayout.context
-                                                        )
-                                                    materialAutoCompleteTextView.inputType =
-                                                        InputType.TYPE_CLASS_TEXT
+                                                        MaterialAutoCompleteTextView(textInputLayout.context)
+                                                    materialAutoCompleteTextView.inputType = InputType.TYPE_CLASS_TEXT
 
-                                                    textInputLayout.addView(
-                                                        materialAutoCompleteTextView
-                                                    )
+                                                    textInputLayout.addView(materialAutoCompleteTextView)
                                                     othersLayout.addView(textInputLayout)
 
                                                     // Create Spinner for select type
                                                     val options = field.options ?: emptyList()
-                                                    val optionsAdapter = ArrayAdapter(
-                                                        requireContext(),
-                                                        android.R.layout.simple_dropdown_item_1line,
-                                                        options
-                                                    )
-                                                    materialAutoCompleteTextView.setAdapter(
-                                                        optionsAdapter
-                                                    )
+                                                    val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+                                                    materialAutoCompleteTextView.setAdapter(optionsAdapter)
                                                 }
                                             }
 
                                             else -> {
-                                                val textInputLayout = TextInputLayout(
-                                                    requireContext(),
-                                                    null,
-                                                    R.attr.customTextInputStyle
-                                                )
+                                                val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customTextInputStyle)
                                                 textInputLayout.hint = label
                                                 textInputLayout.isEndIconVisible = true
-                                                textInputLayout.endIconMode =
-                                                    TextInputLayout.END_ICON_CLEAR_TEXT
+                                                textInputLayout.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
                                                 textInputLayout.layoutParams =
-                                                    LinearLayout.LayoutParams(
-                                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                                                    )
-                                                val textInputEditText =
-                                                    TextInputEditText(textInputLayout.context)
+                                                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
+                                                val textInputEditText = TextInputEditText(textInputLayout.context)
                                                 when (field.type) {
                                                     "text" -> textInputEditText.inputType =
                                                         InputType.TYPE_CLASS_TEXT
 
                                                     "date" -> {
-                                                        textInputEditText.inputType =
-                                                            InputType.TYPE_NULL
+                                                        textInputEditText.inputType = InputType.TYPE_NULL
                                                         textInputEditText.setOnClickListener {
-                                                            showDatePickerDialog(
-                                                                textInputEditText
-                                                            )
+                                                            showDatePickerDialog(textInputEditText)
                                                         }
                                                     }
                                                 }
