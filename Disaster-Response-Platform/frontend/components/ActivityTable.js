@@ -83,31 +83,37 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
             <Table
             isHeaderSticky
                 selectionMode="single"
-                defaultSelectedKeys={["2"]}
                 aria-label="activity table"
-                className='flex w-full overflow-x-auto shadow-md sm:rounded my-10 max-h-[300px] overflow-scroll'
+                className='flex w-full overflow-x-auto shadow-md sm:rounded max-h-[300px] overflow-scroll'
             >
                 <TableHeader>
                     <TableColumn>Type</TableColumn>
                     <TableColumn>Location</TableColumn>
                     <TableColumn>Created by</TableColumn>
-                    <TableColumn>Details</TableColumn>
+                    <TableColumn>Created At</TableColumn>
+                    <TableColumn>Description</TableColumn>
+
                 </TableHeader>
                 <TableBody>
                     {resourceFilter && resources && resources.map((resource, index) => (
                         <TableRow key={index} onClick={()=>{setActivity(resource); onOpen()}} >
                             <TableCell>{resource.type}</TableCell>
-                            <TableCell>{resource.location}</TableCell>
+                            <TableCell>{resource.x} : {resource.y}</TableCell>
                             <TableCell>{resource.created_by}</TableCell>
-                            <TableCell>{resource.details.subtype ?? resource.details.tool_type}</TableCell>
+                            <TableCell>{resource.created_at}</TableCell>
+                            <TableCell>{resource.description}</TableCell>
+
+
                         </TableRow>
                     ))}
                     {needFilter && needs && needs.map((need, index) => (
                         <TableRow key={index} onClick={()=>{setActivity(need); onOpen()}}>
                             <TableCell>{need.type}</TableCell>
-                            <TableCell>{need.location}</TableCell>
+                            <TableCell>{need.x} : {need.y}</TableCell>
                             <TableCell>{need.created_by}</TableCell>
-                            <TableCell>{need.details.subtype ?? need.details.tool_type}</TableCell>
+                            <TableCell>{need.created_at}</TableCell>
+                            <TableCell>{need.description}</TableCell>
+                           
                         </TableRow>
                     ))}
                 </TableBody>
