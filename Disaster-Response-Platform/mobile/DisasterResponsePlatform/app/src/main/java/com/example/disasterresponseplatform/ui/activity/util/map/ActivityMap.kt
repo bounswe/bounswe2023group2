@@ -2,7 +2,9 @@ package com.example.disasterresponseplatform.ui.activity.util.map
 
 import android.Manifest
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -24,6 +26,8 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Overlay
+
+lateinit var mLocationManager: LocationManager
 
 interface OnCoordinatesSelectedListener {
     fun onCoordinatesSelected(x: Double, y: Double)
@@ -97,35 +101,32 @@ class ActivityMap : Fragment() {
     }
 
     private fun initializeMapWithLocation() {
-        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val locationProvider = LocationManager.GPS_PROVIDER
+        println("initialize map with location")
 
         try {
-            val lastKnownLocation = locationManager.getLastKnownLocation(locationProvider)
+            val lastKnownLocation = getLastKnownLocation()
+            val zoom: Double
             if (lastKnownLocation != null) {
                 selectedPoint = GeoPoint(lastKnownLocation.latitude, lastKnownLocation.longitude)
-                // Add a marker for the user's location
-                userLocationMarker = Marker(map)
-                userLocationMarker.position = selectedPoint!!
-                userLocationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                map.overlays.add(userLocationMarker)
+                zoom = 18.5
             } else {
-                selectedPoint = GeoPoint(48.8583, 2.2944) // Eiffel Tower
+                selectedPoint = GeoPoint(41.086105, 29.0440387) // Eiffel Tower
+                zoom = 9.5
             }
+            setUpMapView(zoom)
 
-            setUpMapView()
-        } catch (e: SecurityException) {
+        } catch (_: SecurityException) {
         }
     }
 
-    private fun setUpMapView() {
+    private fun setUpMapView(zoom: Double) {
         map = binding.map
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setBuiltInZoomControls(true)
         map.setMultiTouchControls(true)
 
         val mapController = map.controller
-        mapController.setZoom(9.5)
+        mapController.setZoom(zoom)
         mapController.setCenter(selectedPoint)
 
         marker = Marker(map)
@@ -159,18 +160,43 @@ class ActivityMap : Fragment() {
     }
 
 
-        override fun onResume() {
+    override fun onResume() {
         super.onResume()
-        map.onResume()
+        try {
+            map.onResume()
+        } catch (_: Exception) {}
+
     }
 
     override fun onPause() {
         super.onPause()
+        try {
         map.onPause()
+        } catch (_: Exception) {}
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun getLastKnownLocation(): Location? {
+        try {
+            mLocationManager =
+                requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
+            val providers: List<String> = mLocationManager.getProviders(true)
+            var bestLocation: Location? = null
+            for (provider in providers) {
+                val l: Location = mLocationManager.getLastKnownLocation(provider) ?: continue
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    bestLocation = l
+                }
+            }
+            return bestLocation
+        } catch (e: SecurityException) {
+            println("Security exception")
+            return null
+        }
     }
 }
