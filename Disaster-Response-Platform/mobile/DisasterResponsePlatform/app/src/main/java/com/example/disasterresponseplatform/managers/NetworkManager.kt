@@ -164,6 +164,13 @@ class NetworkManager {
                     }
                 }
             }
+            Endpoint.FORM_FIELDS_TYPE -> {
+                Log.d("RESPONSE", callback.toString())
+                id?.let {
+                    val call = api.getData("${endpoint.path}/$id", headers)
+                    call.enqueue(callback)
+                }
+            }
             else -> {
                 when (requestType) {
                     RequestType.GET -> {

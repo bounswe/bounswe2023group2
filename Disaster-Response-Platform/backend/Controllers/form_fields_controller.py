@@ -20,6 +20,11 @@ async def get_need_fields():
     form_fields = load_fields(FORM_FIELDS_FILE_PATH)
     return form_fields.get('need', {})
 
+@router.get("/action")
+async def get_need_fields():
+    form_fields = load_fields(FORM_FIELDS_FILE_PATH)
+    return form_fields.get('action', {})
+
 @router.get("/type/{type_name}")
 async def get_type_details(type_name: str):
     form_fields = load_fields(FORM_FIELDS_FILE_PATH)
