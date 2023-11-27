@@ -130,16 +130,16 @@ class MapFragment(
 
     private fun addNeedMarker(needItem: NeedBody.NeedItem) {
         if (isNeedValidLocation(needItem)) {
-            val point = GeoPoint(needItem.x!!.toDouble(), needItem.y!!.toDouble())
+            val point = GeoPoint(needItem.x, needItem.y)
             val marker = Marker(mapView)
             marker.setInfoWindow(BubbleInfoView(mapView, View.OnClickListener {
-                addFragment(NeedItemFragment(needViewModel, needItem.getNeed()))
+                addFragment(NeedItemFragment(needViewModel, needItem))
             }))
             marker.id = needItem._id
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = needItem.getDescription()
-            marker.subDescription = needItem.getSubDescription()
+            marker.title = needItem.type
+            marker.subDescription = needItem.details["Sub Type"]
             needClusterer.add(marker)
         }
     }

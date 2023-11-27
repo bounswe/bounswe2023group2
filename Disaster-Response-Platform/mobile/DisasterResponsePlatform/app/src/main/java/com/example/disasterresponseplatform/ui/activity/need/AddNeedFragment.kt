@@ -19,14 +19,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.databinding.FragmentAddNeedBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.utils.DateUtil
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.utils.DateUtil.Companion.dateForBackend
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -40,7 +38,7 @@ import retrofit2.Response
 import java.io.IOException
 import java.util.Calendar
 
-class AddNeedFragment(private val needViewModel: NeedViewModel, private val need: Need?) : Fragment() {
+class AddNeedFragment(private val needViewModel: NeedViewModel, private val need: NeedBody.NeedItem?) : Fragment() {
 
     private lateinit var binding: FragmentAddNeedBinding
     private var requireActivity: FragmentActivity? = null
@@ -59,6 +57,220 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
         return binding.root
     }
 
+
+
+    /** It fills the layout's fields corresponding data if it is editNeed
+     * It checks whether it is editNeed by checking if need is null, if it is not null then it should be edit form
+     */
+    @SuppressLint("SetTextI18n")
+    private fun fillParameters(need: NeedBody.NeedItem?) {
+        if (need != null) {
+            binding.tvAddNeed.text = getString(R.string.edit_need)
+            binding.btnSubmit.text = getString(R.string.save_changes)
+            binding.spNeedType.setText(need.type)
+            binding.spNeedSubType.setText(need.details["Sub Type"])
+            binding.etQuantity.editText?.setText(need.initialQuantity.toString())
+            binding.etCoordinateX.editText?.setText(
+                String.format("%.2f", need.x).replace(',', '.')
+            )
+            binding.etCoordinateY.editText?.setText(
+                String.format("%.2f", need.y).replace(',', '.')
+            )
+        }
+    }
+
+
+    /**
+     * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
+     */
+    private fun submitNeed(isAdd: Boolean) {
+        if (requireActivity == null) { // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
+
+        binding.btnSubmit.setOnClickListener {
+            if (!binding.btnSubmit.isEnabled) { // Prevent multiple clicks
+                return@setOnClickListener
+            }
+            binding.btnSubmit.isEnabled = false
+            val layAddNeed = binding.layAddNeed
+            if (validateFields(layAddNeed)) {
+
+                val othersList = getOthersList()
+                var description: String? = ""
+                var occurAt: String? = ""
+                var recurrenceRate: Int? = null
+                var recurrenceDeadline: String? = ""
+                var urgency: Int = 1
+                for (field in othersList){
+                    Log.i("NEW VALUE","fieldname: ${field.fieldName}")
+                    when(field.fieldName){
+                        "Description" -> description = field.input
+                        "Urgency" -> urgency = field.input.toInt()
+                        "Occur At" -> occurAt = field.input
+                        "Recurrence Rate" -> {
+                            if (field.input.isNotEmpty())
+                                recurrenceRate = field.input.toInt()
+                        }
+                        "Recurrence Deadline" -> recurrenceDeadline = field.input
+                    }
+                }
+
+                if (description == "") description = null
+                occurAt = if (occurAt == "") null else dateForBackend(occurAt!!)
+                recurrenceDeadline = if (recurrenceDeadline == "") null else dateForBackend(recurrenceDeadline!!)
+                Log.i("occurAt","occurAt: $occurAt")
+
+                val subtypeAsLst = mutableListOf<NeedBody.DetailedFields>()
+                val subType = binding.spNeedSubType.text.toString().trim()
+                subtypeAsLst.add(NeedBody.DetailedFields("Sub Type",subType))
+                val detailedList = getDetailsList(subtypeAsLst)
+                val detailsMap = mutableMapOf<String, String>()
+                for (item in detailedList) {
+                    detailsMap[item.fieldName] = item.input
+                }
+
+                val type2 = binding.spNeedType.text.toString().trim()
+                val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
+                val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
+                val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
+
+                //val newNeed = Need(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
+                //needViewModel.insertNeed(need) insert local db
+                val needPost = NeedBody.NeedRequestBody(description,quantity,urgency,quantity,type2,detailsMap,
+                coordinateX,coordinateY,occurAt,recurrenceRate,recurrenceDeadline)
+
+                if (isAdd) {
+                    needViewModel.postNeedRequest(needPost)
+                } else {
+                    val needID = "/" + need!!._id // comes from older need
+                    needViewModel.postNeedRequest(needPost, needID)
+                }
+                needViewModel.getLiveDataNeedID().observe(requireActivity!!) {
+                    if (it != "-1") { // in error cases it returns this
+                        if (isAdded) { // to ensure it attached a context
+                            if (isAdd)
+                                Toast.makeText(requireContext(), "Created Need ID: $it", Toast.LENGTH_LONG).show()
+                            else
+                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
+                        }
+
+                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                            if (isAdded) // to ensure it attached a parentFragmentManager
+                                parentFragmentManager.popBackStack("AddNeedFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            if (!isAdd)
+                                parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            // Re-enable the button after the background operation completes
+                            binding.btnSubmit.isEnabled = true
+                        }, 200)
+                    } else {
+                        Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
+                        binding.btnSubmit.isEnabled = true
+                    }
+                }
+            } else {
+                if (isAdded)
+                    Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
+                binding.btnSubmit.isEnabled = true
+            }
+        }
+    }
+
+    /**
+     * It gets the values from layout others and store them in a structured way with OtherFields in a list
+     */
+    private fun getOthersList(): MutableList<NeedBody.OtherFields>{
+        val otherList = mutableListOf<NeedBody.OtherFields>()
+        // Iterate through each child view in the layOthers layout
+        for (i in 0 until binding.layOthers.childCount) {
+            // Check the type of the child view
+            when (val childView = binding.layOthers.getChildAt(i)) {
+                is TextInputLayout -> {
+                    val editText = childView.editText
+                    if (editText != null) {
+                        val fieldName = editText.hint.toString()
+                        val userInput = editText.text.toString().trim()
+                        otherList.add(NeedBody.OtherFields(fieldName,userInput))
+                        // Use fieldName and userInput as needed
+                        Log.i("USER_INPUT", "Others Text Field: $fieldName, Value: $userInput")
+                    }
+                }
+                is MaterialAutoCompleteTextView -> {
+                    val fieldName = childView.hint.toString()
+                    val userInput = childView.text.toString().trim()
+                    otherList.add(NeedBody.OtherFields(fieldName,userInput))
+                    // Use fieldName and userInput as needed
+                    Log.i("USER_INPUT", "Others Material Field: $fieldName, Value: $userInput")
+                }
+                // Add additional cases for other view types as needed
+            }
+        }
+        return otherList
+    }
+
+    /**
+     * It gets the values from layout others and store them in a structured way with OtherFields in a list
+     * textInputEditText.inputType = when (field.type){
+    "text" ->  InputType.TYPE_CLASS_TEXT
+    "number" -> InputType.TYPE_CLASS_NUMBER
+    "date" ->  {
+    textInputEditText.setOnClickListener {
+    showDatePickerDialog(textInputEditText)
+    }
+    InputType.TYPE_NULL
+    }
+     */
+    private fun getDetailsList(detailsList: MutableList<NeedBody.DetailedFields>): MutableList<NeedBody.DetailedFields>{
+        // Iterate through each child view in the layOthers layout
+        for (i in 0 until binding.laySpecific.childCount) {
+            // Check the type of the child view
+            when (val childView = binding.laySpecific.getChildAt(i)) {
+                is TextInputLayout -> {
+                    val editText = childView.editText
+                    if (editText != null) {
+                        val fieldName = editText.hint.toString()
+                        var userInput = editText.text.toString().trim()
+                        if (editText.inputType == InputType.TYPE_NULL) userInput = dateForBackend(userInput)
+                        detailsList.add(NeedBody.DetailedFields(fieldName,userInput))
+                        // Use fieldName and userInput as needed
+                        Log.i("USER_INPUT", "Details Text Field: $fieldName, Value: $userInput")
+                    }
+                }
+                is MaterialAutoCompleteTextView -> {
+                    val fieldName = childView.hint.toString()
+                    val userInput = childView.text.toString().trim()
+                    detailsList.add(NeedBody.DetailedFields(fieldName,userInput))
+                    // Use fieldName and userInput as needed
+                    Log.i("USER_INPUT", "Details Material Field: $fieldName, Value: $userInput")
+                }
+                // Add additional cases for other view types as needed
+            }
+        }
+        return detailsList
+    }
+
+    private fun typeFieldListener(){
+        // Listener for Type field
+        val spNeedType = binding.spNeedType
+        spNeedType.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // This method is called before the text changes
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // This method is called when the text is changing
+                val newText = s.toString()
+                // Perform actions based on the changing text
+                // For example, update a list based on the entered text
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // This method is called after the text has changed
+                val selectedType = spNeedType.text.toString()
+                typeChanged(selectedType)
+            }
+        })
+    }
 
     /**
      * This function gets the form fields from backend and show them in Form dynamically
@@ -347,235 +559,6 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
             }
         }
     }
-
-    /** It fills the layout's fields corresponding data if it is editNeed
-     * It checks whether it is editNeed by checking if need is null, if it is not null then it should be edit form
-     */
-    @SuppressLint("SetTextI18n")
-    private fun fillParameters(need: Need?) {
-        if (need != null) {
-            binding.tvAddNeed.text = getString(R.string.edit_need)
-            binding.btnSubmit.text = getString(R.string.save_changes)
-            binding.spNeedType.setText(need.type.toString())
-            binding.spNeedSubType.setText(need.details)
-            binding.etQuantity.editText?.setText(need.quantity.toString())
-            binding.etCoordinateX.editText?.setText(
-                String.format("%.2f", need.coordinateX).replace(',', '.')
-            )
-            binding.etCoordinateY.editText?.setText(
-                String.format("%.2f", need.coordinateY).replace(',', '.')
-            )
-        }
-    }
-
-
-    /**
-     * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
-     */
-    private fun submitNeed(isAdd: Boolean) {
-        if (requireActivity == null) { // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
-
-        binding.btnSubmit.setOnClickListener {
-            if (!binding.btnSubmit.isEnabled) { // Prevent multiple clicks
-                return@setOnClickListener
-            }
-            binding.btnSubmit.isEnabled = false
-            val layAddNeed = binding.layAddNeed
-            if (validateFields(layAddNeed)) {
-                val type: NeedTypes =
-                    when (binding.boxNeedType.editText?.text.toString().trim()) {
-                        NeedTypes.Cloth.toString() -> NeedTypes.Cloth
-                        NeedTypes.Food.toString() -> NeedTypes.Food
-                        NeedTypes.Drink.toString() -> NeedTypes.Drink
-                        NeedTypes.Shelter.toString() -> NeedTypes.Shelter
-                        NeedTypes.Medication.toString() -> NeedTypes.Medication
-                        NeedTypes.Transportation.toString() -> NeedTypes.Transportation
-                        NeedTypes.Tools.toString() -> NeedTypes.Tools
-                        NeedTypes.Human.toString() -> NeedTypes.Human
-                        else -> NeedTypes.Other
-                    }
-
-                val othersList = getOthersList()
-                var description: String? = ""
-                var occurAt: String? = ""
-                var recurrenceRate: Int? = null
-                var recurrenceDeadline: String? = ""
-                var urgency: Int = 1
-                for (field in othersList){
-                    Log.i("NEW VALUE","fieldname: ${field.fieldName}")
-                    when(field.fieldName){
-                        "Description" -> description = field.input
-                        "Urgency" -> urgency = field.input.toInt()
-                        "Occur At" -> occurAt = field.input
-                        "Recurrence Rate" -> {
-                            if (field.input.isNotEmpty())
-                                recurrenceRate = field.input.toInt()
-                        }
-                        "Recurrence Deadline" -> recurrenceDeadline = field.input
-                    }
-                }
-
-                if (description == "") description = null
-                occurAt = if (occurAt == "") null else dateForBackend(occurAt!!)
-                recurrenceDeadline = if (recurrenceDeadline == "") null else dateForBackend(recurrenceDeadline!!)
-
-                val subtypeAsLst = mutableListOf<NeedBody.DetailedFields>()
-                val subType = binding.spNeedSubType.text.toString().trim()
-                subtypeAsLst.add(NeedBody.DetailedFields("Sub Type",subType))
-                val detailedList = getDetailsList(subtypeAsLst)
-                val detailsMap = mutableMapOf<String, String>()
-                for (item in detailedList) {
-                    detailsMap[item.fieldName] = item.input
-                }
-                
-                Log.i("DetailsDict",detailsMap.toString())
-                
-                val creatorName = DiskStorageManager.getKeyValue("username").toString()
-                val type2 = binding.spNeedType.text.toString().trim()
-                val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
-                val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
-                val date = DateUtil.getDate("dd-MM-yy").toString()
-
-                //val newNeed = Need(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
-                //needViewModel.insertNeed(need) insert local db
-                val needPost = NeedBody.NewNeedRequestBody(description,quantity,urgency,quantity,type2,detailsMap,
-                coordinateX,coordinateY,occurAt,recurrenceRate,recurrenceDeadline)
-
-                if (isAdd) {
-                    needViewModel.postNeedRequest(needPost)
-                } else {
-                    val needID = "/" + need!!.ID // comes from older need
-                    needViewModel.postNeedRequest(needPost, needID)
-                }
-                needViewModel.getLiveDataNeedID().observe(requireActivity!!) {
-                    if (it != "-1") { // in error cases it returns this
-                        if (isAdded) { // to ensure it attached a context
-                            if (isAdd)
-                                Toast.makeText(requireContext(), "Created Need ID: $it", Toast.LENGTH_LONG).show()
-                            else
-                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
-                        }
-
-                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                            if (isAdded) // to ensure it attached a parentFragmentManager
-                                parentFragmentManager.popBackStack("AddNeedFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                            if (!isAdd)
-                                parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                            // Re-enable the button after the background operation completes
-                            binding.btnSubmit.isEnabled = true
-                        }, 200)
-                    } else {
-                        Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
-                        binding.btnSubmit.isEnabled = true
-                    }
-                }
-            } else {
-                if (isAdded)
-                    Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
-                binding.btnSubmit.isEnabled = true
-            }
-        }
-    }
-
-    /**
-     * It gets the values from layout others and store them in a structured way with OtherFields in a list
-     */
-    private fun getOthersList(): MutableList<NeedBody.OtherFields>{
-        val otherList = mutableListOf<NeedBody.OtherFields>()
-        // Iterate through each child view in the layOthers layout
-        for (i in 0 until binding.layOthers.childCount) {
-            // Check the type of the child view
-            when (val childView = binding.layOthers.getChildAt(i)) {
-                is TextInputLayout -> {
-                    val editText = childView.editText
-                    if (editText != null) {
-                        val fieldName = editText.hint.toString()
-                        val userInput = editText.text.toString().trim()
-                        otherList.add(NeedBody.OtherFields(fieldName,userInput))
-                        // Use fieldName and userInput as needed
-                        Log.i("USER_INPUT", "Others Text Field: $fieldName, Value: $userInput")
-                    }
-                }
-                is MaterialAutoCompleteTextView -> {
-                    val fieldName = childView.hint.toString()
-                    val userInput = childView.text.toString().trim()
-                    otherList.add(NeedBody.OtherFields(fieldName,userInput))
-                    // Use fieldName and userInput as needed
-                    Log.i("USER_INPUT", "Others Material Field: $fieldName, Value: $userInput")
-                }
-                // Add additional cases for other view types as needed
-            }
-        }
-        return otherList
-    }
-
-    /**
-     * It gets the values from layout others and store them in a structured way with OtherFields in a list
-     * textInputEditText.inputType = when (field.type){
-    "text" ->  InputType.TYPE_CLASS_TEXT
-    "number" -> InputType.TYPE_CLASS_NUMBER
-    "date" ->  {
-    textInputEditText.setOnClickListener {
-    showDatePickerDialog(textInputEditText)
-    }
-    InputType.TYPE_NULL
-    }
-     */
-    private fun getDetailsList(detailsList: MutableList<NeedBody.DetailedFields>): MutableList<NeedBody.DetailedFields>{
-        // Iterate through each child view in the layOthers layout
-        for (i in 0 until binding.laySpecific.childCount) {
-            // Check the type of the child view
-            when (val childView = binding.laySpecific.getChildAt(i)) {
-                is TextInputLayout -> {
-                    val editText = childView.editText
-                    if (editText != null) {
-                        val fieldName = editText.hint.toString()
-                        var userInput = editText.text.toString().trim()
-                        if (editText.inputType == InputType.TYPE_NULL) userInput = dateForBackend(userInput)
-                        detailsList.add(NeedBody.DetailedFields(fieldName,userInput))
-                        // Use fieldName and userInput as needed
-                        Log.i("USER_INPUT", "Details Text Field: $fieldName, Value: $userInput")
-                    }
-                }
-                is MaterialAutoCompleteTextView -> {
-                    val fieldName = childView.hint.toString()
-                    val userInput = childView.text.toString().trim()
-                    detailsList.add(NeedBody.DetailedFields(fieldName,userInput))
-                    // Use fieldName and userInput as needed
-                    Log.i("USER_INPUT", "Details Material Field: $fieldName, Value: $userInput")
-                }
-                // Add additional cases for other view types as needed
-            }
-        }
-        return detailsList
-    }
-
-    private fun typeFieldListener(){
-        // Listener for Type field
-        val spNeedType = binding.spNeedType
-        spNeedType.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // This method is called before the text changes
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // This method is called when the text is changing
-                val newText = s.toString()
-                // Perform actions based on the changing text
-                // For example, update a list based on the entered text
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // This method is called after the text has changed
-                val selectedType = spNeedType.text.toString()
-                typeChanged(selectedType)
-            }
-        })
-    }
-
 
     private fun validateFields(layout: ViewGroup): Boolean {
         var isValid = true

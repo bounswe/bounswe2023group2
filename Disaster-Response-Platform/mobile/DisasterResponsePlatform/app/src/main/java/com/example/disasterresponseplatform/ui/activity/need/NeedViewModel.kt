@@ -55,35 +55,6 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResponse(): LiveData<NeedBody.NeedResponse> = liveDataResponse
 
-    fun createNeedList(needResponse: NeedBody.NeedResponse): List<Need> {
-        Log.d("createNeedList", "needResponse: $needResponse")
-        val currentList = needResponse.needs
-        Log.d("createNeedList", "currentList: $currentList")
-        val lst = mutableListOf<Need>()
-        currentList.forEach { responseItem ->
-            //Log.d("createNeedList", "responseItem: $responseItem")
-            //Log.d("createNeedList", "responseItemDetails: ${responseItem.details}")
-            val details = responseItem.returnDetailsAsString()
-            val needType = responseItem.returnNeedType()
-            val time = DateUtil.getDate("dd-MM-yy").toString()
-            val coordinateX = if (responseItem.x == null) 1.0 else responseItem.x.toDouble()
-            val coordinateY = if (responseItem.y == null) 1.0 else responseItem.y.toDouble()
-            val currentNeed = Need(
-                responseItem._id,
-                responseItem.created_by,
-                needType,
-                details,
-                time,
-                responseItem.initialQuantity,
-                coordinateX,
-                coordinateY,
-                responseItem.urgency
-            )
-            lst.add(currentNeed)
-        }
-        return lst.toList()
-    }
-
     fun sendGetAllRequest() {
         val headers = mapOf(
             "Content-Type" to "application/json"
@@ -106,23 +77,14 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                             try {
                                 Log.d("ResponseSuccess", "Body: $rawJson")
                                 val gson = Gson()
-                                val needResponse = gson.fromJson(
-                                    rawJson,
-                                    NeedBody.NeedResponse::class.java
-                                )
+                                val needResponse = gson.fromJson(rawJson, NeedBody.NeedResponse::class.java)
                                 if (needResponse != null) { // TODO check null
-                                    Log.d(
-                                        "ResponseSuccess",
-                                        "needResponse: $needResponse"
-                                    )
+                                    Log.d("ResponseSuccess", "needResponse: $needResponse")
                                     liveDataResponse.postValue(needResponse)
                                 }
                             } catch (e: IOException) {
                                 // Handle IOException if reading the response body fails
-                                Log.e(
-                                    "ResponseError",
-                                    "Error reading response body: ${e.message}"
-                                )
+                                Log.e("ResponseError", "Error reading response body: ${e.message}")
                             }
                         } else {
                             Log.d("ResponseSuccess", "Body is null")
@@ -150,7 +112,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     /**
      * It send POST or PUT request with respect to id, if there was an id it should be PUT
      */
-    fun postNeedRequest(postRequest: NeedBody.NewNeedRequestBody, id: String? = null) {
+    fun postNeedRequest(postRequest: NeedBody.NeedRequestBody, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
         Log.i("token", "Token $token")
         if (!token.isNullOrEmpty()) {
