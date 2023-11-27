@@ -3,7 +3,6 @@ from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 from pymongo import ASCENDING, DESCENDING
 from Services.build_API_returns import *
-from datetime import datetime
 from typing import Optional
 from datetime import datetime, timedelta
 
@@ -147,7 +146,7 @@ def update_resource(resource_id: str, resource: Resource) -> Resource:
             update_data['created_at'] = existing_resource['created_at']
 
         # Set 'last_updated_at' to the current time
-        update_data['last_updated_at'] = datetime.now()
+        update_data['last_updated_at'] = datetime.now() + timedelta(hours=3)
 
         resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": update_data})
 
@@ -168,7 +167,7 @@ def delete_resource(resource_id: str):
         raise ValueError(f"Resource {resource_id} cannot be deleted")
 
 def set_initial_quantity(resource_id: str, quantity: int) -> bool:
-    result = resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": {"initialQuantity": quantity, "last_updated_at": datetime.now()}})
+    result = resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": {"initialQuantity": quantity, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Resource id {resource_id} not found")
     return True
@@ -181,7 +180,7 @@ def get_initial_quantity(resource_id: str) -> int:
         raise ValueError(f"Resource id {resource_id} not found")
 
 def set_current_quantity(resource_id: str, quantity: int) -> bool:
-    result = resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": {"currentQuantity": quantity, "last_updated_at": datetime.now()}})
+    result = resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": {"currentQuantity": quantity, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Resource id {resource_id} not found")
     return True
@@ -194,7 +193,7 @@ def get_current_quantity(resource_id: str) -> int:
         raise ValueError(f"Resource id {resource_id} not found")
 
 def set_condition(resource_id: str, condition: ConditionEnum) -> bool:
-    result = resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": {"condition": condition.value, "last_updated_at": datetime.now()}})
+    result = resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set": {"condition": condition.value, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Resource id {resource_id} not found")
     return True

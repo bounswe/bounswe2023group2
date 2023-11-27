@@ -144,7 +144,7 @@ def update_need(need_id: str, need: Need) -> Need:
             update_data['created_at'] = existing_need['created_at']
 
         # Set 'last_updated_at' to the current time
-        update_data['last_updated_at'] = datetime.now()
+        update_data['last_updated_at'] = datetime.now() + timedelta(hours=3)
 
         needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": update_data})
 
@@ -165,7 +165,7 @@ def delete_need(need_id: str):
         raise ValueError(f"Need {need_id} cannot be deleted")    
     
 def set_initial_quantity(need_id: str, quantity: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"initialQuantity": quantity, "last_updated_at": datetime.now()}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"initialQuantity": quantity, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True
@@ -178,7 +178,7 @@ def get_initial_quantity(need_id: str) -> int:
         raise ValueError(f"Need id {need_id} not found")
     
 def set_unsupplied_quantity(need_id: str, quantity: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"unsuppliedQuantity": quantity, "last_updated_at": datetime.now()}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"unsuppliedQuantity": quantity, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True
@@ -191,7 +191,7 @@ def get_unsupplied_quantity(need_id: str) -> int:
         raise ValueError(f"Need id {need_id} not found")
     
 def set_urgency(need_id: str, urgency: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"urgency": urgency, "last_updated_at": datetime.now()}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"urgency": urgency, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True
