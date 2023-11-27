@@ -228,4 +228,7 @@ def unauthorize_user(username: str):
     {"$set": {"user_role": "GUEST"}}
     )    
     return True
-    
+
+def is_admin(username: str):
+    user = get_user(username)
+    return (user.user_role == user.user_role.ADMIN)
