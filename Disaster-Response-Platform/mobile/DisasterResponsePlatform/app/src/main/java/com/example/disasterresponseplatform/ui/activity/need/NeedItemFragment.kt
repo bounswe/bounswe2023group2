@@ -2,6 +2,8 @@ package com.example.disasterresponseplatform.ui.activity.need
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.NeedBody
@@ -19,6 +23,8 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 class NeedItemFragment(private val needViewModel: NeedViewModel, private val need: NeedBody.NeedItem) : Fragment() {
 
     private lateinit var binding: FragmentNeedItemBinding
+    private var requireActivity: FragmentActivity? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,12 +106,26 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         textView.layoutParams = layoutParams
     }
 
+    /**
+     * It arranges buttons, if user is authenticated and the creator of the item user can edit and delete
+     * else these buttons are gone
+     */
     private fun arrangeButtons(){
-        binding.btnEdit.setOnClickListener {
-            editNeed()
+        if (requireActivity == null) { // to handle error when user enters this page twice
+            requireActivity = requireActivity()
         }
-        binding.btnDelete.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+        val token = DiskStorageManager.getKeyValue("token")
+        val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
+        if (!token.isNullOrEmpty() and (username == need.created_by)) {
+            binding.btnEdit.setOnClickListener {
+                editNeed()
+            }
+            binding.btnDelete.setOnClickListener {
+                deleteNeed()
+            }
+        } else{
+            binding.btnDelete.visibility = View.GONE
+            binding.btnEdit.visibility = View.GONE
         }
         binding.btnNavigate.setOnClickListener {
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
@@ -121,8 +141,8 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         }
     }
 
-    /** This function is called whenever need is created or edited
-     * If it is created need should be null, else need should be the clicked item
+    /** This function is called when user wants to edit need
+     * If the creator of need and users match, user can edit need
      */
     private fun editNeed(){
         val token = DiskStorageManager.getKeyValue("token")
@@ -133,6 +153,34 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         }
         else{
             Toast.makeText(context, "You don't have enough authority to edit it!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /** This function is called when user wants to delete need
+     * If the creator of need and users match, user can delete need
+     */
+    private fun deleteNeed(){
+        val token = DiskStorageManager.getKeyValue("token")
+        val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
+        if (!token.isNullOrEmpty() and (username == need.created_by)) {
+            needViewModel.deleteNeed(need._id)
+            needViewModel.getLiveDataIsDeleted().observe(requireActivity!!){
+                if (isAdded) { // to ensure it attached a context
+                    if (it){
+                        Toast.makeText(context, "Successfully Deleted", Toast.LENGTH_SHORT).show()
+
+                    } else{
+                        Toast.makeText(context, "Cannot Deleted Check Logs", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                    if (isAdded) // to ensure it attached a parentFragmentManager
+                        parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                }, 200)
+            }
+        }
+        else{
+            Toast.makeText(context, "You don't have enough authority to delete it!", Toast.LENGTH_SHORT).show()
         }
     }
 

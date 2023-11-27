@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -189,5 +190,49 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
             )
         }
     }
+
+    private val liveDataIsDeleted = MutableLiveData<Boolean>()
+    // this is for updating LiveData, it can be observed from where it is called
+    fun getLiveDataIsDeleted(): LiveData<Boolean> = liveDataIsDeleted
+
+    /**
+     * It deletes need with respect to ID, if it deletes successful, it post a value into livedata to notify UI
+     */
+    fun deleteNeed(ID: String) {
+        val headers = mapOf(
+            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            "Content-Type" to "application/json"
+        )
+        val networkManager = NetworkManager()
+        networkManager.makeRequest(
+            endpoint = Endpoint.NEED,
+            requestType = RequestType.DELETE,
+            id = ID,
+            headers = headers,
+            callback = object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    // Handle failure when the request fails
+                }
+
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        liveDataIsDeleted.postValue(true)
+                    } else {
+                        liveDataIsDeleted.postValue(false)
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            Log.d("no", errorBody)
+                        }
+                    }
+                }
+            })
+    }
+
 
 }
