@@ -21,7 +21,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
 
             setResources(res.resources)
         } else {
-            toast.error("An unexpected error occurred while saving, please try again")
+            // toast.error("An unexpected error occurred while saving, please try again")
         }
     }
     const getNeeds = async () => {
@@ -93,7 +93,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
                         </TableRow>
                     ))}
                     {needFilter && needs && needs.map((need, index) => (
-                        <TableRow key={index}>
+                        <TableRow key={index} onClick={()=>{setActivity(need); onOpen()}}>
                             <TableCell>{need.type}</TableCell>
                             <TableCell>{need.location}</TableCell>
                             <TableCell>{need.created_by}</TableCell>
