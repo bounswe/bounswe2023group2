@@ -20,17 +20,20 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.enums.Endpoint
-import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.databinding.FragmentAddNeedBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
+import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.DateUtil.Companion.dateForBackend
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,10 +41,16 @@ import retrofit2.Response
 import java.io.IOException
 import java.util.Calendar
 
-class AddNeedFragment(private val needViewModel: NeedViewModel, private val need: NeedBody.NeedItem?) : Fragment() {
+class AddNeedFragment(
+    private val needViewModel: NeedViewModel,
+    private val need: NeedBody.NeedItem?
+) : Fragment(),
+    OnCoordinatesSelectedListener {
 
     private lateinit var binding: FragmentAddNeedBinding
     private var requireActivity: FragmentActivity? = null
+    private var selectedLocationX: Double? = null
+    private var selectedLocationY: Double? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +59,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
     ): View {
 
         binding = FragmentAddNeedBinding.inflate(inflater, container, false)
+        mapFunction()
         fillParameters(need)
         getFormFieldsFromBackend()
         typeFieldListener()
@@ -57,7 +67,81 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
         return binding.root
     }
 
+    private fun mapFunction(){
+        parentFragmentManager.setFragmentResultListener(
+            "coordinatesKey",
+            viewLifecycleOwner
+        ) { _, bundle ->
+            selectedLocationX = bundle.getDouble("x_coord")
+            selectedLocationY = bundle.getDouble("y_coord")
+            coordinateToAddress(
+                selectedLocationX!!,
+                selectedLocationY!!,
+                object : okhttp3.Callback {
+                    override fun onFailure(call: okhttp3.Call, e: IOException) {
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            binding.etCoordinate.editText?.setText(
+                                "%.2f, %.2f".format(
+                                    selectedLocationX,
+                                    selectedLocationY
+                                )
+                            )
+                        }
+                    }
 
+                    override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body?.string()
+                            if (responseBody == null) {
+                                val handler = Handler(Looper.getMainLooper())
+                                handler.post {
+                                    binding.etCoordinate.editText?.setText(
+                                        "%.2f, %.2f".format(
+                                            selectedLocationX,
+                                            selectedLocationY
+                                        )
+                                    )
+                                }
+                            } else {
+                                var address = responseBody.subSequence(
+                                    responseBody.indexOf("display_name") + 15,
+                                    responseBody.length
+                                )
+                                address = address.subSequence(0, address.indexOf("\""))
+                                val handler = Handler(Looper.getMainLooper())
+                                handler.post {
+                                    binding.etCoordinate.editText?.setText(address)
+                                }
+                            }
+                        } else {
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(
+                                    "%.2f, %.2f".format(
+                                        selectedLocationX,
+                                        selectedLocationY
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                })
+        }
+        binding.etCoordinate.setEndIconOnClickListener {
+            navigateToMapFragment()
+        }
+    }
+
+    private fun navigateToMapFragment() {
+        val mapFragment = ActivityMap()
+        mapFragment.coordinatesSelectedListener = this@AddNeedFragment
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, mapFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
 
     /** It fills the layout's fields corresponding data if it is editNeed
      * It checks whether it is editNeed by checking if need is null, if it is not null then it should be edit form
@@ -70,15 +154,68 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
             binding.spNeedType.setText(need.type)
             binding.spNeedSubType.setText(need.details["subtype"])
             binding.etQuantity.editText?.setText(need.initialQuantity.toString())
-            binding.etCoordinateX.editText?.setText(
-                String.format("%.2f", need.x).replace(',', '.')
-            )
-            binding.etCoordinateY.editText?.setText(
-                String.format("%.2f", need.y).replace(',', '.')
-            )
+            coordinateToAddress()
         }
     }
 
+    private fun coordinateToAddress(){
+        coordinateToAddress(
+            selectedLocationX!!,
+            selectedLocationY!!,
+            object : okhttp3.Callback {
+                override fun onFailure(call: okhttp3.Call, e: IOException) {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        binding.etCoordinate.editText?.setText(
+                            "%.2f, %.2f".format(
+                                selectedLocationX,
+                                selectedLocationY
+                            )
+                        )
+                    }
+                }
+
+                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body?.string()
+                        if (responseBody == null) {
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(
+                                    "%.2f, %.2f".format(
+                                        selectedLocationX,
+                                        selectedLocationY
+                                    )
+                                )
+                            }
+                        } else {
+                            var address = responseBody.subSequence(
+                                responseBody.indexOf("display_name") + 15,
+                                responseBody.length
+                            )
+                            address = address.subSequence(0, address.indexOf("\""))
+
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(address)
+                            }
+                        }
+                    } else {
+
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            binding.etCoordinate.editText?.setText(
+                                "%.2f, %.2f".format(
+                                    selectedLocationX,
+                                    selectedLocationY
+                                )
+                            )
+                        }
+                    }
+                }
+
+            })
+    }
 
     /**
      * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
@@ -102,9 +239,9 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                 var recurrenceRate: Int? = null
                 var recurrenceDeadline: String? = ""
                 var urgency: Int = 1
-                for (field in othersList){
-                    Log.i("NEW VALUE","fieldname: ${field.fieldName}")
-                    when(field.fieldName){
+                for (field in othersList) {
+                    Log.i("NEW VALUE", "fieldname: ${field.fieldName}")
+                    when (field.fieldName) {
                         "Description" -> description = field.input
                         "Urgency" -> urgency = field.input.toInt()
                         "Occur At" -> occurAt = field.input
@@ -112,18 +249,20 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                             if (field.input.isNotEmpty())
                                 recurrenceRate = field.input.toInt()
                         }
+
                         "Recurrence Deadline" -> recurrenceDeadline = field.input
                     }
                 }
 
                 if (description == "") description = null
                 occurAt = if (occurAt == "") null else dateForBackend(occurAt!!)
-                recurrenceDeadline = if (recurrenceDeadline == "") null else dateForBackend(recurrenceDeadline!!)
-                Log.i("occurAt","occurAt: $occurAt")
+                recurrenceDeadline =
+                    if (recurrenceDeadline == "") null else dateForBackend(recurrenceDeadline!!)
+                Log.i("occurAt", "occurAt: $occurAt")
 
                 val subtypeAsLst = mutableListOf<NeedBody.DetailedFields>()
                 val subType = binding.spNeedSubType.text.toString().trim()
-                subtypeAsLst.add(NeedBody.DetailedFields("subtype",subType))
+                subtypeAsLst.add(NeedBody.DetailedFields("subtype", subType))
                 val detailedList = getDetailsList(subtypeAsLst)
                 val detailsMap = mutableMapOf<String, String>()
                 for (item in detailedList) {
@@ -132,13 +271,15 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
 
                 val type2 = binding.spNeedType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
-                val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
+                val coordinateX = selectedLocationX
+                val coordinateY = selectedLocationY
 
                 //val newNeed = Need(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
                 //needViewModel.insertNeed(need) insert local db
-                val needPost = NeedBody.NeedRequestBody(description,quantity,urgency,quantity,type2,detailsMap,
-                coordinateX,coordinateY,occurAt,recurrenceRate,recurrenceDeadline)
+                val needPost = NeedBody.NeedRequestBody(
+                    description, quantity, urgency, quantity, type2, detailsMap,
+                    coordinateX, coordinateY, occurAt, recurrenceRate, recurrenceDeadline
+                )
 
                 if (isAdd) {
                     needViewModel.postNeedRequest(needPost)
@@ -150,22 +291,38 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                     if (it != "-1") { // in error cases it returns this
                         if (isAdded) { // to ensure it attached a context
                             if (isAdd)
-                                Toast.makeText(requireContext(), "Created Need ID: $it", Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Created Need ID: $it",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             else
-                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT)
+                                    .show()
                         }
 
                         Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                             if (isAdded) // to ensure it attached a parentFragmentManager
-                                parentFragmentManager.popBackStack("AddNeedFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                parentFragmentManager.popBackStack(
+                                    "AddNeedFragment",
+                                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                                )
                             if (!isAdd)
-                                parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                parentFragmentManager.popBackStack(
+                                    "NeedItemFragment",
+                                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                                )
                             // Re-enable the button after the background operation completes
                             binding.btnSubmit.isEnabled = true
                         }, 200)
                     } else {
                         if (isAdded)
-                            Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Error Check Logs",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
                         binding.btnSubmit.isEnabled = true
                     }
                 }
@@ -180,7 +337,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
     /**
      * It gets the values from layout others and store them in a structured way with OtherFields in a list
      */
-    private fun getOthersList(): MutableList<NeedBody.OtherFields>{
+    private fun getOthersList(): MutableList<NeedBody.OtherFields> {
         val otherList = mutableListOf<NeedBody.OtherFields>()
         // Iterate through each child view in the layOthers layout
         for (i in 0 until binding.layOthers.childCount) {
@@ -191,15 +348,16 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                     if (editText != null) {
                         val fieldName = editText.hint.toString()
                         val userInput = editText.text.toString().trim()
-                        otherList.add(NeedBody.OtherFields(fieldName,userInput))
+                        otherList.add(NeedBody.OtherFields(fieldName, userInput))
                         // Use fieldName and userInput as needed
                         Log.i("USER_INPUT", "Others Text Field: $fieldName, Value: $userInput")
                     }
                 }
+
                 is MaterialAutoCompleteTextView -> {
                     val fieldName = childView.hint.toString()
                     val userInput = childView.text.toString().trim()
-                    otherList.add(NeedBody.OtherFields(fieldName,userInput))
+                    otherList.add(NeedBody.OtherFields(fieldName, userInput))
                     // Use fieldName and userInput as needed
                     Log.i("USER_INPUT", "Others Material Field: $fieldName, Value: $userInput")
                 }
@@ -221,7 +379,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
     InputType.TYPE_NULL
     }
      */
-    private fun getDetailsList(detailsList: MutableList<NeedBody.DetailedFields>): MutableList<NeedBody.DetailedFields>{
+    private fun getDetailsList(detailsList: MutableList<NeedBody.DetailedFields>): MutableList<NeedBody.DetailedFields> {
         // Iterate through each child view in the layOthers layout
         for (i in 0 until binding.laySpecific.childCount) {
             // Check the type of the child view
@@ -231,16 +389,18 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                     if (editText != null) {
                         val fieldName = editText.hint.toString()
                         var userInput = editText.text.toString().trim()
-                        if (editText.inputType == InputType.TYPE_NULL) userInput = dateForBackend(userInput)
-                        detailsList.add(NeedBody.DetailedFields(fieldName,userInput))
+                        if (editText.inputType == InputType.TYPE_NULL) userInput =
+                            dateForBackend(userInput)
+                        detailsList.add(NeedBody.DetailedFields(fieldName, userInput))
                         // Use fieldName and userInput as needed
                         Log.i("USER_INPUT", "Details Text Field: $fieldName, Value: $userInput")
                     }
                 }
+
                 is MaterialAutoCompleteTextView -> {
                     val fieldName = childView.hint.toString()
                     val userInput = childView.text.toString().trim()
-                    detailsList.add(NeedBody.DetailedFields(fieldName,userInput))
+                    detailsList.add(NeedBody.DetailedFields(fieldName, userInput))
                     // Use fieldName and userInput as needed
                     Log.i("USER_INPUT", "Details Material Field: $fieldName, Value: $userInput")
                 }
@@ -250,11 +410,16 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
         return detailsList
     }
 
-    private fun typeFieldListener(){
+    private fun typeFieldListener() {
         // Listener for Type field
         val spNeedType = binding.spNeedType
         spNeedType.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
                 // This method is called before the text changes
             }
 
@@ -276,7 +441,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
     /**
      * This function gets the form fields from backend and show them in Form dynamically
      */
-    private fun getFormFieldsFromBackend(){
+    private fun getFormFieldsFromBackend() {
         val networkManager = NetworkManager()
         val headers = mapOf(
             "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
@@ -310,7 +475,10 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                                     NeedBody.NeedFormFieldsResponse::class.java
                                 )
                                 if (formFieldsNeedResponse != null) { // TODO check null
-                                    Log.d("ResponseSuccess", "formFieldsNeedResponse: $formFieldsNeedResponse")
+                                    Log.d(
+                                        "ResponseSuccess",
+                                        "formFieldsNeedResponse: $formFieldsNeedResponse"
+                                    )
 
                                     val othersLayout = binding.layOthers
                                     val fields: List<NeedBody.NeedFormFields> =
@@ -324,57 +492,110 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                                                 if (name == "x" || name == "y" || name == "initialQuantity" || name == "unsuppliedQuantity") {
                                                     // Pass
                                                 } else {
-                                                    val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customTextInputStyle)
+                                                    val textInputLayout = TextInputLayout(
+                                                        requireContext(),
+                                                        null,
+                                                        R.attr.customTextInputStyle
+                                                    )
                                                     textInputLayout.hint = label
                                                     textInputLayout.isEndIconVisible = true
-                                                    textInputLayout.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
-                                                    textInputLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
+                                                    textInputLayout.endIconMode =
+                                                        TextInputLayout.END_ICON_CLEAR_TEXT
+                                                    textInputLayout.layoutParams =
+                                                        LinearLayout.LayoutParams(
+                                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                        )
 
-                                                    val textInputEditText = TextInputEditText(textInputLayout.context)
-                                                    textInputEditText.inputType = InputType.TYPE_CLASS_NUMBER
+                                                    val textInputEditText =
+                                                        TextInputEditText(textInputLayout.context)
+                                                    textInputEditText.inputType =
+                                                        InputType.TYPE_CLASS_NUMBER
                                                     textInputLayout.addView(textInputEditText)
                                                     othersLayout.addView(textInputLayout)
                                                 }
                                             }
+
                                             "select" -> {
                                                 if (name == "type") {
                                                     // Create Spinner for select type
                                                     val options = field.options ?: emptyList()
-                                                    val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+                                                    val optionsAdapter = ArrayAdapter(
+                                                        requireContext(),
+                                                        android.R.layout.simple_dropdown_item_1line,
+                                                        options
+                                                    )
                                                     val spNeedType = binding.spNeedType
                                                     spNeedType.setAdapter(optionsAdapter)
                                                 } else {
-                                                    val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customDropDownStyle)
+                                                    val textInputLayout = TextInputLayout(
+                                                        requireContext(),
+                                                        null,
+                                                        R.attr.customDropDownStyle
+                                                    )
                                                     textInputLayout.hint = label
                                                     textInputLayout.isEndIconVisible = true
-                                                    textInputLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
-                                                    textInputLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
+                                                    textInputLayout.endIconMode =
+                                                        TextInputLayout.END_ICON_DROPDOWN_MENU
+                                                    textInputLayout.layoutParams =
+                                                        LinearLayout.LayoutParams(
+                                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                        )
 
-                                                    val materialAutoCompleteTextView = MaterialAutoCompleteTextView(textInputLayout.context)
-                                                    materialAutoCompleteTextView.inputType = InputType.TYPE_CLASS_TEXT
+                                                    val materialAutoCompleteTextView =
+                                                        MaterialAutoCompleteTextView(
+                                                            textInputLayout.context
+                                                        )
+                                                    materialAutoCompleteTextView.inputType =
+                                                        InputType.TYPE_CLASS_TEXT
 
-                                                    textInputLayout.addView(materialAutoCompleteTextView)
+                                                    textInputLayout.addView(
+                                                        materialAutoCompleteTextView
+                                                    )
                                                     othersLayout.addView(textInputLayout)
 
                                                     // Create Spinner for select type
                                                     val options = field.options ?: emptyList()
-                                                    val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
-                                                    materialAutoCompleteTextView.setAdapter(optionsAdapter)
+                                                    val optionsAdapter = ArrayAdapter(
+                                                        requireContext(),
+                                                        android.R.layout.simple_dropdown_item_1line,
+                                                        options
+                                                    )
+                                                    materialAutoCompleteTextView.setAdapter(
+                                                        optionsAdapter
+                                                    )
                                                 }
                                             }
+
                                             else -> {
-                                                val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customTextInputStyle)
+                                                val textInputLayout = TextInputLayout(
+                                                    requireContext(),
+                                                    null,
+                                                    R.attr.customTextInputStyle
+                                                )
                                                 textInputLayout.hint = label
                                                 textInputLayout.isEndIconVisible = true
-                                                textInputLayout.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
-                                                textInputLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
-                                                val textInputEditText = TextInputEditText(textInputLayout.context)
-                                                when(field.type){
-                                                    "text" -> textInputEditText.inputType = InputType.TYPE_CLASS_TEXT
+                                                textInputLayout.endIconMode =
+                                                    TextInputLayout.END_ICON_CLEAR_TEXT
+                                                textInputLayout.layoutParams =
+                                                    LinearLayout.LayoutParams(
+                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                    )
+                                                val textInputEditText =
+                                                    TextInputEditText(textInputLayout.context)
+                                                when (field.type) {
+                                                    "text" -> textInputEditText.inputType =
+                                                        InputType.TYPE_CLASS_TEXT
+
                                                     "date" -> {
-                                                        textInputEditText.inputType = InputType.TYPE_NULL
+                                                        textInputEditText.inputType =
+                                                            InputType.TYPE_NULL
                                                         textInputEditText.setOnClickListener {
-                                                            showDatePickerDialog(textInputEditText)
+                                                            showDatePickerDialog(
+                                                                textInputEditText
+                                                            )
                                                         }
                                                     }
                                                 }
@@ -464,7 +685,8 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                                         "ResponseSuccess",
                                         "formFieldsNeedResponse: $formFieldsNeedResponse"
                                     )
-                                    val fields: List<NeedBody.NeedFormFields> = formFieldsNeedResponse.fields
+                                    val fields: List<NeedBody.NeedFormFields> =
+                                        formFieldsNeedResponse.fields
                                     arrangeDynamicFields(fields)
                                 }
                             } catch (e: IOException) {
@@ -493,7 +715,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
     /**
      * This function arranges the form with respect to dynamic fields from backend
      */
-    private fun arrangeDynamicFields(fields: List<NeedBody.NeedFormFields>, ){
+    private fun arrangeDynamicFields(fields: List<NeedBody.NeedFormFields>) {
         val specificLayout = binding.laySpecific
         val spNeedSubType = binding.spNeedSubType
         for (field in fields) {
@@ -505,15 +727,23 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                     if (name == "subtype") {
                         // Create Spinner for select subtype
                         val options = field.options ?: emptyList()
-                        val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+                        val optionsAdapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            options
+                        )
                         spNeedSubType.setAdapter(optionsAdapter)
 
                     } else {
-                        val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customDropDownStyle)
+                        val textInputLayout =
+                            TextInputLayout(requireContext(), null, R.attr.customDropDownStyle)
                         textInputLayout.hint = label
                         textInputLayout.isEndIconVisible = true
                         textInputLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
-                        textInputLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
+                        textInputLayout.layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                        )
 
                         val materialAutoCompleteTextView =
                             MaterialAutoCompleteTextView(textInputLayout.context)
@@ -525,33 +755,46 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
 
                         // Create Spinner for select type
                         val options = field.options ?: emptyList()
-                        val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+                        val optionsAdapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            options
+                        )
                         materialAutoCompleteTextView.setAdapter(optionsAdapter)
                     }
                 }
+
                 else -> {
-                    val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customTextInputStyle)
+                    val textInputLayout =
+                        TextInputLayout(requireContext(), null, R.attr.customTextInputStyle)
                     textInputLayout.hint = label
                     textInputLayout.isEndIconVisible = true
                     textInputLayout.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
-                    textInputLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
+                    textInputLayout.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                    )
                     val textInputEditText = TextInputEditText(textInputLayout.context)
-                    textInputEditText.inputType = when (field.type){
-                        "text" ->  InputType.TYPE_CLASS_TEXT
+                    textInputEditText.inputType = when (field.type) {
+                        "text" -> InputType.TYPE_CLASS_TEXT
                         "number" -> InputType.TYPE_CLASS_NUMBER
-                        "date" ->  {
+                        "date" -> {
                             textInputEditText.setOnClickListener {
                                 showDatePickerDialog(textInputEditText)
                             }
                             InputType.TYPE_NULL
                         }
+
                         else -> InputType.TYPE_CLASS_TEXT
                     }
                     textInputEditText.onFocusChangeListener =
                         View.OnFocusChangeListener { _, hasFocus ->
                             if (!hasFocus) {
                                 // Handle user input here when focus is lost
-                                Log.i("ENTERED", "AA ${textInputEditText.text.toString().trim()}")
+                                Log.i(
+                                    "ENTERED",
+                                    "AA ${textInputEditText.text.toString().trim()}"
+                                )
                             }
                         }
                     textInputLayout.addView(textInputEditText)
@@ -571,7 +814,7 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
                 val editText = view.editText
                 if (editText != null) {
                     val hint = editText.hint
-                    if (hint != "Occur At" && hint != "Recurrence Rate" && hint != "Recurrence Deadline" && hint != "Description"){
+                    if (hint != "Occur At" && hint != "Recurrence Rate" && hint != "Recurrence Deadline" && hint != "Description") {
                         val text = editText.text.toString().trim()
                         if (text.isEmpty()) {
                             isValid = false
@@ -614,4 +857,25 @@ class AddNeedFragment(private val needViewModel: NeedViewModel, private val need
         datePickerDialog.show()
     }
 
+    override fun onCoordinatesSelected(x: Double, y: Double) {
+        //Log.d("YOOO x", x.toString())
+        //Log.d("YOOO y", y.toString())
+        // binding.etCoordinateY.editText?.setText("Test String")
+        //requireActivity().runOnUiThread {
+        //binding.etCoordinateX.editText!!.setText(String.format("%.2f", x).replace(',', '.'))
+        //binding.etCoordinateY.editText!!.setText(String.format("%.2f", y).replace(',', '.'))
+        //}
+    }
+
+}
+
+
+private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
+    val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+    val client = OkHttpClient()
+    val request = Request.Builder()
+        .url(url)
+        .get()
+        .build()
+    client.newCall(request).enqueue(callback)
 }

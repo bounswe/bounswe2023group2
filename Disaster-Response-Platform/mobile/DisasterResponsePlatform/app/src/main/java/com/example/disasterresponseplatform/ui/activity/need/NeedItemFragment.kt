@@ -145,42 +145,28 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
      * If the creator of need and users match, user can edit need
      */
     private fun editNeed(){
-        val token = DiskStorageManager.getKeyValue("token")
-        val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (!token.isNullOrEmpty() and (username == need.created_by)) {
-            val addNeedFragment = AddNeedFragment(needViewModel,need)
-            addFragment(addNeedFragment,"AddNeedFragment")
-        }
-        else{
-            Toast.makeText(context, "You don't have enough authority to edit it!", Toast.LENGTH_SHORT).show()
-        }
+        val addNeedFragment = AddNeedFragment(needViewModel,need)
+        addFragment(addNeedFragment,"AddNeedFragment")
     }
 
     /** This function is called when user wants to delete need
      * If the creator of need and users match, user can delete need
      */
     private fun deleteNeed(){
-        val token = DiskStorageManager.getKeyValue("token")
-        val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (!token.isNullOrEmpty() and (username == need.created_by)) {
-            needViewModel.deleteNeed(need._id)
-            needViewModel.getLiveDataIsDeleted().observe(requireActivity!!){
-                if (isAdded) { // to ensure it attached a context
-                    if (it){
-                        Toast.makeText(context, "Successfully Deleted", Toast.LENGTH_SHORT).show()
+        needViewModel.deleteNeed(need._id)
+        needViewModel.getLiveDataIsDeleted().observe(requireActivity!!){
+            if (isAdded) { // to ensure it attached a context
+                if (it){
+                    Toast.makeText(context, "Successfully Deleted", Toast.LENGTH_SHORT).show()
 
-                    } else{
-                        Toast.makeText(context, "Cannot Deleted Check Logs", Toast.LENGTH_SHORT).show()
-                    }
+                } else{
+                    Toast.makeText(context, "Cannot Deleted Check Logs", Toast.LENGTH_SHORT).show()
                 }
-                Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                    if (isAdded) // to ensure it attached a parentFragmentManager
-                        parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                }, 200)
             }
-        }
-        else{
-            Toast.makeText(context, "You don't have enough authority to delete it!", Toast.LENGTH_SHORT).show()
+            Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                if (isAdded) // to ensure it attached a parentFragmentManager
+                    parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            }, 200)
         }
     }
 

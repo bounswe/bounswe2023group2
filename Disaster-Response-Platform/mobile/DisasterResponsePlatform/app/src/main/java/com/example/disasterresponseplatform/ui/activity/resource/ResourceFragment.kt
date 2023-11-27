@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ResourceAdapter
 import com.example.disasterresponseplatform.data.database.resource.Resource
+import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.databinding.FragmentResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -114,8 +115,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         }
         resourceViewModel.sendGetAllRequest()
         resourceViewModel.getLiveDataResponse().observe(requireActivity!!){ resourceResponse ->
-            val lst = resourceViewModel.createResourceList(resourceResponse)
-            arrangeRecyclerView(lst)
+            arrangeRecyclerView(resourceResponse.resources)
         }
     }
 
@@ -123,7 +123,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
     /** Arrange recycler view and its adapter
      * Whenever an item is clicked, it make toast and opens edit resource page
      */
-    private fun arrangeRecyclerView(resourceList : List<Resource>){
+    private fun arrangeRecyclerView(resourceList : List<ResourceBody.ResourceItem>){
         val recyclerView = binding.recyclerViewResources
         if (recyclerView.layoutManager == null){
             val layoutManager = LinearLayoutManager(requireContext())
@@ -187,7 +187,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
      * It opens a resource page that contains details about it and users can edit, delete, upvote and downvote this item from this page
      * if they have the authority
      */
-    private fun openResourceItemFragment(resource: Resource){
+    private fun openResourceItemFragment(resource: ResourceBody.ResourceItem){
         val resourceItemFragment = ResourceItemFragment(resourceViewModel,resource)
         addFragment(resourceItemFragment,"ResourceItemFragment")
     }

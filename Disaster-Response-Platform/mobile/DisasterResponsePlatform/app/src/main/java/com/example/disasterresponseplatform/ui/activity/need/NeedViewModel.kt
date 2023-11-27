@@ -199,12 +199,12 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
      * It deletes need with respect to ID, if it deletes successful, it post a value into livedata to notify UI
      */
     fun deleteNeed(ID: String) {
-        val headers = mapOf(
-            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
-            "Content-Type" to "application/json"
-        )
-        val networkManager = NetworkManager()
-        networkManager.makeRequest(
+            val headers = mapOf(
+                "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+                "Content-Type" to "application/json"
+            )
+            val networkManager = NetworkManager()
+            networkManager.makeRequest(
             endpoint = Endpoint.NEED,
             requestType = RequestType.DELETE,
             id = ID,
