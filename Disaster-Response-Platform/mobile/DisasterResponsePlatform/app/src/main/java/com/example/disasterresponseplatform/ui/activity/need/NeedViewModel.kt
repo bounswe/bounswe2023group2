@@ -1,13 +1,13 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.Endpoint
-import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.repositories.NeedRepository
@@ -56,35 +56,6 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResponse(): LiveData<NeedBody.NeedResponse> = liveDataResponse
 
-    fun createNeedList(needResponse: NeedBody.NeedResponse): List<Need> {
-        Log.d("createNeedList", "needResponse: $needResponse")
-        val currentList = needResponse.needs
-        Log.d("createNeedList", "currentList: $currentList")
-        val lst = mutableListOf<Need>()
-        currentList.forEach { responseItem ->
-            //Log.d("createNeedList", "responseItem: $responseItem")
-            //Log.d("createNeedList", "responseItemDetails: ${responseItem.details}")
-            val details = responseItem.returnDetailsAsString()
-            val needType = responseItem.returnNeedType()
-            val time = DateUtil.getDate("dd-MM-yy").toString()
-            val coordinateX = if (responseItem.x == null) 1.0 else responseItem.x.toDouble()
-            val coordinateY = if (responseItem.y == null) 1.0 else responseItem.y.toDouble()
-            val currentNeed = Need(
-                responseItem._id,
-                responseItem.created_by,
-                needType,
-                details,
-                time,
-                responseItem.initialQuantity,
-                coordinateX,
-                coordinateY,
-                responseItem.urgency
-            )
-            lst.add(currentNeed)
-        }
-        return lst.toList()
-    }
-
     fun sendGetAllRequest() {
         val headers = mapOf(
             "Content-Type" to "application/json"
@@ -107,23 +78,14 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                             try {
                                 Log.d("ResponseSuccess", "Body: $rawJson")
                                 val gson = Gson()
-                                val needResponse = gson.fromJson(
-                                    rawJson,
-                                    NeedBody.NeedResponse::class.java
-                                )
+                                val needResponse = gson.fromJson(rawJson, NeedBody.NeedResponse::class.java)
                                 if (needResponse != null) { // TODO check null
-                                    Log.d(
-                                        "ResponseSuccess",
-                                        "needResponse: $needResponse"
-                                    )
+                                    Log.d("ResponseSuccess", "needResponse: $needResponse")
                                     liveDataResponse.postValue(needResponse)
                                 }
                             } catch (e: IOException) {
                                 // Handle IOException if reading the response body fails
-                                Log.e(
-                                    "ResponseError",
-                                    "Error reading response body: ${e.message}"
-                                )
+                                Log.e("ResponseError", "Error reading response body: ${e.message}")
                             }
                         } else {
                             Log.d("ResponseSuccess", "Body is null")
@@ -151,7 +113,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     /**
      * It send POST or PUT request with respect to id, if there was an id it should be PUT
      */
-    fun postNeedRequest(postRequest: Need, id: String? = null) {
+    fun postNeedRequest(postRequest: NeedBody.NeedRequestBody, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
         Log.i("token", "Token $token")
         if (!token.isNullOrEmpty()) {
@@ -160,30 +122,8 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                 "Content-Type" to "application/json"
             )
 
-            val type: String = when (postRequest.type) {
-                NeedTypes.Clothes -> "Clothes"
-                NeedTypes.Food -> "Food"
-                NeedTypes.Shelter -> "Shelter"
-                NeedTypes.Medication -> "Medication"
-                NeedTypes.Transportation -> "Transportation"
-                NeedTypes.Tools -> "Tools"
-                NeedTypes.Human -> "Human"
-                else -> "Other"
-            }
-
-
-            val needRequestBody = NeedBody.NeedRequestBody(
-                created_by = postRequest.creatorName,
-                initialQuantity = postRequest.quantity,
-                urgency = postRequest.urgency ?: 0,
-                unsuppliedQuantity = postRequest.quantity,
-                type = type,
-                details = NeedBody.Details(postRequest.details),
-                x = postRequest.coordinateX,
-                y = postRequest.coordinateY
-            )
             val gson = Gson()
-            val json = gson.toJson(needRequestBody)
+            val json = gson.toJson(postRequest)
             val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
 
             val requestType = if (id == null) RequestType.POST else RequestType.PUT
@@ -250,5 +190,49 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
             )
         }
     }
+
+    private val liveDataIsDeleted = MutableLiveData<Boolean>()
+    // this is for updating LiveData, it can be observed from where it is called
+    fun getLiveDataIsDeleted(): LiveData<Boolean> = liveDataIsDeleted
+
+    /**
+     * It deletes need with respect to ID, if it deletes successful, it post a value into livedata to notify UI
+     */
+    fun deleteNeed(ID: String) {
+        val headers = mapOf(
+            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            "Content-Type" to "application/json"
+        )
+        val networkManager = NetworkManager()
+        networkManager.makeRequest(
+            endpoint = Endpoint.NEED,
+            requestType = RequestType.DELETE,
+            id = ID,
+            headers = headers,
+            callback = object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    // Handle failure when the request fails
+                }
+
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        liveDataIsDeleted.postValue(true)
+                    } else {
+                        liveDataIsDeleted.postValue(false)
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            Log.d("no", errorBody)
+                        }
+                    }
+                }
+            })
+    }
+
 
 }

@@ -191,5 +191,6 @@
 
     <string-array name="resource_empty_sub_types"></string-array>
     <string name="more">More</string>
+    <string name="sort_filter">Sort\nFilter</string>
 
 </resources>
