@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
@@ -19,6 +21,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 class EventFragment : Fragment() {
 
     private lateinit var binding: FragmentEventBinding
+    private lateinit var searchView: SearchView
+    private var requireActivity: FragmentActivity? = null
     private val addEventFragment = AddEventFragment()
 
     override fun onCreateView(
@@ -40,7 +44,7 @@ class EventFragment : Fragment() {
         }
 
         binding.btAddEvent.setOnClickListener {
-            addFragment(addEventFragment)
+            addFragment(addEventFragment,"AddEventFragment")
         }
 
         val fab: ExtendedFloatingActionButton = binding.btAddEvent
@@ -89,10 +93,10 @@ class EventFragment : Fragment() {
         dialog.show()
     }
 
-    private fun addFragment(fragment: Fragment) {
+    private fun addFragment(fragment: Fragment, fragmentName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack(fragmentName)
         ft.commit()
     }
 }

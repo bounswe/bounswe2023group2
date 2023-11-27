@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.NeedAdapter
-import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
@@ -123,7 +122,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         if (requireActivity == null){ // to handle error when user enters this page twice
             requireActivity = requireActivity()
         }
-        needViewModel.sendGetAllRequest()
+        needViewModel.getAllNeedsBackend()
         needViewModel.getLiveDataResponse().observe(requireActivity!!){ needResponse ->
             arrangeRecyclerView(needResponse.needs)
         }

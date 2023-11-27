@@ -1,7 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.repositories.NeedRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
-import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +54,10 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResponse(): LiveData<NeedBody.NeedResponse> = liveDataResponse
 
-    fun sendGetAllRequest() {
+    /**
+     * This function get all needs from backend
+     */
+    fun getAllNeedsBackend() {
         val headers = mapOf(
             "Content-Type" to "application/json"
         )
