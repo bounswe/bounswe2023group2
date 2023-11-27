@@ -1,7 +1,8 @@
 import json
 from http import HTTPStatus
 
-from fastapi import APIRouter, HTTPException, Response, Depends, Body
+from fastapi import Query, APIRouter, HTTPException, Response, Depends, Body
+from typing import List, Optional
 from Models.resource_model import Resource, ConditionEnum, QuantityUpdate, ConditionUpdate
 import Services.resource_service as resource_service
 import Services.authentication_service as authentication_service
@@ -60,9 +61,38 @@ def get_resource(resource_id: str, response: Response):
 
 # Get all resources.
 @router.get("/")
-def get_all_resources(response: Response):
+def get_all_resources(
+    response: Response,
+    active: Optional[bool] = Query(None, description="Filter by active status"),
+    types: List[str] = Query(None, description="Filter by types of resources"),
+    subtypes: List[str] = Query(None, description="Filter by subtypes of resources"),
+    x: float = Query(None, description="X coordinate for distance calculation"),
+    y: float = Query(None, description="Y coordinate for distance calculation"),
+    distance_max: float = Query(None, description="Maximum distance for filtering"),
+    sort_by: str = Query('created_at', description="Field to sort by"),
+    order: Optional[str] = Query('asc', description="Sort order")
+):
+    if types:
+        types_list = types[0].split(',')
+    else:
+        types_list = []
+
+    if subtypes:
+        subtypes_list = subtypes[0].split(',')
+    else:
+        subtypes_list = []
+
     try:
-        resources = resource_service.get_resources()
+        resources = resource_service.get_resources(
+            active=active,
+            types=types_list,
+            subtypes=subtypes_list,
+            x=x,
+            y=y,
+            distance_max=distance_max,
+            sort_by=sort_by,
+            order=order
+        )
         response.status_code = HTTPStatus.OK
         return json.loads(resources)
     except ValueError as err:

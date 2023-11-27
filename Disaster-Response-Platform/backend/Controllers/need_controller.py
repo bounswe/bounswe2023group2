@@ -1,13 +1,12 @@
 import json
 from http import HTTPStatus
-
-from fastapi import APIRouter, HTTPException, Response, Depends
+from fastapi import APIRouter, HTTPException, Response, Depends, Query
 from Models.need_model import Need, QuantityUpdate,UrgencyUpdate
 import Services.need_service as need_service
 import Services.feedback_service as feedback_service
-
 import Services.authentication_service as authentication_service
 from Services.build_API_returns import create_json_for_error
+from typing import List, Optional
 
 router = APIRouter()
 
@@ -36,15 +35,39 @@ def get_need(need_id: str, response:Response):
     
 
 @router.get("/")
-def get_all_needs(response:Response):
+def get_all_needs(
+    response: Response,
+    active: Optional[bool] = Query(None, description="Filter by active status"),
+    types: List[str] = Query(None, description="Filter by types of needs"),
+    subtypes: List[str] = Query(None, description="Filter by subtypes of needs"),
+    sort_by: str = Query('created_at', description="Field to sort by"),
+    order: Optional[str] = Query('asc', description="Sort order")
+):
+
+    if types:
+        types_list = types[0].split(',')
+    else:
+        types_list = []
+
+    if subtypes:
+        subtypes_list = subtypes[0].split(',')
+    else:
+        subtypes_list = []
+
     try:
-        needs = need_service.get_needs()
+        needs = need_service.get_needs(
+            active=active,
+            types=types_list,
+            subtypes=subtypes_list,
+            sort_by=sort_by,
+            order=order
+        )
         response.status_code = HTTPStatus.OK
         return json.loads(needs)
     except ValueError as err:
         err_json = create_json_for_error("Need error", str(err))
-        response.status_code = HTTPStatus.NOT_FOUND
-        return json.loads(err_json)  
+        response.status_id = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
 
 @router.put("/{need_id}")
 def update_need(need_id: str, need: Need, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
