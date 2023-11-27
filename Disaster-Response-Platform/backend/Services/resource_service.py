@@ -20,10 +20,10 @@ r_id=0
 def create_resource(resource: Resource) -> str:
     global r_id
     # Manual validation for required fields during creation
-    if not all([resource.created_by, resource.condition,
-                resource.initialQuantity, resource.currentQuantity,
+    if not all([resource.created_by,
+                resource.initialQuantity is not None, resource.currentQuantity is not None,
                 resource.type, resource.details, resource.x is not None, resource.y is not None]):
-        raise ValueError("All fields are mandatory for creation.")
+        raise ValueError("All fields are mandatory for creation: created_by, initialQuantity, currentQuantity, type, details, x, y")
 
     validate_coordinates(resource.x, resource.y)
     validate_quantities(resource.initialQuantity, resource.currentQuantity)

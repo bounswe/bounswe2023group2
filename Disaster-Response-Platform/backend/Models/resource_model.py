@@ -6,7 +6,7 @@ import datetime
 # Function to get current time in GMT+3
 def current_time_gmt3():
     return datetime.datetime.now() + datetime.timedelta(hours=3)
-    
+
 class ConditionEnum(str, Enum):
     new = "new"
     used = "used"
@@ -23,7 +23,6 @@ class Resource(BaseModel):
     _id: str = Field(default=None)
     created_by: str = Field(default=None)
     description: str = Field(default=None)
-    condition: ConditionEnum = Field(default=None)
     initialQuantity: int = Field(default=None)
     currentQuantity: int = Field(default=None)
     type: str = Field(default=None)
