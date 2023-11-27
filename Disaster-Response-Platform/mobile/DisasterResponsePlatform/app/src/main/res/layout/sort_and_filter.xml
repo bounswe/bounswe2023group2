@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
-                android:text="@string/sf_reliability" />
+                android:text="@string/sf_upvote" />
 
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"

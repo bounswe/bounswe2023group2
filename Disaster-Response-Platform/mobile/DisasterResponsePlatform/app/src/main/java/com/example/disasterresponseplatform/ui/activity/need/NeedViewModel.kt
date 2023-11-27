@@ -56,7 +56,10 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResponse(): LiveData<NeedBody.NeedResponse> = liveDataResponse
 
-    fun sendGetAllRequest() {
+    fun sendGetAllRequest(
+        queries: MutableMap<String, String>? = null
+    ) {
+
         val headers = mapOf(
             "Content-Type" to "application/json"
         )
@@ -64,6 +67,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
             endpoint = Endpoint.NEED,
             requestType = RequestType.GET,
             headers = headers,
+            queries = queries,
             callback = object : Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,
@@ -71,7 +75,6 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                 ) {
                     Log.d("ResponseInfo", "Status Code: ${response.code()}")
                     Log.d("ResponseInfo", "Headers: ${response.headers()}")
-
                     if (response.isSuccessful) {
                         val rawJson = response.body()?.string()
                         if (rawJson != null) {
@@ -134,7 +137,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                 requestType = requestType,
                 headers = headers,
                 requestBody = requestBody,
-                id, // need's ID
+                id = id, // need's ID
                 callback = object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,
