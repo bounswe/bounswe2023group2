@@ -31,6 +31,7 @@ import com.example.disasterresponseplatform.data.models.usertypes.CredibleUser
 import com.example.disasterresponseplatform.data.models.usertypes.RoleBasedUser
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.authentication.LoginFragment
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import okhttp3.ResponseBody
@@ -66,7 +67,13 @@ class ProfileFragment : Fragment() {
             if (!DiskStorageManager.hasKey("token")) {
                 binding.profileLoginFirstText.visibility = View.VISIBLE
                 binding.profileProgressBar.visibility = View.GONE
+                replaceFragment(LoginFragment())
             } else {
+                binding.profileCallButton.text = "Log Out"
+                binding.profileCallButton.setOnClickListener {
+                    DiskStorageManager.removeKey("token")
+                    replaceFragment(LoginFragment())
+                }
                 user = AuthenticatedUser("","","","","")
                 val networkManager = NetworkManager()
                 val headers = mapOf(
@@ -107,6 +114,7 @@ class ProfileFragment : Fragment() {
                             } else {
                                 binding.profileLoginFirstText.visibility = View.VISIBLE
                                 binding.profileProgressBar.visibility = View.GONE
+                                replaceFragment(LoginFragment())
                             }
                         }
                     }
@@ -366,7 +374,17 @@ class ProfileFragment : Fragment() {
 //            clickButtons(tempUser)
 //            fillInformations(tempUser)
         } else {
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            binding.profileCallButton.setOnClickListener {
+                if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED ) {
+                    // Permission is granted, make the phone call
+                    var callIntent = Intent(Intent.ACTION_CALL)
+                    callIntent.data = Uri.parse("tel:"+binding.profilePhoneNumber.text.toString().replace(" ",""))
+                    startActivity(callIntent)
+                } else {
+                    // Permission is not granted, request the permission
+                    ActivityCompat.requestPermissions( requireActivity(), arrayOf(Manifest.permission.CALL_PHONE), 1 )
+                }
+            }
         }
     }
 
@@ -490,17 +508,6 @@ class ProfileFragment : Fragment() {
     }
 
     private fun clickButtons(user: AuthenticatedUser){
-        binding.profileCallButton.setOnClickListener {
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED ) {
-                // Permission is granted, make the phone call
-                var callIntent = Intent(Intent.ACTION_CALL)
-                callIntent.data = Uri.parse("tel:"+binding.profilePhoneNumber.text.toString().replace(" ",""))
-                startActivity(callIntent)
-            } else {
-                // Permission is not granted, request the permission
-                ActivityCompat.requestPermissions( requireActivity(), arrayOf(Manifest.permission.CALL_PHONE), 1 )
-            }
-        }
 
         binding.profileEditButton.setOnClickListener {
             addFragment(editProfileFragment, user)
@@ -517,4 +524,10 @@ class ProfileFragment : Fragment() {
         ft.commit()
     }
 
+    private fun replaceFragment(fragment: Fragment) {
+        parentFragmentManager.beginTransaction().apply {
+            replace(R.id.container, fragment) //replacing fragment
+            commit() //call signals to the FragmentManager that all operations have been added to the transaction
+        }
+    }
 }

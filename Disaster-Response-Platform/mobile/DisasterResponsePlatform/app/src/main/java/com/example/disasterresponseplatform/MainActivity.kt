@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         createViewModels()
         mapFragment = MapFragment(needViewModel, resourceViewModel, actionViewModel, eventViewModel, emergencyViewModel)
         navBarListener()
-        toggleListener()
+//        toggleListener()
         arrangeVisibility()
         initializeFragments()
 
