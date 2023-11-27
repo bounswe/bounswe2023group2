@@ -44,13 +44,6 @@ class ActivityMap : Fragment() {
     private lateinit var userLocationMarker: Marker
     var coordinatesSelectedListener: OnCoordinatesSelectedListener? = null
 
-    private fun someMethodWhereYouGetCoordinates(x: Double, y: Double) {
-        coordinatesSelectedListener?.onCoordinatesSelected(x, y)
-
-        // Optionally pop the Map Fragment from the stack to go back to Add Fragment
-        requireActivity().supportFragmentManager.popBackStack()
-    }
-
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
@@ -80,6 +73,11 @@ class ActivityMap : Fragment() {
             initializeMapWithLocation()
         } else {
             requestLocationPermissions()
+        }
+
+        binding.confirmButton.setOnClickListener {
+            coordinatesSelectedListener?.onCoordinatesSelected(marker.position.latitude, marker.position.longitude)
+            requireActivity().onBackPressed()
         }
     }
 
