@@ -63,7 +63,7 @@ export default function OtherProfile({ unauthorized, admin, main_info, optional_
           ? <OptionalInfo className="w-80" fields={optional_info_tr} />
           : null
         }
-        {visibility >= visibilityEnum.DEFAULT
+        {visibility >= visibilityEnum.ADMIN //temporary, change with visibilityEnum.DEFAULT when backend is properly updated
           ? (
             <div>
               <SkillList list={social.list} topic={social.topic} username={username} wide={visibility < visibilityEnum.ADMIN} noedit/>
