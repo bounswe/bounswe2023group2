@@ -8,14 +8,26 @@ from datetime import datetime, timedelta
 
 # Get the resources collection using the MongoDB class
 resources_collection = MongoDB.get_collection('resources')
+def validate_coordinates(x=None, y=None):
+    if (x is not None and ((x < -90 or x > 90)) or (y is not None and (y < -180 or y > 180))):
+        raise ValueError("X coordinates should be within -90 and 90, and y coordinates within -180 and 180")
+
+def validate_quantities(initial_quantity=None, currentQuantity=None):
+    if (initial_quantity is not None and (initial_quantity <= 0)) or (currentQuantity is not None and (currentQuantity <= 0)):
+        raise ValueError("Quantities can't be less than or equal to 0")   
+
 r_id=0
 def create_resource(resource: Resource) -> str:
     global r_id
     # Manual validation for required fields during creation
     if not all([resource.created_by,
                 resource.initialQuantity, resource.currentQuantity,
-                resource.type, resource.details, resource.x, resource.y]):
+                resource.type, resource.details, resource.x is not None, resource.y is not None]):
         raise ValueError("All fields are mandatory for creation.")
+
+    validate_coordinates(resource.x, resource.y)
+    validate_quantities(resource.initialQuantity, resource.currentQuantity)
+        
     
     if(resource.recurrence_rate!= None):
         if not all([resource.recurrence_deadline, resource.occur_at]):
@@ -31,8 +43,6 @@ def create_resource(resource: Resource) -> str:
         insert_result = resources_collection.insert_one(resource.dict())
  
 
-    
-    
     #check the result to change from
     if insert_result.inserted_id:
         return "{\"resources\":[{\"_id\":" + f"\"{insert_result.inserted_id}\"" + "}]}"
@@ -136,6 +146,12 @@ def update_resource(resource_id: str, resource: Resource) -> Resource:
     # Fetch the existing resource
     existing_resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
     if existing_resource:
+        
+        # Validate coordinates
+        validate_coordinates(resource.x, resource.y)
+
+        # Validate quantities
+        validate_quantities(resource.initialQuantity, resource.currentQuantity)
         if 'details' in resource.dict(exclude_none=True) and 'details' in existing_resource:
             resource.details = {**existing_resource['details'], **resource.dict(exclude_none=True)['details']}
 
