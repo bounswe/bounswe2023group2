@@ -10,7 +10,7 @@ class EntityTypeEnum(str, Enum):
 
 class Feedback(BaseModel):
     _id: str = Field(default=None)
-    entityType: str = Field(default=None)
+    entityType: EntityTypeEnum = Field(default=None)
     entityID: str = Field(default=None)
     username: str = Field(default=None)
     vote: str = Field(default=None)

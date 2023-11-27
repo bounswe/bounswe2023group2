@@ -2,7 +2,7 @@ import json
 from http import HTTPStatus
 
 from fastapi import APIRouter, HTTPException, Response, Depends
-from Models.report_model import Report
+from Models.report_model import *
 from Models.user_model import UserProfile
 import Services.report_service as report_service
 
@@ -74,4 +74,31 @@ def delete_report(report_id: str, response:Response, current_user: UserProfile =
         err_json = create_json_for_error("Report delete error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)    
-    
+
+@router.post("/reject/{report_id}")    
+def reject_report(report_id: str, response:Response, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+    try:
+        res = report_service.reject_report(report_id)
+        response.status_code=HTTPStatus.OK
+        # return
+        if not res:
+            raise ValueError(f"Report id {report_id} not rejected") 
+        return f'Report {report_id} rejected'
+    except ValueError as err:
+        err_json = create_json_for_error("Report reject error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+ 
+@router.post("/accept")        
+def accept_report(report: AcceptReport, response:Response, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+    try:
+        res = report_service.accept_report(report.report_id, report.report_type, report.report_type_id)
+        response.status_code=HTTPStatus.OK
+        # return json.loads(res)
+        if not res:
+            raise ValueError(f"Report id {report_id} not rejected") 
+        return f'Report {report.report_id} accepted'
+    except ValueError as err:
+        err_json = create_json_for_error("Report accept error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
