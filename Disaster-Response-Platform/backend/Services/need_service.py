@@ -25,9 +25,9 @@ def create_need(need: Need) -> str:
     global r_id
     # Manual validation for required fields during creation
     if not all([need.created_by, need.urgency, 
-                need.initialQuantity, need.unsuppliedQuantity, 
+                need.initialQuantity is not None, need.unsuppliedQuantity is not None, 
                 need.type, need.details, need.x is not None, need.y is not None]):
-        raise ValueError("All fields are mandatory for creation.")
+        raise ValueError("All fields are mandatory for creation: created_by, urgency, initialQuantity, unsuppliedQuantity, type, details, x, y")
 
     validate_coordinates(need.x, need.y)
     validate_quantities(need.initialQuantity, need.unsuppliedQuantity)
