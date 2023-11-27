@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +18,13 @@ import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
+import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.DateUtil
 import com.example.disasterresponseplatform.utils.StringUtil.Companion.generateRandomStringID
 
-class AddResourceFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource?) : Fragment() {
+class AddResourceFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource?) : Fragment(),
+    OnCoordinatesSelectedListener {
 
     private lateinit var binding: FragmentAddResourceBinding
     private var requireActivity: FragmentActivity? = null
@@ -30,12 +34,30 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        Log.d("Yooo on", "Damn")
         binding = FragmentAddResourceBinding.inflate(inflater, container, false)
+        parentFragmentManager.setFragmentResultListener("coordinatesKey", viewLifecycleOwner) { _, bundle ->
+            val x = bundle.getDouble("x_coord")
+            val y = bundle.getDouble("y_coord")
+            binding.etCoordinateX.editText?.setText(x.toString())
+            binding.etCoordinateY.editText?.setText(y.toString())
+        }
+        binding.etCoordinateX.setEndIconOnClickListener {
+            navigateToMapFragment()
+        }
         setUpResourceTypeSpinner()
         fillParameters(resource)
         submitResource(resource == null)
         return binding.root
+    }
+
+    private fun navigateToMapFragment() {
+        val mapFragment = ActivityMap()
+        mapFragment.coordinatesSelectedListener = this@AddResourceFragment
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, mapFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     /** It fills the layout's fields corresponding data if it is editResource
@@ -244,5 +266,15 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
             etQuantity.isErrorEnabled = false
             true
         }
+    }
+
+    override fun onCoordinatesSelected(x: Double, y: Double) {
+        //Log.d("YOOO x", x.toString())
+        //Log.d("YOOO y", y.toString())
+        // binding.etCoordinateY.editText?.setText("Test String")
+        //requireActivity().runOnUiThread {
+            //binding.etCoordinateX.editText!!.setText(String.format("%.2f", x).replace(',', '.'))
+            //binding.etCoordinateY.editText!!.setText(String.format("%.2f", y).replace(',', '.'))
+        //}
     }
 }
