@@ -136,7 +136,7 @@ class NetworkManager {
                             ?.enqueue(callback)
                     }
                     RequestType.DELETE -> {
-                        val call = api.deleteData(endpoint.path, headers)
+                        val call = api.deleteData(endpoint.path+"/"+id, headers)
                         call.enqueue(callback)
                     }
                 }
@@ -159,7 +159,7 @@ class NetworkManager {
                             ?.enqueue(callback)
                     }
                     RequestType.DELETE -> {
-                        val call = api.deleteData(endpoint.path, headers)
+                        val call = api.deleteData(endpoint.path+"/"+id, headers)
                         call.enqueue(callback)
                     }
                 }
@@ -195,7 +195,6 @@ class NetworkManager {
             }
         }
     }
-
 }
 interface ApiService {
 

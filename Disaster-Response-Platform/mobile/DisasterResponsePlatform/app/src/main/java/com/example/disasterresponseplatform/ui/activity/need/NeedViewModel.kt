@@ -84,7 +84,6 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         }
         return lst.toList()
     }
-
     fun sendGetAllRequest() {
         val headers = mapOf(
             "Content-Type" to "application/json"

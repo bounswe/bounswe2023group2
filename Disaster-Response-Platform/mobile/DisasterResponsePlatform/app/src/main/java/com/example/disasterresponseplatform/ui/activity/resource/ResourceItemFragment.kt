@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
+import com.example.disasterresponseplatform.data.enums.Endpoint
+import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.databinding.FragmentResourceItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.managers.NetworkManager
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource) : Fragment() {
 
@@ -43,7 +51,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             editResource()
         }
         binding.btnDelete.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            deleteResource()
         }
         binding.btnNavigate.setOnClickListener {
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
@@ -58,6 +66,44 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun deleteResource() {
+        val headers = mapOf(
+            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            "Content-Type" to "application/json"
+        )
+        var networkManager = NetworkManager()
+        networkManager.makeRequest(
+            endpoint = Endpoint.RESOURCE,
+            requestType = RequestType.DELETE,
+            id = resource.ID,
+            headers = headers,
+            callback = object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    // Handle failure when the request fails
+                }
+
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        Toast.makeText(context, "Successfully Deleted", Toast.LENGTH_SHORT).show()
+                        getFragmentManager()?.popBackStack()
+                    } else {
+                        Toast.makeText(context, "Not Authorized", Toast.LENGTH_SHORT).show()
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            Log.d("no", errorBody)
+                        }
+                    }
+                }
+            })
+    }
+
 
     /** This function is called whenever resource is created or edited
      * If it is created need should be null, else need should be the clicked item
