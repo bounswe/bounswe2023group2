@@ -52,9 +52,9 @@ class ResourceBody {
     ) {
         fun returnNeedType(): NeedTypes {
             val needType: NeedTypes = when (type.lowercase()) {
-                "cloth" -> NeedTypes.Clothes
-                "clothes" -> NeedTypes.Clothes
+                "cloth" -> NeedTypes.Cloth
                 "food" -> NeedTypes.Food
+                "drink" -> NeedTypes.Drink
                 "shelter" -> NeedTypes.Shelter
                 "medication" -> NeedTypes.Medication
                 "transportation" -> NeedTypes.Transportation

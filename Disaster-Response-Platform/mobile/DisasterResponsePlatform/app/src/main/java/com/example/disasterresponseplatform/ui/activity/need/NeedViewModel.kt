@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.Endpoint
-import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.repositories.NeedRepository
@@ -151,7 +150,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     /**
      * It send POST or PUT request with respect to id, if there was an id it should be PUT
      */
-    fun postNeedRequest(postRequest: Need, id: String? = null) {
+    fun postNeedRequest(postRequest: NeedBody.NewNeedRequestBody, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
         Log.i("token", "Token $token")
         if (!token.isNullOrEmpty()) {
@@ -160,30 +159,8 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                 "Content-Type" to "application/json"
             )
 
-            val type: String = when (postRequest.type) {
-                NeedTypes.Clothes -> "Clothes"
-                NeedTypes.Food -> "Food"
-                NeedTypes.Shelter -> "Shelter"
-                NeedTypes.Medication -> "Medication"
-                NeedTypes.Transportation -> "Transportation"
-                NeedTypes.Tools -> "Tools"
-                NeedTypes.Human -> "Human"
-                else -> "Other"
-            }
-
-
-            val needRequestBody = NeedBody.NeedRequestBody(
-                created_by = postRequest.creatorName,
-                initialQuantity = postRequest.quantity,
-                urgency = postRequest.urgency ?: 0,
-                unsuppliedQuantity = postRequest.quantity,
-                type = type,
-                details = NeedBody.Details(postRequest.details),
-                x = postRequest.coordinateX,
-                y = postRequest.coordinateY
-            )
             val gson = Gson()
-            val json = gson.toJson(needRequestBody)
+            val json = gson.toJson(postRequest)
             val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
 
             val requestType = if (id == null) RequestType.POST else RequestType.PUT

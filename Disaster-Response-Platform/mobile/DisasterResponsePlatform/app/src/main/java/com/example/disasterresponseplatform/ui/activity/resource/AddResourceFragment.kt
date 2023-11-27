@@ -128,8 +128,9 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
 
                 val type: NeedTypes =
                     when(binding.boxResourceType.editText?.text.toString().trim()){
-                        NeedTypes.Clothes.toString() -> NeedTypes.Clothes
+                        NeedTypes.Cloth.toString() -> NeedTypes.Cloth
                         NeedTypes.Food.toString() -> NeedTypes.Food
+                        NeedTypes.Drink.toString() -> NeedTypes.Drink
                         NeedTypes.Shelter.toString() -> NeedTypes.Shelter
                         NeedTypes.Medication.toString() -> NeedTypes.Medication
                         NeedTypes.Transportation.toString() -> NeedTypes.Transportation
