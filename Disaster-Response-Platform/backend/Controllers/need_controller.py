@@ -46,7 +46,6 @@ def get_all_needs(
     sort_by: str = Query('created_at', description="Field to sort by"),
     order: Optional[str] = Query('asc', description="Sort order")
 ):
-
     if types:
         types_list = types[0].split(',')
     else:
@@ -62,6 +61,9 @@ def get_all_needs(
             active=active,
             types=types_list,
             subtypes=subtypes_list,
+            x=x,
+            y=y,
+            distance_max=distance_max,
             sort_by=sort_by,
             order=order
         )

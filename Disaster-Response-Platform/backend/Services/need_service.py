@@ -69,6 +69,9 @@ def get_needs(
     need_id: str = None,
     active: Optional[bool] = None,
     types: list = None, 
+    x: float = None,
+    y: float = None,
+    distance_max: float = None,
     subtypes: list = None,
     sort_by: str = 'created_at',
     order: Optional[str] = 'asc'
