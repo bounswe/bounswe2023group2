@@ -163,7 +163,7 @@ def unverify_user(response:Response,user: UserUsername, current_user: UserProfil
         return json.loads(err_json)
 
 @router.put("/unauthorize")
-def unverify_user(response:Response,user: UserUsername, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+def unauthorize_user(response:Response,user: UserUsername, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
     try:
         unverified = authentication_service.unauthorize_user(user.username)
         response.status_code = HTTPStatus.OK
