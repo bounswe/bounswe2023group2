@@ -4,20 +4,33 @@ import { BiDislike, BiSolidDislike, BiSolidLike } from "react-icons/bi";
 import { BiLike } from "react-icons/bi";
 import Status from "./StatusBar";
 import Link from "next/link";
-export default function ActivityModal({ isOpen, onOpen, onOpenChange, activity }) {
+import { api } from "@/lib/apiUtils";
+export default function ActivityModal({ isOpen, onOpen, onOpenChange, activity, activityType }) {
   const [like, setLike] = React.useState(false);
   const [dislike, setDislike] = React.useState(false);
   const handleLike = async (e) => {
     try {
-      const result = await fetch(`/api/votes/`, {
+      if((e.voteType === 'like' && e.vote === true) || (e.voteType === 'dislike' && e.vote === false)){
+
+      const result = await fetch(`/api/vote/downvote`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
-        }, body: JSON.stringify({ _id: activity._id, voteType: e.voteType, vote: e.vote })
+        }, body: JSON.stringify({ entityID: activity._id, entityType: activityType })
       })
       const data = await result.json()
       console.log(data)
+    }
 
+    if((e.voteType === 'like' && e.vote === false) || (e.voteType === 'dislike' && e.vote === true)){ 
+        const result = await fetch(`/api/vote/upvote`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+          }, body: JSON.stringify({ entityID: activity._id, entityType: activityType  })
+        })
+        const data = await result.json()
+    }
     } catch (error) {
       console.log(error)
     }
@@ -74,7 +87,7 @@ export default function ActivityModal({ isOpen, onOpen, onOpenChange, activity }
                         icon: "",
                       }}
                     />
-                    {activity?.likes ?? 0}
+                    {activity?.downvote ?? 0}
                   </span>
                   <span className=" flex flex-row gap-1 items-center " >
                     <Avatar
@@ -86,7 +99,7 @@ export default function ActivityModal({ isOpen, onOpen, onOpenChange, activity }
                         icon: "",
                       }}
                     />
-                    {activity?.dislikes ?? 0}
+                    {activity?.upvote ?? 0}
                   </span>
                   </div>
                     <Link href={`/profile/${activity.created_by}`}>
