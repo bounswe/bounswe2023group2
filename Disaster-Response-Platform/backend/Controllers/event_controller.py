@@ -18,7 +18,7 @@ router = APIRouter()
 @router.post("/", responses={
     status.HTTP_200_OK: {"model": Events},
     status.HTTP_404_NOT_FOUND: {"model": Error},
-    status.HTTP_401_UNAUTHORIZED: {"model": Error}})
+    status.HTTP_403_FORBIDDEN: {"model": Error}})
 def create_event(event:Event, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         event.created_by_user = current_user
@@ -34,7 +34,7 @@ def create_event(event:Event, response:Response, current_user: str = Depends(aut
 @router.get("/{event_id}", responses={
     status.HTTP_200_OK: {"model": Events},
     status.HTTP_404_NOT_FOUND: {"model": Error},
-    status.HTTP_401_UNAUTHORIZED: {"model": Error}
+    status.HTTP_403_FORBIDDEN: {"model": Error}
 })
 def get_event(event_id: str, response: Response):
     try:
@@ -50,7 +50,7 @@ def get_event(event_id: str, response: Response):
 @router.get("/", responses={
     status.HTTP_200_OK: {"model": Events},
     status.HTTP_404_NOT_FOUND: {"model": Error},
-    status.HTTP_401_UNAUTHORIZED: {"model": Error}})
+    status.HTTP_403_FORBIDDEN: {"model": Error}})
 def get_all_events(response: Response):
     try:
         events = event_service.get_events()
@@ -65,7 +65,7 @@ def get_all_events(response: Response):
 @router.patch("/{event_id}", responses={
     status.HTTP_200_OK: {"model": Events},
     status.HTTP_404_NOT_FOUND: {"model": Error},
-    status.HTTP_401_UNAUTHORIZED: {"model": Error}})
+    status.HTTP_403_FORBIDDEN: {"model": Error}})
 def update_event(event_id: str, event:Event, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         updated_event = event_service.update_event(event_id, event)
@@ -84,7 +84,7 @@ def update_event(event_id: str, event:Event, response:Response, current_user: st
 @router.delete("/{event_id}", responses={
     status.HTTP_200_OK: {"model": EventKeys},
     status.HTTP_404_NOT_FOUND: {"model": Error},
-    status.HTTP_401_UNAUTHORIZED: {"model": Error}})
+    status.HTTP_403_FORBIDDEN: {"model": Error}})
 def delete_event(event_id: str, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         event_list = event_service.delete_event(event_id)
