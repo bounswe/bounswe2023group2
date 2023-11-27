@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import android.view.ViewGroup.LayoutParams
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +36,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNeedBinding.inflate(inflater,container,false)
+        sendRequest()
         return binding.root
     }
 
