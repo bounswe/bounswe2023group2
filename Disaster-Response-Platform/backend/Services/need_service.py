@@ -1,8 +1,9 @@
 from Models.need_model import Need
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
-
 from Services.build_API_returns import *
+from pymongo import ASCENDING, DESCENDING
+from typing import Optional
 from datetime import datetime, timedelta
 
 # Get the needs collection using the MongoDB class
@@ -64,7 +65,14 @@ def create_recurrent_needs(need:Need):
     return insert_ids
     
 
-def get_needs(need_id:str = None) -> list[dict]:
+def get_needs(
+    need_id: str = None,
+    active: Optional[bool] = None,
+    types: list = None, 
+    subtypes: list = None,
+    sort_by: str = 'created_at',
+    order: Optional[str] = 'asc'
+) -> list[dict]:
     projection = {
             "_id": {"$toString": "$_id"},
             "created_by": 1,
@@ -79,27 +87,35 @@ def get_needs(need_id:str = None) -> list[dict]:
             "recurrence_deadline": 1,
             "x": 1,
             "y": 1,
+            "active": 1,
             "occur_at": 1,
             "created_at": 1,
-            "last_updated_at": 1
+            "last_updated_at": 1,
+            "upvote": 1,
+            "downvote": 1
+            # Add other fields if necessary
         }
     
-    if (need_id is None):
-        query = {}
-    else:
-        if (ObjectId.is_valid(need_id)):
+    sort_order = ASCENDING if order == 'asc' else DESCENDING
+    query = {}
+    
+    if need_id:
+        if ObjectId.is_valid(need_id):
             query = {"_id": ObjectId(need_id)}
         else:
             raise ValueError(f"Need id {need_id} is invalid")
+    else:
+        if active is not None:
+            query['active'] = active
+        if types:
+            query['type'] = {'$in': types}
+        if subtypes:
+            query['details.subtype'] = {'$in': subtypes}
 
-    needs_data = needs_collection.find(query, projection)
+    needs_cursor = needs_collection.find(query, projection).sort(sort_by, sort_order)
+    needs_data = list(needs_cursor)
 
-    if (needs_data.explain()["executionStats"]["nReturned"] == 0):
-        if need_id is None:
-            need_id = ""
-        raise ValueError(f"Need {need_id} does not exist")
-
-    # Convert and format datetime fields
+    # Formatting datetime fields
     formatted_needs_data = []
     for need in needs_data:
         if 'created_at' in need:
