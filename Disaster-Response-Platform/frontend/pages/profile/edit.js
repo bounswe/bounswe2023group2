@@ -94,7 +94,7 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
                     'required': false}))}
             <div key='private_account' class="my-3">
               <input name='private_account' id='private_account' type='checkbox' defaultChecked={checked} onChange={() => setChecked((state) => !state)} />
-              <label htmlFor='private_account' class="ml-2">İletişim bilgileri gizlensin</label>
+              <label htmlFor='private_account' class="ml-2">İletişim bilgileri ve yan bilgiler gizlensin</label>
             </div>
           </GrayBox>
           <GrayBox className="w-96">

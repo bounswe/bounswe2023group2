@@ -28,29 +28,29 @@ export default function OtherProfile({ unauthorized, admin, main_info, optional_
   }
 
   const visibilityEnum = {
-    MINIMAL: 0,
-    CONTACT: 1,
-    ALL: 2
+    PRIVATE: 0,
+    DEFAULT: 1,
+    ADMIN: 2
   }
 
   let visibility = (admin
-                    ? visibilityEnum.ALL
+                    ? visibilityEnum.ADMIN
                     : main_info.private_account
-                      ? visibilityEnum.MINIMAL
-                      : visibilityEnum.CONTACT);
+                      ? visibilityEnum.PRIVATE
+                      : visibilityEnum.DEFAULT);
 
 
   const username = router.query.username;
   const {professions, languages, "socialmedia-links": social, skills} = list_info;
   const dictionary_tr = {
-  "username": "Kullanıcı Adı",
-  "date_of_birth": "Doğum Tarihi",
-  "nationality": "Ülke",
-  "identity_number": "Kimlik No",
-  "education": "Öğrenim",
-  "health_condition": "Sağlık Durumu",
-  "blood_type": "Kan Grubu",
-  "Address": "Adres"
+    "username": "Kullanıcı Adı",
+    "date_of_birth": "Doğum Tarihi",
+    "nationality": "Ülke",
+    "identity_number": "Kimlik No",
+    "education": "Öğrenim",
+    "health_condition": "Sağlık Durumu",
+    "blood_type": "Kan Grubu",
+    "Address": "Adres"
   }
   const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val]);
   optional_info_tr.sort();
@@ -58,17 +58,22 @@ export default function OtherProfile({ unauthorized, admin, main_info, optional_
   <>
     <main>
       <div class="flex justify-around space-x-8">
-        <MainInfo className="w-60" info={main_info} onOpen={onOpen} contact={visibility >= visibilityEnum.CONTACT} report/>
-        {visibility >= visibilityEnum.ALL
+        <MainInfo className={visibility >= visibilityEnum.ADMIN ? "w-60" : "w-64"} info={main_info} onOpen={onOpen} contact={visibility >= visibilityEnum.DEFAULT} report/>
+        {visibility >= visibilityEnum.ADMIN
           ? <OptionalInfo className="w-80" fields={optional_info_tr} />
           : null
         }
-        <div>
-          <SkillList list={social.list} topic={social.topic} username={username} noedit/>
-          <SkillList list={skills.list} topic={skills.topic} username={username} noedit/>
-          <SkillList list={languages.list} topic={languages.topic} username={username} noedit/>
-          <SkillList list={professions.list} topic={professions.topic} username={username} noedit/>
-        </div>
+        {visibility >= visibilityEnum.DEFAULT
+          ? (
+            <div>
+              <SkillList list={social.list} topic={social.topic} username={username} wide={visibility < visibilityEnum.ADMIN} noedit/>
+              <SkillList list={skills.list} topic={skills.topic} username={username} wide={visibility < visibilityEnum.ADMIN} noedit/>
+              <SkillList list={languages.list} topic={languages.topic} username={username} wide={visibility < visibilityEnum.ADMIN} noedit/>
+              <SkillList list={professions.list} topic={professions.topic} username={username} wide={visibility < visibilityEnum.ADMIN} noedit/>
+            </div>
+          )
+          : null
+        }
       </div>
       <ActivityTable />
       <ReportModal isOpen={isOpen} onOpenChange={onOpenChange} reported={username}/>
@@ -156,7 +161,7 @@ export const getServerSideProps = withIronSessionSsr(
       list_info[topic.api_url] = {"list": fields ? fields : [], "topic": topic};
     }
 
-    const admin = true;
+    const admin = false;
 
     return {
       props: {
