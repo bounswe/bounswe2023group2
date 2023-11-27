@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
+import { useState } from "react";
 
 export default function Edit({ guest, expired, current_main_fields, current_optional_fields, accessToken }) {
 
   const router = useRouter();
+  const [checked, setChecked] = useState(current_main_fields.private_account);
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -20,13 +22,14 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
     }
     let mainData = {}, optionalData = {};
     for (let [key, val] of Object.entries(formData)) {
-      if (val === "" || val === current_main_fields[key] || val === current_optional_fields[key]) continue;
+      if (key === "private_account" || val === "" || val === current_main_fields[key] || val === current_optional_fields[key]) continue;
         if (["first_name", "last_name", "email", "phone_number"].includes(key)) {
           mainData[key] = val;
         } else {
           optionalData[key] = val;
         }
     }
+    mainData.private_account = "private_account" in formData
 
     if (Object.keys(mainData).length > 0) {
       await api.put("/api/users/update-user", mainData, {
@@ -89,6 +92,10 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
                     'placeholder': key in current_main_fields ? current_main_fields[key] : "",
                     'type': (key === "phone_number") ? 'number' : 'text',
                     'required': false}))}
+            <div key='private_account' class="my-3">
+              <input name='private_account' id='private_account' type='checkbox' defaultChecked={checked} onChange={() => setChecked((state) => !state)} />
+              <label htmlFor='private_account' class="ml-2">İletişim bilgileri ve yan bilgiler gizlensin</label>
+            </div>
           </GrayBox>
           <GrayBox className="w-96">
             <h3 class="object-top text-center text-xl"> Diğer Bilgiler </h3>
