@@ -115,6 +115,10 @@ def get_needs(
     needs_cursor = needs_collection.find(query, projection).sort(sort_by, sort_order)
     needs_data = list(needs_cursor)
 
+    # Filter by distance if necessary
+    if x is not None and y is not None and distance_max is not None:
+        needs_data = [res for res in needs_data if ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
+   
     # Formatting datetime fields
     formatted_needs_data = []
     for need in needs_data:

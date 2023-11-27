@@ -40,6 +40,9 @@ def get_all_needs(
     active: Optional[bool] = Query(None, description="Filter by active status"),
     types: List[str] = Query(None, description="Filter by types of needs"),
     subtypes: List[str] = Query(None, description="Filter by subtypes of needs"),
+    x: float = Query(None, description="X coordinate for distance calculation"),
+    y: float = Query(None, description="Y coordinate for distance calculation"),
+    distance_max: float = Query(None, description="Maximum distance for filtering"),
     sort_by: str = Query('created_at', description="Field to sort by"),
     order: Optional[str] = Query('asc', description="Sort order")
 ):
