@@ -93,13 +93,15 @@ export const getServerSideProps = withIronSessionSsr(
     	return { props: { expired: true } };
     }
 
-    const { data: { user_optional_infos: all_optional_info_list } } = await api.get('/api/profiles/all-user-optional-infos', {
+    const { data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/user-optional-infos', {
+    	params: {
+    		'anyuser': params.username
+    	},
     	headers: {
-    		'Authorization': `Bearer ${self.accessToken}` 
+    		'Authorization': `Bearer ${self.accessToken}`
     	}
     });
-    const filtered_optional_info_list = all_optional_info_list.filter(elem => (elem.username = params.username));
-    const optional_info = filtered_optional_info_list.length > 0 ? filtered_optional_info_list[0] : {};
+    const optional_info = optional_info_list.length > 0 ? optional_info_list[0] : {};
 
     let list_info = {}
 
@@ -128,11 +130,11 @@ export const getServerSideProps = withIronSessionSsr(
     for (let topic of topics) {
       const { data: { [topic.key]: fields } } = await api.get(`/api/profiles/${topic.api_url}`, {
         params: {
-    		'anyuser': params.username
-    	},
-    	headers: {
-          'Authorization': `Bearer ${self.accessToken}` 
-        }
+    			'anyuser': params.username
+	    	},
+	    	headers: {
+	          'Authorization': `Bearer ${self.accessToken}` 
+	        }
       });
       list_info[topic.api_url] = {"list": fields ? fields : [], "topic": topic};
     }
