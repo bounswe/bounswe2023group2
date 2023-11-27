@@ -8,7 +8,7 @@
             {"name": "x", "label": "X Coordinate", "type": "number"},
             {"name": "y", "label": "Y Coordinate", "type": "number"},
             {"name": "occur_at", "label": "Occur At", "type": "date"},
-            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": ["none", "daily", "weekly"]},
+            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": [1,7]},
             {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
         ]
     },
@@ -17,12 +17,40 @@
             {"name": "description", "label": "Description", "type": "text"},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
             {"name": "urgency", "label": "Urgency", "type": "select", "options": [1, 2, 3, 4, 5]},
-            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "shelter", "medication", "transportation", "tool", "human", "other"]},
+            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "drink", "shelter", "medication", "transportation", "tool", "human", "other"]},
             {"name": "x", "label": "X Coordinate", "type": "number"},
             {"name": "y", "label": "Y Coordinate", "type": "number"},
             {"name": "occur_at", "label": "Occur At", "type": "date"},
-            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": ["none", "daily", "weekly"]},
+            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": [1,7]},
             {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
+        ]
+    },
+    "action": {
+        "fields": [
+            {"name": "created_by", "label": "Created By", "type": "text"},
+            {"name": "description", "label": "Description", "type": "text"},
+            {"name": "type", "label": "Type", "type": "select", "options": ["need_resource"]},
+            {"name": "occur_at", "label": "Occur date", "type": "date"},
+            {"name": "end_at", "label": "End date", "type": "date"},
+            {
+                "name": "related_groups",
+                "label": "List of Action Group",
+                "type": "array",
+                "fields": [
+                    {
+                        "name": "related_needs",
+                        "label": "Related Needs",
+                        "type": "array",
+                        "fields": [{"name": "id", "label": "ID", "type": "text"}]
+                    },
+                    {
+                        "name": "related_resources",
+                        "label": "Related Resources",
+                        "type": "array",
+                        "fields": [{"name": "id", "label": "ID", "type": "text"}]
+                    }
+                ]
+            }
         ]
     },
     "type": {
@@ -43,7 +71,7 @@
         },
         "drink": {
             "fields": [
-                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["water", "juice", "milk", "soda", "tea", "coffee", "cola", "yellow cola"]},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["water", "juice", "milk", "soda", "tea", "coffee", "cola", "yellow cola"]}
             ]
         },
         "shelter": {

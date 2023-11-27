@@ -1,22 +1,27 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ResourceAdapter
-import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.databinding.FragmentResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.ui.activity.need.NeedItemFragment
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
 
@@ -37,10 +42,49 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         arrangeView()
     }
 
+    /**
+     * It refresh the recycler view whenever returned this page (i.e after adding/editing/deleting item)
+     */
+    override fun onResume() {
+        super.onResume()
+        sendRequest()
+    }
+
     private fun arrangeView(){
+        binding.btFilter.setOnClickListener {
+            showFilterDialog()
+        }
+
         binding.btAddResource.setOnClickListener {
             addResource()
         }
+
+        val fab: ExtendedFloatingActionButton = binding.btAddResource
+
+        binding.recyclerViewResources.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                // if the recycler view is scrolled
+                // above shrink the FAB
+                if (dy > 30 && fab.isExtended) {
+                    fab.shrink()
+                }
+
+                // if the recycler view is scrolled
+                // above extend the FAB
+                if (dy < -30 && !fab.isExtended) {
+                    fab.extend()
+                }
+
+                // of the recycler view is at the first
+                // item always extend the FAB
+                if (!recyclerView.canScrollVertically(-1)) {
+                    fab.extend()
+                }
+            }
+        })
+
 
         arrangeSearchView()
         //arrangeRecyclerView()
@@ -122,6 +166,22 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
             false // Return true if you want to consume the event, otherwise return false
         }
     }
+
+
+    /**
+     * Arrange filter and sort
+     */
+    private fun showFilterDialog(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.sort_and_filter)
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        dialog.show()
+    }
+
 
     /** This function is called whenever resource item is selected
      * It opens a resource page that contains details about it and users can edit, delete, upvote and downvote this item from this page

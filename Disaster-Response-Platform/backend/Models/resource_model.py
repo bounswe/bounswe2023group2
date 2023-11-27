@@ -1,11 +1,23 @@
-from pydantic import BaseModel, Field
-from typing import Dict, Any
+from pydantic import BaseModel, Field, validator
+from typing import Dict, Any, List
 from enum import Enum
 import datetime
 
+# Function to get current time in GMT+3
+def current_time_gmt3():
+    return datetime.datetime.now() + datetime.timedelta(hours=3)
+    
 class ConditionEnum(str, Enum):
     new = "new"
     used = "used"
+
+class Recurrence(Enum):
+    Daily= 1
+    Weekly= 7
+
+class ActionHistory(BaseModel):
+    quantity: int = Field(default=0)
+    action_id: str= Field(None)
 
 class Resource(BaseModel):
     _id: str = Field(default=None)
@@ -19,14 +31,24 @@ class Resource(BaseModel):
     x: float = Field(default=None)
     y: float = Field(default=None)
     recurrence_id: str = Field(default=None)
-    recurrence_rate: str = Field(default=None)
-    recurrence_deadline: datetime.date = Field(default=None)
+    recurrence_rate: Recurrence = Field(default=None)
+    recurrence_deadline: datetime.datetime = Field(default=None)
     active: bool = Field(default=True)
-    occur_at: datetime.date = Field(default_factory=datetime.date.today)
-    created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
-    last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    occur_at: datetime.datetime = Field(default=None)
+    created_at: datetime.datetime = Field(default_factory=current_time_gmt3)
+    last_updated_at: datetime.datetime = Field(default_factory=current_time_gmt3)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
+    actions_used: List[ActionHistory]= Field(default=None)
+
+    @validator('recurrence_deadline', 'occur_at', pre=True)
+    def convert_str_to_datetime(cls, value):
+        if isinstance(value, str):
+            try:
+                return datetime.datetime.strptime(value, '%Y-%m-%d')
+            except ValueError:
+                raise ValueError("Incorrect date format, should be YYYY-MM-DD")
+        return value
     
 # Update Body Models
 class QuantityUpdate(BaseModel):
@@ -34,3 +56,4 @@ class QuantityUpdate(BaseModel):
 
 class ConditionUpdate(BaseModel):
     condition: ConditionEnum
+

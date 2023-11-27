@@ -1,12 +1,14 @@
 from Models.need_model import Need
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
-
 from Services.build_API_returns import *
-from datetime import datetime
+from pymongo import ASCENDING, DESCENDING
+from typing import Optional
+from datetime import datetime, timedelta
 
 # Get the needs collection using the MongoDB class
 needs_collection = MongoDB.get_collection('needs')
+
 
 
 def validate_coordinates(x=None, y=None):
@@ -18,18 +20,31 @@ def validate_quantities(initial_quantity=None, unsupplied_quantity=None):
         raise ValueError("Quantities can't be less than or equal to 0")   
 
 
-
+r_id=0
 def create_need(need: Need) -> str:
+    global r_id
     # Manual validation for required fields during creation
     if not all([need.created_by, need.urgency, 
                 need.initialQuantity, need.unsuppliedQuantity, 
                 need.type, need.details, need.x is not None, need.y is not None]):
         raise ValueError("All fields are mandatory for creation.")
+
     validate_coordinates(need.x, need.y)
     validate_quantities(need.initialQuantity, need.unsuppliedQuantity)
-    if need.initialQuantity <= 0 or need.unsuppliedQuantity <= 0:
-        raise ValueError("Quantities can't be less than or equal to 0")
-    insert_result = needs_collection.insert_one(need.dict())
+    if(need.recurrence_rate!= None):
+        if not all([need.recurrence_deadline, need.occur_at]):
+            raise ValueError("Recurrence fields need to be entered")
+        need.recurrence_id=r_id
+        need.recurrence_rate = need.recurrence_rate.value
+        insert_result = needs_collection.insert_one(need.dict())
+        print("need added ", insert_result, need.recurrence_id, need.occur_at)
+        insert_ids=create_recurrent_needs(need)
+        print(insert_ids)
+        r_id+=1
+    else:
+        insert_result = needs_collection.insert_one(need.dict())
+        print("need added ", insert_result, need.recurrence_id, need.occur_at)
+
     if insert_result.inserted_id:
         result = "{\"needs\":[{\"_id\":" + f"\"{insert_result.inserted_id}\""+"}]}"
         return result
@@ -41,9 +56,35 @@ def create_need(need: Need) -> str:
 def get_need_by_id(need_id: str) -> list[dict]:
     return get_needs(need_id)
 
+def create_recurrent_needs(need:Need):
 
+    current_date = need.occur_at
+    current_date += timedelta(days=need.recurrence_rate)
+    insert_ids=[]
 
-def get_needs(need_id:str = None) -> list[dict]:
+    def normalize_date(dt):
+        return datetime(dt.year, dt.month, dt.day)
+    while normalize_date(current_date) <= normalize_date(need.recurrence_deadline):
+        need.occur_at=current_date
+        need.recurrence_id=r_id
+        insert_result = needs_collection.insert_one(need.dict())
+        print("need added ", insert_result, r_id, need.occur_at)
+        if(insert_result):
+            insert_ids.append(insert_result)
+            current_date += timedelta(days=need.recurrence_rate)
+        else:
+            raise ValueError("Need could not be created")
+    return insert_ids
+    
+
+def get_needs(
+    need_id: str = None,
+    active: Optional[bool] = None,
+    types: list = None, 
+    subtypes: list = None,
+    sort_by: str = 'created_at',
+    order: Optional[str] = 'asc'
+) -> list[dict]:
     projection = {
             "_id": {"$toString": "$_id"},
             "created_by": 1,
@@ -58,26 +99,44 @@ def get_needs(need_id:str = None) -> list[dict]:
             "recurrence_deadline": 1,
             "x": 1,
             "y": 1,
+            "active": 1,
             "occur_at": 1,
             "created_at": 1,
-            "last_updated_at": 1
+            "last_updated_at": 1,
+            "upvote": 1,
+            "downvote": 1
+            # Add other fields if necessary
         }
     
-    if (need_id is None):
-        query = {}
-    else:
-        if (ObjectId.is_valid(need_id)):
+    sort_order = ASCENDING if order == 'asc' else DESCENDING
+    query = {}
+    
+    if need_id:
+        if ObjectId.is_valid(need_id):
             query = {"_id": ObjectId(need_id)}
         else:
             raise ValueError(f"Need id {need_id} is invalid")
+    else:
+        if active is not None:
+            query['active'] = active
+        if types:
+            query['type'] = {'$in': types}
+        if subtypes:
+            query['details.subtype'] = {'$in': subtypes}
 
-    needs_data = needs_collection.find(query, projection)
+    needs_cursor = needs_collection.find(query, projection).sort(sort_by, sort_order)
+    needs_data = list(needs_cursor)
 
-    if (needs_data.explain()["executionStats"]["nReturned"] == 0):
-        if need_id is None:
-            need_id = ""
-        raise ValueError(f"Need {need_id} does not exist")
-    result_list = create_json_for_successful_data_fetch(needs_data, "needs")
+    # Formatting datetime fields
+    formatted_needs_data = []
+    for need in needs_data:
+        if 'created_at' in need:
+            need['created_at'] = need['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+        if 'last_updated_at' in need:
+            need['last_updated_at'] = need['last_updated_at'].strftime('%Y-%m-%d %H:%M:%S')
+        formatted_needs_data.append(need)
+
+    result_list = create_json_for_successful_data_fetch(formatted_needs_data, "needs")
     return result_list
 
     
@@ -104,9 +163,8 @@ def update_need(need_id: str, need: Need) -> Need:
             update_data['created_at'] = existing_need['created_at']
 
         # Set 'last_updated_at' to the current time
-        update_data['last_updated_at'] = datetime.now()
-        
-        
+
+        update_data['last_updated_at'] = datetime.now() + timedelta(hours=3)
 
         needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": update_data})
 
@@ -127,7 +185,7 @@ def delete_need(need_id: str):
         raise ValueError(f"Need {need_id} cannot be deleted")    
     
 def set_initial_quantity(need_id: str, quantity: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"initialQuantity": quantity, "last_updated_at": datetime.now()}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"initialQuantity": quantity, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True
@@ -140,7 +198,7 @@ def get_initial_quantity(need_id: str) -> int:
         raise ValueError(f"Need id {need_id} not found")
     
 def set_unsupplied_quantity(need_id: str, quantity: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"unsuppliedQuantity": quantity, "last_updated_at": datetime.now()}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"unsuppliedQuantity": quantity, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True
@@ -153,7 +211,7 @@ def get_unsupplied_quantity(need_id: str) -> int:
         raise ValueError(f"Need id {need_id} not found")
     
 def set_urgency(need_id: str, urgency: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"urgency": urgency, "last_updated_at": datetime.now()}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"urgency": urgency, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True

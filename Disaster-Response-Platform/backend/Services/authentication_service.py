@@ -8,7 +8,7 @@ from Models.user_model import *
 from typing import Annotated
 import config
 import json
-
+from fastapi.security import HTTPBearer
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -18,10 +18,10 @@ SECRET_KEY = config.SECRET_KEY
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-
+auth_scheme = HTTPBearer()
 userDb = MongoDB.get_collection('authenticated_user')
 # Verify JWT token
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(auth_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -29,6 +29,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     )
   
     try:
+        if not  token.credentials is None:
+            token = token.credentials
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
         username: str = payload.get("sub")
@@ -43,6 +45,13 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
 
     return user
+
+def get_current_admin_user(current_user: UserProfile = Depends(get_current_user)):
+    if current_user.user_role.value != "ADMIN":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f'Only admins have access to this route')
+    return current_user.user_role
 
 def get_current_username(current_user: LoginUserRequest= Depends(get_current_user)):
     return current_user.username
@@ -187,3 +196,41 @@ def is_valid_password(password):
 
     # if not any(char.islower() for char in password):
     #     return False
+
+
+def verify_user(username: str):
+    user = get_user(username)
+    if not user:
+        raise ValueError(f"No such user with username {username}")
+    
+    update_result = userDb.update_one(
+    {"username": username},
+    {"$set": {"user_role": "CREDIBLE"}}
+    )    
+    return True
+
+def unverify_user(username: str):
+    user = get_user(username)
+    if not user:
+        raise ValueError(f"No such user with username {username}")
+    
+    update_result = userDb.update_one(
+    {"username": username},
+    {"$set": {"user_role": "AUTHENTICATED"}}
+    )    
+    return True
+    
+def unauthorize_user(username: str):
+    user = get_user(username)
+    if not user:
+        raise ValueError(f"No such user with username {username}")
+    
+    update_result = userDb.update_one(
+    {"username": username},
+    {"$set": {"user_role": "GUEST"}}
+    )    
+    return True
+
+def is_admin(username: str):
+    user = get_user(username)
+    return (user.user_role == user.user_role.ADMIN)

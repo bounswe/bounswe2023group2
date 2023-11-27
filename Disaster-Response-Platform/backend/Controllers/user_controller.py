@@ -18,7 +18,7 @@ db = MongoDB.getInstance()
 # Secret key to sign and verify the JWT token
 SECRET_KEY = config.SECRET_KEY
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 120
+ACCESS_TOKEN_EXPIRE_MINUTES = 1200
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 userDb = MongoDB.get_collection('authenticated_user')
 
@@ -138,3 +138,37 @@ async def get_user_info(response:Response,username: str, current_user: UserProfi
                         private_account=user.private_account)
 
     return user_info
+
+
+@router.put("/verify")
+def verify_user(response:Response,user: UserUsername, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+    try:
+        verified = authentication_service.verify_user(user.username)
+        response.status_code = HTTPStatus.OK
+        return {f'{user.username} is verified'}    
+    except ValueError as err:
+        err_json = create_json_for_error("Verification error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+
+@router.put("/unverify")
+def unverify_user(response:Response,user: UserUsername, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+    try:
+        unverified = authentication_service.unverify_user(user.username)
+        response.status_code = HTTPStatus.OK
+        return {f'{user.username} is unverified'}   
+    except ValueError as err:
+        err_json = create_json_for_error("Unverification error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+
+@router.put("/unauthorize")
+def unauthorize_user(response:Response,user: UserUsername, current_user: UserProfile = Depends(authentication_service.get_current_admin_user)):
+    try:
+        unverified = authentication_service.unauthorize_user(user.username)
+        response.status_code = HTTPStatus.OK
+        return {f'{user.username} is unauthorized'}   
+    except ValueError as err:
+        err_json = create_json_for_error("Unauthorization error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)

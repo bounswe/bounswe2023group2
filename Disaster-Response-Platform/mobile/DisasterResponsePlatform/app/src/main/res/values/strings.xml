@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Disaster Response Platform</string>
+    <string name="app_name">Disaster Aid Provision Platform</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login_page">Login Page</string>
@@ -79,8 +79,8 @@
     <string name="select_need_type">Select or Enter Need Type <font color='#B00020'>*</font></string>
     <string name="select_or_enter_location">Select or Enter Location <font color='#B00020'>*</font></string>
     <string name="enter_quantity">Enter Quantity <font color='#B00020'>*</font></string>
-    <string name="select_or_enter_coordinate_x">Select or Enter Coordinate X <font color='#B00020'>*</font></string>
-    <string name="select_or_enter_coordinate_y">Select or Enter Coordinate Y <font color='#B00020'>*</font></string>
+    <string name="select_or_enter_coordinate_x">Select Location <font color='#B00020'>*</font></string>
+    <string name="select_or_enter_coordinate_y">Select Location <font color='#B00020'>*</font></string>
     <string name="enter_allergens">Enter Allergens</string>
     <string name="enter_additional_notes">Enter Additional Notes</string>
     <string name="enter_full_name">Enter Full Name <font color='#B00020'>*</font></string>
@@ -94,6 +94,19 @@
     <string name="save_changes">Save Changes</string>
     <string name="condition">Condition</string>
     <string name="navigate">Navigate</string>
+
+    <string name="field_need_type">Need Type (Select or Enter)</string>
+    <string name="field_resource_type">Resource Type (Select or Enter)</string>
+    <string name="field_sub_type">Sub-Type (Select or Enter)</string>
+    <string name="field_location">Select or Enter Location</string>
+    <string name="field_quantity">Quantity</string>
+    <string name="field_coordinate_x">X Coordinate</string>
+    <string name="field_coordinate_y">Y Coordinate</string>
+
+
+    <string name="nav_home">Home</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_profile">Profile</string>
 
     <string-array name="need_types">
         <item>Clothes</item>
@@ -116,16 +129,6 @@
         <item>Human</item>
         <item>Other</item>
     </string-array>
-
-    <string-array name="need_food_sub_types">
-        <item>Pasta</item>
-        <item>Rice</item>
-        <item>Canned Good</item>
-        <item>Baby Food</item>
-        <item>Other</item>
-    </string-array>
-
-    <string-array name="need_empty_sub_types"></string-array>
 
     <string-array name="resource_food_sub_types">
         <item>Pasta</item>
@@ -187,5 +190,7 @@
     </string-array>
 
     <string-array name="resource_empty_sub_types"></string-array>
+    <string name="more">More</string>
+    <string name="sort_filter">Sort\nFilter</string>
 
 </resources>

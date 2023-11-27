@@ -11,7 +11,7 @@ reports_collection = MongoDB.get_collection('reports')
 def create_report(report: Report) -> str:
     # Manual validation for required fields during creation
     if not all([report.created_by, report.description, 
-                report.type, report.details]):
+                report.report_type, report.report_type_id, report.details]):
         raise ValueError("All fields are mandatory for creation.")
     insert_result = reports_collection.insert_one(report.dict())
     if insert_result.inserted_id:
@@ -80,3 +80,23 @@ def delete_report(report_id: str):
     except:
         raise ValueError(f"Report {report_id} cannot be deleted")
     
+    
+def reject_report(report_id: str):
+    result = reports_collection.update_one({"_id": ObjectId(report_id)}, {"$set": {"status": "rejected"}})
+    if result.matched_count == 0:
+        raise ValueError(f"Report id {report_id} not found")
+    # return True
+
+def accept_report(report_id: str, report_type:str, report_type_id: str) :
+    result = reports_collection.update_one({"_id": ObjectId(report_id)}, {"$set": {"status": "accepted"}})
+    if result.matched_count == 0:
+        raise ValueError(f"Report id {report_id} not found")
+
+    collection = MongoDB.get_collection(report_type)
+    try:
+        d = collection.delete_one({"_id": ObjectId(report_type_id)})
+        if d.deleted_count == 0:
+            raise ValueError(f"{report_type} {report_type_id} cannot be deleted")
+    except:
+        raise ValueError(f"{report_type} {report_type_id} cannot be deleted")  
+
