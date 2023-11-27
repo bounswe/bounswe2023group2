@@ -8,7 +8,7 @@ from Models.user_model import *
 from typing import Annotated
 import config
 import json
-
+from fastapi.security import HTTPBearer
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -18,10 +18,10 @@ SECRET_KEY = config.SECRET_KEY
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-
+auth_scheme = HTTPBearer()
 userDb = MongoDB.get_collection('authenticated_user')
 # Verify JWT token
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(auth_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -29,6 +29,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     )
   
     try:
+        if not  token.credentials is None:
+            token = token.credentials
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
         username: str = payload.get("sub")

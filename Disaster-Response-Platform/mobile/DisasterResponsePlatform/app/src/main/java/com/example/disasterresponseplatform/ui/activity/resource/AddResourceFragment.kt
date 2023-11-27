@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,42 +18,165 @@ import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
+import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.DateUtil
 import com.example.disasterresponseplatform.utils.StringUtil.Companion.generateRandomStringID
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okio.IOException
 
-class AddResourceFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource?) : Fragment() {
+class AddResourceFragment(private val resourceViewModel: ResourceViewModel, private val resource: Resource?) : Fragment(),
+    OnCoordinatesSelectedListener {
 
     private lateinit var binding: FragmentAddResourceBinding
     private var requireActivity: FragmentActivity? = null
+    private var selectedLocationX: Double? = null
+    private var selectedLocationY: Double? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        Log.d("Yooo on", "Damn")
         binding = FragmentAddResourceBinding.inflate(inflater, container, false)
+        parentFragmentManager.setFragmentResultListener(
+            "coordinatesKey",
+            viewLifecycleOwner
+        ) { _, bundle ->
+            selectedLocationX = bundle.getDouble("x_coord")
+            selectedLocationY = bundle.getDouble("y_coord")
+            coordinateToAddress(selectedLocationX!!, selectedLocationY!!, object : Callback {
+                override fun onFailure(call: Call, e: java.io.IOException) {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        binding.etCoordinate.editText?.setText(
+                            "%.2f, %.2f".format(
+                                selectedLocationX,
+                                selectedLocationY
+                            )
+                        )
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body?.string()
+                        if (responseBody == null) {
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(
+                                    "%.2f, %.2f".format(
+                                        selectedLocationX,
+                                        selectedLocationY
+                                    )
+                                )
+                            }
+                        } else {
+                            var address = responseBody.subSequence(responseBody.indexOf("display_name") + 15, responseBody.length)
+                            address = address.subSequence(0, address.indexOf("\""))
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(address)
+                            }
+                        }
+                    } else {
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            binding.etCoordinate.editText?.setText(
+                                "%.2f, %.2f".format(
+                                    selectedLocationX,
+                                    selectedLocationY
+                                )
+                            )
+                        }
+                    }
+                }
+
+            })
+        }
+        binding.etCoordinate.setEndIconOnClickListener {
+            navigateToMapFragment()
+        }
         setUpResourceTypeSpinner()
         fillParameters(resource)
         submitResource(resource == null)
         return binding.root
     }
 
+    private fun navigateToMapFragment() {
+        val mapFragment = ActivityMap()
+        mapFragment.coordinatesSelectedListener = this@AddResourceFragment
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, mapFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
     /** It fills the layout's fields corresponding data if it is editResource
      * It checks whether it is editResource by checking if resource is null, if it is not null then it should be edit form
      */
     @SuppressLint("SetTextI18n")
-    private fun fillParameters(resource: Resource?){
-        if (resource != null){
+    private fun fillParameters(resource: Resource?) {
+        if (resource != null) {
             binding.tvAddResource.text = getString(R.string.edit_resource)
             binding.btnSubmit.text = getString(R.string.save_changes)
             binding.spResourceType.setText(resource.type.toString())
             binding.spResourceSubType.setText(resource.details)
             binding.etQuantity.editText?.setText(resource.quantity.toString())
-            binding.etCoordinateX.editText?.setText(String.format("%.2f", resource.coordinateX).replace(',', '.'))
-            binding.etCoordinateY.editText?.setText(String.format("%.2f", resource.coordinateY).replace(',', '.'))
+
+            coordinateToAddress(selectedLocationX!!, selectedLocationY!!, object : Callback {
+                override fun onFailure(call: Call, e: java.io.IOException) {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        binding.etCoordinate.editText?.setText("%.2f, %.2f".format(selectedLocationX, selectedLocationY))
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body?.string()
+                        if (responseBody == null) {
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(
+                                    "%.2f, %.2f".format(
+                                        selectedLocationX,
+                                        selectedLocationY
+                                    )
+                                )
+                            }
+                        } else {
+                            var address = responseBody.subSequence(responseBody.indexOf("display_name") + 15, responseBody.length)
+                            address = address.subSequence(0, address.indexOf("\""))
+
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(address)
+                            }
+                        }
+                    } else {
+
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            binding.etCoordinate.editText?.setText(
+                                "%.2f, %.2f".format(
+                                    selectedLocationX,
+                                    selectedLocationY
+                                )
+                            )
+                        }
+                    }
+                }
+
+            })
         }
     }
+
     private fun setUpResourceTypeSpinner() {
 
         // Get the array of resource types from resource
@@ -115,8 +239,8 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
     /**
      * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
      */
-    private fun submitResource(isAdd : Boolean) {
-        if (requireActivity == null){ // to handle error when user enters this page twice
+    private fun submitResource(isAdd: Boolean) {
+        if (requireActivity == null) { // to handle error when user enters this page twice
             requireActivity = requireActivity()
         }
         binding.btnSubmit.setOnClickListener {
@@ -124,10 +248,10 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
                 return@setOnClickListener
             }
             binding.btnSubmit.isEnabled = false
-            if (validateQuantity() and validateCoordinateY() and validateCoordinateX()  and validateType() and validateSubType()) {
+            if (validateQuantity() and validateCoordinateY() and validateCoordinateX() and validateType() and validateSubType()) {
 
                 val type: NeedTypes =
-                    when(binding.boxResourceType.editText?.text.toString().trim()){
+                    when (binding.boxResourceType.editText?.text.toString().trim()) {
                         NeedTypes.Cloth.toString() -> NeedTypes.Cloth
                         NeedTypes.Food.toString() -> NeedTypes.Food
                         NeedTypes.Drink.toString() -> NeedTypes.Drink
@@ -141,31 +265,58 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
                 val creatorName = DiskStorageManager.getKeyValue("username").toString()
                 val details = binding.spResourceSubType.text.toString().trim()
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val coordinateX = binding.etCoordinateX.editText?.text.toString().trim().toDouble()
-                val coordinateY = binding.etCoordinateY.editText?.text.toString().trim().toDouble()
                 val date = DateUtil.getDate("dd-MM-yy").toString()
-                val newResource = Resource(generateRandomStringID(),creatorName,"new",quantity,type,details,date,coordinateX,coordinateY)
+                val newResource: Resource
+                if (selectedLocationX == null || selectedLocationY == null) {
+                    selectedLocationX = 0.0
+                    selectedLocationY = 0.0
+                    Toast.makeText(requireContext(), "Location is not selected", Toast.LENGTH_LONG)
+                        .show()
+                    return@setOnClickListener
+                } else {
+                    newResource = Resource(
+                        generateRandomStringID(),
+                        creatorName,
+                        "new",
+                        quantity,
+                        type,
+                        details,
+                        date,
+                        selectedLocationX!!,
+                        selectedLocationY!!
+                    )
+                }
 
                 //resourceViewModel.insertResource(resource) insert local db
-                if (isAdd){
+                if (isAdd) {
                     resourceViewModel.postResourceRequest(newResource)
-                } else{
-                    val resourceID = "/"+resource!!.ID // comes from older resource
-                    resourceViewModel.postResourceRequest(newResource,resourceID)
+                } else {
+                    val resourceID = "/" + resource!!.ID // comes from older resource
+                    resourceViewModel.postResourceRequest(newResource, resourceID)
                 }
-                resourceViewModel.getLiveDataResourceID().observe(requireActivity!!){
-                    if (isAdded){ // to ensure it attached a context
+                resourceViewModel.getLiveDataResourceID().observe(requireActivity!!) {
+                    if (isAdded) { // to ensure it attached a context
                         if (isAdd)
-                            Toast.makeText(requireContext(), "Created Resource ID: $it", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Created Resource ID: $it",
+                                Toast.LENGTH_LONG
+                            ).show()
                         else
                             Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
                     }
 
                     Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                         if (isAdded) // to ensure it attached a parentFragmentManager
-                            parentFragmentManager.popBackStack("AddResourceFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                        if (!isAdd){
-                            parentFragmentManager.popBackStack("ResourceItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            parentFragmentManager.popBackStack(
+                                "AddResourceFragment",
+                                FragmentManager.POP_BACK_STACK_INCLUSIVE
+                            )
+                        if (!isAdd) {
+                            parentFragmentManager.popBackStack(
+                                "ResourceItemFragment",
+                                FragmentManager.POP_BACK_STACK_INCLUSIVE
+                            )
                         }
                         // Re-enable the button after the background operation completes
                         binding.btnSubmit.isEnabled = true
@@ -208,27 +359,23 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
 
 
     private fun validateCoordinateX(): Boolean {
-        val etCoordinateX = binding.etCoordinateX
-        val coordinateX = etCoordinateX.editText?.text.toString().trim()
-        return if (coordinateX.isEmpty()) {
-            etCoordinateX.error = "Field can not be empty"
+        return if (selectedLocationX == null) {
+            binding.etCoordinate.error = "Field can not be empty"
             false
         } else {
-            etCoordinateX.error = null
-            etCoordinateX.isErrorEnabled = false
+            binding.etCoordinate.error = null
+            binding.etCoordinate.isErrorEnabled = false
             true
         }
     }
 
     private fun validateCoordinateY(): Boolean {
-        val etCoordinateY = binding.etCoordinateY
-        val coordinateY = etCoordinateY.editText?.text.toString().trim()
-        return if (coordinateY.isEmpty()) {
-            etCoordinateY.error = "Field can not be empty"
+        return if (selectedLocationY == null) {
+            binding.etCoordinate.error = "Field can not be empty"
             false
         } else {
-            etCoordinateY.error = null
-            etCoordinateY.isErrorEnabled = false
+            binding.etCoordinate.error = null
+            binding.etCoordinate.isErrorEnabled = false
             true
         }
     }
@@ -246,4 +393,25 @@ class AddResourceFragment(private val resourceViewModel: ResourceViewModel, priv
             true
         }
     }
+
+    override fun onCoordinatesSelected(x: Double, y: Double) {
+        //Log.d("YOOO x", x.toString())
+        //Log.d("YOOO y", y.toString())
+        // binding.etCoordinateY.editText?.setText("Test String")
+        //requireActivity().runOnUiThread {
+        //binding.etCoordinateX.editText!!.setText(String.format("%.2f", x).replace(',', '.'))
+        //binding.etCoordinateY.editText!!.setText(String.format("%.2f", y).replace(',', '.'))
+        //}
+    }
+}
+
+
+private fun coordinateToAddress(x: Double, y: Double, callback: Callback) {
+    val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+    val client = OkHttpClient()
+    val request = Request.Builder()
+        .url(url)
+        .get()
+        .build()
+    client.newCall(request).enqueue(callback)
 }
