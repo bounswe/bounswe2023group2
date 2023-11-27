@@ -4,7 +4,7 @@ import ActivityModal from "./ActivityModal";
 import Filter from "./Filter";
 import Sort from "./Sort";
 import { toast } from 'react-toastify';
-
+import { api } from "@/lib/apiUtils";
 
 export default function ActivityTable({ needFilter, resourceFilter }) {
     const [filters, setFilters] = useState({})
@@ -13,7 +13,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
     const [selectedKeys, setSelectedKeys] = useState(new Set(["text"]));
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [activity, setActivity] = useState({});
-
+    const [order, setOrder] = useState({});
     const getResources = async () => {
         const response = await fetch('/api/resource', { method: 'GET', headers: { "Content-Type": "application/json" } });
         let res = await response.json();
@@ -28,10 +28,8 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
         const response = await fetch('/api/need/get', { method: 'GET', headers: { "Content-Type": "application/json" } });
         let res = await response.json();
         if (response.ok) {
-
             setNeeds(res.needs)
         } else {
-
             toast.error("An unexpected error occurred while saving, please try again")
         }
     }
@@ -43,10 +41,13 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
 
     const filterActivities = async () => {
         let response
+
         if (needFilter) {
-            response = await fetch('/api/need/filter', { method: 'POST', headers: { "Content-Type": "application/json" }, body: JSON.stringify(filters) });
-            let res = await response.json();
-            if (response.ok) {
+            let my_filter = new URLSearchParams(filters).toString()
+           
+            response = await api.get(`/api/needs/?${my_filter}`, {headers: { "Content-Type": "application/json" } });
+            let res =  response.data;
+            if (response.status === 200) {
                 setNeeds(res.needs)
             } else {
                 // unknown error
@@ -54,10 +55,15 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
             }
         }
         if (resourceFilter) {
-            response = await fetch('/api/resource/filter', { method: 'POST', headers: { "Content-Type": "application/json" }, body: JSON.stringify(filters) });
-            let res = await response.json();
-            if (response.ok) {
+            let my_filter = new URLSearchParams(filters).toString()
+           
+            response = await api.get(`/api/resources/?${my_filter}`, {headers: { "Content-Type": "application/json" } });
+            let res =  response.data;
+        
+            setResources(res.resources)
+            if (response.status === 200){
                 setResources(res.resources)
+                console.log(resources)
             } else {
                 // unknown error
                 toast.error("An unexpected error occurred while saving, please try again")
@@ -71,7 +77,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
             <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} />
 
             <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} />
-            <Sort needFilter={needFilter} resourceFilter={resourceFilter} setSelectedKeys={setSelectedKeys} selectedKeys={selectedKeys} filterActivities={filterActivities} />
+            <Sort needFilter={needFilter} resourceFilter={resourceFilter} filterActivities={filterActivities}  setFilters={setFilters} filters={filters} />
             <Table
                 selectionMode="single"
                 defaultSelectedKeys={["2"]}

@@ -34,10 +34,10 @@ export default function ActivityModal({ isOpen, onOpen, onOpenChange, activity }
               <ModalBody>
 
                 {Object.keys(activity).map((key) => {
-                  if (key === "_id" || key === "description" || key === "initialQuantity" || key === "currentQuantity" || key === "createdBy" || key === "condition" || key === 'created_by' || key === 'details' ) <></>
+                  if (key === "_id"  || key === "initialQuantity" || key === "currentQuantity" || key === "createdBy" || key === "condition" || key === 'created_by' || key === 'details' ) <></>
                   else
                     return <p>
-                      {key}: {(activity[key]).toString() ?? "No information"}
+                      {key}: {(activity[key]) ?? "No information"}
                     </p>
                 })}
                 {Object.keys(activity.details).map((key) => {
