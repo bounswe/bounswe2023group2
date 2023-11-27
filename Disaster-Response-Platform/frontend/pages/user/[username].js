@@ -13,53 +13,69 @@ import ReportModal from '@/components/profile/ReportModal';
 import { Button } from "@nextui-org/react";
 import { ToastContainer } from 'react-toastify';
 
-export default function OtherProfile({ guest, expired, main_info, optional_info, list_info }) {
-	const router = useRouter();
-	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+export default function OtherProfile({ unauthorized, admin, main_info, optional_info, list_info }) {
+  const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	if (guest || expired) {
-		useEffect(() => {router.push("/login")});
-		return (
-			<div class="text-center text-xl">
-				<br /><br /><br />
-				Oturum açmaya yönlendiriliyorsunuz...
-			</div>
-		);
-	}
+  if (unauthorized) {
+    useEffect(() => {router.push("/login")});
+    return (
+      <div class="text-center text-xl">
+        <br /><br /><br />
+        Oturum açmaya yönlendiriliyorsunuz...
+      </div>
+    );
+  }
 
-	const username = router.query.username;
-	const {professions, languages, "socialmedia-links": social, skills} = list_info;
-	const dictionary_tr = {
-	"username": "Kullanıcı Adı",
-	"date_of_birth": "Doğum Tarihi",
-	"nationality": "Ülke",
-	"identity_number": "Kimlik No",
-	"education": "Öğrenim",
-	"health_condition": "Sağlık Durumu",
-	"blood_type": "Kan Grubu",
-	"Address": "Adres"
-	}
-	const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val]);
-	optional_info_tr.sort();
-	return (
-	<>
-	  <main>
-	    <div class="flex justify-around space-x-8">
-	      <MainInfo className="w-60" info={main_info} onOpen={onOpen} report/>
-	      <OptionalInfo className="w-80" fields={optional_info_tr} />
-	      <div>
-	        <SkillList list={social.list} topic={social.topic} username={username} noedit/>
-	        <SkillList list={skills.list} topic={skills.topic} username={username} noedit/>
-	        <SkillList list={languages.list} topic={languages.topic} username={username} noedit/>
-	        <SkillList list={professions.list} topic={professions.topic} username={username} noedit/>
-	      </div>
-	    </div>
-	    <ActivityTable />
-			<ReportModal isOpen={isOpen} onOpenChange={onOpenChange} reported={username}/>
-			<ToastContainer />
-	  </main>
-	</>
-	)
+  const visibilityEnum = {
+    MINIMAL: 0,
+    CONTACT: 1,
+    ALL: 2
+  }
+
+  let visibility = (admin
+                    ? visibilityEnum.ALL
+                    : main_info.private_account
+                      ? visibilityEnum.MINIMAL
+                      : visibilityEnum.CONTACT);
+
+
+  const username = router.query.username;
+  const {professions, languages, "socialmedia-links": social, skills} = list_info;
+  const dictionary_tr = {
+  "username": "Kullanıcı Adı",
+  "date_of_birth": "Doğum Tarihi",
+  "nationality": "Ülke",
+  "identity_number": "Kimlik No",
+  "education": "Öğrenim",
+  "health_condition": "Sağlık Durumu",
+  "blood_type": "Kan Grubu",
+  "Address": "Adres"
+  }
+  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val]);
+  optional_info_tr.sort();
+  return (
+  <>
+    <main>
+      <div class="flex justify-around space-x-8">
+        <MainInfo className="w-60" info={main_info} onOpen={onOpen} contact={visibility >= visibilityEnum.CONTACT} report/>
+        {visibility >= visibilityEnum.ALL
+          ? <OptionalInfo className="w-80" fields={optional_info_tr} />
+          : null
+        }
+        <div>
+          <SkillList list={social.list} topic={social.topic} username={username} noedit/>
+          <SkillList list={skills.list} topic={skills.topic} username={username} noedit/>
+          <SkillList list={languages.list} topic={languages.topic} username={username} noedit/>
+          <SkillList list={professions.list} topic={professions.topic} username={username} noedit/>
+        </div>
+      </div>
+      <ActivityTable />
+      <ReportModal isOpen={isOpen} onOpenChange={onOpenChange} reported={username}/>
+      <ToastContainer />
+    </main>
+  </>
+  )
 };
 OtherProfile.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
@@ -67,41 +83,42 @@ OtherProfile.getLayout = function getLayout(page) {
 
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps({ req, locale, params }) {
-  	let self;
+    let self;
 
     try {
-    	self = req.session.user;
+      self = req.session.user;
     } catch (error) {
-    	console.log('Error @ user/[username].js: ', error);
-    	return { notFound: true };
+      console.log('Error @ user/[username].js: ', error);
+      return { notFound: true };
     }
 
     if (!self?.accessToken) {
-    	console.log("A guest is trying to view a profile");
-    	return { props: { guest: true } };
+      console.log("A guest is trying to view a profile");
+      return { props: { unauthorized: true } };
     }
 
     let main_info;
     try {
-		({ data: main_info } = await api.get(`/api/users/${params.username}`, {
-			headers: {
-				'Authorization': `Bearer ${self.accessToken}` 
-			}
-		}));
+    ({ data: main_info } = await api.get(`/api/users/${params.username}`, {
+      headers: {
+        'Authorization': `Bearer ${self.accessToken}` 
+      }
+    }));
     } catch (AxiosError) {
-    	console.log("A token expired");
-    	return { props: { expired: true } };
+      console.log("A token expired");
+      return { props: { unauthorized: true } };
     }
 
     const { data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/user-optional-infos', {
-    	params: {
-    		'anyuser': params.username
-    	},
-    	headers: {
-    		'Authorization': `Bearer ${self.accessToken}`
-    	}
+      params: {
+        'anyuser': params.username
+      },
+      headers: {
+        'Authorization': `Bearer ${self.accessToken}`
+      }
     });
     const optional_info = optional_info_list.length > 0 ? optional_info_list[0] : {};
+    delete optional_info.username;
 
     let list_info = {}
 
@@ -130,20 +147,23 @@ export const getServerSideProps = withIronSessionSsr(
     for (let topic of topics) {
       const { data: { [topic.key]: fields } } = await api.get(`/api/profiles/${topic.api_url}`, {
         params: {
-    			'anyuser': params.username
-	    	},
-	    	headers: {
-	          'Authorization': `Bearer ${self.accessToken}` 
-	        }
+          'anyuser': params.username
+        },
+        headers: {
+            'Authorization': `Bearer ${self.accessToken}` 
+          }
       });
       list_info[topic.api_url] = {"list": fields ? fields : [], "topic": topic};
     }
+
+    const admin = true;
 
     return {
       props: {
         main_info,
         optional_info,
-        list_info
+        list_info,
+        admin
       },
     };
   },

@@ -111,6 +111,7 @@ export const getServerSideProps = withIronSessionSsr(
       }
     });
     const optional_info = optional_info_list.length > 0 ? optional_info_list[0] : {};
+    delete optional_info.username;
 
     let list_info = {}
 
