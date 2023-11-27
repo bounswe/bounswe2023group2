@@ -16,22 +16,10 @@
         android:layout_height="match_parent"
         tools:context=".ui.activity.resource.ResourceFragment">
 
-        <Button
-            android:id="@+id/btAddResource"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_resource"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerViewResources" />
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewResources"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="64dp"
             android:adapter="@{adapter}"
             android:keepScreenOn="true"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -76,7 +64,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sort\nFilter"
+                android:text="@string/sort_filter"
                 android:textAlignment="textStart"
                 android:textAllCaps="false"
                 app:icon="@drawable/filter_alt"
@@ -95,6 +83,16 @@
             android:background="@color/separator"
             app:layout_constraintBottom_toTopOf="@+id/recyclerViewResources"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/btAddResource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="@string/add_resource"
+            app:icon="@drawable/ic_add_circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

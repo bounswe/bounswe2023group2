@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +12,17 @@ import android.view.ViewGroup.LayoutParams
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.NeedAdapter
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
@@ -35,22 +35,49 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNeedBinding.inflate(inflater,container,false)
+        sendRequest()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arrangeView()
-        val btFilter = binding.btFilter
-        btFilter.setOnClickListener {
-            showFilterDialog()
-        }
     }
 
     private fun arrangeView(){
+        binding.btFilter.setOnClickListener {
+            showFilterDialog()
+        }
+
         binding.btAddNeed.setOnClickListener {
             addNeed()
         }
+
+        val fab: ExtendedFloatingActionButton = binding.btAddNeed
+
+        binding.recyclerViewNeeds.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                // if the recycler view is scrolled
+                // above shrink the FAB
+                if (dy > 30 && fab.isExtended) {
+                    fab.shrink()
+                }
+
+                // if the recycler view is scrolled
+                // above extend the FAB
+                if (dy < -30 && !fab.isExtended) {
+                    fab.extend()
+                }
+
+                // of the recycler view is at the first
+                // item always extend the FAB
+                if (!recyclerView.canScrollVertically(-1)) {
+                    fab.extend()
+                }
+            }
+        })
 
         arrangeSearchView()
         //arrangeRecyclerView()
@@ -141,7 +168,6 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
             false // Return true if you want to consume the event, otherwise return false
         }
     }
-
 
 
     /**
