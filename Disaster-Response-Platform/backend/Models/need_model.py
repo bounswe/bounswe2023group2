@@ -4,6 +4,10 @@ from enum import Enum
 import datetime
 from Models.resource_model import Recurrence
 
+# Function to get current time in GMT+3
+def current_time_gmt3():
+    return datetime.datetime.now() + datetime.timedelta(hours=3)
+
 class Need(BaseModel):
     _id: str = Field(default=None)
     created_by: str = Field(default=None)
@@ -22,8 +26,8 @@ class Need(BaseModel):
     occur_at: datetime.datetime = Field(default=None)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
-    created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
-    last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    created_at: datetime.datetime = Field(default_factory=current_time_gmt3)
+    last_updated_at: datetime.datetime = Field(default_factory=current_time_gmt3)
     action_used: int = Field(default=0)
 
     @validator('recurrence_deadline', 'occur_at', pre=True)

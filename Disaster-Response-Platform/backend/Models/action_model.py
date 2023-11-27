@@ -5,6 +5,10 @@ from Models.resource_model import *
 from Models.need_model import *
 import datetime
 
+# Function to get current time in GMT+3
+def current_time_gmt3():
+    return datetime.datetime.now() + datetime.timedelta(hours=3)
+    
 class statusEnum(str, Enum):
     created="Created"
     active= "Active"
@@ -44,14 +48,14 @@ class Action(BaseModel):
     endLocation_x: float = Field(default=0.0)
     endLocation_y: float = Field(default=0.0)
     status: statusEnum = Field(statusEnum.created)
-    occur_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
-    created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
-    last_updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    occur_at: datetime.datetime = Field(default_factory=current_time_gmt3)
+    created_at: datetime.datetime = Field(default_factory=current_time_gmt3)
+    last_updated_at: datetime.datetime = Field(default_factory=current_time_gmt3)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
     related_groups: Optional[List[ActionGroup]]= None
  
-    end_at: datetime.datetime = Field(default_factory=datetime.datetime.now) #recurrence ise, girilen date min(resource, need) den büyük ise user a action bilgisi tarih içererek dönülür
+    end_at: datetime.datetime = Field(default_factory=current_time_gmt3) #recurrence ise, girilen date min(resource, need) den büyük ise user a action bilgisi tarih içererek dönülür
    
     @validator('end_at', 'occur_at', pre=True)
     def convert_str_to_datetime(cls, value):
