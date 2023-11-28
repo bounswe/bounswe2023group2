@@ -62,11 +62,27 @@
         </LinearLayout>
 
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Created By"
-            android:textSize="16sp" />
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Created By"
+                android:textSize="16sp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/createdByRole"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="User Role: "
+                android:textSize="16sp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
         <!-- The row -->
         <LinearLayout

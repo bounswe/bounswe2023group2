@@ -22,12 +22,15 @@ import com.example.disasterresponseplatform.databinding.FragmentResourceItemBind
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
+import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 
 class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, private val resource: ResourceBody.ResourceItem) : Fragment() {
 
     private lateinit var binding: FragmentResourceItemBinding
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
+    private val userViewModel = UserViewModel()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentResourceItemBinding.inflate(inflater,container,false)
@@ -36,12 +39,17 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (requireActivity == null) { // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         fillTexts(resource)
         arrangeButtons()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun fillTexts(resource: ResourceBody.ResourceItem){
-        binding.etCreatedBy.text = resource.created_by
+        val creatorName = resource.created_by
+        binding.etCreatedBy.text = creatorName
         binding.etType.text = resource.type
         binding.etInitialQuantity.text = resource.initialQuantity.toString()
         binding.etUnSuppliedQuantity.text = resource.currentQuantity.toString()
@@ -55,6 +63,11 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         binding.etSubType.text = resource.details["subtype"]
         fillDetails(resource.details)
         fillRecurrence(resource)
+        userViewModel.getUserRole(creatorName)
+        userViewModel.getLiveDataUserRole().observe(requireActivity!!){
+            val userRole = if (it == "null") "AUTHENTICATED" else it
+            binding.createdByRole.text = "User Role: $userRole"
+        }
     }
 
     /**
@@ -109,9 +122,6 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
      * else these buttons are gone
      */
     private fun arrangeButtons(){
-        if (requireActivity == null) { // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
         if (!token.isNullOrEmpty() and (username == resource.created_by)) {
