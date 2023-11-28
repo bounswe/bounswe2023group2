@@ -119,6 +119,7 @@ class MapFragment(
                 mapView.invalidate()
             }
             mapView.overlays.add(needClusterer)
+            mapView.invalidate()
             mapView.postInvalidate()
         }
         mapViewModel.getLiveDataResourceResponse().observe(viewLifecycleOwner) { resourceItems ->
@@ -138,12 +139,13 @@ class MapFragment(
                 val point = GeoPoint(resourceItem.x, resourceItem.y)
                 marker.position = point
                 allClusters.add(marker)
-                mapView.overlays.add(needClusterer)
                 mapView.postInvalidate()
+                mapView.invalidate()
             }
             //mapView.overlays.add(needClusterer)
-            mapView.postInvalidate()
+            mapView.overlays.add(needClusterer)
             mapView.invalidate()
+            mapView.postInvalidate()
         }
 
         mapViewModel.getLiveDataActionsResponse().observe(viewLifecycleOwner) { actions ->
@@ -219,7 +221,8 @@ class MapFragment(
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = needItem.type
-            marker.subDescription = needItem.details["Sub Type"]
+            marker.subDescription = needItem.details["subtype"]
+            marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.need_map_icon)
             needClusterer.add(marker)
         }
     }
@@ -236,11 +239,13 @@ class MapFragment(
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = resourceItem.type
+            marker.subDescription = resourceItem.details["subtype"]
 
             // Apply a color filter to the default marker
-            val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon
-            defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
-            marker.icon = defaultDrawable
+            marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.resource_map_icon)
+//            val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon
+//            defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
+//            marker.icon = defaultDrawable
             needClusterer.add(marker)
         }
     }

@@ -150,9 +150,8 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
      */
     private fun arrangeRecyclerView(resourceList : List<ResourceBody.ResourceItem>){
         val recyclerView = binding.recyclerViewResources
-        if (recyclerView.layoutManager == null){
-            val layoutManager = LinearLayoutManager(requireContext())
-            recyclerView.layoutManager = layoutManager
+        if (recyclerView.layoutManager == null && isAdded){
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
         // val list = resourceViewModel.getAllResources() // this is for local DB
         val adapter = ResourceAdapter(resourceList)
