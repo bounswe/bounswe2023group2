@@ -109,7 +109,7 @@
     <string name="nav_profile">Profile</string>
 
     <string-array name="need_types">
-        <item>clothes</item>
+        <item>cloth</item>
         <item>food</item>
         <item>drink</item>
         <item>shelter</item>
