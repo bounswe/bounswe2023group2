@@ -12,6 +12,7 @@ import add from "../public/icons/add.png";
 import dapp_logo_extended_white from "../public/logo/dapp_logo_extended_white.svg";
 import Image from "next/image";
 import AddNeedForm from "./AddNeed";
+import AddActionFromId from "./AddActionFromId";
 export default function NavBar() {
   const { user, mutateUser } = useUser();
   const router = useRouter();
@@ -71,7 +72,7 @@ export default function NavBar() {
                 <DropdownItem key="need" onClick={onOpenNeedModal}>
                   İhtiyaç ekle
                 </DropdownItem>
-                <DropdownItem key="aksiyon" >
+                <DropdownItem key="aksiyon" onClick={onOpenActionModal}>
                   Aksiyon ekle
                 </DropdownItem>
               </DropdownMenu>
@@ -155,6 +156,7 @@ export default function NavBar() {
       </NavbarContent>
       <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
       <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
+      <AddActionFromId onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} />
     </Navbar>
   );
 }
