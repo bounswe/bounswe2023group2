@@ -99,7 +99,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
                     <TableColumn>Created by</TableColumn>
                     <TableColumn>Created At</TableColumn>
                     <TableColumn>Description</TableColumn>
-                    <TableColumn>Take Action</TableColumn>
+                   <TableColumn>Take Action</TableColumn>
 
                 </TableHeader>
                 <TableBody>
@@ -110,15 +110,8 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
                             <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.created_by}</TableCell>
                             <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.created_at}</TableCell>
                             <TableCell onClick={() => { setActivity(resource); onOpen() }}  >{resource.description}</TableCell>
-                            <TableCell onClick={() => { onOpenNeedModal() }} >
-
-                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                    <GrTransaction />
-                                </span>
-
-                            </TableCell>
-
-
+                            <TableCell >
+                                </TableCell>
                         </TableRow>
                     ))}
                     {needFilter && needs && needs.map((need, index) => (
@@ -139,6 +132,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
                     ))}
                 </TableBody>
             </Table>
+            <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} table_need={activity} need_type={activity.type} />
         </div>
 
     );
