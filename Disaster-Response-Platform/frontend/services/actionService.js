@@ -31,18 +31,39 @@ const actionService = {
         },
          
       });
+      console.log(data)
       return { status:200, payload: {data: data?.data , message: 'Success'} };
     } catch (error) {
-      
+      console.log(error)
       return { status:400 , message: 'Error' };
     }
   },
+
+  
   deleteAction: async (id, body, accessToken) => {
     try {
       const data = await api.delete(`/api/actions/${id}`, { headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": 'application/json' } });
       return Promise.resolve(data?.data);
     } catch (error) {
       return Promise.reject(error);
+    }
+  },
+  doAction: async (action_id, accessToken) => {
+   
+    try {
+      
+      const data = await api.put(`api/actions/do/${action_id}`, {"action_id": action_id}, {
+         headers: { 
+          Authorization: `Bearer ${accessToken}`,
+         'Content-Type': 'application/json' 
+        },
+         
+      });
+      console.log(data)
+      return { status:200, payload: {data: data?.data , message: 'Success'} };
+    } catch (error) {
+      console.log(error)
+      return { status:400 , message: 'Error' };
     }
   },
 };
