@@ -22,7 +22,8 @@ import com.example.disasterresponseplatform.databinding.FragmentNeedItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
-import com.example.disasterresponseplatform.ui.authentication.UserViewModel
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 
 class NeedItemFragment(private val needViewModel: NeedViewModel, private val need: NeedBody.NeedItem) : Fragment() {
@@ -30,7 +31,6 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
     private lateinit var binding: FragmentNeedItemBinding
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
-    private val userViewModel = UserViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,23 +43,36 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (requireActivity == null) { // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
         fillTexts(need)
         arrangeButtons()
     }
 
-    @SuppressLint("SetTextI18n")
     private fun fillTexts(need: NeedBody.NeedItem){
-        val creatorName = need.created_by
-        binding.etCreatedBy.text = creatorName
+        binding.etCreatedBy.text = need.created_by
         binding.etType.text = need.type
         binding.etInitialQuantity.text = need.initialQuantity.toString()
         binding.etUnSuppliedQuantity.text = need.unsuppliedQuantity.toString()
         binding.etUrgency.text = need.urgency.toString()
-        binding.etCoordinateX.text = need.x.toString()
-        binding.etCoordinateY.text = need.y.toString()
+        binding.etCoordinate.text = "%.3f %.3f".format(need.x, need.y)
+        coordinateToAddress(need.x, need.y, object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                Log.e("Network", "Error: ${e.message}")
+            }
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                val responseBody = response.body?.string()
+                Log.i("Network", "Response: $responseBody")
+                if (responseBody != null) {
+                    var address = responseBody.subSequence(
+                        responseBody.indexOf("display_name") + 15,
+                        responseBody.length
+                    )
+                    address = address.subSequence(0, address.indexOf("\""))
+                    requireActivity?.runOnUiThread {
+                        binding.etCoordinate.text = address
+                    }
+                }
+            }
+        })
         binding.tvLastUpdatedTime.text = need.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = need.created_at.substring(0,10)
         binding.tvUpvoteCount.text = need.upvote.toString()
@@ -68,11 +81,6 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         binding.etSubType.text = need.details["subtype"]
         fillDetails(need.details)
         fillRecurrence(need)
-        userViewModel.getUserRole(creatorName)
-        userViewModel.getLiveDataUserRole().observe(requireActivity!!){
-            val userRole = if (it == "null") "AUTHENTICATED" else it
-            binding.createdByRole.text = "User Role: $userRole"
-        }
     }
 
     /**
@@ -127,6 +135,9 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
      * else these buttons are gone
      */
     private fun arrangeButtons(){
+        if (requireActivity == null) { // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
         if (!token.isNullOrEmpty() and (username == need.created_by)) {
@@ -256,6 +267,17 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         ft.replace(R.id.container, fragment)
         ft.addToBackStack(fragmentName)
         ft.commit()
+    }
+
+
+    private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
+        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+        client.newCall(request).enqueue(callback)
     }
 
 }

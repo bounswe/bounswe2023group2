@@ -26,20 +26,15 @@
     },
     "action": {
         "fields": [
-            {"name": "created_by", "label": "Created By", "type": "text"},
             {"name": "description", "label": "Description", "type": "text"},
             {"name": "type", "label": "Type", "type": "select", "options": ["need_resource"]},
             {"name": "occur_at", "label": "Occur date", "type": "date"},
             {"name": "end_at", "label": "End date", "type": "date"},
             {
-                "name": "related_groups",
-                "label": "List of Action Group",
-                "type": "array",
+                "name": "related_groups","label": "List of Action Group","type": "array",
                 "fields": [
                     {
-                        "name": "related_needs",
-                        "label": "Related Needs",
-                        "type": "array",
+                        "name": "related_needs","label": "Related Needs","type": "array",
                         "fields": [{"name": "id", "label": "ID", "type": "text"}]
                     },
                     {
@@ -66,7 +61,7 @@
             "fields": [
                 {"name": "expiration_date", "label": "Expiration Date", "type": "date"},
                 {"name": "allergens", "label": "Allergens", "type": "text"},
-                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["grains", "vegetables", "fruits", "meats", "dairy", "baby food", "conserved food"]}
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["grains", "vegetables", "fruits", "meats", "dairy", "baby food", "conserved food","warm food"]}
             ]
         },
         "drink": {
