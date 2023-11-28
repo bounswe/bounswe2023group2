@@ -22,6 +22,7 @@ import com.example.disasterresponseplatform.databinding.FragmentNeedItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
+import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -31,6 +32,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
     private lateinit var binding: FragmentNeedItemBinding
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
+    private val userViewModel = UserViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,12 +45,16 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (requireActivity == null) { // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         fillTexts(need)
         arrangeButtons()
     }
 
     private fun fillTexts(need: NeedBody.NeedItem){
-        binding.etCreatedBy.text = need.created_by
+        val creatorName = need.created_by
+        binding.etCreatedBy.text = creatorName
         binding.etType.text = need.type
         binding.etInitialQuantity.text = need.initialQuantity.toString()
         binding.etUnSuppliedQuantity.text = need.unsuppliedQuantity.toString()
@@ -78,9 +84,14 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         binding.tvUpvoteCount.text = need.upvote.toString()
         binding.tvDownVoteCount.text = need.downvote.toString()
         binding.tvDescription.text = need.description.toString()
-        binding.etSubType.text = need.details["subtype"]
+        //binding.e.text = need.details["subtype"]
         fillDetails(need.details)
         fillRecurrence(need)
+        userViewModel.getUserRole(creatorName)
+        userViewModel.getLiveDataUserRole().observe(requireActivity!!){
+            val userRole = if (it == "null") "AUTHENTICATED" else it
+            binding.etUserRole.text = userRole
+        }
     }
 
     /**
@@ -135,9 +146,6 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
      * else these buttons are gone
      */
     private fun arrangeButtons(){
-        if (requireActivity == null) { // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
         if (!token.isNullOrEmpty() and (username == need.created_by)) {
