@@ -53,6 +53,20 @@ async def get_user_role(response : Response, current_user: UserProfile = Depends
         response.status_code= HTTPStatus.BAD_REQUEST
         #response.response_model= Error
         return error
+@router.get("/role/{username}", responses={
+    status.HTTP_200_OK: {"model": UserRoleResponse},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+
+})
+async def get_user_role(username:str,response : Response, current_user: UserProfile = Depends(authentication_service.get_current_user)):
+    try:
+        role= get_user_role_service(username)
+        return UserRoleResponse(user_role=role)
+    except ValueError as err:
+        error= Error(ErrorMessage="Could not find user role", ErrorDetail=str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        #response.response_model= Error
+        return error
     
 @router.get("/proficiencies", responses={
     status.HTTP_200_OK: {"model": UserRoleResponse},
