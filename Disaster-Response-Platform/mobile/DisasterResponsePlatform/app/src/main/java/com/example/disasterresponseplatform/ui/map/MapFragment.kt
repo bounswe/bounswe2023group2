@@ -119,6 +119,7 @@ class MapFragment(
                 mapView.invalidate()
             }
             mapView.overlays.add(needClusterer)
+            mapView.invalidate()
             mapView.postInvalidate()
         }
         mapViewModel.getLiveDataResourceResponse().observe(viewLifecycleOwner) { resourceItems ->
@@ -143,6 +144,7 @@ class MapFragment(
             }
             //mapView.overlays.add(needClusterer)
             mapView.overlays.add(needClusterer)
+            mapView.invalidate()
             mapView.postInvalidate()
         }
 
@@ -219,14 +221,8 @@ class MapFragment(
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = needItem.type
-            marker.subDescription = needItem.details["Sub Type"]
+            marker.subDescription = needItem.details["subtype"]
             marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.need_map_icon)
-            marker.icon.bounds = marker.icon.copyBounds().apply {
-                this.right = this.right / 15
-                this.left = this.left / 15
-                this.top = this.top / 15
-                this.bottom = this.bottom / 15
-            }
             needClusterer.add(marker)
         }
     }
@@ -243,6 +239,7 @@ class MapFragment(
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = resourceItem.type
+            marker.subDescription = resourceItem.details["subtype"]
 
             // Apply a color filter to the default marker
             marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.resource_map_icon)
