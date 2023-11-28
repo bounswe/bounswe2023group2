@@ -26,7 +26,6 @@
     },
     "action": {
         "fields": [
-            {"name": "created_by", "label": "Created By", "type": "text"},
             {"name": "description", "label": "Description", "type": "text"},
             {"name": "type", "label": "Type", "type": "select", "options": ["need_resource"]},
             {"name": "occur_at", "label": "Occur date", "type": "date"},
