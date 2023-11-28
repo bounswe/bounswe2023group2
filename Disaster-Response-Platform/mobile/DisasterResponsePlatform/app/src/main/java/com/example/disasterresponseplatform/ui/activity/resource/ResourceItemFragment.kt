@@ -153,10 +153,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
                     if (isAdded)
                         Toast.makeText(requireContext(),"You Already Upvote it!",Toast.LENGTH_SHORT).show()
                 }
-                else if (it == ""){
-                    Log.i("Break","Break")
-                }
-                else{ // upvote succesfully
+                else if (it == "upvote"){
                     binding.btnUpvote.isClickable = false
                     binding.tvUpvoteCount.text = (resource.upvote + 1).toString()
                     if (isAdded){
@@ -185,10 +182,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
                     if (isAdded)
                         Toast.makeText(requireContext(),"You Already Downvote it!",Toast.LENGTH_SHORT).show()
                 }
-                else if (it == ""){
-                    Log.i("Break","Break")
-                }
-                else{ // downvote succesfully
+                else if (it == "downvote"){
                     binding.btnDownvote.isClickable = false
                     binding.tvDownVoteCount.text = (resource.downvote + 1).toString()
                     if (isAdded){

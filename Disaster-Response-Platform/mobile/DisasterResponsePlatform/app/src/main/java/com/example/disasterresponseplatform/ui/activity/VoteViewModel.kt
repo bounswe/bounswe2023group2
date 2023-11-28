@@ -68,7 +68,7 @@ class VoteViewModel {
                                     )
                                     val message = registerResponse.message
                                     Log.i("Upvote", "message: $message ")
-                                    liveDataMessage.postValue(message)
+                                    liveDataMessage.postValue("upvote")
 
                                 } catch (e: IOException) {
                                     // Handle IOException if reading the response body fails
@@ -139,7 +139,7 @@ class VoteViewModel {
                                     )
                                     val message = registerResponse.message
                                     Log.i("Upvote", "message: $message ")
-                                    liveDataMessage.postValue(message)
+                                    liveDataMessage.postValue("downvote")
 
                                 } catch (e: IOException) {
                                     // Handle IOException if reading the response body fails

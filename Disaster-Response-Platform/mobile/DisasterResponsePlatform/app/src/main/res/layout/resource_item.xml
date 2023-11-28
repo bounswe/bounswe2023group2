@@ -30,6 +30,50 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/recyc_category"/>
 
+        <ImageView
+            android:id="@+id/upvoteItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/tvUpvoteCount"
+            app:layout_constraintEnd_toStartOf="@+id/downvoteItem"
+            app:srcCompat="@drawable/ic_upvote" />
+
+        <ImageView
+            android:id="@+id/downvoteItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/tvDownvoteCount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCreator"
+            app:srcCompat="@drawable/ic_downvote" />
+
+        <TextView
+            android:id="@+id/tvDownvoteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="100"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/downvoteItem" />
+
+        <TextView
+            android:id="@+id/tvUpvoteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="100"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/upvoteItem" />
+
+
 
         <TextView
             android:id="@+id/tvType"
@@ -118,11 +162,11 @@
             android:id="@+id/tvQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:text="123 pcs"
             android:textSize="16sp"
-            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toStartOf="@+id/iconQuantity"
-            app:layout_constraintTop_toTopOf="@+id/tvLocation" />
+            app:layout_constraintTop_toTopOf="@+id/tvSubType" />
 
         <ImageView
             android:id="@+id/iconCreator"
@@ -137,11 +181,11 @@
             android:id="@+id/tvCreator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:text="Mehmet"
             android:textSize="16sp"
-            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toStartOf="@+id/iconCreator"
-            app:layout_constraintTop_toTopOf="@+id/tvDate" />
+            app:layout_constraintTop_toTopOf="@+id/tvLocation" />
         <View
             android:id="@+id/divider"
             android:layout_width="0dp"
