@@ -24,6 +24,7 @@ import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.databinding.FragmentResourceItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -131,7 +132,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             binding.btnEdit.visibility = View.GONE
         }
         binding.btnNavigate.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
@@ -169,6 +170,11 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
                     parentFragmentManager.popBackStack("ResourceItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
             }, 200)
         }
+    }
+
+    private fun navigateToMapFragment() {
+        val mapFragment = ActivityMap()
+        addFragment(mapFragment,"ActivityMap")
     }
 
     private fun addFragment(fragment: Fragment, fragmentName: String) {
