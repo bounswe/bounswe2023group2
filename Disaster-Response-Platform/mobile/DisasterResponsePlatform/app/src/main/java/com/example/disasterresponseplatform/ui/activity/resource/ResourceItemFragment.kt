@@ -16,24 +16,18 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.resource.Resource
-import com.example.disasterresponseplatform.data.enums.Endpoint
-import com.example.disasterresponseplatform.data.enums.RequestType
-import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.ResourceBody
+import com.example.disasterresponseplatform.data.models.VoteBody
 import com.example.disasterresponseplatform.databinding.FragmentResourceItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, private val resource: ResourceBody.ResourceItem) : Fragment() {
 
     private lateinit var binding: FragmentResourceItemBinding
     private var requireActivity: FragmentActivity? = null
+    private val voteViewModel = VoteViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentResourceItemBinding.inflate(inflater,container,false)
@@ -138,13 +132,76 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
         }
         binding.btnUpvote.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            upvoteResource(token)
         }
         binding.btnDownvote.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            downvoteResource(token)
         }
     }
 
+    /**
+     * It upvotes the resource, increment upvote count, make upvote button not clickable and shows toast upvote successfully message
+     * If user already upvotes that resource it shows toast you already upvoted message
+     */
+    @SuppressLint("SetTextI18n")
+    private fun upvoteResource(token: String?){
+        if (!token.isNullOrEmpty()){
+            val votePostRequest = VoteBody.VoteRequestBody("resources",resource._id)
+            voteViewModel.upvote(votePostRequest)
+            voteViewModel.getLiveDataMessage().observe(requireActivity!!){
+                if (it == "-1"){
+                    if (isAdded)
+                        Toast.makeText(requireContext(),"You Already Upvote it!",Toast.LENGTH_SHORT).show()
+                }
+                else if (it == ""){
+                    Log.i("Break","Break")
+                }
+                else{ // upvote succesfully
+                    binding.btnUpvote.isClickable = false
+                    binding.tvUpvoteCount.text = (resource.upvote + 1).toString()
+                    if (isAdded){
+                        voteViewModel.liveDataMessage.postValue("") //TO prevent toast both upvote successfully and already upvote when user clicks after update
+                        Toast.makeText(requireContext(),"Upvote Successfully",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        } else{
+            if (isAdded)
+                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * It downvotes the resource, increase downvote count, make downvote button not clickable and shows toast downvote successfully message
+     * If user already downvote that resource it shows toast you already downvote message
+     */
+    @SuppressLint("SetTextI18n")
+    private fun downvoteResource(token: String?){
+        if (!token.isNullOrEmpty()){
+            val votePostRequest = VoteBody.VoteRequestBody("resources",resource._id)
+            voteViewModel.downvote(votePostRequest)
+            voteViewModel.getLiveDataMessage().observe(requireActivity!!){
+                if (it == "-1"){
+                    if (isAdded)
+                        Toast.makeText(requireContext(),"You Already Downvote it!",Toast.LENGTH_SHORT).show()
+                }
+                else if (it == ""){
+                    Log.i("Break","Break")
+                }
+                else{ // downvote succesfully
+                    binding.btnDownvote.isClickable = false
+                    binding.tvDownVoteCount.text = (resource.downvote + 1).toString()
+                    if (isAdded){
+                        voteViewModel.liveDataMessage.postValue("") //TO prevent toast both upvote successfully and already upvote when user clicks after update
+                        Toast.makeText(requireContext(),"Downvote Successfully",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        } else{
+            if (isAdded)
+                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+        }
+    }
 
     /** This function is called whenever resource is created or edited
      * If it is created resource should be null, else need should be the clicked item
