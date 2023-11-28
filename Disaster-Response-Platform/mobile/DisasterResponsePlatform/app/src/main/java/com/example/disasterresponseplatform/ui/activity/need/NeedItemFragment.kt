@@ -145,6 +145,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         }
     }
 
+    private var voted = false // if user change his/her some arrangements will happen with this parameter
     /**
      * It upvotes the need, increment upvote count, make upvote button not clickable and shows toast upvote successfully message
      * If user already upvotes that need it shows toast you already upvoted message
@@ -160,12 +161,15 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
                         Toast.makeText(requireContext(),"You Already Upvote it!",Toast.LENGTH_SHORT).show()
                 }
                 else if (it == "upvote"){
+                    // if users vote for downvote before (if vote for upvote he can't click again because its not clickable)
+                    if (voted){
+                        binding.btnDownvote.isClickable = true
+                        binding.tvDownVoteCount.text = need.downvote.toString()
+                    }
+                    voted = true
                     binding.btnUpvote.isClickable = false
                     binding.tvUpvoteCount.text = (need.upvote + 1).toString()
-                    if (isAdded){
-                        voteViewModel.liveDataMessage.postValue("") //TO prevent toast both upvote successfully and already upvote when user clicks after update
-                        Toast.makeText(requireContext(),"Upvote Successfully",Toast.LENGTH_SHORT).show()
-                    }
+
                 }
             }
         } else{
@@ -189,12 +193,13 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
                         Toast.makeText(requireContext(),"You Already Downvote it!",Toast.LENGTH_SHORT).show()
                 }
                 else if (it == "downvote"){
+                    if (voted){
+                        binding.btnUpvote.isClickable = true
+                        binding.tvUpvoteCount.text = need.upvote.toString()
+                    }
                     binding.btnDownvote.isClickable = false
                     binding.tvDownVoteCount.text = (need.downvote + 1).toString()
-                    if (isAdded){
-                        voteViewModel.liveDataMessage.postValue("") //TO prevent toast both upvote successfully and already upvote when user clicks after update
-                        Toast.makeText(requireContext(),"Downvote Successfully",Toast.LENGTH_SHORT).show()
-                    }
+                    voted = true
                 }
             }
         } else{
