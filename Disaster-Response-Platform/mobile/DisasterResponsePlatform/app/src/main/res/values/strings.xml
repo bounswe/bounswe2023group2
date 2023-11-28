@@ -121,14 +121,15 @@
     </string-array>
 
     <string-array name="resource_types">
-        <item>Clothes</item>
-        <item>Food</item>
-        <item>Shelter</item>
-        <item>Medication</item>
-        <item>Transportation</item>
-        <item>Tools</item>
-        <item>Human</item>
-        <item>Other</item>
+        <item>cloth</item>
+        <item>food</item>
+        <item>drink</item>
+        <item>shelter</item>
+        <item>medication</item>
+        <item>transportation</item>
+        <item>tool</item>
+        <item>human</item>
+        <item>other</item>
     </string-array>
 
     <string-array name="resource_food_sub_types">

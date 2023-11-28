@@ -4,12 +4,15 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentActivity
@@ -18,15 +21,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ResourceAdapter
-import com.example.disasterresponseplatform.data.database.resource.Resource
+import com.example.disasterresponseplatform.data.enums.Endpoint
+import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.databinding.FragmentResourceBinding
+import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.managers.NetworkManager
+import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.gson.Gson
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
 
 class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragment() {
 
     private lateinit var binding: FragmentResourceBinding
+    private lateinit var filterBinding: SortAndFilterBinding
     private lateinit var searchView: SearchView
     private var requireActivity: FragmentActivity? = null
 
@@ -35,6 +49,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentResourceBinding.inflate(inflater,container,false)
+        sendRequest()
         return binding.root
     }
 
@@ -68,13 +83,13 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
 
                 // if the recycler view is scrolled
                 // above shrink the FAB
-                if (dy > 30 && fab.isExtended) {
+                if (dy > 10 && fab.isExtended) {
                     fab.shrink()
                 }
 
                 // if the recycler view is scrolled
                 // above extend the FAB
-                if (dy < -30 && !fab.isExtended) {
+                if (dy < -10 && !fab.isExtended) {
                     fab.extend()
                 }
 
@@ -106,14 +121,24 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         }
     }
 
+    /** This function is called whenever resource item is selected
+     * It opens a resource page that contains details about it and users can edit, delete, upvote and downvote this item from this page
+     * if they have the authority
+     */
+    private fun openResourceItemFragment(resource: ResourceBody.ResourceItem){
+        val resourceItemFragment = ResourceItemFragment(resourceViewModel,resource)
+        addFragment(resourceItemFragment,"ResourceItemFragment")
+    }
+
     /** This function connects backend and get all resource requests, then it observes livedata from viewModel which is changed
      * whenever all resources are fetched from backend. Then it creates a resource list with this response and prepare recyclerView with this list
      */
-    private fun sendRequest(){
+    private fun sendRequest(queries: MutableMap<String, String>? = null) {
+
         if (requireActivity == null){ // to handle error when user enters this page twice
             requireActivity = requireActivity()
         }
-        resourceViewModel.sendGetAllRequest()
+        resourceViewModel.sendGetAllRequest(queries)
         resourceViewModel.getLiveDataResponse().observe(requireActivity!!){ resourceResponse ->
             arrangeRecyclerView(resourceResponse.resources)
         }
@@ -174,22 +199,202 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
     private fun showFilterDialog(){
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.sort_and_filter)
+        filterBinding = SortAndFilterBinding.inflate(layoutInflater)
+        dialog.setContentView(filterBinding.root)
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialog.window?.setGravity(Gravity.BOTTOM)
+
+        val applyButton = filterBinding.btApply
+        val cancelButton = filterBinding.btCancel
+        val typesChipGroup = filterBinding.cgTypes
+        val subtypesChipGroup = filterBinding.cgSubTypes
+        val subtypesTitle = filterBinding.tvSubType
+
+        filterBinding.chUrgency.visibility = GONE
+
+        // Add chips from resource_types array into Type chip group
+        for (resourceType in resources.getStringArray(R.array.resource_types)) {
+            val chip = Chip(requireContext())
+            chip.text = resourceType
+            chip.isCheckable = true
+            chip.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+            )
+            typesChipGroup.addView(chip)
+        }
+
+        // Set up type chips select listener
+        typesChipGroup.setOnCheckedChangeListener { group, checkedId ->
+            val checkedChip = group.findViewById<Chip>(checkedId)
+            // Perform actions with the checked chip here
+            if(checkedChip == null) {
+                // Delete all type-specific fields
+                filterBinding.cgSubTypes.removeAllViews()
+                subtypesTitle.visibility = ViewGroup.GONE
+            } else {
+                subtypesTitle.visibility = ViewGroup.VISIBLE
+                typeChanged(checkedChip.text.toString())
+            }
+        }
+
+        // Set up apply button click listener
+        applyButton.setOnClickListener {
+            sendRequest(gatherFilterDetails())
+            // Trigger the function with the selected parameters
+            dialog.dismiss()
+
+        }
+
+        // Set up cancel button click listener
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
         dialog.show()
     }
 
+    private fun gatherFilterDetails(): MutableMap<String, String> {
+        val sortByChipGroup = filterBinding.cgSort
+        val selectedSortById = filterBinding.cgSort.checkedChipId
+        val selectedSortBy = sortByChipGroup.findViewById<Chip>(selectedSortById)?.text.toString()
 
-    /** This function is called whenever resource item is selected
-     * It opens a resource page that contains details about it and users can edit, delete, upvote and downvote this item from this page
-     * if they have the authority
+        val orderChipGroup = filterBinding.cgSortOrder
+        val selectedOrderId = filterBinding.cgSortOrder.checkedChipId
+        val selectedOrder = orderChipGroup.findViewById<Chip>(selectedOrderId)?.text.toString()
+
+        val typesChipGroup = filterBinding.cgTypes
+        val selectedTypeIds = filterBinding.cgTypes.checkedChipIds
+        val selectedTypes = mutableListOf<String>()
+
+        val subtypesChipGroup = filterBinding.cgSubTypes
+        val selectedSubTypeIds = subtypesChipGroup.checkedChipIds
+        val selectedSubTypes = mutableListOf<String>()
+
+        for (chipId in selectedTypeIds) {
+            val chip = typesChipGroup.findViewById<Chip>(chipId)
+            chip?.let { selectedTypes.add(it.text.toString()) }
+        }
+
+        for (chipId in selectedSubTypeIds) {
+            val chip = subtypesChipGroup.findViewById<Chip>(chipId)
+            chip?.let { selectedSubTypes.add(it.text.toString()) }
+        }
+
+        val queries = mutableMapOf<String, String>()
+        queries["active"] = "true"
+        selectedSortBy.let { queries["sort_by"] = it }
+        selectedOrder.let { queries["order"] = it }
+        selectedTypes.let { selectedTypes ->
+            if (selectedTypes.isNotEmpty()) {
+                queries["types"] = selectedTypes.joinToString(",")
+            }
+        }
+        selectedSubTypes.let { selectedSubTypes ->
+            if (selectedSubTypes.isNotEmpty()) {
+                queries["subtypes"] = selectedSubTypes.joinToString(",")
+            }
+        }
+        return queries
+    }
+
+    /**
+     * This function triggered when Type field changed.
+     * Makes api call to retrieve type-specific form fields of selected type.
+     * Creates type-specific form fields.
+     * Adds these fields into laySpecific layout that holds type-specific fields such as allergens, expiration_date.
+     * Creates subtype adapter and connects it.
      */
-    private fun openResourceItemFragment(resource: ResourceBody.ResourceItem){
-        val resourceItemFragment = ResourceItemFragment(resourceViewModel,resource)
-        addFragment(resourceItemFragment,"ResourceItemFragment")
+    private fun typeChanged(selectedType: String) {
+
+        // Delete all type-specific fields
+        val subtypesChipGroup = filterBinding.cgSubTypes
+        subtypesChipGroup.removeAllViews()
+
+        // Find type-specific fields and subType list
+        val networkManager = NetworkManager()
+        val headers = mapOf(
+            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            "Content-Type" to "application/json"
+        )
+
+        networkManager.makeRequest(
+            endpoint = Endpoint.FORM_FIELDS_TYPE,
+            requestType = RequestType.GET,
+            id = selectedType,
+            headers = headers,
+            callback = object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    // Handle failure when the request fails
+                }
+
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
+                            try {
+                                Log.d("ResponseSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val formFieldsResourceResponse = gson.fromJson(
+                                    rawJson,
+                                    ResourceBody.ResourceFormFieldsResponse::class.java
+                                )
+                                if (formFieldsResourceResponse != null) { // TODO check null
+                                    Log.d(
+                                        "ResponseSuccess",
+                                        "formFieldsResourceResponse: $formFieldsResourceResponse"
+                                    )
+
+                                    val fields: List<ResourceBody.ResourceFormFields> =
+                                        formFieldsResourceResponse.fields
+
+                                    // get subtype field from the response and add them into subtypesChipGroup
+                                    for (field in fields) {
+                                        if (field.type == "select") {
+                                            if (field.name == "subtype") {
+
+                                                val options = field.options ?: emptyList()
+                                                for (resourceType in options) {
+                                                    val chip = Chip(requireContext())
+                                                    chip.text = resourceType
+                                                    chip.isCheckable = true
+                                                    chip.layoutParams = LinearLayout.LayoutParams(
+                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                    )
+                                                    subtypesChipGroup.addView(chip)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (e: IOException) {
+                                // Handle IOException if reading the response body fails
+                                Log.e(
+                                    "ResponseError",
+                                    "Error reading response body: ${e.message}"
+                                )
+                            }
+                        } else {
+                            Log.d("ResponseSuccess", "Body is null")
+                        }
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            var responseCode = response.code()
+                            Log.d("ResponseSuccess", "Body: $errorBody")
+                        }
+                    }
+                }
+            }
+        )
     }
 
     private fun addFragment(fragment: Fragment, fragmentName: String) {

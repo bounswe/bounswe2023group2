@@ -9,10 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.databinding.ResourceItemBinding
-import java.text.DecimalFormat
 
 class ResourceAdapter(private val resourceList: List<ResourceBody.ResourceItem>?): RecyclerView.Adapter<ResourceAdapter.ResourceViewHolder>() {
 
@@ -43,6 +41,7 @@ class ResourceAdapter(private val resourceList: List<ResourceBody.ResourceItem>?
         hb.tvLocation.text = "x: ${String.format("%.2f", currentResource?.x).replace(',', '.')}, y: ${String.format("%.2f", currentResource?.y).replace(',', '.')}"
         hb.tvQuantity.text = currentResource?.currentQuantity.toString()
         hb.tvCreator.text = currentResource?.created_by
+        hb.tvSubType.text = currentResource?.details?.get("subtype").toString()
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

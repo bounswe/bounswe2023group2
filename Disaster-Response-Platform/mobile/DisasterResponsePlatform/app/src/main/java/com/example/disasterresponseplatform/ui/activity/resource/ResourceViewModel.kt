@@ -7,13 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.Endpoint
-import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.data.repositories.ResourceRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
-import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +52,9 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResponse(): LiveData<ResourceBody.ResourceResponse> = liveDataResponse
 
-    fun sendGetAllRequest() {
+    fun sendGetAllRequest(
+        queries: MutableMap<String, String>? = null
+    ) {
         val headers = mapOf(
             "Content-Type" to "application/json"
         )
@@ -62,6 +62,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             endpoint = Endpoint.RESOURCE,
             requestType = RequestType.GET,
             headers = headers,
+            queries = queries,
             callback = object : Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,
@@ -132,7 +133,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                 requestType = requestType,
                 headers = headers,
                 requestBody = requestBody,
-                id, // Resource's ID
+                id = id, // Resource's ID
                 callback = object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,
