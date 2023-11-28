@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,18 +15,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.resource.Resource
-import com.example.disasterresponseplatform.data.enums.Endpoint
-import com.example.disasterresponseplatform.data.enums.RequestType
-import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.databinding.FragmentResourceItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.managers.NetworkManager
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 
 class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, private val resource: ResourceBody.ResourceItem) : Fragment() {
 
@@ -131,7 +122,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             binding.btnEdit.visibility = View.GONE
         }
         binding.btnNavigate.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
@@ -144,6 +135,13 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         }
     }
 
+    private fun navigateToMapFragment() {
+        val mapFragment = ActivityMap()
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, mapFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
 
     /** This function is called whenever resource is created or edited
      * If it is created resource should be null, else need should be the clicked item

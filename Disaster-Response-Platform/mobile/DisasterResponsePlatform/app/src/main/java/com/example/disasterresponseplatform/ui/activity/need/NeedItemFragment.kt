@@ -18,6 +18,7 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.databinding.FragmentNeedItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 
 
 class NeedItemFragment(private val needViewModel: NeedViewModel, private val need: NeedBody.NeedItem) : Fragment() {
@@ -128,7 +129,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
             binding.btnEdit.visibility = View.GONE
         }
         binding.btnNavigate.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
@@ -139,6 +140,14 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         binding.btnDownvote.setOnClickListener {
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun navigateToMapFragment() {
+        val mapFragment = ActivityMap()
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, mapFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     /** This function is called when user wants to edit need
