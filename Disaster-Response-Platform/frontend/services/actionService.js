@@ -25,8 +25,10 @@ const actionService = {
     try {
       console.log(body)
       const data = await api.post(`api/actions/`, body, {
-         headers: { Authorization: `Bearer ${accessToken}`,
-         'Content-Type': 'application/json' },
+         headers: { 
+          Authorization: `Bearer ${accessToken}`,
+         'Content-Type': 'application/json' 
+        },
          
       });
       return { status:200, payload: {data: data?.data , message: 'Success'} };
