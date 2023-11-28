@@ -8,7 +8,9 @@ export default withIronSessionApiRoute(actionRoute, sessionConfig);
   async function actionRoute(req, res) {
     try {
       const result = await actionService.createAction(req.body, req.session.user.accessToken)
-      
+      console.log(result.payload.data.action_id ,"result")
+      const doAction = await actionService.doAction(result.payload.data.action_id, req.session.user.accessToken)
+      console.log(doAction ,"doAction")
       res.status(result.status).json(result.payload);
     } catch (error) {
       console.log('error', error);
