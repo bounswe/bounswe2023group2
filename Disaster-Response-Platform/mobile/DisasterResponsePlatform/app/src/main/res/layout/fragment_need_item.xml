@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Clothes"
+                android:text="Food"
                 android:textSize="22sp" />
 
             <TextView
@@ -50,11 +50,13 @@
                 android:text="|"
                 android:textSize="22sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Created By"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/etSubType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Warm Food"
+                android:textSize="22sp" />
 
         </LinearLayout>
 
@@ -106,26 +108,33 @@
         </LinearLayout>
 
         <LinearLayout
+            app:tint="@color/primaryDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
+                app:tint="@color/primaryDark"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_role" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:text="User Role:"
+                android:layout_weight="5"
                 android:textStyle="bold"
-                android:gravity="center"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/etUserRole"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
+                android:layout_weight="5"
                 android:text="AUTHENTICATED"
                 android:textSize="16sp" />
 

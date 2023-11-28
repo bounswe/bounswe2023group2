@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="@color/separator"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerViewResources"
+            app:layout_constraintTop_toBottomOf="@id/laySearchFilter"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
