@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="adapter"
+            type="com.example.disasterresponseplatform.adapter.EmergencyAdapter" />
+    </data>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,6 +22,7 @@
             android:layout_height="0dp"
             android:keepScreenOn="true"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:adapter="@{adapter}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"

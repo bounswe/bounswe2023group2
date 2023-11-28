@@ -42,6 +42,8 @@ class ResourceAdapter(private val resourceList: List<ResourceBody.ResourceItem>?
         hb.tvQuantity.text = currentResource?.currentQuantity.toString()
         hb.tvCreator.text = currentResource?.created_by
         hb.tvSubType.text = currentResource?.details?.get("subtype").toString()
+        hb.tvDownvoteCount.text = currentResource?.downvote.toString()
+        hb.tvUpvoteCount.text = currentResource?.upvote.toString()
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

@@ -43,6 +43,8 @@ class NeedAdapter(private val needList: List<NeedBody.NeedItem>?): RecyclerView.
         hb.tvQuantity.text = currentNeed?.initialQuantity.toString()
         hb.tvCreator.text = currentNeed?.created_by
         hb.tvSubType.text = currentNeed?.details?.get("subtype").toString()
+        hb.tvDownvoteCount.text = currentNeed?.downvote.toString()
+        hb.tvUpvoteCount.text = currentNeed?.upvote.toString()
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

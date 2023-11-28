@@ -11,8 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.adapter.EmergencyAdapter
+import com.example.disasterresponseplatform.adapter.NeedAdapter
+import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.databinding.FragmentEmergencyBinding
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
@@ -34,8 +38,25 @@ class EmergencyFragment : Fragment() {
         arrangeView()
     }
 
+    /**
+     * Arrange recycler view and its adapter
+     */
+    private fun arrangeRecyclerView() {
+        val recyclerView = binding.recyclerViewEmergency
+        if (recyclerView.layoutManager == null) {
+            val layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.layoutManager = layoutManager
+        }
+        // val list = needViewModel.getAllNeeds() // this is for local DB
+        val emergencyList = mutableListOf<String>()
+        emergencyList.add("Emergency 1")
+        val adapter = EmergencyAdapter(emergencyList)
+        binding.adapter = adapter
+    }
+
 
     private fun arrangeView(){
+        arrangeRecyclerView()
         binding.btFilter.setOnClickListener {
             showFilterDialog()
         }

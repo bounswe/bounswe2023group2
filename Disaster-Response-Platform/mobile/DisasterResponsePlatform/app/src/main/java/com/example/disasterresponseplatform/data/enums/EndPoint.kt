@@ -29,4 +29,6 @@ enum class Endpoint(val path: String) {
     FORM_FIELDS_RESOURCE("form_fields/resource"),
     FORM_FIELDS_NEED("form_fields/need"),
     FORM_FIELDS_TYPE("form_fields/type"),
+    UPVOTE("feedback/upvote"),
+    DOWNVOTE("feedback/downvote"),
 }

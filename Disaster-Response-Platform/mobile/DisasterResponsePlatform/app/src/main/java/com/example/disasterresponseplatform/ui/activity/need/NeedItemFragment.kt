@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +17,18 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.NeedBody
+import com.example.disasterresponseplatform.data.models.VoteBody
 import com.example.disasterresponseplatform.databinding.FragmentNeedItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.VoteViewModel
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 
 
 class NeedItemFragment(private val needViewModel: NeedViewModel, private val need: NeedBody.NeedItem) : Fragment() {
 
     private lateinit var binding: FragmentNeedItemBinding
     private var requireActivity: FragmentActivity? = null
-
+    private val voteViewModel = VoteViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -128,16 +132,79 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
             binding.btnEdit.visibility = View.GONE
         }
         binding.btnNavigate.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
         }
         binding.btnUpvote.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            upvoteNeed(token)
         }
         binding.btnDownvote.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            downvoteNeed(token)
+        }
+    }
+
+    private var voted = false // if user change his/her some arrangements will happen with this parameter
+    /**
+     * It upvotes the need, increment upvote count, make upvote button not clickable and shows toast upvote successfully message
+     * If user already upvotes that need it shows toast you already upvoted message
+     */
+    @SuppressLint("SetTextI18n")
+    private fun upvoteNeed(token: String?){
+        if (!token.isNullOrEmpty()){
+            val votePostRequest = VoteBody.VoteRequestBody("needs",need._id)
+            voteViewModel.upvote(votePostRequest)
+            voteViewModel.getLiveDataMessage().observe(requireActivity!!){
+                if (it == "-1"){
+                    if (isAdded)
+                        Toast.makeText(requireContext(),"You Already Upvote it!",Toast.LENGTH_SHORT).show()
+                }
+                else if (it == "upvote"){
+                    // if users vote for downvote before (if vote for upvote he can't click again because its not clickable)
+                    if (voted){
+                        binding.btnDownvote.isClickable = true
+                        binding.tvDownVoteCount.text = need.downvote.toString()
+                    }
+                    voted = true
+                    binding.btnUpvote.isClickable = false
+                    binding.tvUpvoteCount.text = (need.upvote + 1).toString()
+
+                }
+            }
+        } else{
+            if (isAdded)
+                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * It downvotes the need, increase downvote count, make downvote button not clickable and shows toast downvote successfully message
+     * If user already downvote that need it shows toast you already downvote message
+     */
+    @SuppressLint("SetTextI18n")
+    private fun downvoteNeed(token: String?){
+        if (!token.isNullOrEmpty()){
+            val votePostRequest = VoteBody.VoteRequestBody("needs",need._id)
+            voteViewModel.downvote(votePostRequest)
+            voteViewModel.getLiveDataMessage().observe(requireActivity!!){
+                if (it == "-1"){
+                    if (isAdded)
+                        Toast.makeText(requireContext(),"You Already Downvote it!",Toast.LENGTH_SHORT).show()
+                }
+                else if (it == "downvote"){
+                    if (voted){
+                        binding.btnUpvote.isClickable = true
+                        binding.tvUpvoteCount.text = need.upvote.toString()
+                    }
+                    binding.btnDownvote.isClickable = false
+                    binding.tvDownVoteCount.text = (need.downvote + 1).toString()
+                    voted = true
+                }
+            }
+        } else{
+            if (isAdded)
+                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -168,6 +235,11 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
                     parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
             }, 200)
         }
+    }
+
+    private fun navigateToMapFragment() {
+        val mapFragment = ActivityMap()
+        addFragment(mapFragment,"ActivityMap")
     }
 
     private fun addFragment(fragment: Fragment, fragmentName: String) {
