@@ -56,6 +56,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         val creatorName = need.created_by
         binding.etCreatedBy.text = creatorName
         binding.etType.text = need.type
+        binding.etSubType.text = need.details["subtype"]
         binding.etInitialQuantity.text = need.initialQuantity.toString()
         binding.etUnSuppliedQuantity.text = need.unsuppliedQuantity.toString()
         binding.etUrgency.text = need.urgency.toString()
