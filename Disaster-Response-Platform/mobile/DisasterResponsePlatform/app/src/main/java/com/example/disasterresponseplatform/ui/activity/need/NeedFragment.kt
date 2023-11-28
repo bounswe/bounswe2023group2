@@ -67,6 +67,12 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     }
 
     private fun arrangeView(){
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            // Handle the refresh action here, e.g., fetch updated data from the backend
+            // and update the RecyclerView adapter
+            sendRequest()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
         binding.btFilter.setOnClickListener {
             showFilterDialog()
         }
