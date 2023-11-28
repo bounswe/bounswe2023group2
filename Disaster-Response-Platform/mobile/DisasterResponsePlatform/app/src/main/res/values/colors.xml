@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary">#104ABF</color>
+    <color name="primaryDark">#062C78</color>
     <color name="primaryVariant">#264FA1</color>
     <color name="onPrimary">#FFFFFF</color>
     <color name="secondary">#D84315</color>
