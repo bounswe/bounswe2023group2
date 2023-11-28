@@ -139,8 +139,6 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
                     ))}
                 </TableBody>
             </Table>
-            <Button onPress={onOpenNeedModal}>Aksiyon al</Button>
-            <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} table_need={activity} need_type={activity.type} />
         </div>
 
     );

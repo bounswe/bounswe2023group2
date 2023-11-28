@@ -77,21 +77,14 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
     const prepared = {}
     Object.keys(data).map((key, index) => {
       console.log(types, key)
-      if (key === 'recurrence_rate' | key === 'recurrence_date' | key === 'recurrence_deadline') {
-        if (data[key] === '') { }
-        else {
-          prepared[key] = data[key]
-        }
 
-      }
-
-      else if (types[key] === 'number' | key === 'urgency') {
+      if (data[key] === '') { }
+      else if (types[key] === 'number' | key === 'urgency' | key === 'recurrence_rate') {
         prepared[key] = parseInt(data[key])
       }
       else {
         prepared[key] = data[key]
       }
-
     })
 
     prepared['type'] = chosen

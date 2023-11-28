@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import GenericForm from "./GenericForm";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -7,34 +6,40 @@ import {
   ModalBody,
 
 } from "@nextui-org/modal";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Select, SelectItem } from "@nextui-org/react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { api } from "@/lib/apiUtils";
 import { useRouter } from "next/router";
-export default function AddResourceForm({ isOpen, onOpenChange }) {
+export default function AddActionFromId({ isOpen, onOpenChange}) {
   const [form, setForm] = useState([]);
-  const [subform, setSubform] = useState([]);
+  const needTypes = ['food', 'water', 'shelter', 'medicine', 'cloth', 'transportation', 'other'];
   const { reset, handleSubmit, control, formState: { isSubmitting }, setValue } = useForm();
   const [chosen, setChosen] = useState('');
   const [types, setTypes] = useState({});
-  const [fields, setFields] = useState([]);
+  const [needs, setNeeds] = useState([]);
+  const [resources, setResources] = useState([]);
+  const [selectedNeeds, setSelectedNeeds] = useState([]);
+
+  const selectedValue = useMemo(
+    () => Array.from(selectedNeeds).join(", ").replaceAll("_", " "),
+    [selectedNeeds]
+  );
+
   const router = useRouter();
   const getFrom = async () => {
-    const result = await api.get('/api/form_fields/resource')
+    const result = await api.get('/api/form_fields/action')
     const desiredForm = result.data.fields;
     setForm(desiredForm)
-    desiredForm.map((res) => {
-      let temp = {}
-      temp[res.name] = res.type
-      setTypes((prev) => { return { ...prev, ...temp } })
-
+    desiredForm.map((res,index) => {
+      let can3 = {}
+      can3[res.name] = res.type
+      setTypes((prev) => { return { ...prev, ...can3 } })
       if (res.name === 'type') {
         let tmp = []
         res.options.map((e, index) => {
 
           tmp = [...tmp, { key: e, value: e, label: e, index: index }]
-
         })
         res.options = tmp
       }
@@ -44,48 +49,61 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
           tmp = [...tmp, { key: e, value: e, label: e, index: index }]
         })
         res.options = tmp
-
       }
+      else if( res.name === 'related_groups'){
+        delete desiredForm[index]
+      }
+
     })
   }
 
-  const getSubtypes = async (value) => {
-    const result = await api.get(`/api/form_fields/type/${value}`)
-    const _subform = result.data.fields;
-    _subform.map((res) => {
-      if (res.type === 'select') {
-        let tmp = []
-        res.options.map((e, index) => {
-          tmp = [...tmp, { key: e, value: e, label: e, index: index }]
-        })
-        res.options = tmp
-      }
-    })
-    setSubform(_subform)
-  }
   useEffect(() => {
     getFrom();
   }, [])
+  
+  const filterActivities = async (my_value) => {
+    let response
+    let responseNeed = await api.get(`/api/needs/?types=${my_value}`, { headers: { "Content-Type": "application/json" } });
+    let resNeed = responseNeed.data;
+    if (responseNeed.status === 200) {
+      setNeeds(resNeed.needs)
+    } else {
+      toast.error("An unexpected error occurred while saving, please try again")
+    }
+    response = await api.get(`/api/resources/?types=${my_value}`, { headers: { "Content-Type": "application/json" } });
+    let res = response.data;
+    if (response.status === 200) {
+      setResources(res.resources)
+      console.log(resources)
+    } else {
 
+      toast.error("An unexpected error occurred while saving, please try again")
+    }
+  }
   const can = async (data) => {
-    console.log(data)
+
     const prepared = {}
+    console.log(data)
     Object.keys(data).map((key, index) => {
       console.log(types, key)
-      if (data[key] === '') { }
-      else if (types[key] === 'number' | key === 'urgency' | key === 'recurrence_rate') {
+      if (data[key] === '' || key === 'resource') { }
+      else {
+        prepared[key] = data[key]
+      }
+      if (types[key] === 'number' && key !== 'resource') {
         prepared[key] = parseInt(data[key])
       }
-      else {
+      else if( key !== 'resource') {
         prepared[key] = data[key]
       }
 
     })
-
     prepared['type'] = chosen
+    let action_temp=  {"related_needs": [table_need._id], "related_resources": [data['resource']]}
+    prepared["related_groups"] = [action_temp, ...prepared["related_groups"]]
     console.log(prepared)
-    prepared['currentQuantity'] = 0
-    const response = await fetch('/api/resource/add', {
+
+    const response = await fetch('/api/action/add', {
       method: 'POST',
       body: JSON.stringify(prepared)
     });
@@ -106,25 +124,45 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
     }
   }
   return <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='text-black' scrollBehavior="inside">
+  
     <ModalContent>
       {(onClose) => (
         <>
-          <ModalHeader className="flex flex-col gap-1">Add Resource</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1">Create Action</ModalHeader>
           <ModalBody>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button
+                  variant="bordered"
+                  className="capitalize"
+                >
+                  {selectedValue}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Multiple selection example"
+                variant="flat"
+                closeOnSelect={true}
+                selectionMode="single"
+                disallowEmptySelection
+                selectedKeys={selectedNeeds}
+                onSelectionChange={(e)=>{setSelectedNeeds(e); filterActivities(Array.from(e).join(", "));console.log(e)}}
+
+              >
+                {needTypes.map((need) => (<DropdownItem key={need}> {need}</DropdownItem>))}
+              </DropdownMenu>
+            </Dropdown>
             <form onSubmit={handleSubmit(can)} action="#"
               method="POST" className='flex w-full flex-col  mb-6 md:mb-0 gap-4'  >
-
-
-
               {form !== [] && form.map((res) => {
                 if (res.name === 'type') return <Select
                   id="type" name="type"
                   items={res.options}
-                  label="Kaynak Türü"
-                  placeholder="Kaynağınızı seçiniz"
+                  label="İhtiyaç Türü"
+                  placeholder="İhtiyacınızı seçiniz"
                   className="max-xs"
                   variant={'bordered'}
-                  onChange={(e) => { setChosen(e.target.value); getSubtypes(e.target.value); console.log(e) }}
+                  onChange={(e) => { setChosen(e.target.value); console.log(e) }}
 
 
                 >
@@ -151,6 +189,27 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
                     </Select>
                   )}
                 />
+
+                // else if (res.type === 'array') return <Controller
+                //   name={res.name}
+                //   control={control}
+                //   defaultValue=""
+                //   label={res.label}
+                //   placeholder={res.label}
+                //   render={({ field }) => (
+                //     <Select
+                //       id={field.name} name={field.name}
+                //       items={res.options}
+                //       label={res.label}
+                //       placeholder={res.label}
+                //       className="max-xs"
+                //       variant={'bordered'}
+                //       {...field}
+                //     >
+                //       {(type) => <SelectItem key={type.value} className='text-black'>{type.value}</SelectItem>}
+                //     </Select>
+                //   )}
+                // />
                 return <Controller
                   name={res.name}
                   control={control}
@@ -169,8 +228,7 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
                   )}
                 />
               })}
-              {subform !== [] && subform.map((res) => {
-
+              {/* {subform !== [] && subform.map((res) => {
                 if (res.type === 'select') return <Controller
                   name={`details.${res.name}`}
                   control={control}
@@ -209,7 +267,51 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
                       />
                     )}
                   />
-              })}
+              })} */}
+          
+              <Controller
+                  name={'resource'}
+                  control={control}
+                  selectionMode="multiple"
+                  label={'Kaynak seçiniz'} 
+                  placeholder={'Kaynak seçiniz'}
+                  render={({ field }) => (
+                    <Select
+                      id={'resource'} name={'resource'}
+                      items={resources}
+                      label={'Kaynak seçiniz'} 
+                      placeholder={'Kaynak seçiniz'}
+                      className="max-xs"
+                      variant={'bordered'}
+                      
+                      {...field}
+                    >
+                      {(type) => <SelectItem key={type._id} value={type.value} className='text-black'>{type.type}: {type.created_by}</SelectItem>}
+                    </Select>
+                  )}
+                />
+                <Controller
+                  name={'need'}
+                  control={control}
+                  selectionMode="multiple"
+                  label={'Ihtiyac seçiniz'} 
+                  placeholder={'Ihtiyac seçiniz'}
+                  render={({ field }) => (
+                    <Select
+                      id={'need'} name={'need'}
+                      items={needs}
+                      label={'Ihtiyac seçiniz'} 
+                      placeholder={'Ihtiyac seçiniz'}
+                      className="max-xs"
+                      variant={'bordered'}
+                      
+                      {...field}
+                    >
+                      {(type) => <SelectItem key={type._id} value={type.value} className='text-black'>{type.type}: {type.created_by}</SelectItem>}
+                    </Select>
+                  )}
+                />
+  
 
 
               <Button type='submit'>
