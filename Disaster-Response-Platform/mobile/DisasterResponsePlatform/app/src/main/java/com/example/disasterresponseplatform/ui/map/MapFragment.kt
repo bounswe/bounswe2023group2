@@ -138,12 +138,12 @@ class MapFragment(
                 val point = GeoPoint(resourceItem.x, resourceItem.y)
                 marker.position = point
                 allClusters.add(marker)
-                mapView.overlays.add(needClusterer)
                 mapView.postInvalidate()
+                mapView.invalidate()
             }
             //mapView.overlays.add(needClusterer)
+            mapView.overlays.add(needClusterer)
             mapView.postInvalidate()
-            mapView.invalidate()
         }
 
         mapViewModel.getLiveDataActionsResponse().observe(viewLifecycleOwner) { actions ->
@@ -220,6 +220,13 @@ class MapFragment(
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = needItem.type
             marker.subDescription = needItem.details["Sub Type"]
+            marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.need_map_icon)
+            marker.icon.bounds = marker.icon.copyBounds().apply {
+                this.right = this.right / 15
+                this.left = this.left / 15
+                this.top = this.top / 15
+                this.bottom = this.bottom / 15
+            }
             needClusterer.add(marker)
         }
     }
@@ -238,9 +245,10 @@ class MapFragment(
             marker.title = resourceItem.type
 
             // Apply a color filter to the default marker
-            val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon
-            defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
-            marker.icon = defaultDrawable
+            marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.resource_map_icon)
+//            val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon
+//            defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
+//            marker.icon = defaultDrawable
             needClusterer.add(marker)
         }
     }
