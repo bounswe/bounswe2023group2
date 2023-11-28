@@ -11,19 +11,30 @@ import { FaMapMarkedAlt } from "react-icons/fa";
 import add from "../public/icons/add.png";
 import dapp_logo_extended_white from "../public/logo/dapp_logo_extended_white.svg";
 import Image from "next/image";
+import AddNeedForm from "./AddNeed";
 export default function NavBar() {
   const { user, mutateUser } = useUser();
   const router = useRouter();
   const isMapPage = router.pathname === '/map';
+  const {
+    isOpen: isNeedModalOpen,
+    onOpen: onOpenNeedModal,
+    onOpenChange: onOpenChangeNeedModal,
+  } = useDisclosure()
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isActionModalOpen,
+    onOpen: onOpenActionModal,
+    onOpenChange: onOpenChangeActionModal,
+  } = useDisclosure()
+
+
   return (
     <Navbar
       className='w-full justify-center p-0  m-0 max-w-screen-xl text-black bg-blue-700'
       isBordered
-      
+
     >
-
-
       <NavbarContent justify="center" >
         <NavbarBrand className="hover:-translate-y-1 duration-300">
           <Link href={`/`}>
@@ -37,19 +48,35 @@ export default function NavBar() {
         </NavbarBrand>
         <NavbarItem className="text-center hover:-translate-y-1 duration-300">
           <Link href={`/map`} >
-            <FaMapMarkedAlt color='white'  size={40} />
+            <FaMapMarkedAlt color='white' size={40} />
           </Link>
         </NavbarItem>
         <NavbarItem className="text-center hover:-translate-y-1 duration-300" >
 
           {isMapPage ? <></> : (
-            <Image
-              onClick={onOpen}
-              src={add}
-              alt="Logo"
-              width={40}
-              height={40}
-            />
+            <Dropdown placement="bottom-start">
+              <DropdownTrigger>
+                <Image
+
+                  src={add}
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Add Activity" className='text-black' variant="flat">
+                <DropdownItem key="kaynak" onClick={onOpen} >
+                  Kaynak ekle
+                </DropdownItem>
+                <DropdownItem key="need" onClick={onOpenNeedModal}>
+                  İhtiyaç ekle
+                </DropdownItem>
+                <DropdownItem key="aksiyon" >
+                  Aksiyon ekle
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+
           )}
         </NavbarItem>
       </NavbarContent>
@@ -127,7 +154,7 @@ export default function NavBar() {
         </NavbarItem>
       </NavbarContent>
       <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
-     
+      <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
     </Navbar>
   );
 }
