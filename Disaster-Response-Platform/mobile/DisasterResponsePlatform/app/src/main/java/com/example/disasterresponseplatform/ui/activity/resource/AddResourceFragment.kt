@@ -18,8 +18,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.ResourceBody
@@ -125,9 +126,12 @@ class AddResourceFragment(
         binding.etCoordinate.setEndIconOnClickListener {
             navigateToMapFragment()
         }
-        fillParameters(resource)
+        if (requireActivity == null) { // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         getFormFieldsFromBackend()
         typeFieldListener()
+        fillParameters(resource)
         submitResource(resource == null)
         return binding.root
     }
@@ -141,6 +145,53 @@ class AddResourceFragment(
         transaction.commit()
     }
 
+    private fun fillDetails(resource: ResourceBody.ResourceItem){
+        // Iterate through each child view in the layOthers layout
+        for (i in 0 until binding.laySpecific.childCount) {
+            // Check the type of the child view
+            when (val childView = binding.laySpecific.getChildAt(i)) {
+                is TextInputLayout -> {
+                    val editText = childView.editText
+                    if (editText != null) {
+                        val fieldName = editText.hint.toString()
+                        if (resource.details[fieldName] != null){
+                            editText.setText(resource.details[fieldName])
+                        }
+                    }
+                }
+                is MaterialAutoCompleteTextView -> {
+                    val fieldName = childView.hint.toString()
+                    if (resource.details[fieldName] != null){
+                        childView.setText(resource.details[fieldName])
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fillOthers(resource: ResourceBody.ResourceItem){
+        // Iterate through each child view in the layOthers layout
+        for (i in 0 until binding.layOthers.childCount) {
+            // Check the type of the child view
+            when (val childView = binding.layOthers.getChildAt(i)) {
+                is TextInputLayout -> {
+                    val editText = childView.editText
+                    val fieldName = editText?.hint.toString()
+                    if (resource.details[fieldName] != null){
+                        editText?.setText(resource.details[fieldName])
+                    }
+                }
+                is MaterialAutoCompleteTextView -> {
+                    val fieldName = childView.hint.toString()
+                    if (resource.details[fieldName] != null){
+                        childView.setText(resource.details[fieldName])
+                    }
+                }
+                // Add additional cases for other view types as needed
+            }
+        }
+    }
+
     /** It fills the layout's fields corresponding data if it is editResource
      * It checks whether it is editResource by checking if resource is null, if it is not null then it should be edit form
      */
@@ -149,9 +200,12 @@ class AddResourceFragment(
         if (resource != null) {
             binding.tvAddResource.text = getString(R.string.edit_resource)
             binding.btnSubmit.text = getString(R.string.save_changes)
-            binding.spResourceType.setText(resource.type.toString())
+            binding.spResourceType.setText(resource.type)
             binding.spResourceSubType.setText(resource.details["subtype"])
             binding.etQuantity.editText?.setText(resource.currentQuantity.toString())
+            fillOthers(resource)
+            fillDetails(resource)
+
 
             selectedLocationX = resource.x
             selectedLocationY = resource.y
@@ -219,9 +273,6 @@ class AddResourceFragment(
      * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
      */
     private fun submitResource(isAdd: Boolean) {
-        if (requireActivity == null) { // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
         binding.btnSubmit.setOnClickListener {
             if (!binding.btnSubmit.isEnabled) { // Prevent multiple clicks
                 return@setOnClickListener
@@ -417,6 +468,11 @@ class AddResourceFragment(
         })
     }
 
+    // this is for observing whether fields are added from fill parameters.
+    private val othersFieldsAdded = MutableLiveData<Boolean>()
+
+    fun getLiveDataResourceID(): LiveData<Boolean> = othersFieldsAdded
+
     /**
      * This function gets the form fields from backend and show them in Form dynamically
      */
@@ -541,7 +597,7 @@ class AddResourceFragment(
                                             }
                                         }
                                     }
-
+                                    othersFieldsAdded.postValue(true)
                                 }
                             } catch (e: java.io.IOException) {
                                 // Handle IOException if reading the response body fails

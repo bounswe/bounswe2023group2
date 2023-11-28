@@ -40,6 +40,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import java.util.Calendar
+import kotlin.properties.Delegates
 
 class AddNeedFragment(
     private val needViewModel: NeedViewModel,
@@ -49,8 +50,8 @@ class AddNeedFragment(
 
     private lateinit var binding: FragmentAddNeedBinding
     private var requireActivity: FragmentActivity? = null
-    private var selectedLocationX: Double? = null
-    private var selectedLocationY: Double? = null
+    private var selectedLocationX by Delegates.notNull<Double>()
+    private var selectedLocationY by Delegates.notNull<Double>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,8 +76,8 @@ class AddNeedFragment(
             selectedLocationX = bundle.getDouble("x_coord")
             selectedLocationY = bundle.getDouble("y_coord")
             coordinateToAddress(
-                selectedLocationX!!,
-                selectedLocationY!!,
+                selectedLocationX,
+                selectedLocationY,
                 object : okhttp3.Callback {
                     override fun onFailure(call: okhttp3.Call, e: IOException) {
                         val handler = Handler(Looper.getMainLooper())
@@ -154,14 +155,17 @@ class AddNeedFragment(
             binding.spNeedType.setText(need.type)
             binding.spNeedSubType.setText(need.details["subtype"])
             binding.etQuantity.editText?.setText(need.initialQuantity.toString())
+
+            selectedLocationX = need.x
+            selectedLocationY = need.y
             coordinateToAddress()
         }
     }
 
     private fun coordinateToAddress(){
         coordinateToAddress(
-            selectedLocationX!!,
-            selectedLocationY!!,
+            selectedLocationX,
+            selectedLocationY,
             object : okhttp3.Callback {
                 override fun onFailure(call: okhttp3.Call, e: IOException) {
                     val handler = Handler(Looper.getMainLooper())

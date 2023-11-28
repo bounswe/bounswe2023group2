@@ -132,7 +132,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                 requestType = requestType,
                 headers = headers,
                 requestBody = requestBody,
-                id, // Resource's ID
+                id = id, // Resource's ID
                 callback = object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,
