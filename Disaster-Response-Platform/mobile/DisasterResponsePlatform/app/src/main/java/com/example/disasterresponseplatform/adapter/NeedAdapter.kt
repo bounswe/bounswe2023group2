@@ -39,6 +39,7 @@ class NeedAdapter(private val needList: List<NeedBody.NeedItem>?): RecyclerView.
 
 
         hb.tvType.text = currentNeed?.type.toString()
+        hb.tvSubType.text = currentNeed?.details?.get("subtype").toString()
         hb.tvDate.text = currentNeed?.created_at?.substring(0,10)
         hb.tvLocation.text = "x: ${String.format("%.2f", currentNeed?.x).replace(',', '.')}, y: ${String.format("%.2f", currentNeed?.y).replace(',', '.')}"
         hb.tvQuantity.text = currentNeed?.initialQuantity.toString()
