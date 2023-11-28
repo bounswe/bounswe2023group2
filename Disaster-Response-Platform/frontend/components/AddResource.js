@@ -84,7 +84,7 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
 
     prepared['type'] = chosen
     console.log(prepared)
-    prepared['currentQuantity'] = 0
+    prepared['currentQuantity'] = prepared['initialQuantity']
     const response = await fetch('/api/resource/add', {
       method: 'POST',
       body: JSON.stringify(prepared)

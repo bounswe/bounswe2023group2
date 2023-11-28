@@ -90,6 +90,7 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
     prepared['type'] = chosen
     console.log(prepared)
     prepared['unsuppliedQuantity'] = prepared['initialQuantity']
+    prepared['currentQuantity'] = prepared['initialQuantity']
     const response = await fetch('/api/need/add', {
       method: 'POST',
       body: JSON.stringify(prepared)
