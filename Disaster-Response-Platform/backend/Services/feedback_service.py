@@ -25,6 +25,17 @@ def vote(entityType:str, entityID:str, current_user:str, voteType:str) -> bool:
             set_upvote(entityType, entityID, 1)
         else:
             set_downvote(entityType, entityID, 1)
+            
+def unvote(entityType:str, entityID:str, current_user:str) -> bool:
+    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID})   
+    if existing_vote:
+        result = feedback_collection.delete_one({"entityType": entityType, "entityID": entityID})
+        if existing_vote['vote'] == "upvote":
+            set_upvote(entityType, entityID, -1)
+        else:
+            set_downvote(entityType, entityID, -1)
+    else:
+        raise ValueError(f"Current user has not voted yet")
         
         
 def set_upvote(entity_type: EntityTypeEnum, entity_id: str, num: int) -> bool:

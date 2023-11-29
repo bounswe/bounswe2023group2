@@ -34,3 +34,14 @@ def set_downvote(voteUpdate: VoteUpdate, response: Response, current_user: str =
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
     
+@router.put("/unvote")
+def set_downvote(voteUpdate: VoteUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        feedback_service.unvote(voteUpdate.entityType, voteUpdate.entityID, current_user)
+        response.status_code = HTTPStatus.OK
+        return {"message": f"{current_user} unvoted {voteUpdate.entityType} with ID {voteUpdate.entityID}"}
+    except ValueError as err:
+        err_json = create_json_for_error("Unvote error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+    
