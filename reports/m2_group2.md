@@ -1,6 +1,6 @@
 # Customer Milestone 2 Deliverables
 
-**Team Name:** Doğal Afet Paylaşım Platformı (DAPP)
+**Team Name:** Doğal Afet Paylaşım Platformu (DAPP)
 
 **Date:** 01.12.2023
 
