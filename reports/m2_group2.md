@@ -266,5 +266,23 @@ I am a member of the front-end team. My responsibilities before Customer Milesto
   
 
 ---
+#### Member: Ömer Şahin Albayram
+
+##### Responsibilities:
+
+Member of frontend team. In milestone 2, my responsibilites was making map more interactive and informative, designing and implementing filter menu, however mostly I failed to fulfill my responsibilites because of other lectures and some other private reasons.
+
+##### Main contributions:
+My overall contribution to this milestone has been to plan how we do things in general, or in other words, how it is better for us to things such as how should we store resources and needs.
+  
+- **Management-related significant issues**:
+  - [Deciding Activity attributes for activity information card on map page](https://github.com/bounswe/bounswe2023group2/issues/488)
+  - [Frontend - Research about how filtered activites might be printed](https://github.com/bounswe/bounswe2023group2/issues/493)
+  - [Resource / Need final design and coding](https://github.com/bounswe/bounswe2023group2/issues/499)
+  - [Backend -Frontend Meeting ](https://github.com/bounswe/bounswe2023group2/issues/536)
+
+- **Pull requests**:
+  - **Reviewed:** [619](https://github.com/bounswe/bounswe2023group2/pull/619) 
+  
 
 ## The Software
