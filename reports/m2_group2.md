@@ -137,6 +137,9 @@ http://3.218.226.215:8000/docs#/
 http://3.218.226.215:8000
 * **The link to the Frontend**
 http://3.218.226.215:3000
+* **[Mobile APK Link (Under Assets)](https://github.com/bounswe/bounswe2023group2/releases/tag/Group2-Practice-App-Release-v.0.2)**
+
+
 - **API endpoint examples**
     We are already using FastAPI response models for Swagger that shows status codes and response examples. But we are also using a collaborative workspace on [Postman]( https://darp-354343.postman.co/workspace/Team-Workspace~323ad32b-b319-4a0d-8ebe-e9ebe4c0a14d/collection/25451471-54780f30-5464-4b34-ada7-4b9e804588cc?action=share&creator=25451471)
 
