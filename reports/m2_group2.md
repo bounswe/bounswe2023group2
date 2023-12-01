@@ -34,61 +34,80 @@
 |---|---|
 | 1.1 User Requirements |  |
 | 1.1.1  |  |
-| 1.1.1.1 |  |
+| 1.1.1.1 | completed  |
 | 1.1.1.1.1 | completed  |
 | 1.1.1.2. |  completed |
-| 1.1.1.2.1 | not started |
-| 1.1.1.2.2   |  |
+| 1.1.1.2.1 | completed|
+| 1.1.1.2.2   |not completed  |
 | 1.1.1.3. | completed |
-| 1.1.1.3.1 | not started |
-| 1.1.2 | not started |
-| 1.1.2.1. | not started |
-| 1.1.2.2. | not started |
-| 1.1.2.3.  |  |
-| 1.1.2.3  | completed  |
-| 1.1.2.4   |  |
-|  1.1.3. | completed |
-| 1.1.3.1.  | in progress |
-| 1.1.3.2 User Actions |  |
+| 1.1.2 |  |
+| 1.1.2.1. | not completed(emergency) |
+| 1.1.2.2. | not completed(event and emergency) |
+| 1.1.2.3.  | not completed(event and emergency) |
+| 1.1.2.4   |not completed(event and emergency) |
+|  1.1.3. |  not completed(reports) |
+| 1.1.3.1.  |completed |
+| 1.1.3.2  | completed  |
 | 1.1.3.3  | not_started |
 | 1.1.3.4 | not_started |
 | 1.1.3.5 | not started |
 | 1.1.3.6  | completed |
-| 1.1.3.7. | completed |
-| 1.1.3.8. | completed |
-| 1.1.3.9. | completed |
-| 1.1.3.10. | completed |
-| 1.1.3.11. | completed |
+| 1.1.3.7. | not_started |
+| 1.1.3.8. | not_started |
+| 1.1.3.9. | not_started |
+| 1.1.3.10. | not_started |
+| 1.1.3.11. | not_started |
 | --1.2. System Requirements | not_started |
-| 1.2.1. | not_started |
+| 1.2.1. | completed |
 | 1.2.1.2 | completed  |
-| 1.2.2  | in_progress |
-| 1.2.2.1 | not_started |
-| 1.2.2.2. | in_progress |
-| 1.2.2.3| completed |
-| 1.2.2.4 | completed |
-| 1.2.3  |completed |
-| 1.2.3.1 | not_started |
-| 1.2.3.1.1 | not_started |
-| 1.3.11 | completed |
-| 1.3.12  | completed |
-| 1.3.13 | completed |
-| 1.3.14 | completed |
-| 1.3.15. (with its subtopics) | completed |
-| -- 1.4. Admin User (with its subtopics)  | not_started |
-| ## System Requirements |  |
-| 2.1.2.5. Monitoring (with its subsections) | not started |
-| 2.1.2.6. Knowledge (with its subsections) | completed |
-| 2.1.2.7. Rating (with its subsections) | not started |
-| 2.1.2.8. Notes (with its subsections) | in progress |
-| 2.1.3. Following (with its subsections) | in progress |
-| 2.1.4. Privacy (with its subsections)| not started|
-| -- 2.2. Communication Channel |  |
-| 2.2.1 | completed |
-| 2.2.2 | completed |
-| 2.2.2.1 | not_started |
+| 1.2.2  | not completed |
+| 1.2.2.1 | completed |
+| 1.2.2.2. | competed |
+| 1.2.2.3| not_started |
+| 1.2.2.4 | not_started |
+| 1.2.3  | |
+| 1.2.3.1 | conpleted |
+| 1.2.3.1.1 | completed |
+| 1.2.3.1.2 | completed |
+| 1.2.3.2  | not_started |
+| 1.2.3.3 | not_completed |
+| 1.2.3.4 | competed (changes required) |
+| 1.2.4  | |
+| 1.2.4.1 | not_completed |
+| 1.2.4.2 | completed |
+| 1.2.4.3 | not_started |
+| 1.2.5.  |  |
+| 1.2.5.1 | not started |
+| 1.2.5.2 | completed |
+| 1.2.5.3 | competed |
+| 1.2.5.4 | completed |
+| 1.2.6. | not_started |
+| 1.2.7 | not_started |
+| 1.2.8 | not_completed |
+| 1.2.8.1 | not_started |
+| 1.2.8.2 | not_started |
+| 1.2.8.3 | not_started |
+| 1.2.8.4 | not_started |
+| 1.2.8.5 | not_started |
+| 1.2.8.6 | not_started |
+| ## Non Functional Requirements |  |
+| -- 2.1.Availability |  |
+| 2.1.1 | completed |
+| 2.1.2 | completed |
+| 2.1.3 | not started |
+| 2.1.3.1 | not started |
+| 2.1.3.2 | not started |
+| 2.1.4 | completed |
+| 2.1.5 | completed for current|
+| 2.1.6 | will be checked |
+| 2.1.6.1 | will be checked |
+| 2.1.6.2 | will be checked |
+| 2.1.6.2 | achieved for current |
+| -- 2.2. Privacy |  |
+| 2.2.1 | should be reviewed in detail |
+| 2.2.2 | not started |
 | 2.2.3 | not_started |
-| -- 2.3. Note Taking |  |
+| -- 2.3. Security |  |
 | 2.3.1  | completed |
 | 2.3.2  | completed for current |
 | 2.3.3   |completed  |
@@ -96,12 +115,20 @@
 | 2.3.4   |completed for current |
 | -- 2.4. Performance and reliability |
 |2.4.1. |completed|
+|2.4.2. |completed but not tested|
+|2.4.3. |completed but not tested|
+|2.4.4. |completed but not tested|
+|2.4.5. |completed but not tested|
+|2.4.6. |should be checked in detail|
 |2.4.1.1. |in progress|
 | -- 2.5. Backup and Recovery (Consistency) |  
-|2.5.1.|completed|
+|2.5.1 |not started|
+|2.5.2 |not started|
+|2.5.3 |not started|
+|2.5.4 |not started|
+|2.5.5 |not started|
+|2.5.6 |not started|
 
-
-## Provide progress according to requirements: being either not started, in progress, or completed (completed = implemented, tested, documented, and deployed)
 
 ## API Documentation and URL's:
 * **The API documentation.**
@@ -434,7 +461,7 @@ I created map, added dynamic pinpoints for need and resource. Connected need and
    - **Created:**
          [#509](https://github.com/bounswe/bounswe2023group2/pull/509),  [#555](https://github.com/bounswe/bounswe2023group2/pull/555), [#618](https://github.com/bounswe/bounswe2023group2/pull/618), [#622](https://github.com/bounswe/bounswe2023group2/pull/622), [#636](https://github.com/bounswe/bounswe2023group2/pull/636), [#603](https://github.com/bounswe/bounswe2023group2/pull/603)
 
-### Additional information**:
+### Additional information:
 
 I want to thank mobile team for working so hard. As a team we worked together, and end result was satisfactory.
     
@@ -538,3 +565,5 @@ My overall contribution to this milestone has been to plan how we do things in g
 
 
 ### Additional information:
+
+## Member: [Buse Tolunay](https://github.com/bounswe/bounswe2023group2/wiki/Buse-Tolunay-Individual-Contribution-Report-2)
