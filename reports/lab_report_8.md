@@ -122,7 +122,7 @@ As mobile team, we accoplished all our goals and additionally we made quite a lo
 | Design and decide the annotation use| [#675](https://github.com/bounswe/bounswe2023group2/issues/675) | Mehmet K. | 9.12.2023 | 3h| 
 | Backend - Annotation functions - Part 1  | [#676](https://github.com/bounswe/bounswe2023group2/issues/676) |Mehmet K. | 12.12.2023 | 3h| 
 | Backend - Probable revisions on profile APIs | [#677](https://github.com/bounswe/bounswe2023group2/issues/677) | Mehmet K. | 12.12.2023 | 2h|
-|Translation - Language Packs |[#678](https://github.com/bounswe/bounswe2023group2/issues/678)|Backend team| 12.12.2023| 2h |
+|Translation - Language Packs |[#678](https://github.com/bounswe/bounswe2023group2/issues/678)|Backend team| 12.12.2023| 2h|
 
 ## Risks
 - Action design needs to be simplified. There can be lots of bugs with it.
