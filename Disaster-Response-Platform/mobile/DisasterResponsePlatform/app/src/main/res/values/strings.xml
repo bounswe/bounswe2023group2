@@ -79,8 +79,8 @@
     <string name="select_need_type">Select or Enter Need Type <font color='#B00020'>*</font></string>
     <string name="select_or_enter_location">Select or Enter Location <font color='#B00020'>*</font></string>
     <string name="enter_quantity">Enter Quantity <font color='#B00020'>*</font></string>
-    <string name="select_or_enter_coordinate_x">Select or Enter Coordinate X <font color='#B00020'>*</font></string>
-    <string name="select_or_enter_coordinate_y">Select or Enter Coordinate Y <font color='#B00020'>*</font></string>
+    <string name="select_or_enter_coordinate_x">Select Location <font color='#B00020'>*</font></string>
+    <string name="select_or_enter_coordinate_y">Select Location <font color='#B00020'>*</font></string>
     <string name="enter_allergens">Enter Allergens</string>
     <string name="enter_additional_notes">Enter Additional Notes</string>
     <string name="enter_full_name">Enter Full Name <font color='#B00020'>*</font></string>
@@ -98,7 +98,7 @@
     <string name="field_need_type">Need Type (Select or Enter)</string>
     <string name="field_resource_type">Resource Type (Select or Enter)</string>
     <string name="field_sub_type">Sub-Type (Select or Enter)</string>
-    <string name="field_location">Select or Enter Location</string>
+    <string name="field_location">Location (Select from Map or Enter)</string>
     <string name="field_quantity">Quantity</string>
     <string name="field_coordinate_x">X Coordinate</string>
     <string name="field_coordinate_y">Y Coordinate</string>
@@ -109,25 +109,27 @@
     <string name="nav_profile">Profile</string>
 
     <string-array name="need_types">
-        <item>Clothes</item>
-        <item>Food</item>
-        <item>Shelter</item>
-        <item>Medication</item>
-        <item>Transportation</item>
-        <item>Tools</item>
-        <item>Human</item>
-        <item>Other</item>
+        <item>cloth</item>
+        <item>food</item>
+        <item>drink</item>
+        <item>shelter</item>
+        <item>medication</item>
+        <item>transportation</item>
+        <item>tools</item>
+        <item>human</item>
+        <item>other</item>
     </string-array>
 
     <string-array name="resource_types">
-        <item>Clothes</item>
-        <item>Food</item>
-        <item>Shelter</item>
-        <item>Medication</item>
-        <item>Transportation</item>
-        <item>Tools</item>
-        <item>Human</item>
-        <item>Other</item>
+        <item>cloth</item>
+        <item>food</item>
+        <item>drink</item>
+        <item>shelter</item>
+        <item>medication</item>
+        <item>transportation</item>
+        <item>tool</item>
+        <item>human</item>
+        <item>other</item>
     </string-array>
 
     <string-array name="resource_food_sub_types">
@@ -192,5 +194,19 @@
     <string-array name="resource_empty_sub_types"></string-array>
     <string name="more">More</string>
     <string name="sort_filter">Sort\nFilter</string>
+    <string name="sf_title">Sort &amp; Filter</string>
+    <string name="sf_sort_by">Sort By:</string>
+    <string name="sf_types">Select a Type:</string>
+    <string name="sf_subtypes">Select Sub-Types:</string>
+    <string name="sf_cancel">Cancel</string>
+    <string name="sf_apply">Apply</string>
+    <string name="sf_date">created_at</string>
+    <string name="sf_reliability">reliability</string>
+    <string name="sf_urgency">urgency</string>
+    <string name="sf_ascending">asc</string>
+    <string name="sf_descending">desc</string>
+    <string name="sf_distance">Distance (0–1000 km):</string>
+    <string name="sf_sort_order">Sort Order:</string>
+    <string name="sf_upvote">upvote</string>
 
 </resources>

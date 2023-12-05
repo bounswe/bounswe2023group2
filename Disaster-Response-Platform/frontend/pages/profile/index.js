@@ -24,7 +24,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
         "options": ["Yükleniyor..."]});
 
   if (guest || expired) {
-    useEffect(() => router.push("/login"));
+    useEffect(() => {router.push("/login")});
     return (
       <div class="text-center text-xl">
         <br /><br /><br />
@@ -45,13 +45,13 @@ export default function Profile({guest, expired, main_info, optional_info, list_
     "blood_type": "Kan Grubu",
     "Address": "Adres"
   }
-  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val])
+  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val]);
   optional_info_tr.sort();
   return (
     <>
       <main>
         <div class="flex justify-around space-x-8">
-          <MainInfo className="w-60" info={main_info}/>
+          <MainInfo className="w-60" info={main_info} contact={true}/>
           <OptionalInfo className="w-80" fields={optional_info_tr} />
           <div>
             <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen} setModalState={setModalState}/>
@@ -111,6 +111,7 @@ export const getServerSideProps = withIronSessionSsr(
       }
     });
     const optional_info = optional_info_list.length > 0 ? optional_info_list[0] : {};
+    delete optional_info.username;
 
     let list_info = {}
 

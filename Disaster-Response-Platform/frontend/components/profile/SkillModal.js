@@ -5,7 +5,7 @@ export default function SkillModal({ isOpen, onOpenChange, topic }) {
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
-            <form id="modal" onSubmit={event => {topic.addSkill(event);onClose()}}>
+            <form id="skill-modal" onSubmit={event => {topic.addSkill(event);onClose()}}>
               <ModalHeader className="flex flex-col gap-1">{topic.add_title}</ModalHeader>
               <ModalBody>
               	<Input name={topic.primary} id={topic.primary} type="text"
@@ -36,7 +36,7 @@ export default function SkillModal({ isOpen, onOpenChange, topic }) {
                   Vazgeç
                 </Button>
                 <Button color="primary" type="submit">
-                  Action
+                  Ekle
                 </Button>
               </ModalFooter>
             </form>

@@ -32,43 +32,21 @@
             android:orientation="vertical"
             android:showDividers="middle">
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etCoordinate"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/empty_divider_v"
-                android:orientation="horizontal"
-                android:showDividers="middle">
+                android:hint="@string/field_location"
+                app:endIconDrawable="@android:drawable/ic_dialog_map"
+                app:endIconTint="@color/primary"
+                app:endIconMode="custom">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/etCoordinateX"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/field_coordinate_x">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/etCoordinateY"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/field_coordinate_y">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/boxNeedType"
@@ -121,16 +99,13 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/laySpecific"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@drawable/empty_divider_h"
             android:orientation="vertical"
-            android:showDividers="middle">
-        </LinearLayout>
-
+            android:showDividers="middle"></LinearLayout>
 
         <LinearLayout
             android:id="@+id/layOthers"
@@ -143,9 +118,9 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
-                android:background="?android:attr/listDivider"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"/>
+                android:layout_marginBottom="20dp"
+                android:background="?android:attr/listDivider" />
 
         </LinearLayout>
 
@@ -155,7 +130,6 @@
             android:layout_height="wrap_content"
             android:height="60dip"
             android:text="@string/submit" />
-
 
     </LinearLayout>
 

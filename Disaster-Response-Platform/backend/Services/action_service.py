@@ -413,7 +413,7 @@ def update_action(action_id: str, action: Action) -> Action:
             update_data['created_at'] = existing_action['created_at']
 
         # Set 'last_updated_at' to the current time
-        update_data['last_updated_at'] = datetime.now()
+        update_data['last_updated_at'] = datetime.now() + timedelta(hours=3)
 
         actions_collection.update_one({"_id": ObjectId(action_id)}, {"$set": update_data})
 

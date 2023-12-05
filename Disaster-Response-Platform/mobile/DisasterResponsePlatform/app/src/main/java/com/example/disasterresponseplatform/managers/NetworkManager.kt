@@ -16,6 +16,7 @@ import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 
 /**
@@ -64,6 +65,7 @@ class NetworkManager {
         endpoint: Endpoint,
         requestType: RequestType,
         headers: Map<String, String>,
+        queries: Map<String, String>? = null,
         requestBody: RequestBody? = null,
         id: String? = null, // If it is not empty, send request endpoint.path + /id -> send id as /<id> for now
         callback: Callback<ResponseBody>,
@@ -122,8 +124,15 @@ class NetworkManager {
                 when (requestType) {
                     RequestType.GET -> {
                         Log.d("RESPONSE", callback.toString())
-                        val call = api.getData(endpoint.path, headers)
-                        call.enqueue(callback)
+                        if (queries.isNullOrEmpty()) {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getData(endpoint.path, headers)
+                            call.enqueue(callback)
+                        } else {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getQueryData(endpoint.path, headers, queries)
+                            call.enqueue(callback)
+                        }
                     }
                     RequestType.POST -> {
                         Log.d("RESPONSE", callback.toString())
@@ -145,8 +154,15 @@ class NetworkManager {
                 when (requestType) {
                     RequestType.GET -> {
                         Log.d("RESPONSE", callback.toString())
-                        val call = api.getData(endpoint.path, headers)
-                        call.enqueue(callback)
+                        if (queries.isNullOrEmpty()) {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getData(endpoint.path, headers)
+                            call.enqueue(callback)
+                        } else {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getQueryData(endpoint.path, headers, queries)
+                            call.enqueue(callback)
+                        }
                     }
                     RequestType.POST -> {
                         Log.d("RESPONSE", callback.toString())
@@ -165,6 +181,13 @@ class NetworkManager {
                 }
             }
             Endpoint.FORM_FIELDS_TYPE -> {
+                Log.d("RESPONSE", callback.toString())
+                id?.let {
+                    val call = api.getData("${endpoint.path}/$id", headers)
+                    call.enqueue(callback)
+                }
+            }
+            Endpoint.GETUSER -> {
                 Log.d("RESPONSE", callback.toString())
                 id?.let {
                     val call = api.getData("${endpoint.path}/$id", headers)
@@ -202,6 +225,13 @@ interface ApiService {
     fun getData(
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
+    ): Call<ResponseBody>
+
+    @GET("{endpoint}")
+    fun getQueryData(
+        @Path("endpoint") endpoint: String,
+        @HeaderMap headers: Map<String, String>,
+        @QueryMap queries: Map<String, String>?
     ): Call<ResponseBody>
 
     @POST("{endpoint}")

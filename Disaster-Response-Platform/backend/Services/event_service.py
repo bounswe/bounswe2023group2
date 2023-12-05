@@ -30,7 +30,7 @@ def set_Nones_to_old_values(dict_with_Nones:dict, dict_with_Olds:dict):
 def create_event(event: Event) -> str:
     # Manual validation for required fields during creation
     if not all([event.created_by_user, event.created_time,
-                event.event_type, (event.is_active is not None)]):
+                event.event_type, event.short_description, (event.is_active is not None)]):
         raise ValueError("Some mandatory fields missing.")
     event_dict = event.dict() #eradicate_dates(event)
     insert_result = events_collection.insert_one(event_dict)
@@ -56,7 +56,9 @@ def get_events(event_id:str = None) -> list[dict]:
                   "created_time": 1,
                   "created_by_user": 1,
                   "last_confirmed_time": 1,
-                  "confirmed_by_user": 1
+                  "confirmed_by_user": 1,
+                  "short_description": 1,
+                  "note": 1
     }
 
     if (event_id is None):

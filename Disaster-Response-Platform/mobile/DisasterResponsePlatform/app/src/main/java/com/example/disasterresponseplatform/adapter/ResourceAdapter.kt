@@ -9,11 +9,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.database.resource.Resource
+import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.databinding.ResourceItemBinding
-import java.text.DecimalFormat
 
-class ResourceAdapter(private val resourceList: List<Resource>?): RecyclerView.Adapter<ResourceAdapter.ResourceViewHolder>() {
+class ResourceAdapter(private val resourceList: List<ResourceBody.ResourceItem>?): RecyclerView.Adapter<ResourceAdapter.ResourceViewHolder>() {
 
     inner class ResourceViewHolder(val binding: ResourceItemBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -38,10 +37,13 @@ class ResourceAdapter(private val resourceList: List<Resource>?): RecyclerView.A
 
         hb.tvType.text = currentResource?.type.toString()
 
-        hb.tvDate.text = currentResource?.creationTime
-        hb.tvLocation.text = "x: ${String.format("%.2f", currentResource?.coordinateX).replace(',', '.')}, y: ${String.format("%.2f", currentResource?.coordinateY).replace(',', '.')}"
-        hb.tvQuantity.text = currentResource?.quantity.toString()
-        hb.tvCreator.text = currentResource?.creatorName
+        hb.tvDate.text = currentResource?.created_at
+        hb.tvLocation.text = "x: ${String.format("%.2f", currentResource?.x).replace(',', '.')}, y: ${String.format("%.2f", currentResource?.y).replace(',', '.')}"
+        hb.tvQuantity.text = currentResource?.currentQuantity.toString()
+        hb.tvCreator.text = currentResource?.created_by
+        hb.tvSubType.text = currentResource?.details?.get("subtype").toString()
+        hb.tvDownvoteCount.text = currentResource?.downvote.toString()
+        hb.tvUpvoteCount.text = currentResource?.upvote.toString()
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->
@@ -53,9 +55,9 @@ class ResourceAdapter(private val resourceList: List<Resource>?): RecyclerView.A
         }
     }
 
-    private val liveDataResource = MutableLiveData<Resource>()
+    private val liveDataResource = MutableLiveData<ResourceBody.ResourceItem>()
     // this is for updating LiveData, it can be observed from where it is called
-    fun getLiveIntent(): LiveData<Resource> = liveDataResource
+    fun getLiveIntent(): LiveData<ResourceBody.ResourceItem> = liveDataResource
 
     override fun getItemCount(): Int {
         return if (resourceList.isNullOrEmpty()) 0 else resourceList.size

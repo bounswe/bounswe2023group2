@@ -7,13 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.Endpoint
-import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.data.repositories.ResourceRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
-import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -54,35 +52,9 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResponse(): LiveData<ResourceBody.ResourceResponse> = liveDataResponse
 
-    fun createResourceList(resourceResponse: ResourceBody.ResourceResponse): List<Resource> {
-        Log.d("createResourceList", "resourceResponse: $resourceResponse")
-        val currentList = resourceResponse.resources
-        Log.d("createResourceList", "currentList: $currentList")
-        val lst = mutableListOf<Resource>()
-        currentList.forEach { responseItem ->
-            //Log.d("createResourceList", "responseItem: $responseItem")
-            //Log.d("createResourceList", "responseItemDetails: ${responseItem.details}")
-            val details = responseItem.returnDetailsAsString()
-            val needType = responseItem.returnNeedType()
-            val time = DateUtil.getDate("dd-MM-yy").toString()
-            val coordinateX = if (responseItem.x == null) 1.0 else responseItem.x.toDouble()
-            val coordinateY = if (responseItem.y == null) 1.0 else responseItem.y.toDouble()
-            val currentResource = Resource(
-                responseItem._id,
-                responseItem.created_by,
-                responseItem.condition,
-                responseItem.currentQuantity,
-                needType,
-                details,
-                time,
-                coordinateX,
-                coordinateY
-            )
-            lst.add(currentResource)
-        }
-        return lst.toList()
-    }
-    fun sendGetAllRequest() {
+    fun sendGetAllRequest(
+        queries: MutableMap<String, String>? = null
+    ) {
         val headers = mapOf(
             "Content-Type" to "application/json"
         )
@@ -90,6 +62,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             endpoint = Endpoint.RESOURCE,
             requestType = RequestType.GET,
             headers = headers,
+            queries = queries,
             callback = object : Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,
@@ -104,23 +77,14 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                             try {
                                 Log.d("ResponseSuccess", "Body: $rawJson")
                                 val gson = Gson()
-                                val resourceResponse = gson.fromJson(
-                                    rawJson,
-                                    ResourceBody.ResourceResponse::class.java
-                                )
-                                if (resourceResponse != null) { // TODO check null
-                                    Log.d(
-                                        "ResponseSuccess",
-                                        "resourceResponse: $resourceResponse"
-                                    )
+                                val resourceResponse = gson.fromJson(rawJson, ResourceBody.ResourceResponse::class.java)
+                                if (resourceResponse != null) {
+                                    Log.d("ResponseSuccess", "resourceResponse: $resourceResponse")
                                     liveDataResponse.postValue(resourceResponse)
                                 }
                             } catch (e: IOException) {
                                 // Handle IOException if reading the response body fails
-                                Log.e(
-                                    "ResponseError",
-                                    "Error reading response body: ${e.message}"
-                                )
+                                Log.e("ResponseError", "Error reading response body: ${e.message}")
                             }
                         } else {
                             Log.d("ResponseSuccess", "Body is null")
@@ -148,7 +112,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
     /**
      * It send POST or PUT request with respect to id, if there was an id it should be PUT
      */
-    fun postResourceRequest(postRequest: Resource, id: String? = null) {
+    fun postResourceRequest(postRequest: ResourceBody.ResourceRequestBody, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
         Log.i("token", "Token $token")
         if (!token.isNullOrEmpty()) {
@@ -157,31 +121,8 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                 "Content-Type" to "application/json"
             )
 
-            val type: String = when (postRequest.type) {
-                NeedTypes.Cloth -> "Clothes"
-                NeedTypes.Food -> "Food"
-                NeedTypes.Drink -> "Drink"
-                NeedTypes.Shelter -> "Shelter"
-                NeedTypes.Medication -> "Medication"
-                NeedTypes.Transportation -> "Transportation"
-                NeedTypes.Tools -> "Tools"
-                NeedTypes.Human -> "Human"
-                else -> "Other"
-            }
-
-
-            val resourceRequestBody = ResourceBody.ResourceRequestBody(
-                created_by = postRequest.creatorName,
-                condition = postRequest.condition,
-                initialQuantity = postRequest.quantity,
-                currentQuantity = postRequest.quantity,
-                type = type,
-                details = ResourceBody.Details(postRequest.details),
-                x = postRequest.coordinateX,
-                y = postRequest.coordinateY
-            )
             val gson = Gson()
-            val json = gson.toJson(resourceRequestBody)
+            val json = gson.toJson(postRequest)
             val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
 
             val requestType = if (id == null) RequestType.POST else RequestType.PUT
@@ -192,7 +133,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                 requestType = requestType,
                 headers = headers,
                 requestBody = requestBody,
-                id, // Resource's ID
+                id = id, // Resource's ID
                 callback = object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,
@@ -247,5 +188,50 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             )
         }
     }
+
+
+    private val liveDataIsDeleted = MutableLiveData<Boolean>()
+    // this is for updating LiveData, it can be observed from where it is called
+    fun getLiveDataIsDeleted(): LiveData<Boolean> = liveDataIsDeleted
+
+    /**
+     * It deletes resource with respect to ID, if it deletes successful, it post a value into livedata to notify UI
+     */
+    fun deleteResource(ID: String) {
+        val headers = mapOf(
+            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            "Content-Type" to "application/json"
+        )
+        val networkManager = NetworkManager()
+        networkManager.makeRequest(
+            endpoint = Endpoint.RESOURCE,
+            requestType = RequestType.DELETE,
+            id = ID,
+            headers = headers,
+            callback = object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    // Handle failure when the request fails
+                }
+
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        liveDataIsDeleted.postValue(true)
+                    } else {
+                        liveDataIsDeleted.postValue(false)
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            Log.d("no", errorBody)
+                        }
+                    }
+                }
+            })
+    }
+
 
 }

@@ -55,4 +55,9 @@ def create_proficiency_request(prof_request : ProfRequest, username: str):
         raise ValueError("Proficiency could not be added")
   
         
-    
+def get_user_role_service(username: str):
+    existing_user = userDb.find_one({"username": username})
+    if existing_user:
+        return existing_user['user_role']
+    else:
+        raise ValueError("There is no such user")

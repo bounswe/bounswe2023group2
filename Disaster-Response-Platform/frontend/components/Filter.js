@@ -2,9 +2,9 @@ import React from "react";
 import { Popover, PopoverTrigger, PopoverContent, Button, Input, CheckboxGroup, Checkbox, Divider } from "@nextui-org/react";
 import { FaFilter, FaSort } from "react-icons/fa";
 
-export default function Filter({ filters, setFilters, filterActivities }) {
-  const types = ['shelter', 'food', 'water', 'medical', 'rescue', 'other']
-  const urgency = ['low', 'medium', 'high']
+export default function Filter({ filters, setFilters, filterActivities}) {
+  const types = ["cloth","food","drink","shelter","medication","transportation","tool","human","other"];
+  const urgency = [1, 2, 3, 4, 5]
   const status = ['active', 'inactive']
   
   return (
@@ -30,7 +30,7 @@ export default function Filter({ filters, setFilters, filterActivities }) {
                 orientation="horizontal"
                 color="secondary"
                 defaultValue={[]}
-                onValueChange={(e) => { setFilters({ ...filters, type: e }) }}
+                onValueChange={(e) => { setFilters({ ...filters, types: e }) }}
               >
                {types.map((type)=>  <Checkbox value={type}>{type}</Checkbox>)}  
               </CheckboxGroup>
@@ -51,11 +51,11 @@ export default function Filter({ filters, setFilters, filterActivities }) {
                 orientation="horizontal"
                 color="secondary"
                 defaultValue={[]}
-                onValueChange={(e) => { setFilters({ ...filters, urgency: e}) }}
+                onValueChange={(e) => { setFilters({ ...filters, status: e}) }}
               >
                {status.map((stat)=>  <Checkbox value={stat}>{stat}</Checkbox>)}  
               </CheckboxGroup>
-              <Button onClick={(()=>{filterActivities})}>  </Button>
+              <Button onClick={()=>{filterActivities()}}> Filtrele </Button>
 
     
 

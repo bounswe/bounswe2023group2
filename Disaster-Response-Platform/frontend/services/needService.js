@@ -23,11 +23,15 @@ const needService = {
   createNeed: async (body, accessToken) => {
    
     try {
-      const data = await api.post(`/api/needs/`, body, {
-         headers: { Authorization: `Bearer ${accessToken}` },
+      console.log(body)
+      const data = await api.post(`api/needs/`, body, {
+         headers: { Authorization: `Bearer ${accessToken}`,
+         'Content-Type': 'application/json' },
+         
       });
       return { status:200, payload: {data: data?.data , message: 'Success'} };
     } catch (error) {
+      
       return { status:400 , message: 'Error' };
     }
   },

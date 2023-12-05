@@ -53,6 +53,20 @@ async def get_user_role(response : Response, current_user: UserProfile = Depends
         response.status_code= HTTPStatus.BAD_REQUEST
         #response.response_model= Error
         return error
+@router.get("/role/{username}", responses={
+    status.HTTP_200_OK: {"model": UserRoleResponse},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+
+})
+async def get_user_role(username:str,response : Response):
+    try:
+        role= get_user_role_service(username)
+        return UserRoleResponse(user_role=role)
+    except ValueError as err:
+        error= Error(ErrorMessage="Could not find user role", ErrorDetail=str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        #response.response_model= Error
+        return error
     
 @router.get("/proficiencies", responses={
     status.HTTP_200_OK: {"model": UserRoleResponse},
@@ -70,3 +84,22 @@ async def get_user_prof(response : Response, current_user: UserProfile = Depends
         response.status_code= HTTPStatus.BAD_REQUEST
         #response.response_model= Error
         return error
+    
+@router.post("/make-admin", responses={
+    status.HTTP_201_CREATED: {"model": UserRoleResponse},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
+async def make_admin(username : str, response: Response,
+                              current_user: str = Depends(authentication_service.get_current_username)):
+
+    try:
+        query = {"username": username}
+        update_operation = {"$set": {"user_role": UserRole.ADMIN.value}}
+        result = userDb.update_one(query, update_operation)
+        response.status_code=status.HTTP_201_CREATED
+        return UserRoleResponse(user_role="ADMIN")
+    except ValueError as err:
+        error= Error(ErrorMessage="Couldnot change role", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return err

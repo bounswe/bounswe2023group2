@@ -1,3 +1,5 @@
+from enum import Enum
+
 from pydantic import BaseModel, Field
 from typing import List
 from datetime import date, datetime
@@ -19,12 +21,18 @@ from datetime import date, datetime
 #
 # - relatedActions: List<ActionIDs>
 # - relatedNeeds: List<NeedIDs>
+class EventTypesEnum(str, Enum):
+    debris = "Debris"
+    infrastructure = "Infrastructure"
+    disaster = "Disaster"
+    helparrived = "Help-Arrived"
+
 
 class EventKey(BaseModel):
     _id: str = Field(default=None)
 class Event(BaseModel):
     _id: str = Field(default=None)
-    event_type: str = Field(default=None)
+    event_type: EventTypesEnum = Field(default=None)
     event_time: datetime = Field(default=None)
     end_time: datetime = Field(default=None)
     is_active: bool = Field(default=None)
@@ -41,6 +49,9 @@ class Event(BaseModel):
     confirmed_by_user: str = Field(default=None)
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
+
+    short_description: str = Field(default=None)
+    note: str = Field(default=None)
 
 class ActionRelations(BaseModel):
     action_id: str

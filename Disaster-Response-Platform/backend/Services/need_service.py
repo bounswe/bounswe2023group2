@@ -8,15 +8,29 @@ from datetime import datetime, timedelta
 
 # Get the needs collection using the MongoDB class
 needs_collection = MongoDB.get_collection('needs')
+
+
+
+def validate_coordinates(x=None, y=None):
+    if (x is not None and ((x < -90 or x > 90)) or (y is not None and (y < -180 or y > 180))):
+        raise ValueError("X coordinates should be within -90 and 90, and y coordinates within -180 and 180")
+
+def validate_quantities(initial_quantity=None, unsupplied_quantity=None):
+    if (initial_quantity is not None and (initial_quantity <= 0)) or (unsupplied_quantity is not None and (unsupplied_quantity <= 0)):
+        raise ValueError("Quantities can't be less than or equal to 0")   
+
+
 r_id=0
 def create_need(need: Need) -> str:
     global r_id
     # Manual validation for required fields during creation
     if not all([need.created_by, need.urgency, 
-                need.initialQuantity, need.unsuppliedQuantity, 
-                need.type, need.details]):
-        raise ValueError("All fields are mandatory for creation.")
-    
+                need.initialQuantity is not None, need.unsuppliedQuantity is not None, 
+                need.type, need.details, need.x is not None, need.y is not None]):
+        raise ValueError("All fields are mandatory for creation: created_by, urgency, initialQuantity, unsuppliedQuantity, type, details, x, y")
+
+    validate_coordinates(need.x, need.y)
+    validate_quantities(need.initialQuantity, need.unsuppliedQuantity)
     if(need.recurrence_rate!= None):
         if not all([need.recurrence_deadline, need.occur_at]):
             raise ValueError("Recurrence fields need to be entered")
@@ -31,8 +45,6 @@ def create_need(need: Need) -> str:
         insert_result = needs_collection.insert_one(need.dict())
         print("need added ", insert_result, need.recurrence_id, need.occur_at)
 
-    
-    
     if insert_result.inserted_id:
         result = "{\"needs\":[{\"_id\":" + f"\"{insert_result.inserted_id}\""+"}]}"
         return result
@@ -133,6 +145,13 @@ def update_need(need_id: str, need: Need) -> Need:
     existing_need = needs_collection.find_one({"_id": ObjectId(need_id)})
 
     if existing_need:
+        
+        # Validate coordinates
+        validate_coordinates(need.x, need.y)
+
+        # Validate quantities
+        validate_quantities(need.initialQuantity, need.unsuppliedQuantity)
+        
         # If details exist in the provided need and the database, merge them
         if 'details' in need.dict(exclude_none=True) and 'details' in existing_need:
             need.details = {**existing_need['details'], **need.dict(exclude_none=True)['details']}
@@ -144,7 +163,8 @@ def update_need(need_id: str, need: Need) -> Need:
             update_data['created_at'] = existing_need['created_at']
 
         # Set 'last_updated_at' to the current time
-        update_data['last_updated_at'] = datetime.now()
+
+        update_data['last_updated_at'] = datetime.now() + timedelta(hours=3)
 
         needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": update_data})
 
@@ -165,7 +185,7 @@ def delete_need(need_id: str):
         raise ValueError(f"Need {need_id} cannot be deleted")    
     
 def set_initial_quantity(need_id: str, quantity: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"initialQuantity": quantity, "last_updated_at": datetime.now()}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"initialQuantity": quantity, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True
@@ -178,7 +198,7 @@ def get_initial_quantity(need_id: str) -> int:
         raise ValueError(f"Need id {need_id} not found")
     
 def set_unsupplied_quantity(need_id: str, quantity: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"unsuppliedQuantity": quantity, "last_updated_at": datetime.now()}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"unsuppliedQuantity": quantity, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True
@@ -191,7 +211,7 @@ def get_unsupplied_quantity(need_id: str) -> int:
         raise ValueError(f"Need id {need_id} not found")
     
 def set_urgency(need_id: str, urgency: int) -> bool:
-    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"urgency": urgency, "last_updated_at": datetime.now()}})
+    result = needs_collection.update_one({"_id": ObjectId(need_id)}, {"$set": {"urgency": urgency, "last_updated_at": datetime.now() + timedelta(hours=3)}})
     if result.matched_count == 0:
         raise ValueError(f"Need id {need_id} not found")
     return True

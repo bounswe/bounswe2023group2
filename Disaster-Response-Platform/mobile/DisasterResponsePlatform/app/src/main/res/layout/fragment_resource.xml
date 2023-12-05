@@ -16,17 +16,25 @@
         android:layout_height="match_parent"
         tools:context=".ui.activity.resource.ResourceFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewResources"
+        <!-- Add SwipeRefreshLayout around RecyclerView -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:adapter="@{adapter}"
-            android:keepScreenOn="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/laySearchFilter" />
+            app:layout_constraintTop_toBottomOf="@+id/laySearchFilter">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewResources"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adapter="@{adapter}"
+                android:keepScreenOn="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/laySearchFilter"
@@ -81,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="@color/separator"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerViewResources"
+            app:layout_constraintTop_toBottomOf="@id/laySearchFilter"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

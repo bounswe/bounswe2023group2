@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.repositories.NeedRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -54,10 +56,10 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResponse(): LiveData<NeedBody.NeedResponse> = liveDataResponse
 
-    /**
-     * This function get all needs from backend
-     */
-    fun getAllNeedsBackend() {
+    fun sendGetAllRequest(
+        queries: MutableMap<String, String>? = null
+    ) {
+
         val headers = mapOf(
             "Content-Type" to "application/json"
         )
@@ -65,6 +67,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
             endpoint = Endpoint.NEED,
             requestType = RequestType.GET,
             headers = headers,
+            queries = queries,
             callback = object : Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,
@@ -72,7 +75,6 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                 ) {
                     Log.d("ResponseInfo", "Status Code: ${response.code()}")
                     Log.d("ResponseInfo", "Headers: ${response.headers()}")
-
                     if (response.isSuccessful) {
                         val rawJson = response.body()?.string()
                         if (rawJson != null) {
@@ -135,7 +137,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                 requestType = requestType,
                 headers = headers,
                 requestBody = requestBody,
-                id, // need's ID
+                id = id, // need's ID
                 callback = object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,
@@ -200,12 +202,12 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
      * It deletes need with respect to ID, if it deletes successful, it post a value into livedata to notify UI
      */
     fun deleteNeed(ID: String) {
-        val headers = mapOf(
-            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
-            "Content-Type" to "application/json"
-        )
-        val networkManager = NetworkManager()
-        networkManager.makeRequest(
+            val headers = mapOf(
+                "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+                "Content-Type" to "application/json"
+            )
+            val networkManager = NetworkManager()
+            networkManager.makeRequest(
             endpoint = Endpoint.NEED,
             requestType = RequestType.DELETE,
             id = ID,

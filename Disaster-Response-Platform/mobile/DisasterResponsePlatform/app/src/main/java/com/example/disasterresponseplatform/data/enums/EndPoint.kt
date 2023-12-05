@@ -6,7 +6,8 @@ enum class Endpoint(val path: String) {
     DATA("joke/any"),
     USER("user"),
     PRODUCTS("products"),
-    RESOURCE("resource"),
+    RESOURCE("resources"),
+    ACTIONS("actions"),
     NEED("needs"),
     ME("users/me"),
     ME_OPTIONAL("profiles/user-optional-infos"),
@@ -28,5 +29,7 @@ enum class Endpoint(val path: String) {
     FORM_FIELDS_RESOURCE("form_fields/resource"),
     FORM_FIELDS_NEED("form_fields/need"),
     FORM_FIELDS_TYPE("form_fields/type"),
-    EVENT("events"),
+    UPVOTE("feedback/upvote"),
+    DOWNVOTE("feedback/downvote"),
+    GETUSER("userroles/role"),
 }

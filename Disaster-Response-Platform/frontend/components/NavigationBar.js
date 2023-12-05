@@ -8,7 +8,8 @@ import AddResourceForm from "./AddResource";
 import useUser from "@/lib/useUser";
 import { useRouter } from "next/router";
 import fetchJson from "@/lib/fetchJson";
-
+import dapp_logo_extended_blue from "../public/dapp_logo_extended_blue.svg";
+import Image from "next/image";
 
 export default function NavigationBar() {
   const { user, mutateUser } = useUser();
@@ -19,9 +20,15 @@ export default function NavigationBar() {
     <main className={styles.main}>
       <div className={styles.navbar}>
         <div className={styles.leftbar}>
-          <nav className="p-4 h-14  text-center hover:-translate-y-1 duration-300">
+          <nav className=" text-center hover:-translate-y-1 duration-300">
             <Link href={`/`}>
-              <h1>DaRP   </h1>
+            <Image
+        src={dapp_logo_extended_blue}
+        alt="Logo"
+        width={150}
+        height={150}
+      />
+          
             </Link>
           </nav>
           <nav className=" p-4 h-14  text-center hover:-translate-y-1 duration-300">

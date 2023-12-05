@@ -2,14 +2,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import styles from "./MainLayout.module.scss";
-import NavigationBar from "@/components/NavigationBar.js";
+import NavBar from "@/components/NavBar";
 
 function MainLayout({ children}) {
 
 
   return (
     <div className={styles.main}>
-      <NavigationBar />
+      <NavBar />
       <div className={styles.body}>{children}</div>
     </div>
   );
