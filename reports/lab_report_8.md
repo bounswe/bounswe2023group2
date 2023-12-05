@@ -116,13 +116,13 @@ As mobile team, we accoplished all our goals and additionally we made quite a lo
 
 | Description | Issue | Assignee | Due | Estimated Duration |
 | ----------- | ----- | -------- | --- | ------------------ |
-|Backend - Recurrence improvement | [#670](https://github.com/bounswe/bounswe2023group2/issues/670) | Begüm | 09.12.2023 | 5h| 
-|Backend - Action Improvement | [#671](https://github.com/bounswe/bounswe2023group2/issues/671) | Begüm | 12.12.2023 | 10h| 
-| Backend - Unit tests revision |[#674](https://github.com/bounswe/bounswe2023group2/issues/674) | Mehmet K. | 10.12.2023| 3h|
-| Design and decide the annotation use| [#675](https://github.com/bounswe/bounswe2023group2/issues/675) | Mehmet K. | 9.12.2023 | 3h| 
-| Backend - Annotation functions - Part 1  | [#676](https://github.com/bounswe/bounswe2023group2/issues/676) |Mehmet K. | 12.12.2023 | 3h| 
-| Backend - Probable revisions on profile APIs | [#677](https://github.com/bounswe/bounswe2023group2/issues/677) | Mehmet K. | 12.12.2023 | 2h|
-|Translation - Language Packs |[#678](https://github.com/bounswe/bounswe2023group2/issues/678)|Backend team| 12.12.2023| 2h|
+|Backend - Recurrence improvement | [#670](https://github.com/bounswe/bounswe2023group2/issues/670) | Begüm | 09.12.2023 | 5h |
+|Backend - Action Improvement | [#671](https://github.com/bounswe/bounswe2023group2/issues/671) | Begüm | 12.12.2023 | 10h |
+| Backend - Unit tests revision |[#674](https://github.com/bounswe/bounswe2023group2/issues/674) | Mehmet K. | 10.12.2023| 3h |
+| Design and decide the annotation use| [#675](https://github.com/bounswe/bounswe2023group2/issues/675) | Mehmet K. | 9.12.2023 | 3h |
+| Backend - Annotation functions - Part 1  | [#676](https://github.com/bounswe/bounswe2023group2/issues/676) | Mehmet K. | 12.12.2023 | 3h |
+| Backend - Probable revisions on profile APIs | [#677](https://github.com/bounswe/bounswe2023group2/issues/677) | Mehmet K. | 12.12.2023 | 2h |
+| Translation - Language Packs |[#678](https://github.com/bounswe/bounswe2023group2/issues/678) | Backend team | 12.12.2023 | 2h |
 
 ## Risks
 - Action design needs to be simplified. There can be lots of bugs with it.
