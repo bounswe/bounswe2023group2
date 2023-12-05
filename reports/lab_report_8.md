@@ -6,10 +6,11 @@
 
 ## Progress Summary
 
-On the backend, we implemented action, admin, feedback, recurrence endpoints. Also resource and need are enhanced.
+The teams worked on a brief evaluation of the Milestone 2 demo and discussed about a procedure to check the requirements document. The weekly plans are more important now as the final product is the very next step.
 
+On the backend:
+we implemented action, admin, feedback, recurrence endpoints. Also resource and need are enhanced.
 
-The teams worked on a brief evaluation of the Milestone 2 demo and discussed about a procedure to check the requirements document. The weekly plans are more important now as the final product is the very next step. So the requirements check. 
 
 On the frontend side:
 - Action creation form was implemented.
