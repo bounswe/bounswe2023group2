@@ -1,18 +1,9 @@
-import datetime
-
 from Models.user_profile_model import UserOptionalInfo
 from Database.mongo import MongoDB
-from bson.objectid import ObjectId
 from Services.build_API_returns import *
+import Services.utilities
 
 profile_optional_infos = MongoDB.get_collection('user_optional_infos')
-
-#def set update fields list will be prep
-
-def set_Nones_to_old_values(dict_with_Nones:dict, dict_with_Olds:dict):
-    for key, value in dict_with_Nones.items():
-        if (value is None):
-            dict_with_Nones[key] = dict_with_Olds[key]
 
 def get_user_optional_info(username:str = None) -> str:
     projection = {"_id": 0}
@@ -29,19 +20,6 @@ def get_user_optional_info(username:str = None) -> str:
     result = create_json_for_successful_data_fetch(info_from_db, "user_optional_infos")
     return result
 
-
-def eradicate_optional_infO(user_optional_info:UserOptionalInfo):
-    if type(user_optional_info) == UserOptionalInfo:
-        return_dict = user_optional_info.dict()
-        if return_dict["date_of_birth"] is not None:
-            return_dict["date_of_birth"] = datetime.datetime.strptime(str(return_dict["date_of_birth"]),  "%Y-%m-%d")
-    else:
-        return_dict = user_optional_info
-        if return_dict["date_of_birth"] is not None:
-            return_dict["date_of_birth"] = str(return_dict["date_of_birth"])
-
-    return return_dict
-
 def set_user_optional_info(user_optional_info: UserOptionalInfo) -> str:
     if not (user_optional_info.username):
         raise ValueError("Username missing")
@@ -56,22 +34,21 @@ def set_user_optional_info(user_optional_info: UserOptionalInfo) -> str:
     query = {"username": user_optional_info.username}
     info_from_db = profile_optional_infos.find_one(query)
 
+    eradicated_info = Services.utilities.correctDates(user_optional_info)
     if (info_from_db is None):
-        eradicated_info = eradicate_optional_infO(user_optional_info)
         result = profile_optional_infos.insert_one(eradicated_info)
         if result.inserted_id:
             eradicated_info["_id"] = str(eradicated_info["_id"])
-            eradicate_optional_infO(eradicated_info)
+            Services.utilities.correctDates(eradicated_info)
             return json.dumps(eradicated_info)
         else:
             raise ValueError("Unable to insert info")
     else:
-        update_dict = eradicate_optional_infO(user_optional_info)
-        set_Nones_to_old_values(update_dict, info_from_db)
-        result = profile_optional_infos.update_one(query, {"$set": update_dict})
+        Services.utilities.set_Nones_to_old_values(eradicated_info, info_from_db)
+        result = profile_optional_infos.update_one(query, {"$set": eradicated_info})
         if result.modified_count > 0:
-            eradicate_optional_infO(update_dict)
-            return json.dumps(update_dict)
+            eradicated_info = Services.utilities.correctDates(eradicated_info)
+            return json.dumps(eradicated_info)
         else:
             raise ValueError("Unable to update")
 
