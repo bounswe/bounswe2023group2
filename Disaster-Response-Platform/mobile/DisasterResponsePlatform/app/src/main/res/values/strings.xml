@@ -91,12 +91,15 @@
     <string name="username_or_email">Username or Email</string>
     <string name="edit_need">Edit Need</string>
     <string name="edit_resource">Edit Resource</string>
+    <string name="edit_action">Edit Action</string>
     <string name="save_changes">Save Changes</string>
     <string name="condition">Condition</string>
     <string name="navigate">Navigate</string>
 
     <string name="field_need_type">Need Type (Select or Enter)</string>
     <string name="field_resource_type">Resource Type (Select or Enter)</string>
+    <string name="field_action_type">Action Type (Select or Enter)</string>
+    <string name="field_event_type">Event Type (Select or Enter)</string>
     <string name="field_sub_type">Sub-Type (Select or Enter)</string>
     <string name="field_location">Location (Select from Map or Enter)</string>
     <string name="field_quantity">Quantity</string>
@@ -130,6 +133,10 @@
         <item>tool</item>
         <item>human</item>
         <item>other</item>
+    </string-array>
+
+    <string-array name="action_types">
+        <item>need_resource</item>
     </string-array>
 
     <string-array name="resource_food_sub_types">
