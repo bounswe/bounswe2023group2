@@ -15,11 +15,11 @@
     <string name="logout">Logout</string>
 
     <!-- HOME TAB LABELS -->
-    <string name="tab_emergency">Emergency</string>
-    <string name="tab_need">Need</string>
-    <string name="tab_resource">Resource</string>
-    <string name="tab_event">Event</string>
-    <string name="tab_action">Action</string>
+    <string name="tab_emergency">Emergencies</string>
+    <string name="tab_need">Needs</string>
+    <string name="tab_resource">Resources</string>
+    <string name="tab_event">Events</string>
+    <string name="tab_action">Actions</string>
 
     <!-- ACTIVITY LIST SCREEN -->
     <string name="search_hint">Search...</string>
@@ -29,6 +29,26 @@
     <string name="add_resource">Add Resource</string>
     <string name="add_event">Add Event</string>
     <string name="add_action">Add Action</string>
+    <string name="no_emergency">There is no emergency</string>
+
+    <!-- ACTIVITY DETAIL PAGE -->
+    <string name="act_type">Type:</string>
+    <string name="act_subtype">Sub Type:</string>
+    <string name="act_created_by">Created By:</string>
+    <string name="act_user_role">User Role:</string>
+    <string name="act_view_profile">View User Profile</string>
+    <string name="act_creation_date">Creation Date:</string>
+    <string name="act_last_updated_date">Last Updated Date:</string>
+    <string name="act_description">Description:</string>
+    <string name="act_initial_quantity">Initial Quantity:</string>
+    <string name="act_current_quantity">Current Quantity:</string>
+    <string name="act_unsupplied_quantity">Unsupplied Quantity:</string>
+    <string name="act_urgency">Urgency:</string>
+    <string name="act_address">Address:</string>
+    <string name="act_details">Details:</string>
+    <string name="act_edit">Edit</string>
+    <string name="act_delete">Delete</string>
+    <string name="act_navigate">Navigate</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sort &amp; Filter</string>
@@ -111,7 +131,8 @@
     <string name="pr_login_required">You need to log in first</string>
     <string name="pr_full_name">Full Name</string>
     <string name="pr_username">Username</string>
-    <string name="pr_call">Ara</string>
+    <string name="pr_call">Call</string>
+    <string name="pr_logout">Log Out</string>
     <string name="pr_social_media">Social Media</string>
     <string name="pr_skills">Skills</string>
     <string name="pr_languages">Languages</string>
@@ -139,6 +160,7 @@
     <string name="placeholder_username">Mehmet</string>
     <string name="placeholder_date">2023-12-31 23.59</string>
     <string name="placeholder_coordinate">x: 41.09, y: 29.04</string>
+    <string name="placeholder_region">Marmara Region</string>
     <string name="placeholder_quantity">123 pcs</string>
     <string name="placeholder_reliability">0.73</string>
 

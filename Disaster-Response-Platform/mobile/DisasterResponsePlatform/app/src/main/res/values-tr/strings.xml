@@ -15,11 +15,11 @@
     <string name="logout">Üye Ol</string>
 
     <!-- HOME TAB LABELS -->
-    <string name="tab_emergency">Acil Durum</string>
-    <string name="tab_need">İhtiyaç</string>
-    <string name="tab_resource">Kaynak</string>
-    <string name="tab_event">Olay</string>
-    <string name="tab_action">Aksiyon</string>
+    <string name="tab_emergency">Acil Durumlar</string>
+    <string name="tab_need">İhtiyaçlar</string>
+    <string name="tab_resource">Kaynaklar</string>
+    <string name="tab_event">Olaylar</string>
+    <string name="tab_action">Aksiyonlar</string>
 
     <!-- ACTIVITY LIST SCREEN -->
     <string name="search_hint">Arama...</string>
@@ -29,6 +29,26 @@
     <string name="add_resource">Kaynak Oluştur</string>
     <string name="add_event">Olay Bildir</string>
     <string name="add_action">Aksiyon Oluştur</string>
+    <string name="no_emergency">Acil Durum kaydı bulunamadı.</string>
+
+    <!-- ACTIVITY DETAIL PAGE -->
+    <string name="act_type">Kategori:</string>
+    <string name="act_subtype">Alt Kategori:</string>
+    <string name="act_created_by">Oluşturan:</string>
+    <string name="act_user_role">Kullanıcı Rolü:</string>
+    <string name="act_view_profile">Kullanıcı Profilini Görüntüle</string>
+    <string name="act_creation_date">Oluşturulma Zamanı:</string>
+    <string name="act_last_updated_date">Son Güncellenme Zamanı:</string>
+    <string name="act_description">Açıklama:</string>
+    <string name="act_initial_quantity">Başlangıç Miktarı:</string>
+    <string name="act_current_quantity">Mevcut Miktar:</string>
+    <string name="act_unsupplied_quantity">Tedarik Edilmeyen Miktar:</string>
+    <string name="act_urgency">Aciliyet:</string>
+    <string name="act_address">Adres:</string>
+    <string name="act_details">Detaylar:</string>
+    <string name="act_edit">Düzenle</string>
+    <string name="act_delete">Sil</string>
+    <string name="act_navigate">Yol Tarifi</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sırala &amp; Filtrele</string>
@@ -76,7 +96,7 @@
     <string name="field_event_type">Olay Kategorisi (Seç veya Gir)</string>
     <string name="field_sub_type">Alt Kategori (Seç veya Gir)</string>
     <string name="field_location">Konum (Haritadan Seç veya Gir)</string>
-    <string name="field_quantity">Adet</string>
+    <string name="field_quantity">Miktar</string>
     <string name="field_coordinate_x">X Koordinatı</string>
     <string name="field_coordinate_y">Y Koordinatı</string>
     <string name="submit">Gönder</string>
@@ -98,7 +118,7 @@
     <string name="forgot_password">Parolamı Unuttum</string>
     <string name="reset_password">Parolayı Sıfırla</string>
     <string name="verify">DOĞRULA</string>
-    <string name="verification_code">Verification Code</string>
+    <string name="verification_code">Doğrulama Kodu</string>
     <string name="enter_verification_code">Doğrulama Kodunu Gir</string>
     <string name="send_verification_code">DOĞRULAMA KODU GÖNDER</string>
     <string name="resend_code">KODU TEKRAR GÖNDER</string>
@@ -112,6 +132,7 @@
     <string name="pr_full_name">İsim Soyisim</string>
     <string name="pr_username">Kullanıcı Adı</string>
     <string name="pr_call">Ara</string>
+    <string name="pr_logout">Çıkış Yap</string>
     <string name="pr_social_media">Sosyal Medya</string>
     <string name="pr_skills">Beceriler</string>
     <string name="pr_languages">Lisanlar</string>
@@ -139,6 +160,7 @@
     <string name="placeholder_username">Mehmet</string>
     <string name="placeholder_date">2023-12-31 23.59</string>
     <string name="placeholder_coordinate">x: 41.09, y: 29.04</string>
+    <string name="placeholder_region">Marmara Bölgesi</string>
     <string name="placeholder_quantity">123 adet</string>
     <string name="placeholder_reliability">0.73</string>
 
