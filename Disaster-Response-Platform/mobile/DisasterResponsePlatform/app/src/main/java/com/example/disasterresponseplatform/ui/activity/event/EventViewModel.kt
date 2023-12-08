@@ -111,6 +111,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
                 endpoint = Endpoint.EVENT,
                 requestType = requestType,
                 headers = headers,
+                null,
                 requestBody = requestBody,
                 id, // event's ID
                 callback = object : Callback<ResponseBody> {
