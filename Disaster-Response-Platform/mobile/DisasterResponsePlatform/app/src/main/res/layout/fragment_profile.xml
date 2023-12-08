@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="You need to log in first"
+        android:text="@string/pr_login_required"
         android:textSize="30sp"
         android:padding="20dp"
         android:gravity="center"
@@ -427,7 +427,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Social Media"
+                android:text="@string/pr_social_media"
                 android:textSize="30sp" />
 
             <View
@@ -442,7 +442,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Skills"
+                android:text="@string/pr_skills"
                 android:textSize="30sp" />
 
             <View
@@ -457,7 +457,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Languages"
+                android:text="@string/pr_languages"
                 android:textSize="30sp" />
 
             <View
@@ -472,7 +472,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Professions"
+                android:text="@string/pr_professions"
                 android:textSize="30sp" />
 
             <View
