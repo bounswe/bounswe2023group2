@@ -31,3 +31,8 @@ docker-compose up -d --build backend
 docker-compose up -d --build mongo
 - To run tests
 pytest "test file"
+
+##### File Upload Tutorial
+- `api/uploadfile/` is the endpoint for uploading the any file type to the S3, despite restricting the file types is a good practice :).
+- this endpoint returns the url of the file, the client side (front, mobile) should put this url to the object url field and send update request again
+- This endpoint requires AWS keys, the necessary aws key can be found in the discord channel. DO NOT PUSH THE KEYS REPO 🫡
