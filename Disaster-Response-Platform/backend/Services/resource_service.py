@@ -87,7 +87,7 @@ def get_resource_by_id(resource_id: str) -> list[Resource]:
         resource_dict = {**resource, "_id": str(resource["_id"])}
         resource_list.append(resource_dict)
         #resource_list.append(resource)
-    return ResourceList(resource_list= resource_list)
+    return ResourceList(resources= resource_list)
 
 def get_resources(
     resource_id: str = None,
