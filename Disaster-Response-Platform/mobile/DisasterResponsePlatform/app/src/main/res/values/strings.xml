@@ -208,5 +208,6 @@
     <string name="sf_distance">Distance (0–1000 km):</string>
     <string name="sf_sort_order">Sort Order:</string>
     <string name="sf_upvote">upvote</string>
+    <string name="hidden_profile">Hidden Profile</string>
 
 </resources>
