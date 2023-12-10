@@ -69,8 +69,25 @@ def create_recurrent_resources(resource: Resource):
             raise ValueError("Resource could not be created")
     return insert_ids
 
-def get_resource_by_id(resource_id: str) -> list[dict]:
-    return get_resources(resource_id)
+def get_resource_by_id(resource_id: str) -> list[Resource]:
+    resource_list=[]
+    resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
+    if not resource:
+        raise ValueError("There is no resource with this id")
+    resource["x"] = str(resource["_id"])
+    recurrence_id = resource.get("recurrence_id")
+    if recurrence_id is not None:
+        # Find other resources with the same recurrence_id
+        additional_resources = resources_collection.find({"recurrence_id": recurrence_id})
+        additional_resources = [{**r, "_id": str(r["_id"])} for r in additional_resources]
+        
+        # Add the additional resources to the list
+        resource_list.extend(additional_resources)
+    else:
+        resource_dict = {**resource, "_id": str(resource["_id"])}
+        resource_list.append(resource_dict)
+        #resource_list.append(resource)
+    return resource_list
 
 def get_resources(
     resource_id: str = None,
@@ -106,8 +123,11 @@ def get_resources(
     
     sort_order = ASCENDING if order == 'asc' else DESCENDING
     query = {}
+    
     if resource_id:
+        
         if ObjectId.is_valid(resource_id):
+            
             query['_id'] = ObjectId(resource_id)
         else:
             raise ValueError(f"Resource id {resource_id} is invalid")
