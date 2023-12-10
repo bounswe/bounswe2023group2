@@ -56,3 +56,5 @@ class QuantityUpdate(BaseModel):
 class ConditionUpdate(BaseModel):
     condition: ConditionEnum
 
+class ResourceList(BaseModel):
+    resource_list: List[Dict]

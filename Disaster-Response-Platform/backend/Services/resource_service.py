@@ -1,4 +1,4 @@
-from Models.resource_model import Resource, ConditionEnum
+from Models.resource_model import Resource, ConditionEnum, ResourceList
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 from pymongo import ASCENDING, DESCENDING
@@ -87,7 +87,7 @@ def get_resource_by_id(resource_id: str) -> list[Resource]:
         resource_dict = {**resource, "_id": str(resource["_id"])}
         resource_list.append(resource_dict)
         #resource_list.append(resource)
-    return resource_list
+    return ResourceList(resource_list= resource_list)
 
 def get_resources(
     resource_id: str = None,
