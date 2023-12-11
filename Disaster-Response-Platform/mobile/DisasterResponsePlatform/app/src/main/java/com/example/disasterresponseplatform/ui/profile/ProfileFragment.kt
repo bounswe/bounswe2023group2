@@ -69,7 +69,7 @@ class ProfileFragment : Fragment() {
                 binding.profileProgressBar.visibility = View.GONE
                 replaceFragment(LoginFragment())
             } else {
-                binding.profileCallButton.text = "Log Out"
+                binding.profileCallButton.text = getString(R.string.pr_logout)
                 binding.profileCallButton.setOnClickListener {
                     DiskStorageManager.removeKey("token")
                     replaceFragment(LoginFragment())

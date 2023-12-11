@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Food"
+                android:text="@string/placeholder_type"
                 android:textSize="22sp" />
 
             <TextView
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Warm Food"
+                android:text="@string/placeholder_subtype"
                 android:textSize="22sp" />
 
         </LinearLayout>
@@ -83,7 +83,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Created By:"
+                android:text="@string/act_created_by"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textSize="16sp" />
@@ -94,7 +94,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="John Doe"
+                android:text="@string/placeholder_username"
                 android:textSize="16sp" />
 
             <Button
@@ -103,7 +103,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginLeft="10dp"
-                android:text="View User Profile"
+                android:text="@string/act_view_profile"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -125,7 +125,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="User Role:"
+                android:text="@string/act_user_role"
                 android:layout_weight="5"
                 android:textStyle="bold"
                 android:textSize="16sp" />
@@ -169,7 +169,7 @@
                 android:paddingEnd="8dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="Creation Date:" />
+                android:text="@string/act_creation_date" />
 
             <TextView
                 android:id="@+id/tvCreationTime"
@@ -195,7 +195,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:text="Last Updated Date:"/>
+                android:text="@string/act_last_updated_date"/>
 
             <TextView
                 android:id="@+id/tvLastUpdatedTime"
@@ -232,7 +232,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description: "
+                android:text="@string/act_description"
                 android:textStyle="bold"
                 android:layout_marginLeft="20dp"
                 android:textSize="16sp" />
@@ -271,7 +271,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Initial Quantity"
+                    android:text="@string/act_initial_quantity"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -294,7 +294,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Unsupplied Quantity"
+                    android:text="@string/act_unsupplied_quantity"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -324,7 +324,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Urgency:"
+                android:text="@string/act_urgency"
                 android:textStyle="bold"
                 android:textSize="16sp" />
 
@@ -367,7 +367,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Address:"
+                        android:text="@string/act_address"
                         android:textStyle="bold"
                         android:textSize="16sp" />
 
@@ -376,7 +376,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
-                        android:text="38.092004"
+                        android:text="@string/placeholder_coordinate"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -404,7 +404,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Details:"
+                android:text="@string/act_details"
                 android:textStyle="bold"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -456,7 +456,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_weight="3"
-                        android:text="Edit"
+                        android:text="@string/act_edit"
                         android:textSize="12sp" />
 
                     <Button
@@ -466,7 +466,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_weight="4"
-                        android:text="Delete"
+                        android:text="@string/act_delete"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -548,7 +548,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Navigate"
+            android:text="@string/act_navigate"
             android:textSize="12sp" />
 
 

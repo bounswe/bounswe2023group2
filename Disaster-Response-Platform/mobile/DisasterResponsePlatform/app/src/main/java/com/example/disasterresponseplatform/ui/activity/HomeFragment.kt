@@ -47,11 +47,11 @@ class HomeFragment(
         )
 
         val tabTitles: ArrayList<String> = arrayListOf(
-            getString(R.string.emergency),
-            getString(R.string.need),
-            getString(R.string.resource),
-            getString(R.string.event),
-            getString(R.string.action)
+            getString(R.string.tab_emergency),
+            getString(R.string.tab_need),
+            getString(R.string.tab_resource),
+            getString(R.string.tab_event),
+            getString(R.string.tab_action)
         )
 
         val adapter = ViewPagerAdapter(fragments, mainAct)

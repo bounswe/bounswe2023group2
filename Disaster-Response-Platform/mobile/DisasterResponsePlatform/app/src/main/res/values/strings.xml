@@ -1,36 +1,92 @@
 <resources>
+
+    <!-- GENERAL -->
     <string name="app_name">Disaster Aid Provision Platform</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- MENU BOTTOM NAV  -->
+    <string name="nav_home">Home</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- MENU NAV HEADER  -->
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+
+    <!-- HOME TAB LABELS -->
+    <string name="tab_emergency">Emergencies</string>
+    <string name="tab_need">Needs</string>
+    <string name="tab_resource">Resources</string>
+    <string name="tab_event">Events</string>
+    <string name="tab_action">Actions</string>
+
+    <!-- ACTIVITY LIST SCREEN -->
+    <string name="search_hint">Search...</string>
+    <string name="sort_filter">Sort\nFilter</string>
+    <string name="add_emergency">Add Emergency</string>
+    <string name="add_need">Add Need</string>
+    <string name="add_resource">Add Resource</string>
+    <string name="add_event">Add Event</string>
+    <string name="add_action">Add Action</string>
+    <string name="no_emergency">There is no emergency</string>
+
+    <!-- ACTIVITY DETAIL PAGE -->
+    <string name="act_type">Type:</string>
+    <string name="act_subtype">Sub Type:</string>
+    <string name="act_created_by">Created By:</string>
+    <string name="act_user_role">User Role:</string>
+    <string name="act_view_profile">View User Profile</string>
+    <string name="act_creation_date">Creation Date:</string>
+    <string name="act_last_updated_date">Last Updated Date:</string>
+    <string name="act_description">Description:</string>
+    <string name="act_initial_quantity">Initial Quantity:</string>
+    <string name="act_current_quantity">Current Quantity:</string>
+    <string name="act_unsupplied_quantity">Unsupplied Quantity:</string>
+    <string name="act_urgency">Urgency:</string>
+    <string name="act_address">Address:</string>
+    <string name="act_details">Details:</string>
+    <string name="act_edit">Edit</string>
+    <string name="act_delete">Delete</string>
+    <string name="act_navigate">Navigate</string>
+
+    <!-- SORT AND FILTER -->
+    <string name="sf_title">Sort &amp; Filter</string>
+    <string name="sf_sort_by">Sort By:</string>
+    <string name="sf_sort_order">Sort Order:</string>
+    <string name="sf_types">Select a Type:</string>
+    <string name="sf_subtypes">Select Sub-Types:</string>
+    <string name="sf_cancel">Cancel</string>
+    <string name="sf_apply">Apply</string>
+    <string name="sf_date">created_at</string>
+    <string name="sf_reliability">reliability</string>
+    <string name="sf_urgency">urgency</string>
+    <string name="sf_ascending">asc</string>
+    <string name="sf_descending">desc</string>
+    <string name="sf_distance">Distance (0–1000 km):</string>
+    <string name="sf_upvote">upvote</string>
+
+    <!-- PAGE NAMES -->
+    <string name="activity_page">Activity Page</string>
+    <string name="emergency_page">Emergency Page</string>
+    <string name="need_page">Need Page</string>
+    <string name="resource_page">Resource Page</string>
+    <string name="event_page">Event Page</string>
+    <string name="action_page">Action Page</string>
+    <string name="add_emergency_page">Add Emergency Page</string>
+    <string name="add_need_page">Add Need Page</string>
+    <string name="add_resource_page">Add Resource Page</string>
+    <string name="add_event_page">Add Event Page</string>
+    <string name="add_action_page">Add Action Page</string>
     <string name="login_page">Login Page</string>
     <string name="main_page">Main Page</string>
     <string name="profile_page">Profile Page</string>
-    <string name="activity_page">Activity Page</string>
-    <string name="action_page">Action Page</string>
-    <string name="emergency_page">Emergency Page</string>
-    <string name="need_page">Need Page</string>
-    <string name="event_page">Event Page</string>
-    <string name="resource_page">Resource Page</string>
     <string name="registration_page">Registration Page</string>
     <string name="forgot_password_page">Forgot Password Page</string>
     <string name="change_password_page">Change Password Page</string>
-    <string name="change_password">Change Password</string>
-    <string name="login">Login</string>
-    <string name="map">Map</string>
-    <string name="profile">Profile</string>
-    <string name="activity">Activity</string>
-    <string name="action">Action</string>
-    <string name="emergency">Emergency</string>
-    <string name="need">Need</string>
-    <string name="event">Event</string>
-    <string name="resource">Resource</string>
-    <string name="network">Network</string>
-    <string name="network_page">Network Page</string>
-    <string name="make_network_request">Make Network Request</string>
     <string name="adding_notification_page">Adding Notification Page</string>
-    <string name="subscribe_notification_page">Subscribe Notification Page</string>
-    <string name="add_notification">Add Notification</string>
     <string name="past_user_actions_page">Past User Actions Page</string>
+
     <string name="add_resource">Add Resource</string>
     <string name="resource_list">Resource List</string>
     <string name="forgot_password">Forgot Password</string>
@@ -96,6 +152,10 @@
     <string name="condition">Condition</string>
     <string name="navigate">Navigate</string>
 
+    <string name="subscribe_notification_page">Subscribe Notification Page</string>
+
+
+    <!-- ADD/EDIT ACTIVITY FIELD NAMES-->
     <string name="field_need_type">Need Type (Select or Enter)</string>
     <string name="field_resource_type">Resource Type (Select or Enter)</string>
     <string name="field_action_type">Action Type (Select or Enter)</string>
@@ -105,12 +165,76 @@
     <string name="field_quantity">Quantity</string>
     <string name="field_coordinate_x">X Coordinate</string>
     <string name="field_coordinate_y">Y Coordinate</string>
+    <string name="submit">Submit</string>
+    <string name="edit_need">Edit Need</string>
+    <string name="edit_resource">Edit Resource</string>
+    <string name="edit_action">Edit Action</string>
+    <string name="save_changes">Save Changes</string>
+
+    <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
+    <string name="sign_up">SIGN UP</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="sign_up_camel">Sign Up</string>
+    <string name="sign_in_camel">Sign In</string>
+    <string name="username">Username</string>
+    <string name="e_mail">E-mail</string>
+    <string name="username_or_email">Username or E-mail</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="verify">VERIFY</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="enter_verification_code">Enter Verification Code</string>
+    <string name="send_verification_code">SEND VERIFICATION CODE</string>
+    <string name="resend_code">RESEND CODE</string>
+    <string name="full_name">Full Name</string>
+
+    <!-- MAP -->
+    <string name="more">More</string>
+
+    <!-- PROFILE -->
+    <string name="pr_login_required">You need to log in first</string>
+    <string name="pr_full_name">Full Name</string>
+    <string name="pr_username">Username</string>
+    <string name="pr_call">Call</string>
+    <string name="pr_logout">Log Out</string>
+    <string name="pr_social_media">Social Media</string>
+    <string name="pr_skills">Skills</string>
+    <string name="pr_languages">Languages</string>
+    <string name="pr_professions">Professions</string>
+    <string name="pr_edit_name">Name</string>
+    <string name="pr_edit_surname">Surname</string>
+    <string name="pr_edit_username">Username</string>
+    <string name="pr_edit_visibility">Profile Info Visible</string>
+    <string name="pr_edit_proficiency">Proficiency</string>
+    <string name="pr_edit_credibility_region">Credibility Region</string>
+    <string name="pr_edit_verified_by">Verified By</string>
+    <string name="pr_edit_phone">Phone Number</string>
+    <string name="pr_edit_email">E-mail</string>
+    <string name="pr_edit_nationality">Nationality</string>
+    <string name="pr_edit_id">ID Number</string>
+    <string name="pr_edit_address">Address</string>
+    <string name="pr_edit_education">Education</string>
+    <string name="pr_edit_health">Health Condition</string>
+    <string name="pr_edit_blood">Blood Type</string>
+
+    <!-- PLACEHOLDERS -->
+    <string name="placeholder_activity">Need</string>
+    <string name="placeholder_type">Food</string>
+    <string name="placeholder_subtype">Baby Food</string>
+    <string name="placeholder_username">Mehmet</string>
+    <string name="placeholder_date">2023-12-31 23.59</string>
+    <string name="placeholder_coordinate">x: 41.09, y: 29.04</string>
+    <string name="placeholder_region">Marmara Region</string>
+    <string name="placeholder_quantity">123 pcs</string>
+    <string name="placeholder_reliability">0.73</string>
+
+    <!-- NOTIFICATION -->
+    <string name="add_notification">Add Notification</string>
 
 
-    <string name="nav_home">Home</string>
-    <string name="nav_map">Map</string>
-    <string name="nav_profile">Profile</string>
-
+    <!-- ACTIVITY LISTS -->
     <string-array name="need_types">
         <item>cloth</item>
         <item>food</item>
@@ -137,6 +261,7 @@
 
     <string-array name="action_types">
         <item>need_resource</item>
+
     </string-array>
 
     <string-array name="resource_food_sub_types">
@@ -158,6 +283,7 @@
         <item>Other</item>
     </string-array>
 
+    <!-- PROFILE LISTS -->
     <string-array name="language_level_types">
         <item>Beginner</item>
         <item>Intermediate</item>
@@ -170,7 +296,7 @@
         <item>Pro</item>
         <item>Certified Pro</item>
     </string-array>
-    
+
     <string-array name="skill_level_types">
         <item>Beginner</item>
         <item>Basic</item>
@@ -197,23 +323,5 @@
         <item>College</item>
         <item>University</item>
     </string-array>
-
-    <string-array name="resource_empty_sub_types"></string-array>
-    <string name="more">More</string>
-    <string name="sort_filter">Sort\nFilter</string>
-    <string name="sf_title">Sort &amp; Filter</string>
-    <string name="sf_sort_by">Sort By:</string>
-    <string name="sf_types">Select a Type:</string>
-    <string name="sf_subtypes">Select Sub-Types:</string>
-    <string name="sf_cancel">Cancel</string>
-    <string name="sf_apply">Apply</string>
-    <string name="sf_date">created_at</string>
-    <string name="sf_reliability">reliability</string>
-    <string name="sf_urgency">urgency</string>
-    <string name="sf_ascending">asc</string>
-    <string name="sf_descending">desc</string>
-    <string name="sf_distance">Distance (0–1000 km):</string>
-    <string name="sf_sort_order">Sort Order:</string>
-    <string name="sf_upvote">upvote</string>
 
 </resources>
