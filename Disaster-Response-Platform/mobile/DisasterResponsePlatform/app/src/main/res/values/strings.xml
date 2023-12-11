@@ -152,6 +152,8 @@
     <string name="pr_edit_education">Education</string>
     <string name="pr_edit_health">Health Condition</string>
     <string name="pr_edit_blood">Blood Type</string>
+    <string name="pr_hidden_profile">Hidden Profile</string>
+    <string name="pr_no_connection">No Connection</string>
 
     <!-- PLACEHOLDERS -->
     <string name="placeholder_activity">Need</string>

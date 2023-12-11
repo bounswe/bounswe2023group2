@@ -198,21 +198,29 @@ class NetworkManager {
                 when (requestType) {
                     RequestType.GET -> {
                         Log.d("RESPONSE", callback.toString())
-                        val call = api.getData(endpoint.path, headers)
+                        var endpoint = endpoint.path
+                        if (id != null) endpoint += "/$id"
+                        val call = api.getData(endpoint, headers)
                         call.enqueue(callback)
                     }
                     RequestType.POST -> {
                         Log.d("RESPONSE", callback.toString())
-                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        requestBody?.let { api.postData(call, headers, it) }
                             ?.enqueue(callback)
                     }
                     RequestType.PUT -> {
-                        requestBody?.let { api.putData(endpoint.path, headers, it) }
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        requestBody?.let { api.putData(call, headers, it) }
                             ?.enqueue(callback)
                     }
                     RequestType.DELETE -> {
-                        val call = api.deleteData(endpoint.path, headers)
-                        call.enqueue(callback)
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        val callb = api.deleteData(call, headers)
+                        callb.enqueue(callback)
                     }
                 }
             }
