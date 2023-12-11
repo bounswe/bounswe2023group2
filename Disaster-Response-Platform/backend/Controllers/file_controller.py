@@ -13,8 +13,9 @@ router = APIRouter()
 async def create_upload_file(file: UploadFile, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         object_name = file.filename.replace(" ", "_")
-        f = open(f'./tmp/{object_name}', 'w')
-        f.write(file.file.read().decode('utf-8'))
+        f = open(f'./tmp/{object_name}', 'wb')
+        tmp = file.file.read()
+        f.write(tmp)
         f.close()
 
         result = upload_file_using_client(object_name)
