@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resourceViewModel: ResourceViewModel
 
     private lateinit var mapFragment: MapFragment
-    private val profileFragment = ProfileFragment()
+    private val profileFragment = ProfileFragment(null)
     private val loginFragment = LoginFragment()
     private lateinit var homeFragment: HomeFragment
 

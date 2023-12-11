@@ -53,7 +53,7 @@ def get_resource(resource_id: str, response: Response):
     try:
         resource = resource_service.get_resource_by_id(resource_id)
         response.status_code = HTTPStatus.OK
-        return json.loads(resource)
+        return resource
     except ValueError as err:
         err_json = create_json_for_error("Resource error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND

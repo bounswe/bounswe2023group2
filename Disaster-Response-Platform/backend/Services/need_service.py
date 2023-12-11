@@ -1,4 +1,4 @@
-from Models.need_model import Need
+from Models.need_model import Need, NeedList
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 from Services.build_API_returns import *
@@ -53,8 +53,25 @@ def create_need(need: Need) -> str:
     # return str(result.inserted_id)
 
 
-def get_need_by_id(need_id: str) -> list[dict]:
-    return get_needs(need_id)
+def get_need_by_id(need_id: str) -> list[Need]:
+    need_list=[]
+    need = needs_collection.find_one({"_id": ObjectId(need_id)})
+    if not need:
+        raise ValueError("There is no need with this id")
+    #need["x"] = str(need["_id"])
+    recurrence_id = need.get("recurrence_id")
+    if recurrence_id is not None:
+        # Find other needs with the same recurrence_id
+        additional_needs = needs_collection.find({"recurrence_id": recurrence_id})
+        additional_needs = [{**r, "_id": str(r["_id"])} for r in additional_needs]
+
+   
+        need_list.extend(additional_needs)
+    else:
+        need_dict = {**need, "_id": str(need["_id"])}
+        need_list.append(need_dict)
+        #resource_list.append(resource)
+    return NeedList(needs= need_list)
 
 def create_recurrent_needs(need:Need):
 
