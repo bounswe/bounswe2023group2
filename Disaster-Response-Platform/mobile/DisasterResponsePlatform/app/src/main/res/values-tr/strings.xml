@@ -152,6 +152,8 @@
     <string name="pr_edit_education">Eğitim</string>
     <string name="pr_edit_health">Sağlık Durumu</string>
     <string name="pr_edit_blood">Kan Grubu</string>
+    <string name="pr_hidden_profile">Gizli Profil</string>
+    <string name="pr_no_connection">Bağlantı Yok</string>
 
     <!-- PLACEHOLDERS -->
     <string name="placeholder_activity">İhtiyaç</string>

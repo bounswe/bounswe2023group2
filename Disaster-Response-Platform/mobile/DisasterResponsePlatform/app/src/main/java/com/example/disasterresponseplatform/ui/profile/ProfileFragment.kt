@@ -85,7 +85,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                             binding.profileLoginFirstText.visibility = View.VISIBLE
                             binding.profileProgressBar.visibility = View.GONE
-                            binding.profileLoginFirstText.text = "No Connection"
+                            binding.profileLoginFirstText.text = getString(R.string.pr_no_connection)
                         }
 
                         override fun onResponse(
@@ -340,7 +340,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                             binding.profileLoginFirstText.visibility = View.VISIBLE
                             binding.profileProgressBar.visibility = View.GONE
-                            binding.profileLoginFirstText.text = "No Connection"
+                            binding.profileLoginFirstText.text = getString(R.string.pr_no_connection)
                         }
 
                         override fun onResponse(
@@ -369,7 +369,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                 binding.profileLoginFirstText.visibility = View.VISIBLE
                                 binding.profileProgressBar.visibility = View.GONE
                                 binding.profileLoginFirstText.text =
-                                    getString(R.string.hidden_profile)
+                                    getString(R.string.pr_hidden_profile)
 //                                replaceFragment(LoginFragment())
                             }
                         }
