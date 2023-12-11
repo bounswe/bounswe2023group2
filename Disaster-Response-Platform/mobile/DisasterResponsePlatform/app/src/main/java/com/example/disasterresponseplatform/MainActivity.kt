@@ -52,6 +52,9 @@ class MainActivity : AppCompatActivity() {
         mapFragment = MapFragment(needViewModel, resourceViewModel, actionViewModel, eventViewModel, emergencyViewModel)
         navBarListener()
 //        toggleListener()
+        // This clears the shadow of action bar and set background color
+        supportActionBar?.elevation = 0F
+        supportActionBar?.setBackgroundDrawable(getDrawable(R.color.primary))
         arrangeVisibility()
         initializeFragments()
 
@@ -105,8 +108,6 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState() // to be ready to use
         // able to close navigation when clicked to back arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setElevation(0F)
-        supportActionBar?.setBackgroundDrawable(getDrawable(R.color.primary))
         binding.navView.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.miLoggedInAs -> replaceNavFragment(profileFragment)
