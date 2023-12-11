@@ -67,13 +67,14 @@
 
             <TextView
                 android:id="@+id/tvSubType"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="@string/placeholder_subtype"
                 android:textSize="20sp"
                 app:layout_constraintStart_toEndOf="@+id/sep1"
-                app:layout_constraintTop_toTopOf="@+id/sep1" />
+                app:layout_constraintTop_toTopOf="@+id/sep1"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
             <com.google.android.material.button.MaterialButton
@@ -120,7 +121,7 @@
                 app:srcCompat="@drawable/ic_numbers" />
 
             <TextView
-                android:id="@+id/tvInitialQuantityTitle"
+                android:id="@+id/tvQuantityTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -138,11 +139,11 @@
                 android:text="10"
                 android:textSize="16sp"
                 android:layout_marginStart="10dp"
-                app:layout_constraintStart_toEndOf="@+id/tvInitialQuantityTitle"
-                app:layout_constraintTop_toTopOf="@+id/tvInitialQuantityTitle" />
+                app:layout_constraintStart_toEndOf="@+id/tvQuantityTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvQuantityTitle" />
 
             <TextView
-                android:id="@+id/tvQuantityText"
+                android:id="@+id/tvUnsuppliedQuantityText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/act_unsupplied_quantity_text"
@@ -152,24 +153,14 @@
                 app:layout_constraintTop_toTopOf="@+id/tvUnsuppliedQuantity" />
 
             <TextView
-                android:id="@+id/tvQuantitySeperator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="/"
-                android:textSize="16sp"
-                android:layout_marginStart="3dp"
-                app:layout_constraintStart_toEndOf="@+id/tvQuantityText"
-                app:layout_constraintTop_toTopOf="@+id/tvQuantityText" />
-
-            <TextView
                 android:id="@+id/tvInitialQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="20"
                 android:textSize="16sp"
-                android:layout_marginStart="3dp"
-                app:layout_constraintStart_toEndOf="@+id/tvQuantitySeperator"
-                app:layout_constraintTop_toTopOf="@+id/tvQuantitySeperator" />
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toStartOf="@+id/tvUnsuppliedQuantity"
+                app:layout_constraintTop_toBottomOf="@+id/tvUnsuppliedQuantity" />
 
             <TextView
                 android:id="@+id/tvInitialQuantityText"
@@ -185,11 +176,11 @@
                 android:id="@+id/iconUrgency"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                app:srcCompat="@drawable/ic_urgency"
-                app:tint="@color/icon"
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iconQuantity"/>
+                app:layout_constraintTop_toBottomOf="@+id/tvInitialQuantity"
+                app:srcCompat="@drawable/ic_urgency"
+                app:tint="@color/icon" />
 
             <TextView
                 android:id="@+id/tvUrgencyTitle"
@@ -237,13 +228,14 @@
 
             <TextView
                 android:id="@+id/tvDescription"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/placeholder_general"
                 android:textSize="16sp"
-                android:layout_marginStart="10dp"
-                app:layout_constraintStart_toEndOf="@+id/tvDescriptionTitle"
-                app:layout_constraintTop_toTopOf="@+id/tvDescriptionTitle" />
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvDescriptionTitle"
+                app:layout_constraintTop_toBottomOf="@+id/tvDescriptionTitle" />
 
             <ImageView
                 android:id="@+id/iconDetails"
@@ -300,13 +292,14 @@
 
             <TextView
                 android:id="@+id/tvCreationTime"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/placeholder_general"
                 android:textSize="16sp"
                 android:layout_marginStart="10dp"
                 app:layout_constraintStart_toEndOf="@+id/tvCreationTimeTitle"
-                app:layout_constraintTop_toTopOf="@+id/tvCreationTimeTitle" />
+                app:layout_constraintTop_toTopOf="@+id/tvCreationTimeTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
             <ImageView
@@ -333,13 +326,14 @@
 
             <TextView
                 android:id="@+id/tvLastUpdatedTime"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/placeholder_general"
                 android:textSize="16sp"
                 android:layout_marginStart="10dp"
                 app:layout_constraintStart_toEndOf="@+id/tvLastUpdatedTimeTitle"
-                app:layout_constraintTop_toTopOf="@+id/tvLastUpdatedTimeTitle" />
+                app:layout_constraintTop_toTopOf="@+id/tvLastUpdatedTimeTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
                 android:id="@+id/iconAddress"
@@ -410,13 +404,14 @@
 
             <TextView
                 android:id="@+id/tvCreator"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/placeholder_general"
                 android:textSize="16sp"
                 android:layout_marginStart="10dp"
                 app:layout_constraintStart_toEndOf="@+id/tvUsernameTitle"
-                app:layout_constraintTop_toTopOf="@+id/tvUsernameTitle" />
+                app:layout_constraintTop_toTopOf="@+id/tvUsernameTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
                 android:id="@+id/iconUserRole"
@@ -442,13 +437,14 @@
 
             <TextView
                 android:id="@+id/tvUserRole"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/placeholder_general"
                 android:textSize="16sp"
                 android:layout_marginStart="10dp"
                 app:layout_constraintStart_toEndOf="@+id/tvUserRoleTitle"
-                app:layout_constraintTop_toTopOf="@+id/tvUserRoleTitle" />
+                app:layout_constraintTop_toTopOf="@+id/tvUserRoleTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSeeProfile"
