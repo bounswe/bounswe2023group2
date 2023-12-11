@@ -2,6 +2,11 @@
 
     <!-- GENERAL -->
     <string name="app_name">Doğal Afet Paylaşım Platformu</string>
+    <string name="emergency">Acil Durum</string>
+    <string name="need">İhtiyaç</string>
+    <string name="resource">Kaynak</string>
+    <string name="event">Olay</string>
+    <string name="action">Aksiyon</string>
 
     <!-- MENU BOTTOM NAV  -->
     <string name="nav_home">Ana Sayfa</string>
@@ -38,11 +43,17 @@
     <string name="act_user_role">Kullanıcı Rolü:</string>
     <string name="act_view_profile">Kullanıcı Profilini Görüntüle</string>
     <string name="act_creation_date">Oluşturulma Zamanı:</string>
+    <string name="act_creation_time">Oluşturuldu:</string>
     <string name="act_last_updated_date">Son Güncellenme Zamanı:</string>
+    <string name="act_last_updated_time">Son Güncelleme:</string>
     <string name="act_description">Açıklama:</string>
+    <string name="act_quantity">Miktar:</string>
     <string name="act_initial_quantity">Başlangıç Miktarı:</string>
+    <string name="act_initial_quantity_text">başlangıç miktarı</string>
     <string name="act_current_quantity">Mevcut Miktar:</string>
+    <string name="act_current_quantity_text">mevcut miktar</string>
     <string name="act_unsupplied_quantity">Tedarik Edilmeyen Miktar:</string>
+    <string name="act_unsupplied_quantity_text">tedarik edilmeyen miktar</string>
     <string name="act_urgency">Aciliyet:</string>
     <string name="act_address">Adres:</string>
     <string name="act_details">Detaylar:</string>
@@ -154,6 +165,7 @@
     <string name="pr_edit_blood">Kan Grubu</string>
 
     <!-- PLACEHOLDERS -->
+    <string name="placeholder_general">Örnek Metin</string>
     <string name="placeholder_activity">İhtiyaç</string>
     <string name="placeholder_type">Yiyecek</string>
     <string name="placeholder_subtype">Bebek Yiyeceği</string>

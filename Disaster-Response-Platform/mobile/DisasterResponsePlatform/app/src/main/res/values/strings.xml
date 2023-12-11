@@ -2,6 +2,11 @@
 
     <!-- GENERAL -->
     <string name="app_name">Disaster Aid Provision Platform</string>
+    <string name="emergency">Emergency</string>
+    <string name="need">Need</string>
+    <string name="resource">Resource</string>
+    <string name="event">Event</string>
+    <string name="action">Action</string>
 
     <!-- MENU BOTTOM NAV  -->
     <string name="nav_home">Home</string>
@@ -38,11 +43,17 @@
     <string name="act_user_role">User Role:</string>
     <string name="act_view_profile">View User Profile</string>
     <string name="act_creation_date">Creation Date:</string>
+    <string name="act_creation_time">Creation Time:</string>
     <string name="act_last_updated_date">Last Updated Date:</string>
+    <string name="act_last_updated_time">Last Updated:</string>
     <string name="act_description">Description:</string>
+    <string name="act_quantity">Quantity:</string>
     <string name="act_initial_quantity">Initial Quantity:</string>
+    <string name="act_initial_quantity_text">initial</string>
     <string name="act_current_quantity">Current Quantity:</string>
+    <string name="act_current_quantity_text">current</string>
     <string name="act_unsupplied_quantity">Unsupplied Quantity:</string>
+    <string name="act_unsupplied_quantity_text">unsupplied</string>
     <string name="act_urgency">Urgency:</string>
     <string name="act_address">Address:</string>
     <string name="act_details">Details:</string>
@@ -154,6 +165,7 @@
     <string name="pr_edit_blood">Blood Type</string>
 
     <!-- PLACEHOLDERS -->
+    <string name="placeholder_general">Sample Text</string>
     <string name="placeholder_activity">Need</string>
     <string name="placeholder_type">Food</string>
     <string name="placeholder_subtype">Baby Food</string>
