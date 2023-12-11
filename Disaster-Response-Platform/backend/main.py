@@ -6,9 +6,8 @@ from Services.build_API_returns import *
 from Controllers import (resource_controller, user_controller, uprofile_optinfo_controller,
                          uprofile_languages_controller, uprofile_SocMed_controller, uprofile_professions_controller,
                          uprofile_skills_controller, need_controller, event_controller, user_roles_controller, 
-                         form_fields_controller, report_controller, feedback_controller,
-                         uprofile_admin_controller,
-                         action_controller)
+                         form_fields_controller, report_controller, feedback_controller, uprofile_admin_controller,
+                         action_controller, file_controller)
 
 
 from fastapi.responses import JSONResponse
@@ -44,6 +43,7 @@ app.include_router(form_fields_controller.router, prefix="/api/form_fields", tag
 app.include_router(feedback_controller.router, prefix="/api/feedback", tags=["Feedback System"])
 app.include_router(uprofile_admin_controller.router, prefix="/api/admin", tags=["User Profiles - Admin"])
 
+app.include_router(file_controller.router, prefix="/api", tags=["File Uploads"])
 
 @app.get("/")
 async def root(some_parameter:str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):

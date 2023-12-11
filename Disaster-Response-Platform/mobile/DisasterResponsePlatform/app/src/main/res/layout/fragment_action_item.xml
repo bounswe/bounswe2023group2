@@ -40,22 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="@string/placeholder_type"
-                android:textSize="22sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="|"
-                android:textSize="22sp" />
-
-            <TextView
-                android:id="@+id/etSubType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="@string/placeholder_subtype"
+                android:text="Food"
                 android:textSize="22sp" />
 
         </LinearLayout>
@@ -83,7 +68,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/act_created_by"
+                android:text="Created By:"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textSize="16sp" />
@@ -94,7 +79,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/placeholder_username"
+                android:text="John Doe"
                 android:textSize="16sp" />
 
             <Button
@@ -103,7 +88,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginLeft="10dp"
-                android:text="@string/act_view_profile"
+                android:text="View User Profile"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -125,7 +110,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="@string/act_user_role"
+                android:text="User Role:"
                 android:layout_weight="5"
                 android:textStyle="bold"
                 android:textSize="16sp" />
@@ -169,7 +154,7 @@
                 android:paddingEnd="8dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="@string/act_creation_date" />
+                android:text="Creation Date:" />
 
             <TextView
                 android:id="@+id/tvCreationTime"
@@ -195,7 +180,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:text="@string/act_last_updated_date"/>
+                android:text="Last Updated Date:"/>
 
             <TextView
                 android:id="@+id/tvLastUpdatedTime"
@@ -232,21 +217,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/act_description"
+                android:text="Description: "
                 android:textStyle="bold"
                 android:layout_marginLeft="20dp"
                 android:textSize="16sp" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvDescription"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="This is a description"
-            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -266,75 +242,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/act_initial_quantity"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/etInitialQuantity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="10"
-                    android:inputType="number"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
+                android:orientation="vertical"/>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/act_unsupplied_quantity"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/etUnSuppliedQuantity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="10"
-                    android:inputType="number"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_urgency"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/act_urgency"
-                android:textStyle="bold"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/etUrgency"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="High"
-                android:textSize="16sp" />
+                android:orientation="vertical"/>
         </LinearLayout>
 
         <LinearLayout
@@ -362,76 +276,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/act_address"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/etCoordinate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:text="@string/placeholder_coordinate"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
+                    android:orientation="horizontal"/>
             </LinearLayout>
 
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/divider11"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="10dp"
-            android:background="?android:attr/listDivider" />
-
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_details" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/act_details"
-                android:textStyle="bold"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:showDividers="middle">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"/>
-
-        </LinearLayout>
+            android:layout_height="wrap_content"/>
 
         <!-- The row -->
-        <View
-            android:id="@+id/divider10"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="10dp"
-            android:layout_weight="0.5"
-            android:background="?android:attr/listDivider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -456,7 +311,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_weight="3"
-                        android:text="@string/act_edit"
+                        android:text="Edit"
                         android:textSize="12sp" />
 
                     <Button
@@ -466,7 +321,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_weight="4"
-                        android:text="@string/act_delete"
+                        android:text="Delete"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -548,7 +403,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/act_navigate"
+            android:text="Navigate"
             android:textSize="12sp" />
 
 

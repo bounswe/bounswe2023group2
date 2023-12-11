@@ -71,7 +71,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                 "Content-Type" to "application/json"
             )
             if (username == null) { // get self profile info
-                binding.profileCallButton.text = "Log Out"
+                binding.profileCallButton.text = getString(R.string.pr_logout)
                 binding.profileCallButton.setOnClickListener {
                     DiskStorageManager.removeKey("token")
                     replaceFragment(LoginFragment())
