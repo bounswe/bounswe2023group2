@@ -14,5 +14,8 @@
     <color name="colorResource">#067A47</color>
     <color name="colorActivity">#656565</color>
     <color name="separator">#6A6A6A</color>
+    <color name="icon">#D3D3D3</color>
+
+    <color name="bottom_sheet_bg">#2B2B2B</color>
 
 </resources>
