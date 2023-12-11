@@ -54,13 +54,13 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
 
     private fun fillTexts(need: NeedBody.NeedItem){
         val creatorName = need.created_by
-        binding.etCreatedBy.text = creatorName
-        binding.etType.text = need.type
-        binding.etSubType.text = need.details["subtype"]
-        binding.etInitialQuantity.text = need.initialQuantity.toString()
-        binding.etUnSuppliedQuantity.text = need.unsuppliedQuantity.toString()
-        binding.etUrgency.text = need.urgency.toString()
-        binding.etCoordinate.text = "%.3f %.3f".format(need.x, need.y)
+        binding.tvCreator.text = creatorName
+        binding.tvType.text = need.type
+        binding.tvSubType.text = need.details["subtype"]
+        binding.tvInitialQuantity.text = need.initialQuantity.toString()
+        binding.tvUnsuppliedQuantity.text = need.unsuppliedQuantity.toString()
+        binding.tvUrgency.text = need.urgency.toString()
+        binding.tvAddress.text = "%.3f %.3f".format(need.x, need.y)
         coordinateToAddress(need.x, need.y, object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 Log.e("Network", "Error: ${e.message}")
@@ -75,7 +75,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
                     )
                     address = address.subSequence(0, address.indexOf("\""))
                     requireActivity?.runOnUiThread {
-                        binding.etCoordinate.text = address
+                        binding.tvAddress.text = address
                     }
                 }
             }
@@ -91,7 +91,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it
-            binding.etUserRole.text = userRole
+            binding.tvUserRole.text = userRole
         }
     }
 
@@ -107,6 +107,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
             if (fieldName != "subtype"){
                 val textView = TextView(requireContext())
                 textView.text = "$fieldName: $value"
+                textView.textSize = 16F
                 linearLayout.addView(textView)
                 val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 textView.layoutParams = layoutParams
