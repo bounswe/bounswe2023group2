@@ -86,72 +86,6 @@
     <string name="change_password_page">Change Password Page</string>
     <string name="adding_notification_page">Adding Notification Page</string>
     <string name="past_user_actions_page">Past User Actions Page</string>
-
-    <string name="add_resource">Add Resource</string>
-    <string name="resource_list">Resource List</string>
-    <string name="forgot_password">Forgot Password</string>
-    <string name="past_user_activities">Past User Activities</string>
-    <string name="subsrcibe_notification">Subsrcibe Notification</string>
-    <string name="add_need">Add Need</string>
-    <string name="need_list">Need List</string>
-    <string name="registration">Registration</string>
-    <string name="add_event">Add Event</string>
-    <string name="event_list">Event List</string>
-    <string name="add_emergency">Add Emergency</string>
-    <string name="emergency_list">Emergency List</string>
-    <string name="add_resource_page">Add Resource Page</string>
-    <string name="add_need_page">Add Need Page</string>
-    <string name="add_event_page">Add Event Page</string>
-    <string name="add_emergency_page">Add Emergency Page</string>
-    <string name="add_action_page">Add Action Page</string>
-    <string name="add_action">Add Action</string>
-    <string name="e_mail">E-mail</string>
-    <string name="password">Password</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="sign_up">SIGN UP</string>
-    <string name="sign_in">SIGN IN</string>
-    <string name="username">Username</string>
-    <string name="full_name">Full Name</string>
-    <string name="sign_up_camel">Sign Up</string>
-    <string name="enter_verification_code">Enter Verification Code</string>
-    <string name="verification_code">Verification Code</string>
-    <string name="verify">VERIFY</string>
-    <string name="resend_code">RESEND CODE</string>
-    <string name="sign_in_camel">Sign In</string>
-    <string name="reset_password">Reset Password</string>
-    <string name="send_verification_code">SEND VERIFICATION CODE</string>
-    <string name="network_request">Network Request</string>
-    <string name="logout">Logout</string>
-    <string name="register">Register</string>
-    <string name="open">Open</string>
-    <string name="close">Close</string>
-    <string name="type">Type:</string>
-    <string name="location">Location:</string>
-    <string name="activity_item">Activity:</string>
-    <string name="clothes">Clothes</string>
-    <string name="date">Date:</string>
-    <string name="add_example_user_data">Add Example User Data</string>
-    <string name="select_sub_type">Select or Enter Sub-Type <font color='#B00020'>*</font></string>
-    <string name="select_need_type">Select or Enter Need Type <font color='#B00020'>*</font></string>
-    <string name="select_or_enter_location">Select or Enter Location <font color='#B00020'>*</font></string>
-    <string name="enter_quantity">Enter Quantity <font color='#B00020'>*</font></string>
-    <string name="select_or_enter_coordinate_x">Select Location <font color='#B00020'>*</font></string>
-    <string name="select_or_enter_coordinate_y">Select Location <font color='#B00020'>*</font></string>
-    <string name="enter_allergens">Enter Allergens</string>
-    <string name="enter_additional_notes">Enter Additional Notes</string>
-    <string name="enter_full_name">Enter Full Name <font color='#B00020'>*</font></string>
-    <string name="enter_phone_number">Enter Phone Number</string>
-    <string name="submit">Submit</string>
-    <string name="select_resource_type">Select or Enter Resource Type <font color='#B00020'>*</font></string>
-    <string name="enter_expiration_date">Enter Expiration Date</string>
-    <string name="username_or_email">Username or Email</string>
-    <string name="edit_need">Edit Need</string>
-    <string name="edit_resource">Edit Resource</string>
-    <string name="edit_action">Edit Action</string>
-    <string name="save_changes">Save Changes</string>
-    <string name="condition">Condition</string>
-    <string name="navigate">Navigate</string>
-
     <string name="subscribe_notification_page">Subscribe Notification Page</string>
 
 
@@ -323,5 +257,4 @@
         <item>College</item>
         <item>University</item>
     </string-array>
-
 </resources>
