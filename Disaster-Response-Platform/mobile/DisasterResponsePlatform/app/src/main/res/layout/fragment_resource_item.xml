@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingEnd="8dp"
-                android:text="Creation Time"/>
+                android:text="@string/act_creation_date"/>
 
             <!-- Right TextView for Last Updated Time -->
             <TextView
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingStart="8dp"
-                android:text="Last Updated Time"/>
+                android:text="@string/act_last_updated_date"/>
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +70,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Created By"
+                android:text="@string/act_created_by"
                 android:textSize="16sp"
                 android:layout_weight="1" />
 
@@ -78,7 +78,7 @@
                 android:id="@+id/createdByRole"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="User Role: "
+                android:text="@string/act_user_role"
                 android:textSize="16sp"
                 android:layout_weight="1" />
 
@@ -108,7 +108,7 @@
                         android:id="@+id/etCreatedBy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="John Doe"
+                        android:text="@string/placeholder_username"
                         android:textStyle="bold"
                         android:textSize="16sp" />
 
@@ -132,7 +132,7 @@
                         android:id="@+id/btnSeeProfile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="View User Profile"
+                        android:text="@string/act_view_profile"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -149,14 +149,14 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Type"
+                android:text="@string/act_type"
                 android:textSize="16sp"
                 android:layout_weight="1" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Sub Type"
+                android:text="@string/act_subtype"
                 android:textSize="16sp"
                 android:layout_weight="1" />
 
@@ -172,7 +172,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Clothes"
+                android:text="@string/placeholder_type"
                 android:textStyle="bold"
                 android:textSize="16sp" />
 
@@ -181,7 +181,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="T-Shirt"
+                android:text="@string/placeholder_subtype"
                 android:textStyle="bold"
                 android:textSize="16sp" />
 
@@ -190,7 +190,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
+            android:text="@string/act_description"
             android:textSize="16sp"
             android:layout_marginTop="8dp" />
 
@@ -225,7 +225,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Initial Quantity"
+                        android:text="@string/act_initial_quantity"
                         android:textSize="16sp" />
 
 
@@ -247,7 +247,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Current Quantity"
+                        android:text="@string/act_current_quantity"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -388,7 +388,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Details"
+            android:text="@string/act_details"
             android:textSize="16sp"
             android:layout_marginTop="8dp" />
 
@@ -431,7 +431,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_weight="3"
-                        android:text="Edit"
+                        android:text="@string/act_edit"
                         android:textSize="12sp" />
 
                     <Button
@@ -441,7 +441,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_weight="4"
-                        android:text="Delete"
+                        android:text="@string/act_delete"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -519,7 +519,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Navigate"
+            android:text="@string/act_navigate"
             android:textSize="12sp" />
 
 
