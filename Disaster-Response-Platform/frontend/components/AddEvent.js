@@ -4,8 +4,15 @@ import { Button, RadioGroup, Radio, Input, Checkbox, Textarea } from '@nextui-or
 
 
 export default function AddEvent({ isOpen, onOpenChange }) {
-  function addEvent(event) {
 
+  function addEvent(event) {
+    const form = new FormData(event.target);
+    const formData = Object.fromEntries(form.entries());
+    formData.is_active = ("is_active" in formData);
+    formData.event_time = `${formData.event_time_day}T${formData.event_time_hour}:00.000Z`;
+    delete formData.event_time_day;
+    delete formData.event_time_hour;
+    formData.created_time = new Date().toISOString();
   }
 
   const event_types = [
@@ -16,7 +23,8 @@ export default function AddEvent({ isOpen, onOpenChange }) {
   ];
 
   const fields = [
-    {"Component": Input, "key": "event_time", "label_EN": "Event time", "label_TR": "Olay zamanı", "type": "date", "placeholder": " "},
+    {"Component": Input, "key": "event_time_day", "label_EN": "Event day", "label_TR": "Olay günü", "type": "date", "placeholder": " "},
+    {"Component": Input, "key": "event_time_hour", "label_EN": "Event hour", "label_TR": "Olay saati", "type": "time", "placeholder": " "},
     {"Component": Checkbox, "key": "is_active", "label_EN": "Still active", "label_TR": "Hala mevcut"},
     {"Component": Input, "key": "center_location_x", "label_EN": "Center longitude (West-East)", "label_TR": "Merkez boylamı (Batı-Doğu)", "type": "number", "placeholder": "29", max: "180", min: "-180", step: "any"},
     {"Component": Input, "key": "center_location_y", "label_EN": "Center latitude (North-South)", "label_TR": "Merkez enlemi (Kuzey-Güney)", "type": "number", "placeholder": "41", max: "90", min: "-90", step: "any"},
