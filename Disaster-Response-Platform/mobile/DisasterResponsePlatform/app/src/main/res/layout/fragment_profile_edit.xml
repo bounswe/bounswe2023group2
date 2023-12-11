@@ -65,14 +65,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:hint="Name">
+                        android:hint="@string/pr_edit_name">
                         <EditText
                             android:id="@+id/profile_name"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:padding="5dp"
-                            android:text="Suzan"
                             android:textSize="15sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,14 +79,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:hint="Surname">
+                        android:hint="@string/pr_edit_surname">
                     <EditText
                         android:id="@+id/profile_surname"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:padding="5dp"
-                        android:text="Üsküdarlı"
                         android:textSize="15sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,7 +96,7 @@
                         android:layout_weight="1"
                         android:paddingStart="5dp"
                         android:paddingBottom="10dp"
-                        android:text="suzanuskudarli"
+                        android:text="@string/pr_edit_username"
                         android:textSize="15sp" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -107,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingHorizontal="5dp"
-                        android:text="Profile Info Visible" />
+                        android:text="@string/pr_edit_visibility" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -138,15 +136,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Proficiency">
+                    android:hint="@string/pr_edit_proficiency">
                 <EditText
                     android:id="@+id/profile_proficiency"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="15sp"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Professor" />
+                    android:padding="10dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -169,15 +166,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Credibility Region">
+                    android:hint="@string/pr_edit_credibility_region">
                 <EditText
                     android:id="@+id/profile_region"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="15sp"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:padding="10dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -202,7 +198,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:padding="10dp"
-                    android:text="Cahid Enes Keleş" />
+                    android:text="@string/pr_edit_verified_by" />
             </LinearLayout>
 
             <!-- Phone-->
@@ -223,15 +219,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Phone Number">
+                    android:hint="@string/pr_edit_phone">
                 <EditText
                     android:id="@+id/profile_phone_number"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:textSize="15sp"
-                    android:padding="10dp"
-                    android:text="+90 555 555 55 55" />
+                    android:padding="10dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
@@ -261,15 +256,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Email">
+                    android:hint="@string/pr_edit_email">
                 <EditText
                     android:id="@+id/profile_email"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:textSize="15sp"
-                    android:padding="10dp"
-                    android:text="suzan.uskudarli@boun.edu.tr" />
+                    android:padding="10dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
@@ -324,15 +318,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Nationality">
+                    android:hint="@string/pr_edit_nationality">
                 <EditText
                     android:id="@+id/profile_nationality"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="15sp"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="" />
+                    android:padding="10dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -354,7 +347,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="ID Number">
+                    android:hint="@string/pr_edit_id">
                 <EditText
                     android:id="@+id/profile_id_number"
                     android:layout_width="match_parent"
@@ -383,7 +376,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Address">
+                    android:hint="@string/pr_edit_address">
                 <EditText
                     android:id="@+id/profile_address"
                     android:layout_width="match_parent"
@@ -412,7 +405,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:hint="Education">
+                    android:hint="@string/pr_edit_education">
 
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/spEducation"
@@ -444,7 +437,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Health Condition">
+                    android:hint="@string/pr_edit_health">
                 <EditText
                     android:id="@+id/profile_health_condition"
                     android:layout_width="match_parent"
@@ -473,7 +466,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:hint="Blood Type">
+                    android:hint="@string/pr_edit_blood">
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/spBloodType"
                         android:layout_width="match_parent"
@@ -496,7 +489,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Social Media"
+                android:text="@string/pr_social_media"
                 android:textSize="30sp" />
 
                 <ImageView
@@ -525,7 +518,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Skills"
+                android:text="@string/pr_skills"
                 android:textSize="30sp" />
             <ImageView
                 android:id="@+id/profile_add_skill_button"
@@ -554,7 +547,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Languages"
+                android:text="@string/pr_languages"
                 android:textSize="30sp" />
             <ImageView
                 android:id="@+id/profile_add_language_button"
@@ -583,7 +576,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Professions"
+                android:text="@string/pr_professions"
                 android:textSize="30sp" />
             <ImageView
                 android:id="@+id/profile_add_profession_button"

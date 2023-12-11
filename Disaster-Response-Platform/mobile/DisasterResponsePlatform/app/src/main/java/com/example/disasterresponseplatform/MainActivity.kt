@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeFragments(){
-        homeFragment = HomeFragment(needViewModel,resourceViewModel, this)
+        homeFragment = HomeFragment(needViewModel,resourceViewModel,actionViewModel,this)
         replaceFragment(homeFragment)
     }
 
