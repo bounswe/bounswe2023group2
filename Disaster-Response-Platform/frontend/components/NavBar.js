@@ -12,6 +12,7 @@ import add from "../public/icons/add.png";
 import dapp_logo_extended_white from "../public/logo/dapp_logo_extended_white.svg";
 import Image from "next/image";
 import AddNeedForm from "./AddNeed";
+import AddEventForm from "./AddEvent";
 import AddActionFromId from "./AddActionFromId";
 export default function NavBar() {
   const { user, mutateUser } = useUser();
@@ -21,13 +22,18 @@ export default function NavBar() {
     isOpen: isNeedModalOpen,
     onOpen: onOpenNeedModal,
     onOpenChange: onOpenChangeNeedModal,
-  } = useDisclosure()
+  } = useDisclosure();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isEventModalOpen,
+    onOpen: onOpenEventModal,
+    onOpenChange: onOpenChangeEventModal,
+  } = useDisclosure();
   const {
     isOpen: isActionModalOpen,
     onOpen: onOpenActionModal,
     onOpenChange: onOpenChangeActionModal,
-  } = useDisclosure()
+  } = useDisclosure();
 
 
   return (
@@ -71,6 +77,9 @@ export default function NavBar() {
                 </DropdownItem>
                 <DropdownItem key="need" onClick={onOpenNeedModal}>
                   İhtiyaç ekle
+                </DropdownItem>
+                <DropdownItem key="event" onClick={onOpenEventModal}>
+                  Olay ekle
                 </DropdownItem>
                 <DropdownItem key="aksiyon" onClick={onOpenActionModal}>
                   Aksiyon ekle
@@ -156,6 +165,7 @@ export default function NavBar() {
       </NavbarContent>
       <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
       <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
+      <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} />
       <AddActionFromId onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} />
     </Navbar>
   );
