@@ -27,7 +27,7 @@ def get_need(need_id: str, response:Response):
     try:
         need = need_service.get_need_by_id(need_id)
         response.status_code = HTTPStatus.OK
-        return json.loads(need)
+        return need
     except ValueError as err:
         err_json = create_json_for_error("Need error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
