@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import { Button } from '@nextui-org/react'
 
 
-export default function AddEvent({ isOpen, onOpenChange }) {
-  function addEvent(event) {
+export default function AddEmergency({ isOpen, onOpenChange }) {
+  function addEmergency(event) {
 
   }
 
@@ -13,9 +13,9 @@ export default function AddEvent({ isOpen, onOpenChange }) {
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">Olay bildir</ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">Acil durum bildir</ModalHeader>
             <ModalBody>
-              <form onSubmit={(event) => {event.preventDefault(); addEvent(event); onClose()}}
+              <form onSubmit={(event) => {event.preventDefault(); addEmergency(event); onClose()}}
                 className='flex w-full flex-col  mb-6 md:mb-0 gap-4'  >
                 <Button type='submit'>
                   Bildir

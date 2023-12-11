@@ -14,6 +14,7 @@ import Image from "next/image";
 import AddNeedForm from "./AddNeed";
 import AddEventForm from "./AddEvent";
 import AddActionFromId from "./AddActionFromId";
+import AddEmergencyForm from "./AddEmergency";
 export default function NavBar() {
   const { user, mutateUser } = useUser();
   const router = useRouter();
@@ -33,6 +34,11 @@ export default function NavBar() {
     isOpen: isActionModalOpen,
     onOpen: onOpenActionModal,
     onOpenChange: onOpenChangeActionModal,
+  } = useDisclosure();
+  const {
+    isOpen: isEmergencyModalOpen,
+    onOpen: onOpenEmergencyModal,
+    onOpenChange: onOpenChangeEmergencyModal,
   } = useDisclosure();
 
 
@@ -79,7 +85,7 @@ export default function NavBar() {
                   İhtiyaç ekle
                 </DropdownItem>
                 <DropdownItem key="event" onClick={onOpenEventModal}>
-                  Olay ekle
+                  Olay bildir
                 </DropdownItem>
                 <DropdownItem key="aksiyon" onClick={onOpenActionModal}>
                   Aksiyon ekle
@@ -158,7 +164,7 @@ export default function NavBar() {
           }
         </NavbarItem>
         <NavbarItem>
-          <Button color="primary" className={styles.button}>
+          <Button color="primary" className={styles.button} onPress={onOpenEmergencyModal}>
             Acil Durum
           </Button>
         </NavbarItem>
@@ -167,6 +173,7 @@ export default function NavBar() {
       <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
       <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} />
       <AddActionFromId onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} />
+      <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} />
     </Navbar>
   );
 }
