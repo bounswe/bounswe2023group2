@@ -41,6 +41,8 @@ def get_events(event_id:str = None) -> list[dict]:
                   "last_confirmed_time": 1,
                   "confirmed_by_user": 1,
                   "short_description": 1,
+                  "downvote": 1,
+                  "upvote": 1,
                   "note": 1
     }
 
