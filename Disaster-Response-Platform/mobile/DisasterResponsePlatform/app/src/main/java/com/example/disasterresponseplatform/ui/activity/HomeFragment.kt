@@ -139,6 +139,9 @@ class HomeFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        changeActionBarColor(0)
+        changeStatusBarColor(0)
+        changeTabColor(0)
     }
 
     /**
