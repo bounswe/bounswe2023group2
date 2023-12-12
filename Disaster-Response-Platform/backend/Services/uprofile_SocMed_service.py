@@ -10,11 +10,6 @@ profile_socialmedias = MongoDB.get_collection('user_socialmedias')
 
 #def set update fields list will be prep
 
-def set_Nones_to_old_values(dict_with_Nones:dict, dict_with_Olds:dict):
-    for key, value in dict_with_Nones.items():
-        if (value is None):
-            dict_with_Nones[key] = dict_with_Olds[key]
-
 def get_user_social_media(username:str = None, platform_name:str = None) -> str:
     projection = {"_id": 0}
 

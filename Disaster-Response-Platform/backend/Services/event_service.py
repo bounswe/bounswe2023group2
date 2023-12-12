@@ -4,29 +4,12 @@ from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 
 from Services.build_API_returns import *
+import Services.utilities
 
 
 # Get the resources collection using the MongoDB class
 events_collection = MongoDB.get_collection('events')
-time_format = "%Y-%m-%d %H:%M"
 
-def eradicate_dates(event:Event):
-    return_dict = event.dict()
-    if return_dict["event_time"] is not None:
-        return_dict["event_time"] = datetime.datetime.strptime(str(return_dict["event_time"]),  time_format)
-    if return_dict["end_time"] is not None:
-        return_dict["end_time"] = datetime.datetime.strptime(str(return_dict["end_time"]), time_format)
-    if return_dict["created_time"] is not None:
-        return_dict["created_time"] = datetime.datetime.strptime(str(return_dict["created_time"]), time_format)
-    if return_dict["last_confirmed_time"] is not None:
-        return_dict["last_confirmed_time"] = datetime.datetime.strptime(str(return_dict["last_confirmed_time"]), time_format)
-
-    return return_dict
-
-def set_Nones_to_old_values(dict_with_Nones:dict, dict_with_Olds:dict):
-    for key, value in dict_with_Nones.items():
-        if (value is None):
-            dict_with_Nones[key] = dict_with_Olds[key]
 def create_event(event: Event) -> str:
     # Manual validation for required fields during creation
     if not all([event.created_by_user, event.created_time,
@@ -58,6 +41,8 @@ def get_events(event_id:str = None) -> list[dict]:
                   "last_confirmed_time": 1,
                   "confirmed_by_user": 1,
                   "short_description": 1,
+                  "downvote": 1,
+                  "upvote": 1,
                   "note": 1
     }
 
@@ -85,7 +70,7 @@ def update_event(event_id: str, event:Event) -> list[dict]:
     existing_event = events_collection.find_one({"_id": ObjectId(event_id)})
     new_event = event.dict()
     if existing_event:
-        set_Nones_to_old_values(new_event, existing_event)
+        Services.utilities.set_Nones_to_old_values(new_event, existing_event)
         update_data = {k: v for k, v in new_event.items()}
 
         events_collection.update_one({"_id": ObjectId(event_id)}, {"$set": update_data})
