@@ -12,7 +12,9 @@ import add from "../public/icons/add.png";
 import dapp_logo_extended_white from "../public/logo/dapp_logo_extended_white.svg";
 import Image from "next/image";
 import AddNeedForm from "./AddNeed";
+import AddEventForm from "./AddEvent";
 import AddActionFromId from "./AddActionFromId";
+import AddEmergencyForm from "./AddEmergency";
 export default function NavBar() {
   const { user, mutateUser } = useUser();
   const router = useRouter();
@@ -21,13 +23,23 @@ export default function NavBar() {
     isOpen: isNeedModalOpen,
     onOpen: onOpenNeedModal,
     onOpenChange: onOpenChangeNeedModal,
-  } = useDisclosure()
+  } = useDisclosure();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isEventModalOpen,
+    onOpen: onOpenEventModal,
+    onOpenChange: onOpenChangeEventModal,
+  } = useDisclosure();
   const {
     isOpen: isActionModalOpen,
     onOpen: onOpenActionModal,
     onOpenChange: onOpenChangeActionModal,
-  } = useDisclosure()
+  } = useDisclosure();
+  const {
+    isOpen: isEmergencyModalOpen,
+    onOpen: onOpenEmergencyModal,
+    onOpenChange: onOpenChangeEmergencyModal,
+  } = useDisclosure();
 
 
   return (
@@ -71,6 +83,9 @@ export default function NavBar() {
                 </DropdownItem>
                 <DropdownItem key="need" onClick={onOpenNeedModal}>
                   İhtiyaç ekle
+                </DropdownItem>
+                <DropdownItem key="event" onClick={onOpenEventModal}>
+                  Olay bildir
                 </DropdownItem>
                 <DropdownItem key="aksiyon" onClick={onOpenActionModal}>
                   Aksiyon ekle
@@ -149,14 +164,16 @@ export default function NavBar() {
           }
         </NavbarItem>
         <NavbarItem>
-          <Button color="primary" className={styles.button}>
+          <Button color="primary" className={styles.button} onPress={onOpenEmergencyModal}>
             Acil Durum
           </Button>
         </NavbarItem>
       </NavbarContent>
       <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
       <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
+      <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} />
       <AddActionFromId onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} />
+      <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} />
     </Navbar>
   );
 }
