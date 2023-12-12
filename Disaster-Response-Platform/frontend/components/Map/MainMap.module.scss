@@ -7,6 +7,6 @@
     z-index: 1 !important;
 
     &.with-popup {
-      width: calc(100% - 300px); /* Adjust the width when popup is open */
+      width: calc(100% - 0px); /* Adjust the width when popup is open */
     }
   }
