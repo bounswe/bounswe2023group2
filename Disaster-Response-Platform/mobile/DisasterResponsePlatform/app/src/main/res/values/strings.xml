@@ -60,6 +60,7 @@
     <string name="act_edit">Edit</string>
     <string name="act_delete">Delete</string>
     <string name="act_navigate">Navigate</string>
+    <string name="act_show_on_map">Show On Map</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sort &amp; Filter</string>
