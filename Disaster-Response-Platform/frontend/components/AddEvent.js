@@ -61,7 +61,7 @@ export default function AddEvent({ isOpen, onOpenChange }) {
               <form onSubmit={(event) => {addEvent(event, onClose)}}
                     className='flex w-full flex-col  mb-6 md:mb-0 gap-4'>
 
-                <RadioGroup name="event_type" id="event_type" label="Olay Türü">
+                <RadioGroup name="event_type" id="event_type" label="Olay Türü" orientation="horizontal">
                   {event_types.map(({key, label_TR}) => (
                     <Radio key={`event-type-${key}`} value={key}> {label_TR} </Radio>
                   ))}
