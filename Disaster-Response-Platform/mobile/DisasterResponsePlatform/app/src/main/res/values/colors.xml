@@ -15,7 +15,10 @@
     <color name="colorResource">#00BA69</color>
     <color name="colorActivity">#515151</color>
     <color name="separator">#BCBCBC</color>
+
     <color name="icon">#797979</color>
+    <color name="red">#E80000</color>
+
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>

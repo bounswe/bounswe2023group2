@@ -79,23 +79,29 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEdit"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/act_edit"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:icon="@drawable/ic_edit"
+                app:iconGravity="textStart"
                 app:layout_constraintEnd_toStartOf="@id/btnDelete"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTypeTitle" />
 
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDelete"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="@string/act_delete"
                 android:textSize="12sp"
+                app:icon="@drawable/ic_delete"
+                app:iconGravity="textStart"
+                android:backgroundTint="@color/red"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btnEdit"
                 app:layout_constraintTop_toTopOf="@+id/btnEdit" />
