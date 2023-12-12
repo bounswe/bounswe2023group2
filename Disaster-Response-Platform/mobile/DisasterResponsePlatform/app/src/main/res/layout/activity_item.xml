@@ -9,25 +9,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_item_background">
 
-            <View
-                android:id="@+id/badge"
-                android:layout_width="10dp"
-                android:layout_height="0dp"
-                android:background="@color/colorActivity"
-                android:layout_marginBottom="1dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <ImageView
                 android:id="@+id/iconType"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintStart_toEndOf="@+id/badge"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/recyc_category" />
 
@@ -147,10 +135,10 @@
             <View
                 android:id="@+id/divider"
                 android:layout_width="0dp"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:background="@color/separator"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/badge" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

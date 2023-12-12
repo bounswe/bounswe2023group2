@@ -99,6 +99,9 @@ def get_needs(
     active: Optional[bool] = None,
     types: list = None, 
     subtypes: list = None,
+    x: float = None,
+    y: float = None,
+    distance_max: float = None,
     sort_by: str = 'created_at',
     order: Optional[str] = 'asc'
 ) -> list[dict]:
@@ -143,6 +146,10 @@ def get_needs(
 
     needs_cursor = needs_collection.find(query, projection).sort(sort_by, sort_order)
     needs_data = list(needs_cursor)
+
+      # Filter by distance if necessary
+    if x is not None and y is not None and distance_max is not None:
+        needs_data = [need for need in needs_data if ((need['x'] - x) ** 2 + (need['y'] - y) ** 2) ** 0.5 <= distance_max]
 
     # Formatting datetime fields
     formatted_needs_data = []
