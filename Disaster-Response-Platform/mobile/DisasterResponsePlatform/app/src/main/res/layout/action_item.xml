@@ -35,10 +35,9 @@
             android:id="@+id/upvoteItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_marginEnd="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/tvUpvoteCount"
             app:layout_constraintEnd_toStartOf="@+id/downvoteItem"
+            app:layout_constraintTop_toTopOf="@+id/downvoteItem"
             app:srcCompat="@drawable/ic_upvote" />
 
         <ImageView
@@ -46,10 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/tvDownvoteCount"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvCreator"
+            app:layout_constraintEnd_toEndOf="@+id/iconCreator"
+            app:layout_constraintTop_toBottomOf="@+id/iconCreator"
             app:srcCompat="@drawable/ic_downvote" />
 
         <TextView
@@ -61,7 +58,8 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/downvoteItem" />
+            app:layout_constraintStart_toStartOf="@+id/downvoteItem"
+            app:layout_constraintTop_toBottomOf="@+id/downvoteItem" />
 
         <TextView
             android:id="@+id/tvUpvoteCount"
@@ -72,7 +70,8 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/upvoteItem" />
+            app:layout_constraintStart_toStartOf="@+id/upvoteItem"
+            app:layout_constraintTop_toBottomOf="@+id/upvoteItem" />
 
         <TextView
             android:id="@+id/tvType"
@@ -86,87 +85,26 @@
             app:layout_constraintStart_toEndOf="@+id/iconType"
             app:layout_constraintTop_toTopOf="@+id/iconType" />
 
-        <TextView
-            android:id="@+id/sep1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text=">"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/tvType"
-            app:layout_constraintTop_toTopOf="@+id/tvType" />
-
-        <TextView
-            android:id="@+id/tvSubType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder_subtype"
-            android:layout_marginStart="4dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/sep1"
-            app:layout_constraintTop_toTopOf="@+id/sep1" />
-
-        <ImageView
-            android:id="@+id/iconLocation"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="@+id/iconType"
-            app:layout_constraintTop_toBottomOf="@+id/iconType"
-            app:srcCompat="@drawable/recyc_location" />
-
-        <TextView
-            android:id="@+id/tvLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/placeholder_coordinate"
-            android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/iconLocation"
-            app:layout_constraintTop_toTopOf="@+id/iconLocation" />
-
         <ImageView
             android:id="@+id/iconDate"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/iconLocation"
-            app:layout_constraintTop_toBottomOf="@+id/iconLocation"
+            app:layout_constraintStart_toStartOf="@+id/iconType"
             app:srcCompat="@drawable/recyc_date_time" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/placeholder_date"
+            android:text="22.10.2023 13:02"
             android:layout_marginStart="10dp"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/iconDate"
             app:layout_constraintTop_toTopOf="@+id/iconDate" />
 
-        <ImageView
-            android:id="@+id/iconQuantity"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvQuantity"
-            app:srcCompat="@drawable/recyc_quantity" />
 
-        <TextView
-            android:id="@+id/tvQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/placeholder_quantity"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/iconQuantity"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/iconCreator"
@@ -182,10 +120,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:text="@string/placeholder_username"
+            android:text="Mehmet"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/iconCreator"
-            app:layout_constraintTop_toTopOf="@+id/tvLocation" />
+            app:layout_constraintTop_toTopOf="@+id/tvType" />
 
         <View
             android:id="@+id/divider"

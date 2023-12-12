@@ -23,6 +23,7 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
+import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -164,7 +165,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
             navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            addFragment(ProfileFragment(need.created_by),"ProfileFragment")
         }
         binding.btnUpvote.setOnClickListener {
             upvoteNeed(token)

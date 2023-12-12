@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.ui.activity.resource
+package com.example.disasterresponseplatform.ui.activity.action
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -16,25 +16,30 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
-import com.example.disasterresponseplatform.data.models.ResourceBody
+import com.example.disasterresponseplatform.data.models.ActionBody
 import com.example.disasterresponseplatform.data.models.VoteBody
-import com.example.disasterresponseplatform.databinding.FragmentResourceItemBinding
+import com.example.disasterresponseplatform.databinding.FragmentActionItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
-import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
-class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, private val resource: ResourceBody.ResourceItem) : Fragment() {
 
-    private lateinit var binding: FragmentResourceItemBinding
+class ActionItemFragment(private val actionViewModel: ActionViewModel, private val action: ActionBody.ActionItem) : Fragment() {
+
+    private lateinit var binding: FragmentActionItemBinding
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentResourceItemBinding.inflate(inflater,container,false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentActionItemBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -43,74 +48,31 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         if (requireActivity == null) { // to handle error when user enters this page twice
             requireActivity = requireActivity()
         }
-        fillTexts(resource)
+        fillTexts(action)
         arrangeButtons()
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun fillTexts(resource: ResourceBody.ResourceItem){
-        val creatorName = resource.created_by
+    private fun fillTexts(action: ActionBody.ActionItem){
+        val creatorName = action.created_by
         binding.etCreatedBy.text = creatorName
-        binding.etType.text = resource.type
-        binding.etInitialQuantity.text = resource.initialQuantity.toString()
-        binding.etUnSuppliedQuantity.text = resource.currentQuantity.toString()
-        binding.etCoordinateX.text = resource.x.toString()
-        binding.etCoordinateY.text = resource.y.toString()
-        binding.tvLastUpdatedTime.text = resource.last_updated_at.substring(0,10)
-        binding.tvCreationTime.text = resource.created_at.substring(0,10)
-        binding.tvUpvoteCount.text = resource.upvote.toString()
-        binding.tvDownVoteCount.text = resource.downvote.toString()
-        binding.tvDescription.text = resource.description.toString()
-        binding.etSubType.text = resource.details["subtype"]
-        fillDetails(resource.details)
-        fillRecurrence(resource)
+        binding.etType.text = action.type
+        binding.tvLastUpdatedTime.text = action.last_updated_at.substring(0,10)
+        binding.tvCreationTime.text = action.created_at.substring(0,10)
+        binding.tvUpvoteCount.text = action.upvote.toString()
+        binding.tvDownVoteCount.text = action.downvote.toString()
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it
-            binding.createdByRole.text = "User Role: $userRole"
+            binding.etUserRole.text = userRole
         }
     }
 
-    /**
-     * It opens new linear layouts in xml and fills them with respect to data fetched from backend
-     * TODO do this for recurrence
-     */
-    @SuppressLint("SetTextI18n")
-    private fun fillDetails(details: MutableMap<String,String>){
-        val linearLayout = binding.layDetails
-        // Loop through each key-value pair in the map
-        for ((fieldName, value) in details) {
-            if (fieldName != "subtype"){
-                val textView = TextView(requireContext())
-                textView.text = "$fieldName: $value"
-                linearLayout.addView(textView)
-                val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                textView.layoutParams = layoutParams
-            }
-        }
-    }
 
-    /**
-     * This function fills the recurrence if the need is recurrent
-     */
-    @SuppressLint("SetTextI18n")
-    private fun fillRecurrence(resource: ResourceBody.ResourceItem){
-        val linearLayout = binding.layDetails
-        if (resource.occur_at != null){
-            addLayoutWithMessage(linearLayout,"Occur At: ${resource.occur_at.substring(0,10)}")
-        }
-        if (resource.recurrence_rate != null){
-            addLayoutWithMessage(linearLayout,"Recurrence Rate: ${resource.recurrence_rate}")
-        }
-        if (resource.recurrence_deadline != null){
-            addLayoutWithMessage(linearLayout,"Recurrence Deadline: ${resource.recurrence_deadline.substring(0,10)}")
-        }
-    }
 
     /**
      * It adds the textView with the message corresponding linear Layout
      */
-    private fun addLayoutWithMessage(linearLayout: LinearLayout, message: String){
+    private fun addLayoutWithMessage(linearLayout: LinearLayout,message: String){
         val textView = TextView(requireContext())
         textView.text = message
         linearLayout.addView(textView)
@@ -125,12 +87,12 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     private fun arrangeButtons(){
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (!token.isNullOrEmpty() and (username == resource.created_by)) {
+        if (!token.isNullOrEmpty() and (username == action.created_by)) {
             binding.btnEdit.setOnClickListener {
-                editResource()
+                editAction()
             }
             binding.btnDelete.setOnClickListener {
-                deleteResource()
+                deleteAction()
             }
         } else{
             binding.btnDelete.visibility = View.GONE
@@ -140,25 +102,25 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
-            addFragment(ProfileFragment(resource.created_by),"ProfileFragment")
+            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
         }
         binding.btnUpvote.setOnClickListener {
-            upvoteResource(token)
+            upvoteAction(token)
         }
         binding.btnDownvote.setOnClickListener {
-            downvoteResource(token)
+            downvoteAction(token)
         }
     }
 
     private var voted = false // if user change his/her some arrangements will happen with this parameter
     /**
-     * It upvotes the resource, increment upvote count, make upvote button not clickable and shows toast upvote successfully message
-     * If user already upvotes that resource it shows toast you already upvoted message
+     * It upvotes the action, increment upvote count, make upvote button not clickable and shows toast upvote successfully message
+     * If user already upvotes that action it shows toast you already upvoted message
      */
     @SuppressLint("SetTextI18n")
-    private fun upvoteResource(token: String?){
+    private fun upvoteAction(token: String?){
         if (!token.isNullOrEmpty()){
-            val votePostRequest = VoteBody.VoteRequestBody("resources",resource._id)
+            val votePostRequest = VoteBody.VoteRequestBody("actions",action._id)
             voteViewModel.upvote(votePostRequest)
             voteViewModel.getLiveDataMessage().observe(requireActivity!!){
                 if (it == "-1"){
@@ -169,27 +131,28 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
                     // if users vote for downvote before (if vote for upvote he can't click again because its not clickable)
                     if (voted){
                         binding.btnDownvote.isClickable = true
-                        binding.tvDownVoteCount.text = resource.downvote.toString()
+                        binding.tvDownVoteCount.text = action.downvote.toString()
                     }
                     voted = true
                     binding.btnUpvote.isClickable = false
-                    binding.tvUpvoteCount.text = (resource.upvote + 1).toString()
+                    binding.tvUpvoteCount.text = (action.upvote + 1).toString()
+
                 }
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),"You action to log in!",Toast.LENGTH_SHORT).show()
         }
     }
 
     /**
-     * It downvotes the resource, increase downvote count, make downvote button not clickable and shows toast downvote successfully message
-     * If user already downvote that resource it shows toast you already downvote message
+     * It downvotes the action, increase downvote count, make downvote button not clickable and shows toast downvote successfully message
+     * If user already downvote that action it shows toast you already downvote message
      */
     @SuppressLint("SetTextI18n")
-    private fun downvoteResource(token: String?){
+    private fun downvoteAction(token: String?){
         if (!token.isNullOrEmpty()){
-            val votePostRequest = VoteBody.VoteRequestBody("resources",resource._id)
+            val votePostRequest = VoteBody.VoteRequestBody("actions",action._id)
             voteViewModel.downvote(votePostRequest)
             voteViewModel.getLiveDataMessage().observe(requireActivity!!){
                 if (it == "-1"){
@@ -199,30 +162,33 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
                 else if (it == "downvote"){
                     if (voted){
                         binding.btnUpvote.isClickable = true
-                        binding.tvUpvoteCount.text = resource.upvote.toString()
+                        binding.tvUpvoteCount.text = action.upvote.toString()
                     }
-                    voted = true
                     binding.btnDownvote.isClickable = false
-                    binding.tvDownVoteCount.text = (resource.downvote + 1).toString()
+                    binding.tvDownVoteCount.text = (action.downvote + 1).toString()
+                    voted = true
                 }
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),"You action to log in!",Toast.LENGTH_SHORT).show()
         }
     }
 
-    /** This function is called whenever resource is created or edited
-     * If it is created resource should be null, else need should be the clicked item
+    /** This function is called when user wants to edit action
+     * If the creator of action and users match, user can edit action
      */
-    private fun editResource(){
-        val addResourceFragment = AddResourceFragment(resourceViewModel,resource)
-        addFragment(addResourceFragment,"AddResourceFragment")
+    private fun editAction(){
+        val addActionFragment = AddActionFragment(actionViewModel,action)
+        addFragment(addActionFragment,"AddActionFragment")
     }
 
-    private fun deleteResource(){
-        resourceViewModel.deleteResource(resource._id)
-        resourceViewModel.getLiveDataIsDeleted().observe(requireActivity!!){
+    /** This function is called when user wants to delete action
+     * If the creator of action and users match, user can delete action
+     */
+    private fun deleteAction(){
+        actionViewModel.deleteAction(action._id)
+        actionViewModel.getLiveDataIsDeleted().observe(requireActivity!!){
             if (isAdded) { // to ensure it attached a context
                 if (it){
                     Toast.makeText(context, "Successfully Deleted", Toast.LENGTH_SHORT).show()
@@ -233,7 +199,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             }
             Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                 if (isAdded) // to ensure it attached a parentFragmentManager
-                    parentFragmentManager.popBackStack("ResourceItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    parentFragmentManager.popBackStack("ActionItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
             }, 200)
         }
     }
@@ -248,6 +214,17 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         ft.replace(R.id.container, fragment)
         ft.addToBackStack(fragmentName)
         ft.commit()
+    }
+
+
+    private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
+        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+        client.newCall(request).enqueue(callback)
     }
 
 }
