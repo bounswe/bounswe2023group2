@@ -56,18 +56,6 @@ class ActivityAdapter(private val activityList: MutableList<DummyActivity>): Rec
         hb.tvLocation.text = currentActivity.location
         hb.tvReliabilityScale.text = currentActivity.reliabilityScale.toString()
 
-        if (currentActivity.activityType == ActivityEnum.Action) {
-            hb.badge.setBackgroundResource(R.color.colorAction)
-        } else if (currentActivity.activityType == ActivityEnum.Emergency) {
-            hb.badge.setBackgroundResource(R.color.colorEmergency)
-        } else if (currentActivity.activityType == ActivityEnum.Event) {
-            hb.badge.setBackgroundResource(R.color.colorEvent)
-        } else if (currentActivity.activityType == ActivityEnum.Need) {
-            hb.badge.setBackgroundResource(R.color.colorNeed)
-        } else if (currentActivity.activityType == ActivityEnum.Resource) {
-            hb.badge.setBackgroundResource(R.color.colorResource)
-        }
-
         if (currentActivity.reliabilityScale < 0.3) {
             hb.tvReliabilityScale.setTextColor(Color.parseColor("#A80C0C"))
         } else if (currentActivity.reliabilityScale > 0.7) {
