@@ -72,7 +72,7 @@ class HomeFragment(
             }
         }.attach()
 
-        // Bu kısım kaydırarak tab değiştirildiğinde renklerin değişmesini sağlar
+        // Allows colors to change when changing tabs by sliding
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
