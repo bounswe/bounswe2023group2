@@ -49,7 +49,7 @@ class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() 
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentActionBinding.inflate(inflater,container,false)
-        sendRequest()
+        if (isAdded) sendRequest()
         return binding.root
     }
 

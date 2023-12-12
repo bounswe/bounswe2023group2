@@ -180,7 +180,14 @@
 
     <!-- NOTIFICATION -->
     <string name="add_notification">Add Notification</string>
-
+    <string name="short_note">Short Note</string>
+    <string name="debris">Debris</string>
+    <string name="event_date">Event Date</string>
+    <string name="event_time">Event Time</string>
+    <string name="coverage_x_km">Coverage X(km)</string>
+    <string name="coverage_y_km">Coverage Y(km)</string>
+    <string name="additional_notes">Additional Notes</string>
+    <string name="edit_event">Edit Event</string>
 
     <!-- ACTIVITY LISTS -->
     <string-array name="need_types">
@@ -205,6 +212,13 @@
         <item>tool</item>
         <item>human</item>
         <item>other</item>
+    </string-array>
+
+    <string-array name="event_types">
+        <item>debris</item>
+        <item>infrastructure</item>
+        <item>disaster</item>
+        <item>help-arrived</item>
     </string-array>
 
     <string-array name="action_types">
@@ -271,4 +285,5 @@
         <item>College</item>
         <item>University</item>
     </string-array>
+
 </resources>

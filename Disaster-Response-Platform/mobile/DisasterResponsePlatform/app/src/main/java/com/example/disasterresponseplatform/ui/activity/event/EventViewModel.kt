@@ -34,7 +34,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
 
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResponse(): LiveData<EventBody.EventResponse> = liveDataResponse
-    fun getAllEvents(){
+    fun getAllEvents(queries: MutableMap<String, String>? = null){
         val headers = mapOf(
             "Content-Type" to "application/json"
         )
@@ -42,6 +42,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
             endpoint = Endpoint.EVENT,
             requestType = RequestType.GET,
             headers = headers,
+            queries = queries,
             callback = object : Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,

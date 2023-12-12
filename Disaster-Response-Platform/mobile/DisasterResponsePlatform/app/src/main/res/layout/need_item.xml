@@ -149,7 +149,7 @@
             app:layout_constraintTop_toTopOf="@+id/iconDate" />
 
         <ImageView
-            android:id="@+id/iconQuantity"
+            android:id="@+id/iconNote"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_marginEnd="16dp"
@@ -165,7 +165,7 @@
             android:layout_marginEnd="10dp"
             android:text="@string/placeholder_quantity"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/iconQuantity"
+            app:layout_constraintEnd_toStartOf="@+id/iconNote"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView

@@ -14,6 +14,7 @@ import com.example.disasterresponseplatform.ui.activity.action.ActionFragment
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyFragment
 import com.example.disasterresponseplatform.ui.activity.event.EventFragment
+import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
 import com.example.disasterresponseplatform.ui.activity.need.NeedFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceFragment
@@ -24,6 +25,7 @@ class HomeFragment(
     private val needViewModel: NeedViewModel,
     private val resourceViewModel: ResourceViewModel,
     private val actionViewModel: ActionViewModel,
+    private val eventViewModel: EventViewModel,
     private val mainAct: MainActivity
 ) : Fragment() {
 
@@ -34,7 +36,11 @@ class HomeFragment(
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val tabLayout = binding.tabLayout
         val viewPager = binding.viewPager
 
@@ -42,7 +48,7 @@ class HomeFragment(
             EmergencyFragment(),
             NeedFragment(needViewModel),
             ResourceFragment(resourceViewModel),
-            EventFragment(),
+            EventFragment(eventViewModel),
             ActionFragment(actionViewModel)
         )
 
@@ -60,13 +66,6 @@ class HomeFragment(
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
-
-        return binding.root
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     /**

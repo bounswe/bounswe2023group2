@@ -17,18 +17,18 @@ class EventBody {
         val max_distance_y: Double?,
         val created_time: String,
         val created_by_user: String,
-        val last_confirmed_time: String,
+        val last_confirmed_time: String?,
         val confirmed_by_user: String?,
         val upvote: Int,
         val downvote: Int,
         val short_description: String?,
-        val note: String?
+        val note: String?,
+        val _id: String
     )
 
     data class EventPostBody(
         val eventType: String,
         val event_time: String,
-        val end_time: String?,
         val center_location_x: Double,
         val center_location_y: Double,
         val max_distance_x: Double?, // the radius to the center (coverage area)

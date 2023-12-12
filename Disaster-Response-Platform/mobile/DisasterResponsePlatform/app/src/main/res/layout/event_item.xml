@@ -12,7 +12,7 @@
             android:id="@+id/badge"
             android:layout_width="10dp"
             android:layout_height="0dp"
-            android:background="@color/colorResource"
+            android:background="@color/colorEvent"
             android:layout_marginBottom="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +28,8 @@
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toEndOf="@+id/badge"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/recyc_category"/>
+            app:srcCompat="@drawable/recyc_category" />
+
 
         <ImageView
             android:id="@+id/upvoteItem"
@@ -73,41 +74,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/upvoteItem" />
 
-
-
         <TextView
             android:id="@+id/tvType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@string/placeholder_type"
+            android:text="@string/debris"
             android:textAllCaps="true"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/iconType"
             app:layout_constraintTop_toTopOf="@+id/iconType" />
-
-        <TextView
-            android:id="@+id/sep1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text=">"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/tvType"
-            app:layout_constraintTop_toTopOf="@+id/tvType" />
-
-        <TextView
-            android:id="@+id/tvSubType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder_subtype"
-            android:layout_marginStart="4dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/sep1"
-            app:layout_constraintTop_toTopOf="@+id/sep1" />
 
         <ImageView
             android:id="@+id/iconLocation"
@@ -153,20 +130,21 @@
             android:id="@+id/iconNote"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvQuantity"
-            app:srcCompat="@drawable/recyc_quantity" />
+            app:layout_constraintTop_toTopOf="@+id/tvShortNode"
+            app:srcCompat="@drawable/ic_notes" />
 
         <TextView
-            android:id="@+id/tvQuantity"
+            android:id="@+id/tvShortNode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@string/placeholder_quantity"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/short_note"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/iconNote"
-            app:layout_constraintTop_toTopOf="@+id/tvSubType" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/iconCreator"
@@ -186,6 +164,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/iconCreator"
             app:layout_constraintTop_toTopOf="@+id/tvLocation" />
+
         <View
             android:id="@+id/divider"
             android:layout_width="0dp"
