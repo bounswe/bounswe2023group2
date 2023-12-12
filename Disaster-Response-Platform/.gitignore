@@ -8,3 +8,7 @@ myenv/
 package-lock.json
 backend/.idea/
 config.py
+*.heic
+*.jpg
+*.jpeg
+*.pdf

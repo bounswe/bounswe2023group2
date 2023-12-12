@@ -1,21 +1,81 @@
 import styles from "./MapFilterMenu.module.scss";
 import { FaSearch } from "react-icons/fa";
+import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { api } from "@/lib/apiUtils";
 
-import {ToastContainer, toast} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+export default function MapFilterMenu({
+  activateClick,
+  setResourceApiData,
+  isMapSelected,
+  selectMap,
+}) {
+  const [resourceChecked, setResourceChecked] = useState(false);
+  const [aktifChecked, setAktifChecked] = useState(false);
+  const [eventChecked, setEventChecked] = useState(false);
+  const [actionsChecked, setActionsChecked] = useState(false);
+  const [needsChecked, setNeedsChecked] = useState(false);
 
-export default function MapFilterMenu({activateClick,isMapSelected,selectMap}) {
-  const notify = () => {
-    toast.info('Haritadan lokasyon seçiniz', {
-      position: 'top-center',
+  const notifyFilter = () => {
+    toast.info("Taramak istediğiniz alanın merkezini seçiniz", {
+      position: "top-center",
       autoClose: 5000, // Auto close the notification after 3 seconds (adjust as needed)
     });
   };
+
+  const notifyAdd = () => {
+    toast.info("Haritadan lokasyon seçiniz", {
+      position: "top-center",
+      autoClose: 5000, // Auto close the notification after 3 seconds (adjust as needed)
+    });
+  };
+
+  const handleFilterClick = async () => {
+    console.log("I am in handleFilterClick");
+    try {
+      // Make API call to filter resources based on the search term
+      //const searchTerm = /* Get the search term from your input field */;
+      const response = await api.get(
+        `/api/resources/?sort_by=created_at&order=asc`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Additional headers or credentials if needed
+        }
+        
+      );
+      console.log("consolelog:",response.status);
+      if (response.status == 200) {
+         const resources = await response.data;
+        // Process the data as needed
+        console.log("Filtered Resources:", resources);
+        setResourceApiData(resources.resources);
+        resources.resources.forEach(resource => {
+          const xValue = resource.x;
+          const yValue = resource.y;
+          console.log(`Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`);
+      });
+      } else {
+        // Handle errors
+        console.error(
+          "Error fetching filtered resources:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      console.error("Error:", error);
+    }
+  };
+
   const popup = () => {
     selectMap();
     onOpen();
-    []
-  }
+    [];
+  };
 
   return (
     <div className={styles.main}>
@@ -41,29 +101,65 @@ export default function MapFilterMenu({activateClick,isMapSelected,selectMap}) {
             alignSelf: "center",
           }}
         />
+        <button
+          onClick={() => {
+            notifyFilter();
+          }}
+          className="bg-yellow-500 hover:bg-yellow-700 text-white 
+                          font-bold py-1 px-2 rounded w-full "
+        >
+          Belirli alanı tara
+        </button>
+
         <div>
-          <input type="checkbox" className={styles.checkbox} />
-          Resource
+          <input className=""></input>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            className={styles.checkbox}
+            checked={aktifChecked}
+            onChange={() => setAktifChecked(!aktifChecked)}
+          />
+          Aktif Olanlar
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          Event
+          Kaynaklar
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          Actions
+          Olaylar
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          Needs
+          Aktiviteler
         </div>
-        <button onClick={() => {activateClick(); notify();}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full
-                          absolute bottom-0 right-0.5">
-            İlan Oluştur
+        <div>
+          <input type="checkbox" className={styles.checkbox} />
+          İhtiyaçlar
+        </div>
+        <button
+          onClick={() => {
+            handleFilterClick();
+          }}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full
+                          absolute bottom-10 right-0.5"
+        >
+          Filtrele
+        </button>
+        <button
+          onClick={() => {
+            activateClick();
+            notifyAdd();
+          }}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full
+                          absolute bottom-0 right-0.5"
+        >
+          İlan Oluştur
         </button>
         {isMapSelected ? popup() : <></>}
-        <ToastContainer/>
-        
+        <ToastContainer />
       </div>
     </div>
   );
