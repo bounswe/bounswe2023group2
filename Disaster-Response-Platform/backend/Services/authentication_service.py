@@ -56,6 +56,12 @@ def get_current_admin_user(current_user: UserProfile = Depends(get_current_user)
 def get_current_username(current_user: LoginUserRequest= Depends(get_current_user)):
     return current_user.username
 
+def get_current_email(current_user: LoginUserRequest= Depends(get_current_user)):
+    if current_user.email:
+        return current_user.email
+    else:
+        raise HTTPException(status_code=404, detail="Email not found for the current user")
+
 def update_user(username: str, updated_user: UpdateUserRequest):
  
     
