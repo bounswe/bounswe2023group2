@@ -97,7 +97,7 @@ def check_token(username, provided_token):
     if entry and entry['token'] == provided_token:
         return check_expiration(username)
     return False
-
+g
 # Main function that checks the token and verifies the email of user.
 def verify_user(username, provided_token):
     if check_token(username, provided_token):
