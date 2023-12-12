@@ -41,7 +41,7 @@
     <string name="act_subtype">Alt Kategori:</string>
     <string name="act_created_by">Oluşturan:</string>
     <string name="act_user_role">Kullanıcı Rolü:</string>
-    <string name="act_view_profile">Kullanıcı Profilini Görüntüle</string>
+    <string name="act_view_profile">Profili Görüntüle</string>
     <string name="act_creation_date">Oluşturulma Zamanı:</string>
     <string name="act_creation_time">Oluşturuldu:</string>
     <string name="act_last_updated_date">Son Güncellenme Zamanı:</string>
@@ -60,6 +60,7 @@
     <string name="act_edit">Düzenle</string>
     <string name="act_delete">Sil</string>
     <string name="act_navigate">Yol Tarifi</string>
+    <string name="act_show_on_map">Haritada Göster</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sırala &amp; Filtrele</string>
