@@ -18,13 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.EventAdapter
-import com.example.disasterresponseplatform.adapter.NeedAdapter
 import com.example.disasterresponseplatform.data.models.EventBody
-import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.databinding.FragmentEventBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.ui.activity.need.AddNeedFragment
-import com.example.disasterresponseplatform.ui.activity.need.NeedItemFragment
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class EventFragment(private val eventViewModel: EventViewModel) : Fragment() {
@@ -76,7 +72,6 @@ class EventFragment(private val eventViewModel: EventViewModel) : Fragment() {
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.layoutManager = layoutManager
         }
-        // val list = needViewModel.getAllNeeds() // this is for local DB
         val adapter = EventAdapter(eventList)
         binding.adapter = adapter
 
@@ -88,7 +83,7 @@ class EventFragment(private val eventViewModel: EventViewModel) : Fragment() {
 
     private fun openEventItemFragment(event: EventBody.EventRequestBody){
         val eventItemFragment = EventItemFragment(eventViewModel,event)
-        addFragment(eventItemFragment,"NeedItemFragment")
+        addFragment(eventItemFragment,"EventItemFragment")
     }
 
     /**

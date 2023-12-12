@@ -216,10 +216,10 @@
     </string-array>
 
     <string-array name="event_types">
-        <item>debris</item>
-        <item>infrastructure</item>
-        <item>disaster</item>
-        <item>help-arrived</item>
+        <item>Debris</item>
+        <item>Infrastructure</item>
+        <item>Disaster</item>
+        <item>Help-Arrived</item>
     </string-array>
 
     <string-array name="action_types">

@@ -8,12 +8,15 @@ import android.app.TimePickerDialog.OnTimeSetListener
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.EventBody
 import com.example.disasterresponseplatform.databinding.FragmentAddEventBinding
@@ -48,7 +51,7 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
         initView()
         mapFunction()
         fillParameters(event)
-        submitNeed(event == null)
+        submitEvent(event == null)
         return binding.root
     }
     override fun onCoordinatesSelected(x: Double, y: Double) {}
@@ -58,12 +61,12 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
         if (event != null) {
             binding.tvAddEvent.text = getString(R.string.edit_event)
             binding.btnSubmit.text = getString(R.string.save_changes)
-            binding.spEventType.setText(event.eventType)
+            binding.spEventType.setText(event.event_type)
             binding.etDate.editText?.setText(event.event_time) // TODO seperate it as date and time with util func
-            if (event.max_distance_x != null) binding.etCoverageX.editText?.setText(event.max_distance_x.toInt())
-            if (event.max_distance_y != null) binding.etCoverageY.editText?.setText(event.max_distance_y.toInt())
-            binding.etShortDescription.editText?.setText(event.short_description)
-            binding.etNotes.editText?.setText(event.note)
+            if (event.max_distance_x != null) binding.tvCoverageX.editText?.setText(event.max_distance_x.toInt())
+            if (event.max_distance_y != null) binding.tvCoverageY.editText?.setText(event.max_distance_y.toInt())
+            binding.tvShortDescription.editText?.setText(event.short_description)
+            binding.tvNotes.editText?.setText(event.note)
 
             selectedLocationX = event.center_location_x
             selectedLocationY = event.center_location_y
@@ -89,7 +92,7 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
         binding.etDateInput.setOnClickListener { showDatePicker() }
     }
 
-    private fun submitNeed(isAdd: Boolean) {
+    private fun submitEvent(isAdd: Boolean) {
 
         binding.btnSubmit.setOnClickListener {
             if (!binding.btnSubmit.isEnabled) { // Prevent multiple clicks
@@ -103,9 +106,58 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
                 if (binding.etDateInput.text != null && binding.etTimeInput.text != null){
                     val eventDate = DateUtil.dateForBackend(binding.etDateInput.text.toString())
                     val eventTime = binding.etTimeInput.text
-                    creationEventDate = eventDate + eventTime
+                    creationEventDate = "$eventDate $eventTime"
+                    Log.i("creationEventDate",creationEventDate)
                 }
 
+                val additionalNote = binding.etNotes.text.toString().trim()
+                val shortNote = binding.etShortDescription.text.toString().trim()
+                val maxDistanceX = if (binding.etCoverageX.text != null) binding.etCoverageX.text.toString().trim().toDouble() else null
+                val maxDistanceY = if (binding.etCoverageY.text != null) binding.etCoverageY.text.toString().trim().toDouble() else null
+                val createdTime = "${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}"
+                val postedEvent = EventBody.EventPostBody(
+                    event_type = binding.spEventType.text.toString().trim(),
+                    event_time =  creationEventDate,
+                    is_active = true,
+                    center_location_x = selectedLocationX,
+                    center_location_y = selectedLocationY,
+                    max_distance_x = maxDistanceX,
+                    max_distance_y = maxDistanceY,
+                    created_time = createdTime ,
+                    short_description = shortNote,
+                    note = additionalNote)
+
+                if (isAdd) {
+                    eventViewModel.postEvent(postedEvent)
+                } else {
+                    val eventID = "/" + event!!._id // comes from older need
+                    eventViewModel.postEvent(postedEvent, eventID)
+                }
+                eventViewModel.getLiveDataEventID().observe(requireActivity!!) {
+                    if (it != "-1") { // in error cases it returns this
+                        if (isAdded) { // to ensure it attached a context
+                            if (isAdd)
+                                Toast.makeText(requireContext(), "Created Event ID: $it", Toast.LENGTH_LONG).show()
+                            else
+                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
+                        }
+                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                            if (isAdded) // to ensure it attached a parentFragmentManager
+                                parentFragmentManager.popBackStack("AddEventFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            if (!isAdd)
+                                parentFragmentManager.popBackStack("EventItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            // Re-enable the button after the background operation completes
+                            binding.btnSubmit.isEnabled = true
+                        }, 200)
+                    } else {
+                        if (isAdded)
+                            Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
+                        binding.btnSubmit.isEnabled = true
+                    }
+                }
+            } else {
+                if (isAdded)
+                    Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
                 binding.btnSubmit.isEnabled = true
             }
         }

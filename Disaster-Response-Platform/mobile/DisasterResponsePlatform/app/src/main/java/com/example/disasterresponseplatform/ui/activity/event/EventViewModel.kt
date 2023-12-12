@@ -104,7 +104,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
             val gson = Gson()
             val json = gson.toJson(postRequest)
             val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-
+            Log.i("ResponseInfo","RequestBody: $requestBody")
             val requestType = if (id == null) RequestType.POST else RequestType.PUT
 
             Log.d("requestBody", json.toString())

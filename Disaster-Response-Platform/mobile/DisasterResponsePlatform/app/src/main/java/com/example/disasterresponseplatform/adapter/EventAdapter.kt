@@ -38,7 +38,7 @@ class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?): Re
         val hb = holder.binding // to bind xml items
 
 
-        hb.tvType.text = currentEvent?.eventType.toString()
+        hb.tvType.text = currentEvent?.event_type.toString()
         hb.tvDate.text = currentEvent?.created_time?.substring(0,10)
         hb.tvLocation.text = "x: ${String.format("%.2f", currentEvent?.center_location_x).replace(',', '.')}, y: ${String.format("%.2f", currentEvent?.center_location_y).replace(',', '.')}"
         val shortDescription = currentEvent?.short_description.toString()

@@ -7,7 +7,7 @@ class EventBody {
     data class EventResponse(val events: List<EventRequestBody>)
 
     data class EventRequestBody(
-        val eventType: String,
+        val event_type: String,
         val event_time: String,
         val end_time: String?,
         val is_active: Boolean = true,
@@ -27,14 +27,15 @@ class EventBody {
     )
 
     data class EventPostBody(
-        val eventType: String,
-        val event_time: String,
+        val event_type: String,
+        val event_time: String?,
+        val is_active: Boolean = true,
         val center_location_x: Double,
         val center_location_y: Double,
         val max_distance_x: Double?, // the radius to the center (coverage area)
         val max_distance_y: Double?,
-        val created_by_user: String,
-        val short_description: String?,
+        val created_time: String?,
+        val short_description: String,
         val note: String?
     )
 

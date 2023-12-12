@@ -55,7 +55,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
     private fun fillTexts(event: EventBody.EventRequestBody){
         val creatorName = event.created_by_user
         binding.tvCreator.text = creatorName
-        binding.tvType.text = event.eventType
+        binding.tvType.text = event.event_type
         binding.tvDescription.text = event.short_description
         binding.tvCreationTime.text = event.created_time
         if (event.last_confirmed_time == null){
