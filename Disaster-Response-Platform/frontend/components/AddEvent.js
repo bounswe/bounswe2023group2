@@ -2,17 +2,34 @@ import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/modal";
 import { toast } from "react-toastify";
 import { Button, RadioGroup, Radio, Input, Checkbox, Textarea } from '@nextui-org/react'
 
-
 export default function AddEvent({ isOpen, onOpenChange }) {
 
-  function addEvent(event) {
+  async function addEvent(event, onClose) {
+    event.preventDefault();
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
     formData.is_active = ("is_active" in formData);
     formData.event_time = `${formData.event_time_day}T${formData.event_time_hour}:00.000Z`;
+    formData.max_distance_y /= 111.133; // km-to-latitude conversion
+    const equator_angle = formData.center_location_y*Math.PI/180
+    formData.max_distance_x /= 111.133 * Math.cos(equator_angle); // km-to-longitude conversion
     delete formData.event_time_day;
     delete formData.event_time_hour;
     formData.created_time = new Date().toISOString();
+
+    const response = await fetch('/api/event/add', {
+      method: 'POST',
+      headers: {
+      "Content-Type": "application/json",
+      }, body: JSON.stringify(formData)
+    });
+
+    if (!response.ok) {
+      toast("Bir hata oluştu :(");
+      return;
+    }
+    toast("Başarıyla eklendi");
+    onClose();
   }
 
   const event_types = [
@@ -41,7 +58,7 @@ export default function AddEvent({ isOpen, onOpenChange }) {
           <>
             <ModalHeader className="flex flex-col gap-1">Olay bildir</ModalHeader>
             <ModalBody>
-              <form onSubmit={(event) => {event.preventDefault(); addEvent(event); onClose()}}
+              <form onSubmit={(event) => {addEvent(event, onClose)}}
                     className='flex w-full flex-col  mb-6 md:mb-0 gap-4'>
 
                 <RadioGroup name="event_type" id="event_type" label="Olay Türü">
@@ -64,6 +81,7 @@ export default function AddEvent({ isOpen, onOpenChange }) {
                                  min={field.min}
                                  step={field.step}
                                  endContent={field.endContent}
+                                 required={field.key==="note" ? undefined : ""}
                       >
                         {children}
                       </Component>
