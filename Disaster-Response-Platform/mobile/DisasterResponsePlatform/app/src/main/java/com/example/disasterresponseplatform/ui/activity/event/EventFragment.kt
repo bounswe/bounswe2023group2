@@ -34,12 +34,12 @@ class EventFragment(private val eventViewModel: EventViewModel) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentEventBinding.inflate(inflater,container,false)
+        sendRequest()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sendRequest()
         arrangeView()
     }
 
