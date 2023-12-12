@@ -133,6 +133,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     private fun addLayoutWithMessage(linearLayout: LinearLayout, message: String){
         val textView = TextView(requireContext())
         textView.text = message
+        textView.textSize = 16F
         linearLayout.addView(textView)
         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         textView.layoutParams = layoutParams
