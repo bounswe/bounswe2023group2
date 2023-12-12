@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Body
+from fastapi import APIRouter, Depends, HTTPException, Body, Query
 from Services.email_verification_service import send_verification_email, verify_user
 from Services.authentication_service import get_current_username, get_current_email
 
@@ -13,7 +13,7 @@ async def send_verification_request(username: str = Depends(get_current_username
         raise HTTPException(status_code=500, detail="Failed to send verification email")
 
 @router.post("/verify", status_code=200)
-async def verify_email(token: str = Query(...), username: str = Depends(get_current_username)):
+async def verify_email(token: str = Query(None, description="Verification token obtained from email"), username: str = Depends(get_current_username)):
     if verify_user(username, token):
         return {"message": "Email verified successfully."}
     else:
