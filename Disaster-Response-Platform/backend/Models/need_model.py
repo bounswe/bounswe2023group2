@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, validator
-from typing import Dict, Any
+from typing import Dict, Any, List
 from enum import Enum
 import datetime
 from Models.resource_model import Recurrence
@@ -48,3 +48,5 @@ class UrgencyUpdate(BaseModel):
 # class voteUpdate(BaseModel):
 #     vote: int
 
+class NeedList(BaseModel):
+    needs: List[Dict]

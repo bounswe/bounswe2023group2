@@ -12,12 +12,13 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="100dp"/>
+        android:padding="100dp"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="You need to log in first"
+        android:text="@string/pr_login_required"
         android:textSize="30sp"
         android:padding="20dp"
         android:gravity="center"
@@ -98,7 +99,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:padding="5dp"
-                        android:text="Full Name"
+                        android:text="@string/pr_full_name"
                         android:textSize="20sp" />
 
                     <TextView
@@ -108,7 +109,6 @@
                         android:layout_weight="1"
                         android:paddingLeft="5dp"
                         android:paddingBottom="10dp"
-                        android:text="username"
                         android:textSize="15sp" />
 
                     <Button
@@ -116,7 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="Call" />
+                        android:text="@string/pr_call" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -147,8 +147,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Professor" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Region -->
@@ -170,8 +169,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Verified by -->
@@ -193,8 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Cahid Enes Keleş" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Phone-->
@@ -215,8 +212,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="+90 555 555 55 55" />
+                    android:padding="10dp"/>
 
                 <ImageView
                     android:id="@+id/profile_phone_verified_icon"
@@ -245,8 +241,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="emailadress@email.com" />
+                    android:padding="10dp"/>
 
                 <ImageView
                     android:id="@+id/profile_email_verified_icon"
@@ -278,8 +273,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Nationality -->
@@ -301,8 +295,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Id Number -->
@@ -324,8 +317,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Address -->
@@ -347,8 +339,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Education -->
@@ -370,8 +361,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Health Contition -->
@@ -393,8 +383,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Blood Type -->
@@ -416,8 +405,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="Marmara Region" />
+                    android:padding="10dp"/>
             </LinearLayout>
 
             <!-- Social Media -->
@@ -427,7 +415,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Social Media"
+                android:text="@string/pr_social_media"
                 android:textSize="30sp" />
 
             <View
@@ -442,7 +430,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Skills"
+                android:text="@string/pr_skills"
                 android:textSize="30sp" />
 
             <View
@@ -457,7 +445,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Languages"
+                android:text="@string/pr_languages"
                 android:textSize="30sp" />
 
             <View
@@ -472,7 +460,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingTop="30dp"
                 android:paddingBottom="10dp"
-                android:text="Professions"
+                android:text="@string/pr_professions"
                 android:textSize="30sp" />
 
             <View
@@ -483,7 +471,6 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="50dp" />
-
 
         </LinearLayout>
 

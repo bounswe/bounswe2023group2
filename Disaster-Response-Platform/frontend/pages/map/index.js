@@ -1,6 +1,7 @@
 import styles from "@/styles/Home.module.css";
 import MapLayout from "@/layouts/MapLayout";
 import dynamic from "next/dynamic";
+
 import MapFilterMenu from "@/components/Map/MapFilterMenu";
 import { useState } from "react";
 
@@ -10,15 +11,18 @@ const Map = dynamic(() => import("@/components/Map/MainMap"), {
 
 export default function mapPage() {
   const [isClickActivated, setIsClickActivated] = useState(false);
+  const [resourceApiData, setResourceApiData] = useState([])
 
   const activateClick = () => {
     setIsClickActivated(!isClickActivated);
   };
 
+
+
   return (
     <>
-      <Map isClickActivated={isClickActivated} activateClick={activateClick}/>
-      <MapFilterMenu activateClick={activateClick}/>
+      <Map isClickActivated={isClickActivated} activateClick={activateClick} resourceApiData={resourceApiData}/>
+      <MapFilterMenu activateClick={activateClick} setResourceApiData={setResourceApiData}/>
     </>
   );
 }

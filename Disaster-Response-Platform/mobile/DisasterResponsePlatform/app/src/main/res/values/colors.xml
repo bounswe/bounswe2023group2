@@ -16,8 +16,13 @@
     <color name="colorActivity">#515151</color>
     <color name="separator">#BCBCBC</color>
 
-    <color name="black">#FF0000</color>
+    <color name="icon">#797979</color>
+    <color name="red">#E80000</color>
+
+
+    <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
+    <color name="bottom_sheet_bg">#FFFFFF</color>
     <color name="tabNotSelected">#80FFFFFF</color>
 </resources>

@@ -26,7 +26,7 @@ class MapViewModel@Inject constructor() : ViewModel() {
 
     private val liveDataNeedResponse = MutableLiveData<NeedBody.NeedResponse>()
     private val liveDataResourceResponse = MutableLiveData<ResourceBody.ResourceResponse>()
-    private val liveDataActionResponse = MutableLiveData<ActionBody.ActionsResponse>()
+    private val liveDataActionResponse = MutableLiveData<ActionBody.ActionResponse>()
     private var savedMapState: MapState? = null
 
     fun saveMapState(zoomLevel: Int, center: IGeoPoint) {
@@ -43,7 +43,7 @@ class MapViewModel@Inject constructor() : ViewModel() {
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResourceResponse(): LiveData<ResourceBody.ResourceResponse> = liveDataResourceResponse
 
-    fun getLiveDataActionsResponse(): LiveData<ActionBody.ActionsResponse> = liveDataActionResponse
+    fun getLiveDataActionsResponse(): LiveData<ActionBody.ActionResponse> = liveDataActionResponse
 
     fun sendGetAllActionsRequest() {
         val headers = mapOf(
@@ -69,7 +69,7 @@ class MapViewModel@Inject constructor() : ViewModel() {
                                 val gson = Gson()
                                 val actionResponse = gson.fromJson(
                                     rawJson,
-                                    ActionBody.ActionsResponse::class.java
+                                    ActionBody.ActionResponse::class.java
                                 )
                                 if (actionResponse != null) { // TODO check null
                                     Log.d(
