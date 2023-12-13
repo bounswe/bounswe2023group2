@@ -1,0 +1,143 @@
+{
+	"_comment": "Etiketler çoğunlukla konularına göre sınıflandırılmıştır. Dil bilgisinin dinamik kısmı backend'de ve forms.json'da saklanmaktadır.",
+	"profile": {
+		"username": "Kullanıcı Adı",
+		"first_name": "İsim",
+		"last_name": "Soyisim",
+		"password": "Şifre",
+		"phone_number": "Telefon Numarası",
+		"email": "E-posta",
+	    "date_of_birth": "Doğum Tarihi",
+	    "nationality": "Ülke",
+	    "identity_number": "Kimlik Numarası",
+	    "education": "Öğrenim",
+	    "health_condition": "Sağlık Durumu",
+	    "blood_type": "Kan Grubu",
+	    "Address": "Adres",
+	    "main_info": "Ana Bilgiler",
+	},
+	"profile_lists": {
+		"professions": {
+ 			"title": "Yetenekler",
+ 			"add_title": "Yetenek Ekle",
+ 			"primary_label": "Yetenek tanımı",
+ 			"secondary_label": "Seviye",
+ 			"options": {
+ 				"amateur": "Amatör",
+ 				"pro": "Profesyonel",
+ 				"certified pro": "Sertifikalı Uzman"
+ 			}
+		},
+		"languages": {
+ 			"title": "Diller",
+ 			"add_title": "Dil Ekle",
+ 			"primary_label": "Dil",
+ 			"secondary_label": "Seviye",
+ 			"options": {
+ 				"beginner": "Başlangıç",
+ 				"intermediate": "Orta",
+ 				"advanced": "İleri",
+ 				"native": "Anadil"
+ 			}
+		},
+		"socialmedia-links": {
+ 			"title": "Sosyal Medya",
+ 			"add_title": "Hesap Ekle",
+ 			"primary_label": "Site ismi",
+ 			"secondary_label": "Profil linki",
+
+		},
+		"skills": {
+
+ 			"options": {
+ 				"beginner": "Acemi",
+ 				"basic": "Basit düzey",
+ 				"intermediate": "Orta",
+ 				"skilled": "Becerikli",
+ 				"expert": "Uzman"
+ 			}
+		}
+	},
+	"activities": {
+		"resource": "Kaynak",
+		"need": "İhtiyaç",
+		"action": "Aksiyon",
+		"event": "Olay",
+		"emergency": "Acil Durum",
+		"resources": "Kaynaklar",
+		"needs": "İhtiyaçlar",
+		"actions": "Aksiyonlar",
+		"events": "Olaylar",
+		"emergencies": "Acil Durumlar",
+		"add_resource": "Kaynak ekle",
+		"add_need": "İhtiyaç ekle",
+		"add_action": "Aksiyon ekle",
+		"report_event": "Olay bildir",
+		"report_emergency": "Acil durum bildir"
+	},
+	"auth": {
+		"signup": "Kayıt ol",
+		"login": "Giriş yap",
+		"logout": "Hesaptan çık",
+		"redirect_to_login": "Oturum açmaya yönlendiriliyorsunuz...",
+		"phone_email_username": "Telefon numarası, e-posta adresi veya kullanıcı adı"
+	},
+	"UI": {
+		"edit": "Düzenle",
+		"submit": "Gönder",
+		"add": "Ekle",
+		"remove": "Kaldır",
+		"cancel": "Vazgeç"
+	},
+	"sort_filter": {
+		"sort": "Sırala",
+		"filter": "Filtrele",
+		"criteria": "Kriterler",
+		"sort_criterion": "Sıralama kriteri",
+		"sort_direction": "Sıralama yönü",
+		"ascending": "artan",
+		"descending": "azalan",
+		"type": "Tür",
+		"urgency": "Aciliyet",
+		"status": "Statü"
+	},
+	"feedback": {
+		"save_success": "Başarıyla kaydedildi",
+		"loading": "Yükleniyor",
+		"add_success": "Başarıyla kaydedildi",
+		"remove_success": "Başarıyla eklendi",
+		"failure": "Son işlem sırasında bir hata oluştu, lütfen tekrar deneyin",
+		"report_success": "Raporunuz alındı. Bildiriminiz için teşekkürler",
+	},
+	"profile_pages": {
+	    "main_info": "Ana Bilgiler",
+	    "info": "Bilgiler",
+	    "optional_info": "Diğer Bilgiler",
+		"no_phone_mail": "Telefon ya da e-posta adresi sağlamalısınız",
+	    "private_account": "Kişisel bilgilerim gizlensin"
+	},
+	"admin": {
+		"no_access": "Admin paneline erişiminiz yok.",
+		"user_reports": "Kullanıcı Raporları",
+		"activity_reports": "Aktivite Raporları",
+		"banned_users": "Engellenmiş Kullanıcılar",
+		"reporter": "Raporlayan",
+		"reported": "Raporlanan",
+		"description": "Açıklama",
+		"details": "Detaylar",
+		"actions": "Aksiyonlar",
+		"report": "Raporla"
+	},
+	"navbar": {
+		"help_feedback": "Yardım ve Geri Bildirim",
+		"profile": "Profil",
+		"edit_profile": "Kullanıcı ayarları"
+	},
+	"forms": {
+		"other": "Diğer",
+		"resource": {
+			"description": "Açıklama",
+			"initial_quantity"
+		}
+	}
+}

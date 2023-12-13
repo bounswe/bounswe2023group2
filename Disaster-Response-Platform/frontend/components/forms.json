@@ -1,49 +1,56 @@
 {
   "cloth": {
+      "label": {"TR": "Kıyafet", "EN": "Clothes"},
       "fields": [
-          {"name": "size", "label": "Size", "type": "text",  "placeholder": "Size"},
-          {"name": "gender", "label": "Gender", "type": "text",  "placeholder": "Gender"},
-          {"name": "age", "label": "Age", "type": "text",  "placeholder":"Age"},
-          {"name": "subtype", "label": "Subtype", "type": "text",  "placeholder":"Subtype"}
+          {"name": "size", "label": {"TR": "Beden", "EN": "Size"}, "type": "text",  "placeholder": "Size"},
+          {"name": "gender", "label": {"TR": "Cinsiyet", "EN": "Gender"}, "type": "text",  "placeholder": "Gender"},
+          {"name": "age", "label": {"TR": "Yaş", "EN": "Age"}, "type": "text",  "placeholder": "Age"},
+          {"name": "subtype", "label": {"TR": "Alt Tür", "EN": "Subtype"}, "type": "text",  "placeholder":"Subtype"}
       ]
   },
   "food": {
+      "label": {"TR": "Yiyecek", "EN": "Food"},
       "fields": [
-          {"name": "expiration_date", "label": "Expiration Date", "type": "date"},
-          {"name": "allergens", "label": "Allergens", "type": "text"},
-          {"name": "subtype", "label": "Subtype", "type": "text"}
+          {"name": "expiration_date", "label": {"TR": "Son Kullanma Tarihi", "EN": "Expiration Date"}, "type": "date"},
+          {"name": "allergens", "label": {"TR": "Alerjenler", "EN": "Allergens"}, "type": "text"},
+          {"name": "subtype", "label": {"TR": "Alt Tür", "EN": "Subtype"}, "type": "text"}
       ]
   },
   "shelter": {
+      "label": {"TR": "Barınak", "EN": "Shelter"},
       "fields": [
-          {"name": "number_of_people", "label": "Number of People", "type": "number"},
-          {"name": "weather_condition", "label": "Weather Condition", "type": "text"}
+          {"name": "number_of_people", "label": {"TR": "Kişi Sayısı", "EN": "Number of People"}, "type": "number"},
+          {"name": "weather_condition", "label": {"TR": "Hava Durumu", "EN": "Weather Condition"}, "type": "text"}
       ]
   },
   "medication": {
+      "label": {"TR": "İlaç", "EN": "Medication"},
       "fields": [
-          {"name": "disease_name", "label": "Disease Name", "type": "text"},
-          {"name": "medicine_name", "label": "Medicine Name", "type": "text"},
-          {"name": "age", "label": "Age", "type": "number"}
+          {"name": "disease_name", "label": {"TR": "Hastalık Adı", "EN": "Disease Name"}, "type": "text"},
+          {"name": "medicine_name", "label": {"TR": "İlaç Adı", "EN": "Medicine Name"}, "type": "text"},
+          {"name": "age", "label": {"TR": "Yaş", "EN": "Age"}, "type": "number"}
       ]
   },
   "transportation": {
+      "label": {"TR": "Ulaşım", "EN": "Transportation"},
       "fields": [
-          {"name": "start_location", "label": "Start Location", "type": "text"},
-          {"name": "end_location", "label": "End Location", "type": "text"}
+          {"name": "start_location", "label": {"TR": "Kalkış noktası", "EN": "Starting Point"}, "type": "text"},
+          {"name": "end_location", "label": {"TR": "Varış noktası", "EN": "Destination"}, "type": "text"}
       ]
   },
   "tool": {
+      "label": {"TR": "Alet", "EN": "Tool"},
       "fields": [
-          {"name": "tool_type", "label": "Tool Type", "type": "text"},
-          {"name": "estimated_weight", "label": "Estimated Weight", "type": "number"}
+          {"name": "tool_type", "label": {"TR": "Alet Türü", "EN": "Tool Type"}, "type": "text"},
+          {"name": "estimated_weight", "label": {"TR": "Tahmini Ağırlık", "EN": "Estimated Weight"}, "type": "number"}
       ]
   },
   "human": {
+      "label": {"TR": "İnsan", "EN": "Human"},
       "fields": [
-          {"name": "proficiency", "label": "Proficiency", "type": "text"},
-          {"name": "number_of_people", "label": "Number of People", "type": "number"},
-          {"name": "subtype", "label": "Subtype", "type": "text"}
+          {"name": "proficiency", "label": {"TR": "Yetkinlik", "EN": "Proficiency"}, "type": "text"},
+          {"name": "number_of_people", "label": {"TR": "Kişi Sayısı", "EN": "Number of People"}, "type": "number"},
+          {"name": "subtype", "label": {"TR": "Alt Tür", "EN": "Subtype"}, "type": "text"}
       ]
   }
 }
