@@ -68,7 +68,7 @@
                 android:id="@+id/layDateTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/empty_divider_h"
+                android:divider="@drawable/empty_divider_v"
                 android:orientation="horizontal"
                 android:showDividers="middle">
 
@@ -113,7 +113,7 @@
                 android:id="@+id/layCoverage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/empty_divider_h"
+                android:divider="@drawable/empty_divider_v"
                 android:orientation="horizontal"
                 android:showDividers="middle">
 
