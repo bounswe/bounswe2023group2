@@ -1,5 +1,5 @@
 {
-	"_comment": "Etiketler çoğunlukla konularına göre sınıflandırılmıştır. Dil bilgisinin dinamik kısmı backend'de ve forms.json'da saklanmaktadır.",
+	"_comment": "Etiketler çoğunlukla konularına göre sınıflandırılmıştır. Dil bilgisinin dinamik kısmı backend'de ve components/forms.json'da saklanmaktadır.",
 	"profile": {
 		"username": "Kullanıcı Adı",
 		"first_name": "İsim",
@@ -14,13 +14,12 @@
 	    "health_condition": "Sağlık Durumu",
 	    "blood_type": "Kan Grubu",
 	    "Address": "Adres",
-	    "main_info": "Ana Bilgiler",
 	},
 	"profile_lists": {
 		"professions": {
- 			"title": "Yetenekler",
- 			"add_title": "Yetenek Ekle",
- 			"primary_label": "Yetenek tanımı",
+ 			"title": "Meslekler",
+ 			"add_title": "Meslek Ekle",
+ 			"primary_label": "Meslek",
  			"secondary_label": "Seviye",
  			"options": {
  				"amateur": "Amatör",
@@ -48,7 +47,10 @@
 
 		},
 		"skills": {
-
+ 			"title": "Yetenekler",
+ 			"add_title": "Yetenek Ekle",
+ 			"primary_label": "Yetenek tanımı",
+ 			"secondary_label": "Seviye",
  			"options": {
  				"beginner": "Acemi",
  				"basic": "Basit düzey",
@@ -69,11 +71,11 @@
 		"actions": "Aksiyonlar",
 		"events": "Olaylar",
 		"emergencies": "Acil Durumlar",
-		"add_resource": "Kaynak ekle",
-		"add_need": "İhtiyaç ekle",
-		"add_action": "Aksiyon ekle",
-		"report_event": "Olay bildir",
-		"report_emergency": "Acil durum bildir"
+		"add_resource": "Kaynak Ekle",
+		"add_need": "İhtiyaç Ekle",
+		"add_action": "Aksiyon Ekle",
+		"report_event": "Olay Bildir",
+		"report_emergency": "Acil Durum Bildir"
 	},
 	"auth": {
 		"signup": "Kayıt ol",
@@ -95,8 +97,8 @@
 		"criteria": "Kriterler",
 		"sort_criterion": "Sıralama kriteri",
 		"sort_direction": "Sıralama yönü",
-		"ascending": "artan",
-		"descending": "azalan",
+		"ascending": "Artan",
+		"descending": "Azalan",
 		"type": "Tür",
 		"urgency": "Aciliyet",
 		"status": "Statü"
@@ -104,8 +106,8 @@
 	"feedback": {
 		"save_success": "Başarıyla kaydedildi",
 		"loading": "Yükleniyor",
-		"add_success": "Başarıyla kaydedildi",
-		"remove_success": "Başarıyla eklendi",
+		"add_success": "Başarıyla eklendi",
+		"remove_success": "Başarıyla kaldırıldı",
 		"failure": "Son işlem sırasında bir hata oluştu, lütfen tekrar deneyin",
 		"report_success": "Raporunuz alındı. Bildiriminiz için teşekkürler",
 	},
@@ -134,10 +136,6 @@
 		"edit_profile": "Kullanıcı ayarları"
 	},
 	"forms": {
-		"other": "Diğer",
-		"resource": {
-			"description": "Açıklama",
-			"initial_quantity"
-		}
+		"other": "Diğer"
 	}
 }
