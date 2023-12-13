@@ -10,9 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.EventBody
-import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.databinding.EventItemBinding
-import com.example.disasterresponseplatform.databinding.NeedItemBinding
 
 class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?): RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
@@ -39,7 +37,7 @@ class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?): Re
 
 
         hb.tvType.text = currentEvent?.event_type.toString()
-        hb.tvDate.text = currentEvent?.created_time?.substring(0,10)
+        hb.tvDate.text = currentEvent?.created_time?.substring(0,19)
         hb.tvLocation.text = "x: ${String.format("%.2f", currentEvent?.center_location_x).replace(',', '.')}, y: ${String.format("%.2f", currentEvent?.center_location_y).replace(',', '.')}"
         val shortDescription = currentEvent?.short_description.toString()
         hb.tvShortNode.text = shortDescription.substring(0, minOf(25,shortDescription.length))
