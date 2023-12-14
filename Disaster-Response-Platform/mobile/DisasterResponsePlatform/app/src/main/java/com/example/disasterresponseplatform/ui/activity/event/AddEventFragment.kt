@@ -31,6 +31,7 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 import java.util.Calendar
+import java.util.Locale
 import kotlin.properties.Delegates
 
 
@@ -63,10 +64,10 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
             binding.btnSubmit.text = getString(R.string.save_changes)
             binding.spEventType.setText(event.event_type)
             binding.etDate.editText?.setText(event.event_time) // TODO seperate it as date and time with util func
-            if (event.max_distance_x != null) binding.tvCoverageX.editText?.setText(event.max_distance_x.toInt())
-            if (event.max_distance_y != null) binding.tvCoverageY.editText?.setText(event.max_distance_y.toInt())
-            binding.tvShortDescription.editText?.setText(event.short_description)
-            binding.tvNotes.editText?.setText(event.note)
+            if (event.max_distance_x != null) binding.etCoverageX.setText(event.max_distance_x.toString())
+            if (event.max_distance_y != null) binding.etCoverageY.setText(event.max_distance_y.toString())
+            binding.etShortDescription.setText(event.short_description)
+            binding.etNotes.setText(event.note)
 
             selectedLocationX = event.center_location_x
             selectedLocationY = event.center_location_y
@@ -109,14 +110,21 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
                     creationEventDate = "$eventDate $eventTime"
                     Log.i("creationEventDate",creationEventDate)
                 }
-
+                val eventType =
+                    when (binding.spEventType.text.toString().trim()){
+                        "Enkaz" -> "Debris"
+                        "Altyapı" -> "Infrastructure"
+                        "Afet" -> "Disaster"
+                        "Yardım Noktası" -> "Help-Arrived"
+                        else -> binding.spEventType.text.toString().trim()
+                    }
                 val additionalNote = binding.etNotes.text.toString().trim()
                 val shortNote = binding.etShortDescription.text.toString().trim()
                 val maxDistanceX = if (binding.etCoverageX.text != null) binding.etCoverageX.text.toString().trim().toDouble() else null
                 val maxDistanceY = if (binding.etCoverageY.text != null) binding.etCoverageY.text.toString().trim().toDouble() else null
                 val createdTime = "${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}"
                 val postedEvent = EventBody.EventPostBody(
-                    event_type = binding.spEventType.text.toString().trim(),
+                    event_type = eventType,
                     event_time =  creationEventDate,
                     is_active = true,
                     center_location_x = selectedLocationX,
@@ -209,7 +217,7 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
         val datePickerDialog = DatePickerDialog(
             requireActivity!!,
             OnDateSetListener { _, year, month, dayOfMonth ->
-                val selectedDate = dayOfMonth.toString() + "/" + (month + 1) + "/" + year
+                val selectedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)
                 binding.etDate.editText?.setText(selectedDate)
             },
             year,
@@ -231,7 +239,7 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
         val timePickerDialog = TimePickerDialog(
             requireActivity!!,
             OnTimeSetListener { _, hourOfDay, minute ->
-                val selectedTime = "$hourOfDay:$minute"
+                val selectedTime = String.format("%02d:%02d", hourOfDay, minute)
                 binding.etTime.editText?.setText(selectedTime)
             },
             hourOfDay,

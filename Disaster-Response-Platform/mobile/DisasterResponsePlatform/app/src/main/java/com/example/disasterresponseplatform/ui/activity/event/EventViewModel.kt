@@ -207,7 +207,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
                         liveDataIsDeleted.postValue(false)
                         val errorBody = response.errorBody()?.string()
                         if (errorBody != null) {
-                            Log.d("no", errorBody)
+                            Log.d("Error Body:", errorBody)
                         }
                     }
                 }
