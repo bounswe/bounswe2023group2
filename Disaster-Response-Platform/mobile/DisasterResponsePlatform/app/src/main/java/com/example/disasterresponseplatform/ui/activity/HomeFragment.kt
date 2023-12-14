@@ -62,6 +62,7 @@ class HomeFragment(
 
         val adapter = ViewPagerAdapter(fragments, mainAct)
         viewPager.adapter = adapter
+        viewPager.offscreenPageLimit = fragments.size // to prevent selected 4th tab gives error issue
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabTitles[position]
@@ -70,7 +71,7 @@ class HomeFragment(
                 changeTabColor(position)
                 changeActionBarColor(position)
                 changeStatusBarColor(position)
-                viewPager.setCurrentItem(position, true) // Update the selected tab
+                viewPager.setCurrentItem(position, false) // Update the selected tab
             }
         }.attach()
 
