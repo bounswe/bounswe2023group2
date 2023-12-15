@@ -79,8 +79,16 @@
 		"report_event": "Report Event",
 		"report_emergency": "Report Emergency"
 	},
+	"activity_table": {
+		"type": "Type",
+		"location": "Location",
+		"created_by": "Created by",
+		"created_at": "Creation Date",
+		"description": "Description",
+		"take_action": "Take Action"
+	},
 	"auth": {
-		"signup": "Register",
+		"register": "Register",
 		"login": "Log in",
 		"logout": "Log out",
 		"redirect_to_login": "Redirecting to login page...",
@@ -96,14 +104,23 @@
 	"sort_filter": {
 		"sort": "Sort",
 		"filter": "Filter",
-		"criteria": "Criteria",
 		"sort_criterion": "Sorting metric",
 		"sort_direction": "Sort direction",
-		"ascending": "Ascending",
-		"descending": "Descending",
-		"type": "Type",
+		"ASC": "Ascending",
+		"DESC": "Descending",
+		"types": "Types",
 		"urgency": "Urgency",
-		"status": "Status"
+		"status": "Status",
+		"active": "Active",
+		"inactive": "Inactive"
+	},
+	"sort_criteria": {
+		"urgency": "Urgency",
+		"status": "Status",
+		"occur_at": "Date of need",
+		"type": "Type",
+		"upvote": "Reliability",
+		"currentQuantity": "Current quantity"
 	},
 	"feedback": {
 		"save_success": "Successfully saved",

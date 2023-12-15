@@ -67,6 +67,7 @@
 		"action": "Aksiyon",
 		"event": "Olay",
 		"emergency": "Acil Durum",
+		"EMERGENCY": "ACİL DURUM",
 		"resources": "Kaynaklar",
 		"needs": "İhtiyaçlar",
 		"actions": "Aksiyonlar",
@@ -78,8 +79,16 @@
 		"report_event": "Olay Bildir",
 		"report_emergency": "Acil Durum Bildir"
 	},
+	"activity_table": {
+		"type": "Kategori",
+		"location": "Konum",
+		"created_by": "Ekleyen",
+		"created_at": "Eklenme tarihi",
+		"description": "Açıklama",
+		"take_action": "Aksiyon al"
+	},
 	"auth": {
-		"signup": "Kayıt ol",
+		"register": "Kayıt ol",
 		"login": "Giriş yap",
 		"logout": "Hesaptan çık",
 		"redirect_to_login": "Oturum açmaya yönlendiriliyorsunuz...",
@@ -95,14 +104,23 @@
 	"sort_filter": {
 		"sort": "Sırala",
 		"filter": "Filtrele",
-		"criteria": "Kriterler",
 		"sort_criterion": "Sıralama kriteri",
 		"sort_direction": "Sıralama yönü",
-		"ascending": "Artan",
-		"descending": "Azalan",
-		"type": "Tür",
+		"ASC": "Artan",
+		"DESC": "Azalan",
+		"types": "Kategoriler",
 		"urgency": "Aciliyet",
-		"status": "Statü"
+		"status": "Durum",
+		"active": "Aktif",
+		"inactive": "İnaktif"
+	},
+	"sort_criteria": {
+		"urgency": "Aciliyet",
+		"status": "Durum",
+		"occur_at": "İhtiyacın olduğu tarih",
+		"type": "Kategori",
+		"upvote": "Güvenilirlik",
+		"currentQuantity": "Mevcut Miktar"
 	},
 	"feedback": {
 		"save_success": "Başarıyla kaydedildi",

@@ -16,7 +16,7 @@ import getLabels from '@/lib/getLabels';
 const Map = dynamic(() => import('../components/Map/Map'), {
   ssr: false,
 })
-export default function home() {
+export default function home({ labels }) {
  
   const [needFilter, setNeedFilter] = useState(false);
   const [resourceFilter, setResourceFilter] = useState(true);
@@ -27,10 +27,10 @@ export default function home() {
       <Map />
       <ToastContainer position="bottom-center" />
       <div className='flex flex-row m-3'>
-        <Button color='warning' className='mr-5' onClick={(e) => { setNeedFilter(true); setResourceFilter(false) }}>İhtiyaç</Button>
-        <Button color='success' onClick={(e) => { setResourceFilter(true); setNeedFilter(false) }} >Kaynaklar</Button>
+        <Button color='warning' className='mr-5' onClick={(e) => { setNeedFilter(true); setResourceFilter(false) }}>{labels.activities.needs}</Button>
+        <Button color='success' onClick={(e) => { setResourceFilter(true); setNeedFilter(false) }} >{labels.activities.resources}</Button>
       </div>
-      <ActivityTable needFilter={needFilter} resourceFilter={resourceFilter} />
+      <ActivityTable needFilter={needFilter} resourceFilter={resourceFilter} labels={labels}/>
 
       <div className={styles.buttonContainer}>
       </div>
