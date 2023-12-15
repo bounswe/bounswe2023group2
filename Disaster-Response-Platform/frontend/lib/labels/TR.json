@@ -148,7 +148,10 @@
 		"description": "Açıklama",
 		"details": "Detaylar",
 		"actions": "Aksiyonlar",
-		"report": "Raporla"
+		"report": "Raporla",
+		"reject_report": "Raporu reddet",
+		"ban_user": "Kullanıcıyı engelle",
+		"remove_activity": "Aktiviteyi kaldır"
 	},
 	"navbar": {
 		"help_feedback": "Yardım ve Geri Bildirim",

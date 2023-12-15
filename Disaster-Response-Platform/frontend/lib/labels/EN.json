@@ -149,7 +149,10 @@
 		"description": "Description",
 		"details": "Details",
 		"actions": "Actions",
-		"report": "Report"
+		"report": "Report",
+		"reject_report": "Reject report",
+		"ban_user": "Ban user",
+		"remove_activity": "Remove activity"
 	},
 	"navbar": {
 		"help_feedback": "Help & Feedback",
