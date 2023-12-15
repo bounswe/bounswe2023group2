@@ -100,7 +100,8 @@
 		"add": "Ekle",
 		"update": "Güncelle",
 		"remove": "Kaldır",
-		"cancel": "Vazgeç"
+		"cancel": "Vazgeç",
+		"loading": "Yükleniyor"
 	},
 	"sort_filter": {
 		"sort": "Sırala",
@@ -125,7 +126,6 @@
 	},
 	"feedback": {
 		"save_success": "Başarıyla kaydedildi",
-		"loading": "Yükleniyor",
 		"add_success": "Başarıyla eklendi",
 		"remove_success": "Başarıyla kaldırıldı",
 		"failure": "Son işlem sırasında bir hata oluştu, lütfen tekrar deneyin",
@@ -157,5 +157,10 @@
 	},
 	"forms": {
 		"other": "Diğer"
+	},
+	"placeholders": {
+		"phone_number": "05321234567",
+		"password": "Şifre en az bir büyük harf ve bir rakam içermelidir",
+		"email": "örnek@adres.com"
 	}
 }

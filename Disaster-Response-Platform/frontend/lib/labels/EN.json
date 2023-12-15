@@ -101,7 +101,8 @@
 		"add": "Add",
 		"update": "Update",
 		"remove": "Remove",
-		"cancel": "Cancel"
+		"cancel": "Cancel",
+		"loading": "Loading"
 	},
 	"sort_filter": {
 		"sort": "Sort",
@@ -126,7 +127,6 @@
 	},
 	"feedback": {
 		"save_success": "Successfully saved",
-		"loading": "Loading",
 		"add_success": "Successfully added",
 		"remove_success": "Succesfully removed",
 		"failure": "An error occurred during the last operation, please try again",
@@ -158,5 +158,10 @@
 	},
 	"forms": {
 		"other": "Other"
+	},
+	"placeholders": {
+		"phone_number": "05321234567",
+		"password": "Password must contain an uppercase letter and a number",
+		"email": "example@address.com"
 	}
 }
