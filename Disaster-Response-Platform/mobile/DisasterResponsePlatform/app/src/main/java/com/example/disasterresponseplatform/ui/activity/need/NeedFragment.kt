@@ -117,7 +117,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
      */
     private fun addNeed(){
         val token = DiskStorageManager.getKeyValue("token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
             val addNeedFragment = AddNeedFragment(needViewModel,null)
             addFragment(addNeedFragment,"AddNeedFragment")
         }

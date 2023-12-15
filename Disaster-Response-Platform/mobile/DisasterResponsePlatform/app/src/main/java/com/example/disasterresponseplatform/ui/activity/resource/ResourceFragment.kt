@@ -118,7 +118,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
      */
     private fun addResource(){
         val token = DiskStorageManager.getKeyValue("token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
             val addResourceFragment = AddResourceFragment(resourceViewModel,null)
             addFragment(addResourceFragment,"AddResourceFragment")
         }

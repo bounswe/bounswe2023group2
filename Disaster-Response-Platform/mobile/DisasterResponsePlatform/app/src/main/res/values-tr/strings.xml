@@ -181,7 +181,7 @@
 
     <!-- NOTIFICATION -->
     <string name="add_notification">Bildirim Ekle</string>
-    <string name="short_note">Kısa Not</string>
+    <string name="short_note">Kısa Açıklama</string>
     <string name="debris">Deprem</string>
     <string name="event_date">Olay Tarihi</string>
     <string name="event_time">Olay Zamanı</string>

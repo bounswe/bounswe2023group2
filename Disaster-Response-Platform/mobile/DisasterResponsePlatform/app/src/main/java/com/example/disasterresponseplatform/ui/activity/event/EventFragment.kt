@@ -162,7 +162,7 @@ class EventFragment(private val eventViewModel: EventViewModel) : Fragment() {
 
     private fun addEvent(){
         val token = DiskStorageManager.getKeyValue("token")
-        if (!token.isNullOrEmpty()) {
+        if ( DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
             val addEventFragment = AddEventFragment(eventViewModel,null)
             addFragment(addEventFragment,"AddEventFragment")
         }

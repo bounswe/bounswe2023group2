@@ -120,7 +120,7 @@ class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() 
      */
     private fun addAction(){
         val token = DiskStorageManager.getKeyValue("token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
             val addActionFragment = AddActionFragment(actionViewModel,null)
             addFragment(addActionFragment,"AddActionFragment")
         }
