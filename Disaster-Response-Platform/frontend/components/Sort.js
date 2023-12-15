@@ -41,7 +41,7 @@ export default function Sort({ needFilter, resourceFilter, filters, setFilters, 
             >
              {['ASC', "DESC"].map((stat)=>  <Radio value={stat}>{labels.sort_filter[stat]}</Radio>)}  
             </RadioGroup>
-            <Button onClick={()=>{filterActivities()}}> Sırala </Button>
+            <Button onClick={()=>{filterActivities()}}> {labels.sort_filter.sort} </Button>
 
   
 

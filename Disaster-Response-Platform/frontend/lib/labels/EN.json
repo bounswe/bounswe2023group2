@@ -68,6 +68,7 @@
 		"action": "Action",
 		"event": "Event",
 		"emergency": "Emergency",
+		"EMERGENCY": "EMERGENCY",
 		"resources": "Resources",
 		"needs": "Needs",
 		"actions": "Actions",

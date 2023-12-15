@@ -4,8 +4,11 @@ import { Button, Input } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { toast, ToastContainer } from 'react-toastify';
+import { withIronSessionSsr } from 'iron-session/next';
+import sessionConfig from '@/lib/sessionConfig';
+import getLabels from '@/lib/getLabels';
 
-export default function login() {
+export default function login({ labels }) {
   const { register, reset, handleSubmit, setError, formState: { isSubmitting, errors } } = useForm();
   const router = useRouter()
 
@@ -52,10 +55,22 @@ export default function login() {
     <Button disabled={isSubmitting} type='submit' className='m-3 ml-0'>
       {isSubmitting ? 'Loading' : "Submit"}
     </Button>
+    <ToastContainer position="bottom-center" />
   </form>;
 }
 
-
 login.getLayout = function getLayout(page) {
-  return <MainLayout>{page}   <ToastContainer position="bottom-center" /></MainLayout>;
+  return <MainLayout>{page}</MainLayout>;
 };
+
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req }) {
+    const labels = await getLabels(req.session.language);
+    return {
+      props: {
+        labels
+      }
+    };
+  },
+  sessionConfig
+)
