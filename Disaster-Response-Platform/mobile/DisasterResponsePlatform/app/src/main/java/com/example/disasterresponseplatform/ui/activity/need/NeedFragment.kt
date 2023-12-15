@@ -49,7 +49,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNeedBinding.inflate(inflater,container,false)
-        sendRequest()
+        if (isAdded) sendRequest() // to prevent not attached error, check whether it attached a context first
         return binding.root
     }
 
@@ -126,7 +126,6 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     /** This function connects backend and get all need requests, then it observes livedata from viewModel which is changed
      * whenever all needs are fetched from backend. Then it creates a need list with this response and prepare recyclerView with this list
      */
-
     private fun sendRequest(queries: MutableMap<String, String>? = null) {
 
         if (requireActivity == null){ // to handle error when user enters this page twice

@@ -17,6 +17,7 @@ import com.example.disasterresponseplatform.ui.activity.action.ActionFragment
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyFragment
 import com.example.disasterresponseplatform.ui.activity.event.EventFragment
+import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
 import com.example.disasterresponseplatform.ui.activity.need.NeedFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceFragment
@@ -28,6 +29,7 @@ class HomeFragment(
     private val needViewModel: NeedViewModel,
     private val resourceViewModel: ResourceViewModel,
     private val actionViewModel: ActionViewModel,
+    private val eventViewModel: EventViewModel,
     private val mainAct: MainActivity
 ) : Fragment() {
 
@@ -46,7 +48,7 @@ class HomeFragment(
             EmergencyFragment(),
             NeedFragment(needViewModel),
             ResourceFragment(resourceViewModel),
-            EventFragment(),
+            EventFragment(eventViewModel),
             ActionFragment(actionViewModel)
         )
 
@@ -60,6 +62,7 @@ class HomeFragment(
 
         val adapter = ViewPagerAdapter(fragments, mainAct)
         viewPager.adapter = adapter
+        viewPager.offscreenPageLimit = fragments.size // to prevent selected 4th tab gives error issue
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabTitles[position]
@@ -68,7 +71,7 @@ class HomeFragment(
                 changeTabColor(position)
                 changeActionBarColor(position)
                 changeStatusBarColor(position)
-                viewPager.setCurrentItem(position, true) // Update the selected tab
+                viewPager.setCurrentItem(position, false) // Update the selected tab
             }
         }.attach()
 

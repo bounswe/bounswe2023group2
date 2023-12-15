@@ -38,7 +38,7 @@ class ActionAdapter(private val actionList: List<ActionBody.ActionItem>?): Recyc
 
 
         hb.tvType.text = currentAction?.type.toString()
-        hb.tvDate.text = currentAction?.created_at?.substring(0,10)
+        hb.tvDate.text = currentAction?.created_at?.substring(0,19)
         hb.tvCreator.text = currentAction?.created_by
         hb.tvDownvoteCount.text = currentAction?.downvote.toString()
         hb.tvUpvoteCount.text = currentAction?.upvote.toString()
