@@ -15,7 +15,9 @@ import AddNeedForm from "./AddNeed";
 import AddEventForm from "./AddEvent";
 import AddActionFromId from "./AddActionFromId";
 import AddEmergencyForm from "./AddEmergency";
-export default function NavBar() {
+
+
+export default function NavBar({ labels }) {
   const { user, mutateUser } = useUser();
   const router = useRouter();
   const isMapPage = router.pathname === '/map';
@@ -40,6 +42,19 @@ export default function NavBar() {
     onOpen: onOpenEmergencyModal,
     onOpenChange: onOpenChangeEmergencyModal,
   } = useDisclosure();
+
+
+  async function toggleLanguage() {
+    const response = await fetch('/api/set-language', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({"language": labels.other_language})
+    });
+    // need to do a full reload to re-run server-side rendering with new language
+    router.reload();
+  }
 
 
   return (
@@ -98,6 +113,11 @@ export default function NavBar() {
       </NavbarContent>
 
       <NavbarContent className="" justify="end" >
+        <NavbarItem >
+          <Button className="hover:-translate-y-1 duration-300 bg-white font-bold rounded-full" onPress={toggleLanguage}>
+            {labels.other_language}
+          </Button>
+        </NavbarItem>
         <NavbarItem >
           {user?.isLoggedIn === false &&
             <Dropdown placement="bottom-start">

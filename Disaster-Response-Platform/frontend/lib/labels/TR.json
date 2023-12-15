@@ -1,5 +1,7 @@
 {
 	"_comment": "Etiketler çoğunlukla konularına göre sınıflandırılmıştır. Dil bilgisinin dinamik kısmı backend'de ve components/forms.json'da saklanmaktadır.",
+	"this_language": "TR",
+	"other_language": "EN",
 	"profile": {
 		"username": "Kullanıcı Adı",
 		"first_name": "İsim",
@@ -13,7 +15,7 @@
 	    "education": "Öğrenim",
 	    "health_condition": "Sağlık Durumu",
 	    "blood_type": "Kan Grubu",
-	    "Address": "Adres",
+	    "Address": "Adres"
 	},
 	"profile_lists": {
 		"professions": {
@@ -43,8 +45,7 @@
  			"title": "Sosyal Medya",
  			"add_title": "Hesap Ekle",
  			"primary_label": "Site ismi",
- 			"secondary_label": "Profil linki",
-
+ 			"secondary_label": "Profil linki"
 		},
 		"skills": {
  			"title": "Yetenekler",
@@ -109,7 +110,7 @@
 		"add_success": "Başarıyla eklendi",
 		"remove_success": "Başarıyla kaldırıldı",
 		"failure": "Son işlem sırasında bir hata oluştu, lütfen tekrar deneyin",
-		"report_success": "Raporunuz alındı. Bildiriminiz için teşekkürler",
+		"report_success": "Raporunuz alındı. Bildiriminiz için teşekkürler"
 	},
 	"profile_pages": {
 	    "main_info": "Ana Bilgiler",

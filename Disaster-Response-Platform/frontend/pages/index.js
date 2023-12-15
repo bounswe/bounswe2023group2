@@ -8,7 +8,10 @@ import { useEffect, useState } from 'react'
 import { Button } from '@nextui-org/react'
 import { FaFilter } from "react-icons/fa";
 import { FaSort } from "react-icons/fa";
-import Filter from '@/components/Filter'
+import Filter from '@/components/Filter';
+import { withIronSessionSsr } from 'iron-session/next';
+import sessionConfig from '@/lib/sessionConfig';
+import getLabels from '@/lib/getLabels';
 
 const Map = dynamic(() => import('../components/Map/Map'), {
   ssr: false,
@@ -37,3 +40,15 @@ export default function home() {
 home.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
+
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req }) {
+    const labels = await getLabels(req.session.language);
+    return {
+      props: {
+        labels
+      }
+    };
+  },
+  sessionConfig
+)

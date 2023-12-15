@@ -5,7 +5,7 @@
           {"name": "size", "label": {"TR": "Beden", "EN": "Size"}, "type": "text",  "placeholder": "Size"},
           {"name": "gender", "label": {"TR": "Cinsiyet", "EN": "Gender"}, "type": "text",  "placeholder": "Gender"},
           {"name": "age", "label": {"TR": "Yaş", "EN": "Age"}, "type": "text",  "placeholder": "Age"},
-          {"name": "subtype", "label": {"TR": "Alt Tür", "EN": "Subtype"}, "type": "text",  "placeholder":"Subtype"}
+          {"name": "subtype", "label": {"TR": "Alt Kategori", "EN": "Subtype"}, "type": "text",  "placeholder":"Subtype"}
       ]
   },
   "food": {
@@ -13,7 +13,7 @@
       "fields": [
           {"name": "expiration_date", "label": {"TR": "Son Kullanma Tarihi", "EN": "Expiration Date"}, "type": "date"},
           {"name": "allergens", "label": {"TR": "Alerjenler", "EN": "Allergens"}, "type": "text"},
-          {"name": "subtype", "label": {"TR": "Alt Tür", "EN": "Subtype"}, "type": "text"}
+          {"name": "subtype", "label": {"TR": "Alt Kategori", "EN": "Subtype"}, "type": "text"}
       ]
   },
   "shelter": {
@@ -50,7 +50,7 @@
       "fields": [
           {"name": "proficiency", "label": {"TR": "Yetkinlik", "EN": "Proficiency"}, "type": "text"},
           {"name": "number_of_people", "label": {"TR": "Kişi Sayısı", "EN": "Number of People"}, "type": "number"},
-          {"name": "subtype", "label": {"TR": "Alt Tür", "EN": "Subtype"}, "type": "text"}
+          {"name": "subtype", "label": {"TR": "Alt Kategori", "EN": "Subtype"}, "type": "text"}
       ]
   }
 }

@@ -1,5 +1,7 @@
 {
 	"_comment": "The labels were mostly categorized by their subject. The dynamic parts are stored in the backend and in components/forms.json.",
+	"this_language": "EN",
+	"other_language": "TR",
 	"profile": {
 		"username": "Username",
 		"first_name": "First Name",
@@ -13,7 +15,7 @@
 	    "education": "Education",
 	    "health_condition": "Health Condition",
 	    "blood_type": "Blood Type",
-	    "Address": "Address",
+	    "Address": "Address"
 	},
 	"profile_lists": {
 		"professions": {
@@ -43,7 +45,7 @@
  			"title": "Social Media",
  			"add_title": "Add Account",
  			"primary_label": "Site name",
- 			"secondary_label": "Profile URL",
+ 			"secondary_label": "Profile URL"
 
 		},
 		"skills": {
@@ -109,7 +111,7 @@
 		"add_success": "Successfully added",
 		"remove_success": "Succesfully removed",
 		"failure": "An error occurred during the last operation, please try again",
-		"report_success": "Your report has been received. Thank you for your help",
+		"report_success": "Your report has been received. Thank you for your help"
 	},
 	"profile_pages": {
 	    "main_info": "Main Info",
