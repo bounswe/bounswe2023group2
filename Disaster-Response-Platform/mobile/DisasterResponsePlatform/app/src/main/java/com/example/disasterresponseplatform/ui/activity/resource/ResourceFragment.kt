@@ -49,7 +49,7 @@ class ResourceFragment(private val resourceViewModel: ResourceViewModel) : Fragm
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentResourceBinding.inflate(inflater,container,false)
-        sendRequest()
+        if (isAdded) sendRequest()
         return binding.root
     }
 
