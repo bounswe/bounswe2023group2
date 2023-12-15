@@ -87,23 +87,11 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                // if the recycler view is scrolled
-                // above shrink the FAB
-                if (dy > 10 && fab.isExtended) {
-                    fab.shrink()
-                }
+                // Extend and shrink the Floating Action Button
+                if (dy > 10 && fab.isExtended) { fab.shrink() }
+                if (dy < -10 && !fab.isExtended) { fab.extend() }
+                if (!recyclerView.canScrollVertically(-1)) { fab.extend() }
 
-                // if the recycler view is scrolled
-                // above extend the FAB
-                if (dy < -10 && !fab.isExtended) {
-                    fab.extend()
-                }
-
-                // of the recycler view is at the first
-                // item always extend the FAB
-                if (!recyclerView.canScrollVertically(-1)) {
-                    fab.extend()
-                }
             }
         })
 
@@ -212,6 +200,10 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialog.window?.setGravity(Gravity.BOTTOM)
 
+        val locationSwitch = filterBinding.swLocationFilter
+        val locationLay = filterBinding.layLocationFilter
+        val typeSwitch = filterBinding.swTypeFilter
+        val typeLay = filterBinding.layTypeFilter
         val applyButton = filterBinding.btApply
         val cancelButton = filterBinding.btCancel
         val typesChipGroup = filterBinding.cgTypes
@@ -244,12 +236,20 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
             }
         }
 
+        // Set up Type Filter switch listener
+        typeSwitch.setOnClickListener {
+            typeLay.visibility = if (typeSwitch.isChecked) View.VISIBLE else View.GONE
+        }
+
+        // Set up Location Filter switch listener
+        locationSwitch.setOnClickListener {
+            locationLay.visibility = if (locationSwitch.isChecked) View.VISIBLE else View.GONE
+        }
+
         // Set up apply button click listener
         applyButton.setOnClickListener {
             sendRequest(gatherFilterDetails())
-            // Trigger the function with the selected parameters
             dialog.dismiss()
-
         }
 
         // Set up cancel button click listener
@@ -262,11 +262,19 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
     private fun gatherFilterDetails(): MutableMap<String, String> {
         val sortByChipGroup = filterBinding.cgSort
         val selectedSortById = filterBinding.cgSort.checkedChipId
-        val selectedSortBy = sortByChipGroup.findViewById<Chip>(selectedSortById)?.text.toString()
 
-        val orderChipGroup = filterBinding.cgSortOrder
-        val selectedOrderId = filterBinding.cgSortOrder.checkedChipId
-        val selectedOrder = orderChipGroup.findViewById<Chip>(selectedOrderId)?.text.toString()
+        val selectedSortBy: String = when (sortByChipGroup.findViewById<Chip>(selectedSortById)?.text) {
+            getString(R.string.sf_creation) -> "created_at"
+            getString(R.string.sf_last_update) -> "last_updated_at"
+            getString(R.string.sf_reliability) -> "upvote"
+            getString(R.string.sf_urgency) -> "urgency"
+            else -> ""
+        }
+
+        val selectedOrder = "desc"
+
+        val typeSwitch = filterBinding.swTypeFilter
+        val locationSwitch = filterBinding.swLocationFilter
 
         val typesChipGroup = filterBinding.cgTypes
         val selectedTypeIds = filterBinding.cgTypes.checkedChipIds
@@ -275,6 +283,10 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         val subtypesChipGroup = filterBinding.cgSubTypes
         val selectedSubTypeIds = subtypesChipGroup.checkedChipIds
         val selectedSubTypes = mutableListOf<String>()
+
+        val selectedXCoordinate = filterBinding.etCoordinateX.text.toString()
+        val selectedYCoordinate = filterBinding.etCoordinateY.text.toString()
+        val selectedMaxDistance = filterBinding.slDistance.value.toString()
 
         for (chipId in selectedTypeIds) {
             val chip = typesChipGroup.findViewById<Chip>(chipId)
@@ -291,15 +303,23 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         selectedSortBy.let { queries["sort_by"] = it }
         selectedOrder.let { queries["order"] = it }
         selectedTypes.let { selectedTypes ->
-            if (selectedTypes.isNotEmpty()) {
+            if (typeSwitch.isChecked && selectedTypes.isNotEmpty()) {
                 queries["types"] = selectedTypes.joinToString(",")
             }
         }
         selectedSubTypes.let { selectedSubTypes ->
-            if (selectedSubTypes.isNotEmpty()) {
+            if (typeSwitch.isChecked && selectedSubTypes.isNotEmpty()) {
                 queries["subtypes"] = selectedSubTypes.joinToString(",")
             }
         }
+
+        if (locationSwitch.isChecked && selectedXCoordinate.isNotBlank() && selectedYCoordinate.isNotBlank()){
+                selectedXCoordinate.let { queries["x"] = it }
+                selectedYCoordinate.let { queries["y"] = it }
+                selectedMaxDistance.let { queries["distance_max"] = it
+                }
+        }
+
         return queries
     }
 

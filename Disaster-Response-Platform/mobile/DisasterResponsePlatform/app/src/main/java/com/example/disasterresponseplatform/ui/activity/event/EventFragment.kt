@@ -49,23 +49,11 @@ class EventFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                // if the recycler view is scrolled
-                // above shrink the FAB
-                if (dy > 30 && fab.isExtended) {
-                    fab.shrink()
-                }
+                // Extend and shrink the Floating Action Button
+                if (dy > 10 && fab.isExtended) { fab.shrink() }
+                if (dy < -10 && !fab.isExtended) { fab.extend() }
+                if (!recyclerView.canScrollVertically(-1)) { fab.extend() }
 
-                // if the recycler view is scrolled
-                // above extend the FAB
-                if (dy < -30 && !fab.isExtended) {
-                    fab.extend()
-                }
-
-                // of the recycler view is at the first
-                // item always extend the FAB
-                if (!recyclerView.canScrollVertically(-1)) {
-                    fab.extend()
-                }
             }
         })
 

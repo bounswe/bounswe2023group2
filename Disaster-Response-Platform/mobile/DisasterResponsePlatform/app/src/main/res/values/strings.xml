@@ -66,16 +66,20 @@
     <string name="sf_title">Sort &amp; Filter</string>
     <string name="sf_sort_by">Sort By:</string>
     <string name="sf_sort_order">Sort Order:</string>
+    <string name="sf_type_filter">Filter By Type</string>
     <string name="sf_types">Select a Type:</string>
-    <string name="sf_subtypes">Select Sub-Types:</string>
+    <string name="sf_subtypes">Select Sub-Types (Optional):</string>
+    <string name="sf_location_filter">Filter By Location</string>
     <string name="sf_cancel">Cancel</string>
     <string name="sf_apply">Apply</string>
-    <string name="sf_date">created_at</string>
-    <string name="sf_reliability">reliability</string>
-    <string name="sf_urgency">urgency</string>
+    <string name="sf_creation">Creation Time</string>
+    <string name="sf_last_update">Last Update Time</string>
+    <string name="sf_reliability">Reliability</string>
+    <string name="sf_urgency">Urgency</string>
     <string name="sf_ascending">asc</string>
     <string name="sf_descending">desc</string>
-    <string name="sf_distance">Distance (0–1000 km):</string>
+    <string name="sf_distance">Distance:\n(0–20 km)</string>
+    <string name="sf_from_location">From\nLocation:</string>
     <string name="sf_upvote">upvote</string>
 
     <!-- PAGE NAMES -->
