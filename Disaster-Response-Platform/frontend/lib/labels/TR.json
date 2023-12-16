@@ -101,11 +101,13 @@
 		"update": "Güncelle",
 		"remove": "Kaldır",
 		"cancel": "Vazgeç",
+		"close": "Kapat",
 		"loading": "Yükleniyor"
 	},
 	"sort_filter": {
 		"sort": "Sırala",
 		"filter": "Filtrele",
+		"filters": "Filtreler",
 		"sort_criterion": "Sıralama kriteri",
 		"sort_direction": "Sıralama yönü",
 		"ASC": "Artan",
@@ -114,6 +116,7 @@
 		"urgency": "Aciliyet",
 		"status": "Durum",
 		"active": "Aktif",
+		"active_only": "Sadece aktif olanlar",
 		"inactive": "İnaktif"
 	},
 	"sort_criteria": {
@@ -121,8 +124,11 @@
 		"status": "Durum",
 		"occur_at": "İhtiyacın olduğu tarih",
 		"type": "Kategori",
+		"subtype": "Alt kategori",
 		"upvote": "Güvenilirlik",
-		"currentQuantity": "Mevcut Miktar"
+		"currentQuantity": "Mevcut miktar",
+		"due_date": "Son kullanım tarihi",
+		"description": "Açıklama"
 	},
 	"feedback": {
 		"save_success": "Başarıyla kaydedildi",
@@ -164,6 +170,15 @@
 	"placeholders": {
 		"phone_number": "05321234567",
 		"password": "Şifre en az bir büyük harf ve bir rakam içermelidir",
-		"email": "örnek@adres.com"
+		"email": "örnek@adres.com",
+		"search_bar": "Ne arıyorsunuz?",
+		"resource_type": "Gıda",
+		"resource_subtype": "Konserve gıda"
+	},
+	"map": {
+		"choose_scan_center": "Taramak istediğiniz alanın merkezini seçiniz",
+		"choose_location": "Haritada yerinizi işaretleyin",
+		"scan_certain_area": "Belirli bir alanı tara",
+		"you_are_here": "You are here"
 	}
 }

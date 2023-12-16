@@ -102,11 +102,13 @@
 		"update": "Update",
 		"remove": "Remove",
 		"cancel": "Cancel",
+		"close": "Close",
 		"loading": "Loading"
 	},
 	"sort_filter": {
 		"sort": "Sort",
 		"filter": "Filter",
+		"filters": "Filters",
 		"sort_criterion": "Sorting metric",
 		"sort_direction": "Sort direction",
 		"ASC": "Ascending",
@@ -115,6 +117,7 @@
 		"urgency": "Urgency",
 		"status": "Status",
 		"active": "Active",
+		"active_only": "Active only",
 		"inactive": "Inactive"
 	},
 	"sort_criteria": {
@@ -122,8 +125,11 @@
 		"status": "Status",
 		"occur_at": "Date of need",
 		"type": "Type",
+		"subtype": "Subtype",
 		"upvote": "Reliability",
-		"currentQuantity": "Current quantity"
+		"currentQuantity": "Current quantity",
+		"due_date": "Due Date",
+		"description": "Description"
 	},
 	"feedback": {
 		"save_success": "Successfully saved",
@@ -159,12 +165,18 @@
 		"profile": "Profile",
 		"edit_profile": "User Settings"
 	},
-	"forms": {
-		"other": "Other"
-	},
 	"placeholders": {
 		"phone_number": "05321234567",
 		"password": "Password must contain an uppercase letter and a number",
-		"email": "example@address.com"
+		"email": "example@address.com",
+		"search_bar": "Enter your search",
+		"resource_type": "Food",
+		"resource_subtype": "Canned food"
+	},
+	"map": {
+		"choose_scan_center": "Choose the center of the area you want to scan",
+		"choose_location": "Choose your location in the map",
+		"scan_certain_area": "Scan a certain area",
+		"you_are_here": "You are here"
 	}
 }
