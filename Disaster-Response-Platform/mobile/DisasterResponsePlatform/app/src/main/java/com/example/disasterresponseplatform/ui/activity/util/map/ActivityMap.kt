@@ -1,21 +1,30 @@
 package com.example.disasterresponseplatform.ui.activity.util.map
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.ActivityMapBinding
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapListener
@@ -33,7 +42,7 @@ interface OnCoordinatesSelectedListener {
     fun onCoordinatesSelected(x: Double, y: Double)
 }
 
-class ActivityMap : Fragment() {
+class ActivityMap : DialogFragment() {
 
     private var _binding: ActivityMapBinding? = null
     private val binding get() = _binding!!
@@ -43,6 +52,7 @@ class ActivityMap : Fragment() {
     private var selectedPoint: GeoPoint? = null
     private lateinit var userLocationMarker: Marker
     var coordinatesSelectedListener: OnCoordinatesSelectedListener? = null
+    var isDialog = false // to store whether it's showed up as a fragment or a dialog
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -59,10 +69,27 @@ class ActivityMap : Fragment() {
         }
     }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+
+        // Set the width and height of the dialog window
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        dialog.window?.setGravity(Gravity.BOTTOM)
+
+        return dialog
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = ActivityMapBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    // this is for tracking from caller Class whether user is clicked confirm button
+    private val isSend = MutableLiveData<Boolean>(false)
+    fun getLocationChosen(): LiveData<Boolean> = isSend
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,8 +103,12 @@ class ActivityMap : Fragment() {
         }
 
         binding.confirmButton.setOnClickListener {
+            isSend.postValue(true)
             coordinatesSelectedListener?.onCoordinatesSelected(marker.position.latitude, marker.position.longitude)
-            requireActivity().onBackPressed()
+            if (isDialog)
+                dismiss()
+            else
+                requireActivity().onBackPressed()
         }
     }
 
