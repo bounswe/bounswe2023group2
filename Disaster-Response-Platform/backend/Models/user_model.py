@@ -86,6 +86,7 @@ class UserInfo(BaseModel):
     phone_number: str | None= None
     is_email_verified: bool = False
     private_account: bool = False
+    user_role: UserRole = Field(default=None)
     proficiency: Optional[ProfRequest] = None
 
     

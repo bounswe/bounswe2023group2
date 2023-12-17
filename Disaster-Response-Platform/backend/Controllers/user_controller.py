@@ -135,7 +135,9 @@ async def get_user_info(response:Response,username: str, current_user: UserProfi
                         last_name=user.last_name,
                         phone_number=user.phone_number,
                         is_email_verified=user.is_email_verified,
-                        private_account=user.private_account)
+                        private_account=user.private_account, 
+                        proficiency=user.proficiency,
+                        user_role= user.user_role)
 
     return user_info
 

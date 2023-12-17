@@ -135,7 +135,7 @@ def create_user(user: CreateUserRequest):
         
     hash= get_password_hash(user.password)
     user.password=hash
-    user.proficiency= []
+    user.proficiency= {}
     user.user_role= UserRole.AUTHENTICATED.value #default signed up user is authenticated
   
     insert_result = userDb.insert_one(user.dict())
@@ -165,7 +165,7 @@ def get_user(username_or_email_or_phone: str):
             {"phone_number": username_or_email_or_phone}
         ]
     })
-
+    print("hey")
     if user_document is not None:
         return UserProfile(**user_document)
 
