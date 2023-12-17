@@ -209,6 +209,10 @@ class ActivityMap : DialogFragment() {
         _binding = null
     }
 
+    override fun getTheme(): Int {
+        return R.style.FullScreenDialogTheme
+    }
+
     private fun getLastKnownLocation(): Location? {
         try {
             mLocationManager =
