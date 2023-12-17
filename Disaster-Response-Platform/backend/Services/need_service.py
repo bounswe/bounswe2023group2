@@ -103,7 +103,7 @@ def get_needs(
     y: float = None,
     distance_max: float = None,
     sort_by: str = 'created_at',
-    order: Optional[str] = 'asc'
+    order: Optional[str] = 'desc'
 ) -> list[dict]:
     projection = {
             "_id": {"$toString": "$_id"},
