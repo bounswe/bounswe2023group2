@@ -207,6 +207,8 @@ class ResourceFragment(
 
         val locationSwitch = filterBinding.swLocationFilter
         val locationLay = filterBinding.layLocationFilter
+        val etXCoordinate = filterBinding.etCoordinateX
+        val etYCoordinate = filterBinding.etCoordinateY
         val typeSwitch = filterBinding.swTypeFilter
         val typeLay = filterBinding.layTypeFilter
         val applyButton = filterBinding.btApply
@@ -257,6 +259,8 @@ class ResourceFragment(
         mapButton.setOnClickListener {
             if (mapButton.isChecked) {
                 mapButton.text = getString(R.string.sf_location_select)
+                etXCoordinate.text?.clear()
+                etYCoordinate.text?.clear()
                 mapButton.isChecked = false
             } else {
                 mapFragment.isDialog = true // arrange that as a dialog instead of fragment
