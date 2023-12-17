@@ -1,7 +1,7 @@
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Textarea } from "@nextui-org/react";
 import { ToastContainer, toast } from 'react-toastify';
 
-export default function ReportModal({ isOpen, onOpenChange, reported }) {
+export default function ReportModal({ isOpen, onOpenChange, reported, labels }) {
 
   async function reportUser(event) {
 
@@ -10,7 +10,7 @@ export default function ReportModal({ isOpen, onOpenChange, reported }) {
     const formData = Object.fromEntries(form.entries());
     const body = {
       reported,
-      reason: formData.reason
+      description: formData.description
     };
 
     const response = await fetch('/api/report-user', {
@@ -22,10 +22,10 @@ export default function ReportModal({ isOpen, onOpenChange, reported }) {
     });
 
     if (!response.ok) {
-      toast("Bir hata oluştu :(");
+      toast(labels.feedback.failure);
       return;
     }
-    toast("Başarıyla raporlandı");
+    toast(labels.feedback.report_success);
 
   }
 
@@ -34,11 +34,11 @@ export default function ReportModal({ isOpen, onOpenChange, reported }) {
       <ModalContent>
         {(onClose) => (
           <form id="report-modal" onSubmit={() => {reportUser(event); onClose()}}>
-            <ModalHeader className="flex flex-col gap-1">Raporla</ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">{labels.admin.report}</ModalHeader>
             <ModalBody>
-            	<Textarea name="reason" id="reason" type="text"
+            	<Textarea name="description" id="description" type="text"
                       className="border-none pb-6"
-                      label="Raporlama sebebi"
+                      label={labels.admin.description}
                       labelPlacement='outside'
                       variant='bordered'
                       required
@@ -46,10 +46,10 @@ export default function ReportModal({ isOpen, onOpenChange, reported }) {
             </ModalBody>
             <ModalFooter>
               <Button color="danger" variant="light" onPress={onClose}>
-                Vazgeç
+                {labels.UI.cancel}
               </Button>
               <Button color="primary" type="submit">
-                Raporla
+                {labels.admin.report}
               </Button>
             </ModalFooter>
           </form>

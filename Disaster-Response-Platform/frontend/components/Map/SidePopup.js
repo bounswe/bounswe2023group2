@@ -3,7 +3,7 @@ import React from 'react';
 import styles from "./SidePopup.module.scss";
 // Import your styles here if needed
 
-function SidePopup({ resource, closePopup }) {
+function SidePopup({ resource, closePopup, labels }) {
   if (!resource) return null;
 
   return (
@@ -12,13 +12,13 @@ function SidePopup({ resource, closePopup }) {
         onClick={closePopup}
         className={styles.closeButton}
       >
-        Close
+        {labels.UI.close}
       </button>
       <div className={styles.text}>
       <h2 className={styles.title}>Resource Details</h2>
       <div className={styles.content}>
-        <p>Type: {resource.type}</p>
-        <p>Description: {resource.description}</p>
+        <p>{labels.sort_criteria.type}: {resource.type}</p>
+        <p>{labels.sort_criteria.description}: {resource.description}</p>
         {/* Add more details as needed */}
       </div>
       </div>
