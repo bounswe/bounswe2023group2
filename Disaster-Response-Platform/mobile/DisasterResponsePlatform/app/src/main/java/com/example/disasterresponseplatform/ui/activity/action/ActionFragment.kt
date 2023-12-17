@@ -28,6 +28,8 @@ import com.example.disasterresponseplatform.databinding.FragmentActionBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
+import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.gson.Gson
@@ -37,12 +39,16 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() {
+class ActionFragment(
+    private val actionViewModel: ActionViewModel
+) : Fragment(),
+    OnCoordinatesSelectedListener {
 
     private lateinit var binding: FragmentActionBinding
     private lateinit var filterBinding: SortAndFilterBinding
     private lateinit var searchView: SearchView
     private var requireActivity: FragmentActivity? = null
+    private val mapFragment = ActivityMap()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -204,11 +210,12 @@ class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() 
         val typeLay = filterBinding.layTypeFilter
         val applyButton = filterBinding.btApply
         val cancelButton = filterBinding.btCancel
+        val mapButton = filterBinding.btSelectFromMap
         val typesChipGroup = filterBinding.cgTypes
-        val subtypesChipGroup = filterBinding.cgSubTypes
-        val subtypesTitle = filterBinding.tvSubType
 
         filterBinding.chUrgency.visibility = View.GONE
+        filterBinding.cgSubTypes.visibility = View.GONE
+        filterBinding.tvSubType.visibility = View.GONE
 
         // Add chips from action_types array into Type chip group
         for (actionType in resources.getStringArray(R.array.action_types)) {
@@ -222,20 +229,6 @@ class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() 
             typesChipGroup.addView(chip)
         }
 
-        // Set up type chips select listener
-        typesChipGroup.setOnCheckedChangeListener { group, checkedId ->
-            val checkedChip = group.findViewById<Chip>(checkedId)
-            // Perform actions with the checked chip here
-            if(checkedChip == null) {
-                // Delete all type-specific fields
-                filterBinding.cgSubTypes.removeAllViews()
-                subtypesTitle.visibility = ViewGroup.GONE
-            } else {
-                subtypesTitle.visibility = ViewGroup.VISIBLE
-                typeChanged(checkedChip.text.toString())
-            }
-        }
-
         // Set up Type Filter switch listener
         typeSwitch.setOnClickListener {
             typeLay.visibility = if (typeSwitch.isChecked) View.VISIBLE else View.GONE
@@ -244,6 +237,18 @@ class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() 
         // Set up Location Filter switch listener
         locationSwitch.setOnClickListener {
             locationLay.visibility = if (locationSwitch.isChecked) View.VISIBLE else View.GONE
+        }
+
+        // Set up apply button click listener
+        mapButton.setOnClickListener {
+            if (mapButton.isChecked) {
+                mapButton.text = getString(R.string.sf_location_select)
+                mapButton.isChecked = false
+            } else {
+                mapFragment.isDialog = true // arrange that as a dialog instead of fragment
+                mapFragment.coordinatesSelectedListener = this@ActionFragment
+                mapFragment.show(parentFragmentManager, "mapDialog")
+            }
         }
 
         // Set up apply button click listener
@@ -279,22 +284,15 @@ class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() 
         val selectedTypeIds = filterBinding.cgTypes.checkedChipIds
         val selectedTypes = mutableListOf<String>()
 
-        val subtypesChipGroup = filterBinding.cgSubTypes
-        val selectedSubTypeIds = subtypesChipGroup.checkedChipIds
-        val selectedSubTypes = mutableListOf<String>()
-
         val selectedXCoordinate = filterBinding.etCoordinateX.text.toString()
         val selectedYCoordinate = filterBinding.etCoordinateY.text.toString()
         val selectedMaxDistance = filterBinding.slDistance.value.toString()
 
         for (chipId in selectedTypeIds) {
             val chip = typesChipGroup.findViewById<Chip>(chipId)
-            chip?.let { selectedTypes.add(it.text.toString()) }
-        }
-
-        for (chipId in selectedSubTypeIds) {
-            val chip = subtypesChipGroup.findViewById<Chip>(chipId)
-            chip?.let { selectedSubTypes.add(it.text.toString()) }
+            chip?.let {
+                selectedTypes.add(convertTypeLabelToName(it.text.toString()))
+            }
         }
 
         val queries = mutableMapOf<String, String>()
@@ -304,11 +302,6 @@ class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() 
         selectedTypes.let { selectedTypes ->
             if (typeSwitch.isChecked && selectedTypes.isNotEmpty()) {
                 queries["types"] = selectedTypes.joinToString(",")
-            }
-        }
-        selectedSubTypes.let { selectedSubTypes ->
-            if (typeSwitch.isChecked && selectedSubTypes.isNotEmpty()) {
-                queries["subtypes"] = selectedSubTypes.joinToString(",")
             }
         }
 
@@ -322,103 +315,12 @@ class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() 
         return queries
     }
 
-
-    /**
-     * This function triggered when Type field changed.
-     * Makes api call to retrieve type-specific form fields of selected type.
-     * Creates type-specific form fields.
-     * Adds these fields into laySpecific layout that holds type-specific fields such as allergens, expiration_date.
-     * Creates subtype adapter and connects it.
-     */
-    private fun typeChanged(selectedType: String) {
-
-        // Delete all type-specific fields
-        val subtypesChipGroup = filterBinding.cgSubTypes
-        subtypesChipGroup.removeAllViews()
-
-        // Find type-specific fields and subType list
-        val networkManager = NetworkManager()
-        val headers = mapOf(
-            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
-            "Content-Type" to "application/json"
-        )
-
-        networkManager.makeRequest(
-            endpoint = Endpoint.FORM_FIELDS_TYPE,
-            requestType = RequestType.GET,
-            id = selectedType,
-            headers = headers,
-            callback = object : Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    // Handle failure when the request fails
-                }
-
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
-
-                    if (response.isSuccessful) {
-                        val rawJson = response.body()?.string()
-                        if (rawJson != null) {
-                            try {
-                                Log.d("ResponseSuccess", "Body: $rawJson")
-                                val gson = Gson()
-                                val formFieldsActionResponse = gson.fromJson(
-                                    rawJson,
-                                    ActionBody.ActionFormFieldsResponse::class.java
-                                )
-                                if (formFieldsActionResponse != null) { // TODO check null
-                                    Log.d(
-                                        "ResponseSuccess",
-                                        "formFieldsActionResponse: $formFieldsActionResponse"
-                                    )
-
-                                    val fields: List<ActionBody.ActionFormFields> =
-                                        formFieldsActionResponse.fields
-
-                                    // get subtype field from the response and add them into subtypesChipGroup
-                                    for (field in fields) {
-                                        if (field.type == "select") {
-                                            if (field.name == "subtype") {
-
-                                                val options = field.options ?: emptyList()
-                                                for (actionType in options) {
-                                                    val chip = Chip(requireContext())
-                                                    chip.text = actionType
-                                                    chip.isCheckable = true
-                                                    chip.layoutParams = LinearLayout.LayoutParams(
-                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                                                    )
-                                                    subtypesChipGroup.addView(chip)
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            } catch (e: IOException) {
-                                // Handle IOException if reading the response body fails
-                                Log.e(
-                                    "ResponseError",
-                                    "Error reading response body: ${e.message}"
-                                )
-                            }
-                        } else {
-                            Log.d("ResponseSuccess", "Body is null")
-                        }
-                    } else {
-                        val errorBody = response.errorBody()?.string()
-                        if (errorBody != null) {
-                            var responseCode = response.code()
-                            Log.d("ResponseSuccess", "Body: $errorBody")
-                        }
-                    }
-                }
-            }
-        )
+    private fun convertTypeLabelToName(typeLabel: String) : String {
+        val typeName = when (typeLabel) {
+            getString(R.string.need_resource) -> "need_resource"
+            else -> ""
+        }
+        return typeName
     }
 
     private fun addFragment(fragment: Fragment, fragmentName: String) {
@@ -426,5 +328,12 @@ class ActionFragment(private val actionViewModel: ActionViewModel) : Fragment() 
         ft.replace(R.id.container, fragment)
         ft.addToBackStack(fragmentName)
         ft.commit()
+    }
+
+    override fun onCoordinatesSelected(x: Double, y: Double) {
+        filterBinding.etCoordinateX.setText(x.toString())
+        filterBinding.etCoordinateY.setText(y.toString())
+        filterBinding.btSelectFromMap.isChecked = true
+        filterBinding.btSelectFromMap.text = getString(R.string.sf_location_selected)
     }
 }

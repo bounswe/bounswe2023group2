@@ -2,7 +2,6 @@ package com.example.disasterresponseplatform.ui.activity.util.map
 
 import android.Manifest
 import android.app.Dialog
-import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -20,7 +19,6 @@ import android.view.Window
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

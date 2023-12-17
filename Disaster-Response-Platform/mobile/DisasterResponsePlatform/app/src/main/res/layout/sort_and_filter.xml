@@ -132,6 +132,24 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btSelectFromMap"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:checkable="true"
+                android:text="@string/sf_location_select"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_map_2"
+                app:iconGravity="textStart"
+                app:layout_constraintBottom_toBottomOf="@+id/tvFromLoc"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/slDistance"
+                app:layout_constraintTop_toTopOf="@+id/tvFromLoc"
+                app:toggleCheckedStateOnClick="false" />
+
             <TextView
                 android:id="@+id/tvDist"
                 android:layout_width="wrap_content"
@@ -139,8 +157,8 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/sf_distance"
                 android:textAlignment="center"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btSelectFromMap" />
 
             <com.google.android.material.slider.Slider
                 android:id="@+id/slDistance"
@@ -161,9 +179,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sf_from_location"
                 android:textAlignment="center"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDist" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/lyCoordinateX"
@@ -172,11 +190,10 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/field_coordinate_x"
                 app:endIconMode="clear_text"
-                android:layout_marginStart="20dp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvFromLoc"
                 app:layout_constraintEnd_toStartOf="@+id/lyCoordinateY"
-                app:layout_constraintStart_toEndOf="@+id/tvFromLoc"
-                app:layout_constraintTop_toTopOf="@+id/tvFromLoc">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/slDistance"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCoordinateX"
@@ -198,7 +215,8 @@
             app:layout_constraintTop_toTopOf="@+id/lyCoordinateX"
             app:layout_constraintBottom_toBottomOf="@+id/lyCoordinateX"
             app:layout_constraintStart_toEndOf="@id/lyCoordinateX"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etCoordinateY"

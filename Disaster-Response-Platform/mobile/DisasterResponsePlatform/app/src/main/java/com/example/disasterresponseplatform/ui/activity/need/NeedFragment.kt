@@ -14,6 +14,7 @@ import android.view.Window
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.text.set
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
@@ -28,6 +29,8 @@ import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
+import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.gson.Gson
@@ -37,12 +40,16 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
+class NeedFragment(
+    private val needViewModel: NeedViewModel
+) : Fragment(),
+    OnCoordinatesSelectedListener {
 
     private lateinit var binding: FragmentNeedBinding
     private lateinit var filterBinding: SortAndFilterBinding
     private lateinit var searchView: SearchView
     private var requireActivity: FragmentActivity? = null
+    private val mapFragment = ActivityMap()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -205,6 +212,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         val typeLay = filterBinding.layTypeFilter
         val applyButton = filterBinding.btApply
         val cancelButton = filterBinding.btCancel
+        val mapButton = filterBinding.btSelectFromMap
         val typesChipGroup = filterBinding.cgTypes
         val subtypesChipGroup = filterBinding.cgSubTypes
         val subtypesTitle = filterBinding.tvSubType
@@ -231,7 +239,7 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
                 subtypesTitle.visibility = ViewGroup.GONE
             } else {
                 subtypesTitle.visibility = ViewGroup.VISIBLE
-                typeChanged(checkedChip.text.toString())
+                typeChanged(convertTypeLabelToName(checkedChip.text.toString()))
             }
         }
 
@@ -243,6 +251,18 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         // Set up Location Filter switch listener
         locationSwitch.setOnClickListener {
             locationLay.visibility = if (locationSwitch.isChecked) View.VISIBLE else View.GONE
+        }
+
+        // Set up apply button click listener
+        mapButton.setOnClickListener {
+            if (mapButton.isChecked) {
+                mapButton.text = getString(R.string.sf_location_select)
+                mapButton.isChecked = false
+            } else {
+                mapFragment.isDialog = true // arrange that as a dialog instead of fragment
+                mapFragment.coordinatesSelectedListener = this@NeedFragment
+                mapFragment.show(parentFragmentManager, "mapDialog")
+            }
         }
 
         // Set up apply button click listener
@@ -289,7 +309,9 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
 
         for (chipId in selectedTypeIds) {
             val chip = typesChipGroup.findViewById<Chip>(chipId)
-            chip?.let { selectedTypes.add(it.text.toString()) }
+            chip?.let {
+                selectedTypes.add(convertTypeLabelToName(it.text.toString()))
+            }
         }
 
         for (chipId in selectedSubTypeIds) {
@@ -421,10 +443,33 @@ class NeedFragment(private val needViewModel: NeedViewModel) : Fragment() {
         )
     }
 
+    private fun convertTypeLabelToName(typeLabel: String) : String {
+        val typeName = when (typeLabel) {
+            getString(R.string.cloth) -> "cloth"
+            getString(R.string.food) -> "food"
+            getString(R.string.drink) -> "drink"
+            getString(R.string.shelter) -> "shelter"
+            getString(R.string.medication) -> "medication"
+            getString(R.string.transportation) -> "transportation"
+            getString(R.string.tool) -> "tool"
+            getString(R.string.human) -> "human"
+            getString(R.string.other) -> "other"
+            else -> ""
+        }
+        return typeName
+    }
+
     private fun addFragment(fragment: Fragment, fragmentName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
         ft.addToBackStack(fragmentName)
         ft.commit()
+    }
+
+    override fun onCoordinatesSelected(x: Double, y: Double) {
+        filterBinding.etCoordinateX.setText(x.toString())
+        filterBinding.etCoordinateY.setText(y.toString())
+        filterBinding.btSelectFromMap.isChecked = true
+        filterBinding.btSelectFromMap.text = getString(R.string.sf_location_selected)
     }
 }
