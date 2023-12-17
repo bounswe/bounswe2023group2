@@ -45,7 +45,7 @@ def autocomplete_address_and_convert_to_coordinates(input_address):
     if complete_address:
         print(f"Complete Address: {complete_address}")
         # Get coordinates of the complete address
-        coordinates = geocode(complete_address, api_key)
+        coordinates = convert_address_to_coordinates(complete_address)
         
         if coordinates:
             return coordinates
