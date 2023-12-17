@@ -110,7 +110,10 @@ class EmergencyFragment : Fragment(), OnCoordinatesSelectedListener {
         val applyButton = filterBinding.btApply
         val cancelButton = filterBinding.btCancel
         val mapButton = filterBinding.btSelectFromMap
-        val typesChipGroup = filterBinding.cgTypes
+
+        filterBinding.chUrgency.visibility = View.GONE
+        filterBinding.cgSubTypes.visibility = View.GONE
+        filterBinding.tvSubType.visibility = View.GONE
 
         // Set up Type Filter switch listener
         typeSwitch.setOnClickListener {
@@ -122,7 +125,7 @@ class EmergencyFragment : Fragment(), OnCoordinatesSelectedListener {
             locationLay.visibility = if (locationSwitch.isChecked) View.VISIBLE else View.GONE
         }
 
-        // Set up apply button click listener
+        // Set up map button click listener
         mapButton.setOnClickListener {
             if (mapButton.isChecked) {
                 mapButton.text = getString(R.string.sf_location_select)

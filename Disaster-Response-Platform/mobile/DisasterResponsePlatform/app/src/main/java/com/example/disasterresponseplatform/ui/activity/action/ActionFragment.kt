@@ -241,7 +241,8 @@ class ActionFragment(
             locationLay.visibility = if (locationSwitch.isChecked) View.VISIBLE else View.GONE
         }
 
-        // Set up apply button click listener
+        trackUserPickLocation()
+        // Set up map button click listener
         mapButton.setOnClickListener {
             if (mapButton.isChecked) {
                 mapButton.text = getString(R.string.sf_location_select)
@@ -334,10 +335,27 @@ class ActionFragment(
         ft.commit()
     }
 
+    private fun trackUserPickLocation(){
+        mapFragment.getLocationChosen().observe(requireActivity!!){chosen ->
+            if (chosen){
+                Log.i("LocationMAP","IS CHOSEN")
+                parentFragmentManager.setFragmentResultListener(
+                    "coordinatesKey",
+                    viewLifecycleOwner
+                ) { _, bundle ->
+                    filterBinding.etCoordinateX.setText(bundle.getDouble("x_coord").toString())
+                    filterBinding.etCoordinateY.setText(bundle.getDouble("y_coord").toString())
+                    filterBinding.btSelectFromMap.isChecked = true
+                    filterBinding.btSelectFromMap.text = getString(R.string.sf_location_selected)
+                }
+                // to ensure it's not continuously listening the port after the location is received
+                parentFragmentManager.clearFragmentResultListener("coordinatesKey")
+            }
+        }
+    }
+
     override fun onCoordinatesSelected(x: Double, y: Double) {
-        filterBinding.etCoordinateX.setText(x.toString())
-        filterBinding.etCoordinateY.setText(y.toString())
-        filterBinding.btSelectFromMap.isChecked = true
-        filterBinding.btSelectFromMap.text = getString(R.string.sf_location_selected)
+        //Log.d("YOOO x", x.toString())
+        //Log.d("YOOO y", y.toString())
     }
 }
