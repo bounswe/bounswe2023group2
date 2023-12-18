@@ -123,12 +123,17 @@ async def get_user_info(response:Response,username: str, current_user: UserProfi
       
     #if it is another user, the account
     if current_user.username != username and user.private_account:
-        error= Error(ErrorMessage="Get user info failed", ErrorDetail= "User's information is private")
-        response.status_code= status.HTTP_403_FORBIDDEN
-        return error
+        user_info= UserInfo(username=user.username,
+                    first_name=user.first_name,
+                    last_name=user.last_name,
+                    private_account=user.private_account, 
+                    proficiency=user.proficiency,
+                    user_role= user.user_role)
+       
+        response.status_code= status.HTTP_200_OK
+        return user_info
     
 
-    # Users can access their own information, return it here 
     user_info= UserInfo(username=user.username,
                         email=user.email,
                         first_name=user.first_name,
