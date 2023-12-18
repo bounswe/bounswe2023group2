@@ -1,9 +1,7 @@
 from fastapi import FastAPI, Request, Depends, Response
 from fastapi.middleware.cors import CORSMiddleware
 from Services.build_API_returns import *
-
-from fastapi.responses import JSONResponse
-from http import HTTPStatus
+from Controllers import annotation_controller
 
 app = FastAPI()
 
@@ -16,7 +14,7 @@ app.add_middleware(
 )
 
 # ROUTES
-#app.include_router(resource_controller.router, prefix = "/api/annotations", tags=["annotations"])
+app.include_router(annotation_controller.router, prefix = "/api/annotations", tags=["annotations"])
 @app.get("/")
 
 async def root(some_parameter:str, response:Response):

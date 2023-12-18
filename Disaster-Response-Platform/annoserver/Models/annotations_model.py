@@ -1,9 +1,5 @@
 from pydantic import BaseModel, Field, HttpUrl
 from typing import List, Optional
-# Annotation olayı bayağı basitleşecek
-# Kullandığımız servis halledecek. Sadece oraya gideacek olanlar için API call vs.
-
-
 
 class TargetSelector(BaseModel):
     source: Optional[str]
@@ -71,7 +67,7 @@ class W3CAnnotation(BaseModel):
     items: Optional[List[Annotation]]
 
 
-sample_annotation_data = {
+sample_annotation_data:W3CAnnotation = {
     "context": "http://www.w3.org/ns/anno.jsonld",
     "type": "Annotation",
     "id": "http://dapp.org/annotated",
