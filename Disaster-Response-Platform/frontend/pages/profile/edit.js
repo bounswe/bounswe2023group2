@@ -6,8 +6,9 @@ import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
 import { useState } from "react";
+import getLabels from '@/lib/getLabels';
 
-export default function Edit({ guest, expired, current_main_fields, current_optional_fields, accessToken }) {
+export default function Edit({ guest, expired, current_main_fields, current_optional_fields, accessToken, labels }) {
 
   const router = useRouter();
   const [checked, setChecked] = useState(current_main_fields.private_account);
@@ -55,27 +56,13 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
     return (
       <div class="text-center text-xl">
         <br /><br /><br />
-        Oturum açmaya yönlendiriliyorsunuz...
+        {labels.auth.redirect_to_login}
       </div>
     );
   }
 
-  const main_tr = {
-    "first_name": "Ad",
-    "last_name": "Soyad",
-    "email": "Email",
-    "phone_number": "Telefon No"
-  }
-
-  const optional_tr = {
-    "date_of_birth": "Doğum Tarihi",
-    "nationality": "Ülke",
-    "identity_number": "Kimlik No",
-    "education": "Öğrenim",
-    "health_condition": "Sağlık Durumu",
-    "blood_type": "Kan Grubu",
-    "Address": "Adres"
-  }
+  const main_fields = ["first_name", "last_name", "email", "phone_number"]
+  const optional_fields = ["date_of_birth", "nationality", "identity_number", "education", "health_condition", "blood_type", "Address"]
 
   if ("date_of_birth" in current_optional_fields)
     current_optional_fields["date_of_birth"] = current_optional_fields["date_of_birth"].substring(0, 10);
@@ -85,30 +72,30 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
       <form onSubmit={onSubmit}>
         <div class="flex justify-around space-x-8">
           <GrayBox className="w-96">
-            <h3 class="object-top text-center text-xl"> Ana Bilgiler </h3>
-            {Object.entries(main_tr).map(([key, title]) => InputField({
+            <h3 class="object-top text-center text-xl"> {labels.profile_pages.main_info} </h3>
+            {main_fields.map(key => InputField({
                     'key': key,
-                    'title': title,
+                    'title': labels.profile[key],
                     'placeholder': key in current_main_fields ? current_main_fields[key] : "",
                     'type': (key === "phone_number") ? 'number' : 'text',
                     'required': false}))}
             <div key='private_account' class="my-3">
               <input name='private_account' id='private_account' type='checkbox' defaultChecked={checked} onChange={() => setChecked((state) => !state)} />
-              <label htmlFor='private_account' class="ml-2">İletişim bilgileri ve yan bilgiler gizlensin</label>
+              <label htmlFor='private_account' class="ml-2">{labels.profile_pages.private_account}</label>
             </div>
           </GrayBox>
           <GrayBox className="w-96">
-            <h3 class="object-top text-center text-xl"> Diğer Bilgiler </h3>
-            {Object.entries(optional_tr).map(([key, title]) => InputField({
+            <h3 class="object-top text-center text-xl"> {labels.profile_pages.optional_info} </h3>
+            {optional_fields.map(key => InputField({
                     'key': key,
-                    'title': title,
+                    'title': labels.profile[key],
                     'placeholder': key in current_optional_fields ? current_optional_fields[key] : "",
                     'type': (key === "identity_number") ? 'number' : (key === "date_of_birth") ? 'date' : 'text',
                     'required': (key === "username")}))}
           </GrayBox>
         </div>
         <div class="my-3 w-full text-center">
-          <button type="submit" class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Güncelle</button>
+          <button type="submit" class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{labels.UI.update}</button>
         </div>
       </form>
     </main>
@@ -122,6 +109,7 @@ export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps({ req, locale }) {
 
     let user;
+    const labels = await getLabels(req.session.language);
 
     try {
       user = req.session.user;
@@ -158,7 +146,8 @@ export const getServerSideProps = withIronSessionSsr(
       {
         current_main_fields,
         current_optional_fields,
-        accessToken: user.accessToken
+        accessToken: user.accessToken,
+        labels
       }
     };
   },

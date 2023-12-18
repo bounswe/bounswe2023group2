@@ -9,7 +9,7 @@ import AddActionForm from "./AddAction";
 import { GrTransaction } from "react-icons/gr";
 
 
-export default function ActivityTable({ needFilter, resourceFilter }) {
+export default function ActivityTable({ needFilter, resourceFilter, labels }) {
     const [filters, setFilters] = useState({})
     const [resources, setResources] = useState([]);
     const [needs, setNeeds] = useState([]);
@@ -29,7 +29,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
 
             setResources(res.resources)
         } else {
-            // toast.error("An unexpected error occurred while saving, please try again")
+            toast.error(labels.feedback.failure);
         }
     }
     const getNeeds = async () => {
@@ -38,7 +38,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
         if (response.ok) {
             setNeeds(res.needs)
         } else {
-            toast.error("An unexpected error occurred while saving, please try again")
+            toast.error(labels.feedback.failure);
         }
     }
     useEffect(() => {
@@ -57,8 +57,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
             if (response.status === 200) {
                 setNeeds(res.needs)
             } else {
-                // unknown error
-                toast.error("An unexpected error occurred while saving, please try again")
+                toast.error(labels.feedback.failure);
             }
         }
         if (resourceFilter) {
@@ -72,8 +71,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
                 setResources(res.resources)
                 console.log(resources)
             } else {
-                // unknown error
-                toast.error("An unexpected error occurred while saving, please try again")
+                toast.error(labels.feedback.failure);
             }
         }
     }
@@ -81,8 +79,8 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
 
         <div class="w-full">
             <div className=' '>
-                <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} />
-                <Sort needFilter={needFilter} resourceFilter={resourceFilter} filterActivities={filterActivities} setFilters={setFilters} filters={filters} />
+                <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} labels={labels} />
+                <Sort needFilter={needFilter} resourceFilter={resourceFilter} filterActivities={filterActivities} setFilters={setFilters} filters={filters} labels={labels} />
             </div>
 
             <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={resourceFilter ? "resources" : "needs"} />
@@ -94,13 +92,12 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
                 className='flex w-full overflow-x-auto shadow-md sm:rounded max-h-[300px] overflow-scroll'
             >
                 <TableHeader>
-                    <TableColumn>Type</TableColumn>
-                    <TableColumn>Location</TableColumn>
-                    <TableColumn>Created by</TableColumn>
-                    <TableColumn>Created At</TableColumn>
-                    <TableColumn>Description</TableColumn>
-                   <TableColumn>Take Action</TableColumn>
-
+                    <TableColumn>{labels.activity_table.type}</TableColumn>
+                    <TableColumn>{labels.activity_table.location}</TableColumn>
+                    <TableColumn>{labels.activity_table.created_by}</TableColumn>
+                    <TableColumn>{labels.activity_table.created_at}</TableColumn>
+                    <TableColumn>{labels.activity_table.description}</TableColumn>
+                    <TableColumn>{labels.activity_table.take_action}</TableColumn>
                 </TableHeader>
                 <TableBody>
                     {resourceFilter && resources && resources.map((resource, index) => (
@@ -132,7 +129,7 @@ export default function ActivityTable({ needFilter, resourceFilter }) {
                     ))}
                 </TableBody>
             </Table>
-            <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} table_need={activity} need_type={activity.type} />
+            <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} table_need={activity} need_type={activity.type} labels={labels}/>
         </div>
 
     );
