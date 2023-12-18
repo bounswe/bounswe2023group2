@@ -18,9 +18,7 @@ const Map = dynamic(() => import('../components/Map/Map'), {
 })
 export default function home({ labels }) {
  
-  const [needFilter, setNeedFilter] = useState(false);
-  const [resourceFilter, setResourceFilter] = useState(true);
-  const [eventFilter, setEventFilter] = useState(false);
+  const [chosenActivityType, setChosenActivityType] = useState("resources");
   
   
   return (
@@ -28,11 +26,11 @@ export default function home({ labels }) {
       <Map />
       <ToastContainer position="bottom-center" />
       <div className='flex flex-row m-3'>
-        <Button color='warning' className='mr-5' onClick={(e) => { setNeedFilter(true); setResourceFilter(false); setEventFilter(false) }}>{labels.activities.needs}</Button>
-        <Button color='success' className='mr-5' onClick={(e) => { setResourceFilter(true); setNeedFilter(false); setEventFilter(false) }} >{labels.activities.resources}</Button>
-        <Button color='primary' onClick={(e) => { setResourceFilter(true); setNeedFilter(false); setEventFilter(true) }} >{labels.activities.events}</Button>
+        <Button color='warning' className='mr-5' onClick={(e) => { setChosenActivityType("needs") }}>{labels.activities.needs}</Button>
+        <Button color='success' className='mr-5' onClick={(e) => { setChosenActivityType("resources") }} >{labels.activities.resources}</Button>
+        <Button color='primary' onClick={(e) => { setChosenActivityType("events") }} >{labels.activities.events}</Button>
       </div>
-      <ActivityTable needFilter={needFilter} resourceFilter={resourceFilter} eventFilter={eventFilter} labels={labels}/>
+      <ActivityTable chosenActivityType={chosenActivityType} labels={labels}/>
 
       <div className={styles.buttonContainer}>
       </div>

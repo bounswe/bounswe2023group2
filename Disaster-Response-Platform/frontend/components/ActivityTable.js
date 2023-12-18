@@ -9,7 +9,7 @@ import AddActionForm from "./AddAction";
 import { GrTransaction } from "react-icons/gr";
 
 
-export default function ActivityTable({ needFilter, resourceFilter, eventFilter, labels }) {
+export default function ActivityTable({ chosenActivityType, labels }) {
     const [filters, setFilters] = useState({})
     const [resources, setResources] = useState([]);
     const [needs, setNeeds] = useState([]);
@@ -60,7 +60,7 @@ export default function ActivityTable({ needFilter, resourceFilter, eventFilter,
 
     const filterActivities = async () => {
         let response
-        if (needFilter) {
+        if (chosenActivityType === "needs") {
             let my_filter = new URLSearchParams(filters).toString()
 
             response = await api.get(`/api/needs/?${my_filter}`, { headers: { "Content-Type": "application/json" } });
@@ -70,8 +70,7 @@ export default function ActivityTable({ needFilter, resourceFilter, eventFilter,
             } else {
                 toast.error(labels.feedback.failure);
             }
-        }
-        if (resourceFilter) {
+        } else if (chosenActivityType === "resources") {
             let my_filter = new URLSearchParams(filters).toString()
 
             response = await api.get(`/api/resources/?${my_filter}`, { headers: { "Content-Type": "application/json" } });
@@ -91,10 +90,10 @@ export default function ActivityTable({ needFilter, resourceFilter, eventFilter,
         <div class="w-full">
             <div className=' '>
                 <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} labels={labels} />
-                <Sort needFilter={needFilter} resourceFilter={resourceFilter} filterActivities={filterActivities} setFilters={setFilters} filters={filters} labels={labels} />
+                <Sort chosenActivityType={chosenActivityType} filterActivities={filterActivities} setFilters={setFilters} filters={filters} labels={labels} />
             </div>
 
-            <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={resourceFilter ? "resources" : "needs"} />
+            <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={chosenActivityType} />
 
             <Table
                 isHeaderSticky
@@ -111,7 +110,7 @@ export default function ActivityTable({ needFilter, resourceFilter, eventFilter,
                     <TableColumn>{labels.activity_table.take_action}</TableColumn>
                 </TableHeader>
                 <TableBody>
-                    {resourceFilter && resources && resources.map((resource, index) => (
+                    {chosenActivityType === "resources" && resources && resources.map((resource, index) => (
                         <TableRow key={index} >
                             <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.type}</TableCell>
                             <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.x} : {resource.y}</TableCell>
@@ -122,7 +121,7 @@ export default function ActivityTable({ needFilter, resourceFilter, eventFilter,
                                 </TableCell>
                         </TableRow>
                     ))}
-                    {needFilter && needs && needs.map((need, index) => (
+                    {chosenActivityType === "needs" && needs && needs.map((need, index) => (
                         <TableRow key={index} >
                             <TableCell onClick={() => { setActivity(need); onOpen() }} >{need.type}</TableCell>
                             <TableCell onClick={() => { setActivity(need); onOpen() }}>{need.x} : {need.y}</TableCell>
@@ -138,7 +137,7 @@ export default function ActivityTable({ needFilter, resourceFilter, eventFilter,
                             </TableCell>
                         </TableRow>
                     ))}
-                    {eventFilter && events && events.map((event, index) => (
+                    {chosenActivityType === "events" && events && events.map((event, index) => (
                         <TableRow key={index} >
                             <TableCell onClick={() => { setActivity(event); onOpen() }} >{event.event_type}</TableCell>
                             {/* event.center_location_x and event.center_location_y will eventually be deprecated */}
