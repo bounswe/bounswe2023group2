@@ -24,7 +24,7 @@ export default function ActivityTable({ chosenActivityType, labels }) {
         onOpenChange: onOpenChangeNeedModal,
     } = useDisclosure()
     const getResources = async () => {
-        const response = await fetch('/api/resource', { method: 'GET', headers: { "Content-Type": "application/json" } });
+        const response = await fetch('/api/resource/get', { method: 'GET', headers: { "Content-Type": "application/json" } });
         let res = await response.json();
         if (response.ok) {
 
