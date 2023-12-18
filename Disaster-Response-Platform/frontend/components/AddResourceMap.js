@@ -9,10 +9,10 @@ import {
 } from "@nextui-org/modal";
 import styles from "./AddResource.module.scss";
 import { Button, Input } from "@nextui-org/react";
-export default function AddResourceForm({ isOpen, onOpenChange,fetchData }) {
+export default function AddResourceForm({ isOpen, onOpenChange, fetchData, labels }) {
     const fields = [
-        { type: "text", name: "type", required: true, label: "İlan türü", placeholder: "Food" },
-        { type: "text", name: "sub_type", required: true, label: "İçerik Türü", placeholder: "Pasta" },
+        { type: "text", name: "type", required: true, label: labels.sort_criteria.type, placeholder: labels.placeholders.resource_type },
+        { type: "text", name: "sub_type", required: true, label: labels.sort_criteria.subtype, placeholder: labels.placeholders.resource_subtype },
         { type: "date", name: "due_date", required: true,  },
     ]
     const renderForm = ({ register, errors, isSubmitting }) => {
@@ -30,7 +30,7 @@ export default function AddResourceForm({ isOpen, onOpenChange,fetchData }) {
                 </>
             })}
             <Button disabled={isSubmitting} type='submit' >
-                {isSubmitting ? 'Yükleniyor' : "Oluştur"}
+                {isSubmitting ? labels.UI.loading : labels.UI.add}
             </Button>
         </>;
     }
@@ -38,7 +38,7 @@ export default function AddResourceForm({ isOpen, onOpenChange,fetchData }) {
         <ModalContent>
             {(onClose) => (
                 <>
-                    <ModalHeader className="flex flex-col gap-1">İlan Oluştur</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">{labels.activities.add_resource}</ModalHeader>
                     <ModalBody> <GenericForm url="/api/form" renderForm={renderForm} fetchData={fetchData} />
                     </ModalBody>
                 </>

@@ -11,7 +11,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { api } from "@/lib/apiUtils";
 import { useRouter } from "next/router";
-export default function AddActionForm({ isOpen, onOpenChange, table_need, need_type}) {
+export default function AddActionForm({ isOpen, onOpenChange, table_need, need_type, labels}) {
   const [form, setForm] = useState([]);
   const needTypes = ['food', 'water', 'shelter', 'medicine', 'cloth', 'transportation', 'other'];
   const { reset, handleSubmit, control, formState: { isSubmitting }, setValue } = useForm();
