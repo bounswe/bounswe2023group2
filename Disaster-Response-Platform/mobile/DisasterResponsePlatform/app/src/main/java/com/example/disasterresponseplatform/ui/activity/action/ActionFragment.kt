@@ -114,12 +114,12 @@ class ActionFragment(
      */
     private fun addAction(){
         val token = DiskStorageManager.getKeyValue("token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
             val addActionFragment = AddActionFragment(actionViewModel,null)
             addFragment(addActionFragment,"AddActionFragment")
         }
         else{
-            Toast.makeText(context, "You action to Logged In !", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, getString(R.string.pr_login_required), Toast.LENGTH_LONG).show()
         }
     }
 

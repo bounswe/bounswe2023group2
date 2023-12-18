@@ -114,12 +114,12 @@ class NeedFragment(
      */
     private fun addNeed(){
         val token = DiskStorageManager.getKeyValue("token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
             val addNeedFragment = AddNeedFragment(needViewModel,null)
             addFragment(addNeedFragment,"AddNeedFragment")
         }
         else{
-            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, getString(R.string.pr_login_required), Toast.LENGTH_LONG).show()
         }
     }
 

@@ -161,12 +161,12 @@ class EventFragment(
 
     private fun addEvent(){
         val token = DiskStorageManager.getKeyValue("token")
-        if (!token.isNullOrEmpty()) {
+        if ( DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
             val addEventFragment = AddEventFragment(eventViewModel,null)
             addFragment(addEventFragment,"AddEventFragment")
         }
         else{
-            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, getString(R.string.pr_login_required), Toast.LENGTH_LONG).show()
         }
     }
 
