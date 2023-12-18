@@ -99,7 +99,7 @@ export default function ActivityTable({ chosenActivityType, labels }) {
                 isHeaderSticky
                 selectionMode="single"
                 aria-label="activity table"
-                className='flex w-full overflow-x-auto shadow-md sm:rounded max-h-[300px] overflow-scroll'
+                className='flex w-full overflow-x-auto shadow-md sm:rounded max-h-[300px]'
             >
                 <TableHeader>
                     <TableColumn>{labels.activity_table.type}</TableColumn>
