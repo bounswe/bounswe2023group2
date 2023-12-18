@@ -59,6 +59,12 @@ def send_reset_password_email(email):
     outlook_user = config.DAPP_EMAIL
     outlook_password = config.DAPP_EMAIL_PASSWORD
 
+    # change based on the server url.
+    base_url = "http://3.218.226.215:8000"
+
+    # Create a reset link with email and token as query parameters
+    reset_link = f"{base_url}/api/forgot_password/reset_password?email={email}&token={token}"
+
     # Email content
     subject = "DAPP Password Reset"
     body = f"""
@@ -66,12 +72,13 @@ def send_reset_password_email(email):
         <head></head>
         <body>
             <p>Hello,</p>
-            <p>Welcome to <strong>DAPP</strong>! Your password reset code is: <strong style='color:#007FFF;'>{token}</strong></p>
-            <p>Please enter this code in the application to reset your password. This code will expire in 10 minutes.</p>
+            <p>To reset your password, please click the following link:</p>
+            <p><a href="{reset_link}" style="color:#007FFF;">Reset Password</a></p>
+            <p>This link will expire in 10 minutes.</p>
             <p>If you did not request a password reset, please ignore this email.</p>
             <p>Thank you for using our service.</p>
             <p>Sincerely,<br>
-            DAPP Team</p>
+            <strong>DAPP Team</strong></p>
         </body>
     </html>
     """
