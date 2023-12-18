@@ -9,10 +9,11 @@ import AddActionForm from "./AddAction";
 import { GrTransaction } from "react-icons/gr";
 
 
-export default function ActivityTable({ needFilter, resourceFilter, labels }) {
+export default function ActivityTable({ needFilter, resourceFilter, eventFilter, labels }) {
     const [filters, setFilters] = useState({})
     const [resources, setResources] = useState([]);
     const [needs, setNeeds] = useState([]);
+    const [events, setEvents] = useState([]);
     const [selectedKeys, setSelectedKeys] = useState(new Set(["text"]));
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [activity, setActivity] = useState({});
@@ -41,10 +42,20 @@ export default function ActivityTable({ needFilter, resourceFilter, labels }) {
             toast.error(labels.feedback.failure);
         }
     }
+    const getEvents = async () => {
+        const response = await fetch('/api/event/get', { method: 'GET', headers: { "Content-Type": "application/json" } });
+        let res = await response.json();
+        console.log(res)
+        if (response.ok) {
+            setEvents(res.events);
+        } else {
+            toast.error(labels.feedback.failure);
+        }
+    }
     useEffect(() => {
         getResources();
         getNeeds();
-
+        getEvents();
     }, [])
 
     const filterActivities = async () => {
@@ -106,7 +117,7 @@ export default function ActivityTable({ needFilter, resourceFilter, labels }) {
                             <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.x} : {resource.y}</TableCell>
                             <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.created_by}</TableCell>
                             <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.created_at}</TableCell>
-                            <TableCell onClick={() => { setActivity(resource); onOpen() }}  >{resource.description}</TableCell>
+                            <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.description}</TableCell>
                             <TableCell >
                                 </TableCell>
                         </TableRow>
@@ -119,6 +130,23 @@ export default function ActivityTable({ needFilter, resourceFilter, labels }) {
                             <TableCell onClick={() => { setActivity(need); onOpen() }}>{need.created_at}</TableCell>
                             <TableCell onClick={() => { setActivity(need); onOpen() }}>{need.description}</TableCell>
                             <TableCell onClick={() => { setActivity(need); onOpenNeedModal() }} >
+
+                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                    <GrTransaction />
+                                </span>
+
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                    {eventFilter && events && events.map((event, index) => (
+                        <TableRow key={index} >
+                            <TableCell onClick={() => { setActivity(event); onOpen() }} >{event.event_type}</TableCell>
+                            {/* event.center_location_x and event.center_location_y will eventually be deprecated */}
+                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.x || event.center_location_x} : {event.y || event.center_location_y}</TableCell>
+                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.created_by_user}</TableCell>
+                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.created_time}</TableCell>
+                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.short_description}</TableCell>
+                            <TableCell onClick={() => { setActivity(event); }} >
 
                                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                                     <GrTransaction />
