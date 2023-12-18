@@ -167,7 +167,7 @@ class EventFragment(private val eventViewModel: EventViewModel) : Fragment() {
             addFragment(addEventFragment,"AddEventFragment")
         }
         else{
-            Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, getString(R.string.pr_login_required), Toast.LENGTH_LONG).show()
         }
     }
 

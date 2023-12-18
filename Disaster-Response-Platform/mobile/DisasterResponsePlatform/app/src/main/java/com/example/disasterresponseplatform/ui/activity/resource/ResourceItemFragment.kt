@@ -211,7 +211,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -241,7 +241,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
