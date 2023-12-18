@@ -45,11 +45,8 @@ app.include_router(feedback_controller.router, prefix="/api/feedback", tags=["Fe
 app.include_router(uprofile_admin_controller.router, prefix="/api/admin", tags=["User Profiles - Admin"])
 app.include_router(email_verification_controller.router, prefix="/api/email_verification", tags=["Email Verification"])
 app.include_router(file_controller.router, prefix="/api", tags=["File Uploads"])
-<<<<<<< HEAD
 app.include_router(forgot_password_controller.router, prefix="/api/forgot_password", tags=["Forgot Password - Reset"])
-=======
 app.include_router(geocode_controller.router, prefix="/api/geocode", tags=["Geocode - Address Translation"])
->>>>>>> origin
 
 @app.get("/")
 async def root(some_parameter:str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
