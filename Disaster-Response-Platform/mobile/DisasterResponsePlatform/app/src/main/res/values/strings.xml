@@ -134,6 +134,8 @@
     <string name="enter_verification_code">Enter Verification Code</string>
     <string name="send_verification_code">SEND VERIFICATION CODE</string>
     <string name="resend_code">RESEND CODE</string>
+    <string name="email_verification_title">E-mail Verification</string>
+    <string name="email_verification_description">To verify your e-mail address, enter the verification code sent to you by e-mail.</string>
     <string name="full_name">Full Name</string>
 
     <!-- MAP -->

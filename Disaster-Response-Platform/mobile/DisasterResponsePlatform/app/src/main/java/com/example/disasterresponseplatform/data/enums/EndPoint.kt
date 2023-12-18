@@ -35,4 +35,6 @@ enum class Endpoint(val path: String) {
     DOWNVOTE("feedback/downvote"),
     GETUSER("userroles/role"),
     EVENT("events/"),
+    EMAIL_VERIFICATION_SEND("email_verification/send"),
+    EMAIL_VERIFICATION_VERIFY("email_verification/verify"),
 }
