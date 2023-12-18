@@ -2,7 +2,7 @@ import Image from 'next/image';
 import GrayBox from '../GrayBox';
 import { Button } from "@nextui-org/react";
 
-export default function MainInfo({ className, info, report, onOpen, contact }) {
+export default function MainInfo({ className, info, report, onOpen, contact, labels }) {
 	const {username, first_name, last_name, email, phone_number} = info;
 	const name = `${first_name} ${last_name}`;
 	const img = null; // TODO
@@ -19,7 +19,7 @@ export default function MainInfo({ className, info, report, onOpen, contact }) {
 					</>
 				) : null}
 			</div>
-			{report ? <Button onPress={onOpen} className="mx-auto block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">Raporla</Button> : null}
+			{report ? <Button onPress={onOpen} className="mx-auto block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">{labels.admin.report}</Button> : null}
 		</GrayBox>
 	)
 }

@@ -66,16 +66,22 @@
     <string name="sf_title">Sort &amp; Filter</string>
     <string name="sf_sort_by">Sort By:</string>
     <string name="sf_sort_order">Sort Order:</string>
+    <string name="sf_type_filter">Filter By Type</string>
     <string name="sf_types">Select a Type:</string>
-    <string name="sf_subtypes">Select Sub-Types:</string>
+    <string name="sf_subtypes">Select Sub-Types (Optional):</string>
+    <string name="sf_location_filter">Filter By Location</string>
+    <string name="sf_location_select">Select From Map</string>
+    <string name="sf_location_selected">Location Selected</string>
     <string name="sf_cancel">Cancel</string>
     <string name="sf_apply">Apply</string>
-    <string name="sf_date">created_at</string>
-    <string name="sf_reliability">reliability</string>
-    <string name="sf_urgency">urgency</string>
+    <string name="sf_creation">Creation Time</string>
+    <string name="sf_last_update">Last Update Time</string>
+    <string name="sf_reliability">Reliability</string>
+    <string name="sf_urgency">Urgency</string>
     <string name="sf_ascending">asc</string>
     <string name="sf_descending">desc</string>
-    <string name="sf_distance">Distance (0–1000 km):</string>
+    <string name="sf_distance">Distance:\n(0–20 km)</string>
+    <string name="sf_from_location">From\nLocation:</string>
     <string name="sf_upvote">upvote</string>
 
     <!-- PAGE NAMES -->
@@ -181,7 +187,9 @@
 
     <!-- NOTIFICATION -->
     <string name="add_notification">Add Notification</string>
-    <string name="short_note">Short Explanation</string>
+
+    <!-- EVENT -->
+    <string name="short_note">Short Description</string>
     <string name="debris">Debris</string>
     <string name="event_date">Event Date</string>
     <string name="event_time">Event Time</string>
@@ -191,28 +199,43 @@
     <string name="edit_event">Edit Event</string>
 
     <!-- ACTIVITY LISTS -->
+    <string name="cloth">Cloth</string>
+    <string name="food">Food</string>
+    <string name="drink">Drink</string>
+    <string name="shelter">Shelter</string>
+    <string name="medication">Medication</string>
+    <string name="transportation">Transportation</string>
+    <string name="tool">Tool</string>
+    <string name="human">Human</string>
+    <string name="other">Other</string>
+    <string name="need_resource">Need - Resource</string>
+
     <string-array name="need_types">
-        <item>cloth</item>
-        <item>food</item>
-        <item>drink</item>
-        <item>shelter</item>
-        <item>medication</item>
-        <item>transportation</item>
-        <item>tools</item>
-        <item>human</item>
-        <item>other</item>
+        <item>@string/cloth</item>
+        <item>@string/food</item>
+        <item>@string/drink</item>
+        <item>@string/shelter</item>
+        <item>@string/medication</item>
+        <item>@string/transportation</item>
+        <item>@string/tool</item>
+        <item>@string/human</item>
+        <item>@string/other</item>
     </string-array>
 
     <string-array name="resource_types">
-        <item>cloth</item>
-        <item>food</item>
-        <item>drink</item>
-        <item>shelter</item>
-        <item>medication</item>
-        <item>transportation</item>
-        <item>tool</item>
-        <item>human</item>
-        <item>other</item>
+        <item>@string/cloth</item>
+        <item>@string/food</item>
+        <item>@string/drink</item>
+        <item>@string/shelter</item>
+        <item>@string/medication</item>
+        <item>@string/transportation</item>
+        <item>@string/tool</item>
+        <item>@string/human</item>
+        <item>@string/other</item>
+    </string-array>
+
+    <string-array name="action_types">
+        <item>@string/need_resource</item>
     </string-array>
 
     <string-array name="event_types">
@@ -222,29 +245,7 @@
         <item>Help-Arrived</item>
     </string-array>
 
-    <string-array name="action_types">
-        <item>need_resource</item>
 
-    </string-array>
-
-    <string-array name="resource_food_sub_types">
-        <item>Pasta</item>
-        <item>Rice</item>
-        <item>Canned Good</item>
-        <item>Baby Food</item>
-        <item>Other</item>
-    </string-array>
-
-    <string-array name="resource_human_sub_types">
-        <item>Doctor</item>
-        <item>Nurse</item>
-        <item>Pharmacist</item>
-        <item>Firefighter</item>
-        <item>Police Officer</item>
-        <item>Driver</item>
-        <item>Translator</item>
-        <item>Other</item>
-    </string-array>
 
     <!-- PROFILE LISTS -->
     <string-array name="language_level_types">

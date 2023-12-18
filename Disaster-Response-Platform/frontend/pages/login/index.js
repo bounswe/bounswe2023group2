@@ -4,8 +4,11 @@ import { Button, Input } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { toast, ToastContainer } from 'react-toastify';
+import { withIronSessionSsr } from 'iron-session/next';
+import sessionConfig from '@/lib/sessionConfig';
+import getLabels from '@/lib/getLabels';
 
-export default function login() {
+export default function login({ labels }) {
   const { register, reset, handleSubmit, setError, formState: { isSubmitting, errors } } = useForm();
   const router = useRouter()
 
@@ -18,22 +21,22 @@ export default function login() {
     });
     if (response.ok) {
       // successful
-      toast.success("Successfully saved")
+      toast.success(labels.feedback.save_success)
       // Usage!
       
       router.push('/');
     } else {
       // unknown error
-      toast.error(response.statusText)
+      toast.error(`${labels.feedback.failure} (${response.statusText})`)
     }
   }
   const fields = [
-    { type: "text", name: "username_or_email_or_phone", required: true, label: "telefon numarası, email ya da kullanıcı adı", placeholder: "telefon numarası, email ya da kullanıcı adı" },
-    { type: "password", name: "password", required: true, label: "Şifre" , placeholder: "strong12345"},
+    { type: "text", name: "username_or_email_or_phone", required: true, label: labels.auth.phone_email_username},
+    { type: "password", name: "password", required: true, label: labels.profile.password},
 
   ]
   return <form className="rounded-xl bg-gray-200 p-6 w-8/12 center" onSubmit={handleSubmit(onSubmit)} >
-      <h1 className='text-6xl font-normal leading-normal mt-0 mb-2 text-center text-emerald-800'> Giriş yap</h1>
+      <h1 className='text-6xl font-normal leading-normal mt-0 mb-2 text-center text-emerald-800'>{labels.auth.login}</h1>
     {fields.map(field => {
       return <>
         <Input type={field.type}
@@ -43,19 +46,30 @@ export default function login() {
           labelPlacement={'outside'}
           variant={'faded'}
           className='mb-2'
-          placeholder={field.placeholder}
           isRequired
         />
         <div className="text-center" >{errors[field.name]?.message}</div>
       </>
     })}
     <Button disabled={isSubmitting} type='submit' className='m-3 ml-0'>
-      {isSubmitting ? 'Loading' : "Submit"}
+      {isSubmitting ? labels.UI.loading : labels.UI.submit}
     </Button>
+    <ToastContainer position="bottom-center" />
   </form>;
 }
 
-
 login.getLayout = function getLayout(page) {
-  return <MainLayout>{page}   <ToastContainer position="bottom-center" /></MainLayout>;
+  return <MainLayout>{page}</MainLayout>;
 };
+
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req }) {
+    const labels = await getLabels(req.session.language);
+    return {
+      props: {
+        labels
+      }
+    };
+  },
+  sessionConfig
+)
