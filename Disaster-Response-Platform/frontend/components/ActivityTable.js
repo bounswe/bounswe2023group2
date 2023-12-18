@@ -140,8 +140,7 @@ export default function ActivityTable({ chosenActivityType, labels }) {
                     {chosenActivityType === "events" && events && events.map((event, index) => (
                         <TableRow key={index} >
                             <TableCell onClick={() => { setActivity(event); onOpen() }} >{event.event_type}</TableCell>
-                            {/* event.center_location_x and event.center_location_y will eventually be deprecated */}
-                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.x || event.center_location_x} : {event.y || event.center_location_y}</TableCell>
+                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.x} : {event.y}</TableCell>
                             <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.created_by_user}</TableCell>
                             <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.created_time}</TableCell>
                             <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.short_description}</TableCell>
