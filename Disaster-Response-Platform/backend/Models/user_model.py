@@ -84,12 +84,11 @@ class UserInfo(BaseModel):
     first_name: str
     last_name: str
     phone_number: str | None= None
-    is_email_verified: bool = False
+    is_email_verified: bool | None= None
     private_account: bool = False
     user_role: UserRole = Field(default=None)
     proficiency: Optional[ProfRequest] = None
 
-    
 
 
 class UpdateUserRequest(BaseModel):
@@ -121,9 +120,3 @@ class ProfResponse(BaseModel):
 
 class UserUsername(BaseModel):
     username: str
-
-class LoginResponse(BaseModel):
-    access_token: str
-    token_type: str
-    user_role: UserRole
-    proficiency: Optional[List[ProfRequest]] = None
