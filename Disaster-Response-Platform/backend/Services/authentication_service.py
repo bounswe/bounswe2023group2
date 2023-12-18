@@ -145,7 +145,7 @@ def create_user(user: CreateUserRequest):
     hash= get_password_hash(user.password)
     user.password=hash
     user.proficiency= {}
-    user.user_role= UserRole.AUTHENTICATED.value #default signed up user is authenticated
+    user.user_role= UserRole.GUEST.value #default signed up user is authenticated
   
     insert_result = userDb.insert_one(user.dict())
 
