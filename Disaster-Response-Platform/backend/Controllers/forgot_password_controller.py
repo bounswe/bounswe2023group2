@@ -132,19 +132,22 @@ async def reset_password_page(request: Request, email: str = Query(None, descrip
                 }}
 
                 if (!is_valid_password(newPassword)) {{
-                    resultMessage.style.display = "block";
+                     document.getElementById("resultMessage").style.display = "block"
                     resultMessage.innerText = "Password is not valid. It must contain at least one digit.";
                     return;
                 }}
 
-                const response = await fetch(`/api/forgot_password/reset?email=`+ email + `&token=` + token + `&new_password=` + newPassword, {{
-                    method: "POST"
+                const response = await fetch(`/api/forgot_password/reset?email=`+ encodeURIcomponent(email) + `&token=` + encodeURIcomponent(token) + `&new_password=` + encodeURIcomponent(newPassword), {{
+                    method: "POST",
+                    body: JSON.stringify({{}})
                 }});
 
                 if (response.status === 200) {{
+                     document.getElementById("resultMessage").style.display = "block"
                     document.getElementById("resultMessage").innerText = "Password reset successful. You can close this tab.";
                     document.getElementById("resultMessage").style.color = "#104569";
                 }} else {{
+                     document.getElementById("resultMessage").style.display = "block"
                     document.getElementById("resultMessage").innerText = "Password reset failed: Invalid token or token expired. Please resend reset request.";
                 }}
             }}
