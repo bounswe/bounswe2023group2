@@ -69,17 +69,17 @@ async def login_for_access_token(user: LoginUserRequest, response:Response): ##d
         response.status_code= HTTPStatus.UNAUTHORIZED
         return error
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = authentication_service.create_jwt_token(data={"sub": user.username}, expires_delta=access_token_expires)
-    return {"access_token": access_token, "token_type": "bearer"}
+    login_response = authentication_service.create_jwt_token(data={"sub": user.username}, expires_delta=access_token_expires)
+    return login_response
 
 
 @router.post("/refresh-token", response_model=Token)
 async def refresh_access_token(current_user: str  = Depends(authentication_service.get_current_username)):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = authentication_service.create_jwt_token(
+    login_response = authentication_service.create_jwt_token(
         data={"sub": current_user}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return login_response
 
 # Protected route
 @router.get("/protected")

@@ -28,11 +28,11 @@ var redIcon = new L.Icon({
   shadowSize: [21, 21],
 });
 
-function LocationMarker({ lat, lng }) {
+function LocationMarker({ lat, lng, labels }) {
   const map = useMap();
   return (
     <Marker position={[41.08714, 29.043474]}>
-      <Popup>You are here</Popup>
+      <Popup>{labels.map.you_are_here}</Popup>
     </Marker>
   );
 }
@@ -41,6 +41,7 @@ export default function Map({
   isClickActivated,
   activateClick,
   resourceApiData,
+  labels
 }) {
   const [MarkerArr, setMarkerArr] = useState([]);
 
@@ -184,7 +185,7 @@ export default function Map({
             }}
           >
             <Popup>
-              <h3>Tür: {resource.type}</h3>
+              <h3>{labels.sort_criteria.type}: {resource.type}</h3>
               {/* Other details you want to show in the popup */}
             </Popup>
           </Marker>
@@ -195,21 +196,22 @@ export default function Map({
           onOpenChange={onOpenChange}
           isOpen={isOpen}
           fetchData={fetchData}
+          labels={labels}
         />
         {MarkerArr &&
           MarkerArr.map(({ type, subType, dueDate, x_coord, y_coord }) => (
             <Marker position={[x_coord, y_coord]} icon={redIcon}>
               <Popup>
-                <h3>Tür: {type} </h3>
+                <h3>{labels.sort_criteria.type}: {type} </h3>
 
-                <h3>Alt Tür: {subType} </h3>
+                <h3>{labels.sort_criteria.subtype}: {subType} </h3>
 
-                <h3>Tarih: {dueDate} </h3>
+                <h3>{labels.sort_criteria.due_date}: {dueDate} </h3>
               </Popup>
             </Marker>
           ))}
       </MapContainer>
-      <SidePopup resource={selectedMarker} closePopup={closePopup} />
+      <SidePopup resource={selectedMarker} closePopup={closePopup} labels={labels} />
     </div>
   );
 }

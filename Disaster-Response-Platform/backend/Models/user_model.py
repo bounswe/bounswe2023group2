@@ -121,3 +121,9 @@ class ProfResponse(BaseModel):
 
 class UserUsername(BaseModel):
     username: str
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user_role: UserRole
+    proficiency: Optional[List[ProfRequest]] = None

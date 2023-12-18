@@ -1,6 +1,6 @@
 import bson
 import pydantic
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AnyUrl
 from typing import Dict, Any, List
 from enum import Enum
 from datetime import date
@@ -46,7 +46,7 @@ class UserOptionalInfo(BaseModel):
     username: str = Field(default=None)
     date_of_birth: date = Field(default=None)
     nationality: str= Field(default=None)
-    #profile_picture: bson = Field(default=None)
+    profile_picture: AnyUrl = Field(default=None)
     identity_number: str= Field(default=None)
     education: EducationEnum = Field(default=None)
     health_condition: str = Field(default=None)
