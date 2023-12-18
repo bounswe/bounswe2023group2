@@ -13,7 +13,7 @@ def current_time_gmt3():
     return datetime.datetime.now() + datetime.timedelta(hours=3)
 
 # Get the resources collection using the MongoDB class.
-password_reset_collection = MongoDB.get_collection('password_reset')
+forgot_password_collection = MongoDB.get_collection('forgot_password')
 user_collection = MongoDB.get_collection('authenticated_user')
 
 # Creates a 6-digit long numerical verification token.
@@ -22,6 +22,11 @@ def create_token():
 
 # Saves email, token, and expiration (auto-generated) to the password reset collection.
 def create_reset_token_entry(email, token):
+    # Check if a user with the given email exists in the user_collection
+    existing_user = user_collection.find_one({"email": email})
+    if not existing_user:
+        return False  # User with the given email does not exist
+
     # Delete old entries if any.
     delete_reset_token_entry(email)
 
@@ -32,19 +37,23 @@ def create_reset_token_entry(email, token):
         "token": token,
         "expiration": expiration_time
     }
-    password_reset_collection.insert_one(reset_token_entry)
+    forgot_password_collection.insert_one(reset_token_entry)
+    return True
 
 # Deletes password reset token entry.
 def delete_reset_token_entry(email):
-    password_reset_collection.delete_one({"email": email})
+    forgot_password_collection.delete_one({"email": email})
 
 # Sends mail to the email with password reset code.
 def send_reset_password_email(email):
     # Generate token
     token = create_token()
 
-    # Save the reset token entry
-    create_reset_token_entry(email, token)
+    # Attempt to save the reset token entry and check if the email is valid
+    valid_email = create_reset_token_entry(email, token)
+    
+    if not valid_email:
+        return "Invalid email address"  # Return a string indicating an invalid email address
 
     # Email details
     outlook_user = config.DAPP_EMAIL
@@ -85,14 +94,14 @@ def send_reset_password_email(email):
         server.quit()
 
         print('Password reset email sent successfully.')
-        return True
+        return "Email sent successfully"  # Return a success message
     except Exception as e:
         print('Failed to send password reset email:', e)
-        return False
+        return "Failed to send email"  # Return a failure message
 
 # Checks if the token expired. If so, deletes the entry.
 def check_expiration(email):
-    entry = password_reset_collection.find_one({"email": email})
+    entry = forgot_password_collection.find_one({"email": email})
     if entry and current_time_gmt3() > entry['expiration']:
         delete_reset_token_entry(email)
         return False
@@ -100,7 +109,7 @@ def check_expiration(email):
 
 # Checks if the provided token matches the generated one, stored in the database.
 def check_reset_token(email, provided_token):
-    entry = password_reset_collection.find_one({"email": email})
+    entry = forgot_password_collection.find_one({"email": email})
     if entry and entry['token'] == provided_token:
         return check_expiration(email)
     return False
