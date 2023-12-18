@@ -26,9 +26,9 @@ export default function home({ labels }) {
       <Map />
       <ToastContainer position="bottom-center" />
       <div className='flex flex-row m-3'>
-        <Button color='warning' className='mr-5' onClick={(e) => { setChosenActivityType("needs") }}>{labels.activities.needs}</Button>
-        <Button color='success' className='mr-5' onClick={(e) => { setChosenActivityType("resources") }} >{labels.activities.resources}</Button>
-        <Button color='primary' onClick={(e) => { setChosenActivityType("events") }} >{labels.activities.events}</Button>
+        <Button className='mx-5 bg-need dark:bg-need-dark' onClick={(e) => { setChosenActivityType("needs") }}>{labels.activities.needs}</Button>
+        <Button className='mx-5 bg-resource dark:bg-resource-dark' onClick={(e) => { setChosenActivityType("resources") }} >{labels.activities.resources}</Button>
+        <Button className='mx-5 bg-event dark:bg-event-dark' onClick={(e) => { setChosenActivityType("events") }} >{labels.activities.events}</Button>
       </div>
       <ActivityTable chosenActivityType={chosenActivityType} labels={labels}/>
 
