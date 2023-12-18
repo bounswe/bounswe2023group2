@@ -144,13 +144,7 @@ export default function ActivityTable({ chosenActivityType, labels }) {
                             <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.created_by_user}</TableCell>
                             <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.created_time}</TableCell>
                             <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.short_description}</TableCell>
-                            <TableCell onClick={() => { setActivity(event); }} >
-
-                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                    <GrTransaction />
-                                </span>
-
-                            </TableCell>
+                            <TableCell onClick={() => { setActivity(event); }} > </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
