@@ -30,6 +30,7 @@ function SidePopup({ card, closePopup }) {
     // Here you can implement the logic to handle the upvote
   };
 
+
   const handleDownvote = async () => {
     if(card.feedback <1){
       const result = await api.post(`/api/feedback/downvote`, {
@@ -71,6 +72,7 @@ function SidePopup({ card, closePopup }) {
             <FaRegThumbsDown />
           </button>
         </div>
+
       </div>
     </div>
   );

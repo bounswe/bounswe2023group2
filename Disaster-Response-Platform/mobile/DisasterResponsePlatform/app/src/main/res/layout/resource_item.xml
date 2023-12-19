@@ -8,25 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/badge"
-            android:layout_width="10dp"
-            android:layout_height="0dp"
-            android:background="@color/colorResource"
-            android:layout_marginBottom="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ImageView
             android:id="@+id/iconType"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintStart_toEndOf="@+id/badge"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/recyc_category"/>
 
@@ -80,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@string/clothes"
+            android:text="@string/placeholder_type"
             android:textAllCaps="true"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -102,7 +90,7 @@
             android:id="@+id/tvSubType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SubType"
+            android:text="@string/placeholder_subtype"
             android:layout_marginStart="4dp"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -123,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Gaziantep"
+            android:text="@string/placeholder_coordinate"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/iconLocation"
             app:layout_constraintTop_toTopOf="@+id/iconLocation" />
@@ -143,14 +131,14 @@
             android:id="@+id/tvDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="22.10.2023 13:02"
+            android:text="@string/placeholder_date"
             android:layout_marginStart="10dp"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/iconDate"
             app:layout_constraintTop_toTopOf="@+id/iconDate" />
 
         <ImageView
-            android:id="@+id/iconQuantity"
+            android:id="@+id/iconNote"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_marginEnd="10dp"
@@ -163,9 +151,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="123 pcs"
+            android:text="@string/placeholder_quantity"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/iconQuantity"
+            app:layout_constraintEnd_toStartOf="@+id/iconNote"
             app:layout_constraintTop_toTopOf="@+id/tvSubType" />
 
         <ImageView
@@ -182,17 +170,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:text="Mehmet"
+            android:text="@string/placeholder_username"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/iconCreator"
             app:layout_constraintTop_toTopOf="@+id/tvLocation" />
         <View
             android:id="@+id/divider"
             android:layout_width="0dp"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:background="@color/separator"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/badge" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

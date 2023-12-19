@@ -9,15 +9,21 @@
     <color name="onSecondary">#FFFFFF</color>
 
     <color name="colorAction">#994AD1</color>
-    <color name="colorEmergency">#FF0000</color>
-    <color name="colorEvent">#FFC107</color>
+    <color name="colorEmergency">#D84315</color>
+    <color name="colorEvent">#986A58</color>
     <color name="colorNeed">#00A9F6</color>
     <color name="colorResource">#00BA69</color>
     <color name="colorActivity">#515151</color>
     <color name="separator">#BCBCBC</color>
 
-    <color name="black">#FF0000</color>
+    <color name="icon">#797979</color>
+    <color name="text">#797979</color>
+    <color name="red">#E80000</color>
+
+
+    <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
+    <color name="bottom_sheet_bg">#FFFFFF</color>
     <color name="tabNotSelected">#80FFFFFF</color>
 </resources>

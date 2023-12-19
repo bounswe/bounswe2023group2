@@ -1,482 +1,487 @@
-<!-- res/layout/item_detail_page.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="@drawable/empty_divider_h"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp"
+        android:showDividers="middle"
+        tools:context=".ui.activity.need.NeedFragment">
 
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_category_new"/>
-
+            android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/tvTypeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Type:"
+                android:text="@string/need"
+                android:textAllCaps="true"
+                android:textColor="@color/colorNeed"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textSize="22sp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:id="@+id/etType"
+                android:id="@+id/sep0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Food"
-                android:textSize="22sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="|"
-                android:textSize="22sp" />
-
-            <TextView
-                android:id="@+id/etSubType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Warm Food"
-                android:textSize="22sp" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:background="?android:attr/listDivider" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_person" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Created By:"
+                android:layout_marginStart="1dp"
+                android:text=":"
                 android:textStyle="bold"
-                android:gravity="center"
-                android:textSize="16sp" />
+                android:textColor="@color/colorNeed"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/tvTypeTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvTypeTitle" />
 
             <TextView
-                android:id="@+id/etCreatedBy"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="John Doe"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/btnSeeProfile"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="10dp"
-                android:text="View User Profile"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            app:tint="@color/primaryDark"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_role" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="User Role:"
-                android:layout_weight="5"
-                android:textStyle="bold"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/etUserRole"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="5"
-                android:text="AUTHENTICATED"
-                android:textSize="16sp" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginRight="20dp"
-
-                android:src="@drawable/ic_clock" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:layout_marginTop="4dp"
-            android:orientation="vertical">
-
-            <!-- Left TextView for Creation Time -->
-            <TextView
+                android:id="@+id/tvType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingEnd="8dp"
+                android:layout_marginStart="4dp"
+                android:text="@string/placeholder_type"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/sep0"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/sep1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text=">"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/tvType"
+                app:layout_constraintTop_toTopOf="@+id/tvType" />
+
+            <TextView
+                android:id="@+id/tvSubType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/placeholder_subtype"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/sep1"
+                app:layout_constraintTop_toTopOf="@+id/sep1"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEdit"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/act_edit"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_edit"
+                app:iconGravity="textStart"
+                app:layout_constraintEnd_toStartOf="@id/btnDelete"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTypeTitle" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDelete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_delete"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_delete"
+                app:iconGravity="textStart"
+                android:backgroundTint="@color/red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btnEdit"
+                app:layout_constraintTop_toTopOf="@+id/btnEdit" />
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/btnEdit"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="?android:attr/listDivider" />
+
+
+            <ImageView
+                android:id="@+id/iconQuantity"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider5"
+                app:tint="@color/icon"
+                app:srcCompat="@drawable/ic_numbers" />
+
+            <TextView
+                android:id="@+id/tvQuantityTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_quantity"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="Creation Date:" />
+                app:layout_constraintBottom_toBottomOf="@+id/iconQuantity"
+                app:layout_constraintStart_toEndOf="@+id/iconQuantity"
+                app:layout_constraintTop_toTopOf="@+id/iconQuantity" />
+
+            <TextView
+                android:id="@+id/tvUnsuppliedQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textSize="16sp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/tvQuantityTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvQuantityTitle" />
+
+            <TextView
+                android:id="@+id/tvUnsuppliedQuantityText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/act_unsupplied_quantity_text"
+                android:textSize="16sp"
+                android:layout_marginStart="3dp"
+                app:layout_constraintStart_toEndOf="@+id/tvUnsuppliedQuantity"
+                app:layout_constraintTop_toTopOf="@+id/tvUnsuppliedQuantity" />
+
+            <TextView
+                android:id="@+id/tvInitialQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toStartOf="@+id/tvUnsuppliedQuantity"
+                app:layout_constraintTop_toBottomOf="@+id/tvUnsuppliedQuantity" />
+
+            <TextView
+                android:id="@+id/tvInitialQuantityText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/act_initial_quantity_text"
+                android:textSize="16sp"
+                android:layout_marginStart="3dp"
+                app:layout_constraintStart_toEndOf="@+id/tvInitialQuantity"
+                app:layout_constraintTop_toTopOf="@+id/tvInitialQuantity" />
+
+            <ImageView
+                android:id="@+id/iconUrgency"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvInitialQuantity"
+                app:srcCompat="@drawable/ic_urgency"
+                app:tint="@color/icon" />
+
+            <TextView
+                android:id="@+id/tvUrgencyTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_urgency"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iconUrgency"
+                app:layout_constraintStart_toEndOf="@+id/iconUrgency"
+                app:layout_constraintTop_toTopOf="@+id/iconUrgency" />
+
+            <TextView
+                android:id="@+id/tvUrgency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder_general"
+                android:textSize="16sp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/tvUrgencyTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvUrgencyTitle" />
+
+            <ImageView
+                android:id="@+id/iconDescription"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:srcCompat="@drawable/ic_description"
+                app:tint="@color/icon"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iconUrgency"/>
+
+            <TextView
+                android:id="@+id/tvDescriptionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_description"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iconDescription"
+                app:layout_constraintStart_toEndOf="@+id/iconDescription"
+                app:layout_constraintTop_toTopOf="@+id/iconDescription" />
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder_general"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvDescriptionTitle"
+                app:layout_constraintTop_toBottomOf="@+id/tvDescriptionTitle" />
+
+            <ImageView
+                android:id="@+id/iconDetails"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iconUpdate"
+                app:srcCompat="@drawable/ic_details"
+                app:tint="@color/icon" />
+
+            <TextView
+                android:id="@+id/tvDetailsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_details"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iconDetails"
+                app:layout_constraintStart_toEndOf="@+id/iconDetails"
+                app:layout_constraintTop_toTopOf="@+id/iconDetails" />
+
+            <LinearLayout
+                android:id="@+id/layDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="@+id/tvDetailsTitle"
+                app:layout_constraintTop_toBottomOf="@+id/iconDetails"/>
+
+            <ImageView
+                android:id="@+id/iconCreationTime"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDescription"
+                app:srcCompat="@drawable/ic_creation_time"
+                app:tint="@color/icon" />
+
+            <TextView
+                android:id="@+id/tvCreationTimeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_creation_time"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iconCreationTime"
+                app:layout_constraintStart_toEndOf="@+id/iconCreationTime"
+                app:layout_constraintTop_toTopOf="@+id/iconCreationTime" />
 
             <TextView
                 android:id="@+id/tvCreationTime"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="@string/placeholder_general"
                 android:textSize="16sp"
-                android:paddingEnd="8dp"
-                android:text="2023-11-27" />
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/tvCreationTimeTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvCreationTimeTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_weight="5"
-            android:layout_marginBottom="8dp"
-            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/iconUpdate"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iconCreationTime"
+                app:srcCompat="@drawable/ic_clock"
+                app:tint="@color/icon" />
 
             <TextView
+                android:id="@+id/tvLastUpdatedTimeTitle"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_last_updated_time"
                 android:textSize="16sp"
-                android:text="Last Updated Date:"/>
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iconUpdate"
+                app:layout_constraintStart_toEndOf="@+id/iconUpdate"
+                app:layout_constraintTop_toTopOf="@+id/iconUpdate" />
 
             <TextView
                 android:id="@+id/tvLastUpdatedTime"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder_general"
                 android:textSize="16sp"
-                android:text="2023-11-28" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-
-
-        <View
-            android:id="@+id/divider6"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="10dp"
-            android:background="?android:attr/listDivider" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content">
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/tvLastUpdatedTimeTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvLastUpdatedTimeTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_description" />
+                android:id="@+id/iconAddress"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:srcCompat="@drawable/ic_location"
+                app:tint="@color/icon"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layDetails"/>
 
             <TextView
+                android:id="@+id/tvAddressTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description: "
+                android:layout_marginStart="10dp"
+                android:text="@string/act_address"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_marginLeft="20dp"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvDescription"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="This is a description"
-            android:textSize="16sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_quantity" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Initial Quantity"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/etInitialQuantity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="10"
-                    android:inputType="number"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Unsupplied Quantity"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/etUnSuppliedQuantity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="10"
-                    android:inputType="number"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_urgency"/>
+                app:layout_constraintBottom_toBottomOf="@+id/iconAddress"
+                app:layout_constraintStart_toEndOf="@+id/iconAddress"
+                app:layout_constraintTop_toTopOf="@+id/iconAddress" />
 
             <TextView
+                android:id="@+id/tvAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/placeholder_general"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/tvAddressTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvAddressTitle" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNavigate"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/act_show_on_map"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_map_2"
+                app:iconGravity="textStart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvAddress"
+                app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
+
+            <ImageView
+                android:id="@+id/iconCreator"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:srcCompat="@drawable/ic_person"
+                app:tint="@color/icon"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnNavigate"/>
+
+            <TextView
+                android:id="@+id/tvUsernameTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Urgency:"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_created_by"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                app:layout_constraintBottom_toBottomOf="@+id/iconCreator"
+                app:layout_constraintStart_toEndOf="@+id/iconCreator"
+                app:layout_constraintTop_toTopOf="@+id/iconCreator" />
 
             <TextView
-                android:id="@+id/etUrgency"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="High"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
-            <!-- Column on row has 0.6 of its width -->
-
-            <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_location"/>
-
-            <LinearLayout
+                android:id="@+id/tvCreator"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:orientation="vertical">
+                android:text="@string/placeholder_general"
+                android:textSize="16sp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/tvUsernameTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvUsernameTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-                <!-- rows on column has same width -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Address:"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/etCoordinate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:text="38.092004"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/divider11"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="10dp"
-            android:background="?android:attr/listDivider" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
             <ImageView
-                app:tint="@color/primaryDark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_details" />
+                android:id="@+id/iconUserRole"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iconCreator"
+                app:srcCompat="@drawable/ic_role"
+                app:tint="@color/icon" />
+
             <TextView
+                android:id="@+id/tvUserRoleTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Details:"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_user_role"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textSize="16sp" />
-        </LinearLayout>
+                app:layout_constraintBottom_toBottomOf="@+id/iconUserRole"
+                app:layout_constraintStart_toEndOf="@+id/iconUserRole"
+                app:layout_constraintTop_toTopOf="@+id/iconUserRole" />
 
-        <LinearLayout
-            android:id="@+id/layDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:showDividers="middle">
+            <TextView
+                android:id="@+id/tvUserRole"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder_general"
+                android:textSize="16sp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/tvUserRoleTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvUserRoleTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSeeProfile"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/act_view_profile"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_person_search"
+                app:iconGravity="textStart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvUserRoleTitle"
+                app:layout_constraintTop_toBottomOf="@+id/iconUserRole" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- The row -->
-        <View
-            android:id="@+id/divider10"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="10dp"
-            android:layout_weight="0.5"
-            android:background="?android:attr/listDivider" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <!-- Column on row has 0.6 of its width -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:orientation="vertical">
-
-                <!-- rows on column has same width -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btnEdit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="3"
-                        android:text="Edit"
-                        android:textSize="12sp" />
-
-                    <Button
-                        android:id="@+id/btnDelete"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="4"
-                        android:text="Delete"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.15"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <!-- rows on column has same width -->
                 <LinearLayout
@@ -542,14 +547,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnNavigate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Navigate"
-            android:textSize="12sp" />
 
 
     </LinearLayout>

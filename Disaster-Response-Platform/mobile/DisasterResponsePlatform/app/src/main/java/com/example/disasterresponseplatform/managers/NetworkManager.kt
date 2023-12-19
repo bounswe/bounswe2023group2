@@ -13,6 +13,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -91,6 +92,7 @@ class NetworkManager {
                         val call = api.deleteData(endpoint.path, headers)
                         call.enqueue(callback)
                     }
+                    else -> {}
                 }
             }
             Endpoint.USER -> TODO()
@@ -148,7 +150,9 @@ class NetworkManager {
                         val call = api.deleteData(endpoint.path+"/"+id, headers)
                         call.enqueue(callback)
                     }
+                    else -> {}
                 }
+
             }
             Endpoint.NEED -> {
                 when (requestType) {
@@ -178,6 +182,7 @@ class NetworkManager {
                         val call = api.deleteData(endpoint.path+"/"+id, headers)
                         call.enqueue(callback)
                     }
+                    else -> {}
                 }
             }
             Endpoint.FORM_FIELDS_TYPE -> {
@@ -198,21 +203,36 @@ class NetworkManager {
                 when (requestType) {
                     RequestType.GET -> {
                         Log.d("RESPONSE", callback.toString())
-                        val call = api.getData(endpoint.path, headers)
+                        var endpoint = endpoint.path
+                        if (id != null) endpoint += "/$id"
+                        val call = api.getData(endpoint, headers)
                         call.enqueue(callback)
                     }
                     RequestType.POST -> {
                         Log.d("RESPONSE", callback.toString())
-                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        requestBody?.let { api.postData(call, headers, it) }
                             ?.enqueue(callback)
                     }
                     RequestType.PUT -> {
-                        requestBody?.let { api.putData(endpoint.path, headers, it) }
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        requestBody?.let { api.putData(call, headers, it) }
                             ?.enqueue(callback)
                     }
                     RequestType.DELETE -> {
-                        val call = api.deleteData(endpoint.path, headers)
-                        call.enqueue(callback)
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        Log.i("Delete Call:" , call)
+                        val callb = api.deleteData(call, headers)
+                        callb.enqueue(callback)
+                    }
+                    RequestType.PATCH -> {
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        requestBody?.let { api.patchData(call, headers, it) }
+                            ?.enqueue(callback)
                     }
                 }
             }
@@ -253,4 +273,12 @@ interface ApiService {
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
     ): Call<ResponseBody>
+
+    @PATCH("{endpoint}")
+    fun patchData(
+        @Path("endpoint") endpoint: String,
+        @HeaderMap headers: Map<String, String>,
+        @Body requestBody: RequestBody
+    ): Call<ResponseBody>
+
 }

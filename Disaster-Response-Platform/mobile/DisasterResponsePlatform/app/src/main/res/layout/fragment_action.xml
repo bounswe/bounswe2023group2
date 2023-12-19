@@ -3,22 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="adapter"
+            type="com.example.disasterresponseplatform.adapter.ActionAdapter" />
+    </data>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activity.action.ActionFragment">
+        tools:context=".ui.activity.action.ActionFragment"
+        tools:ignore="MissingClass">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewActions"
+        <!-- Add SwipeRefreshLayout around RecyclerView -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:keepScreenOn="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/laySearchFilter" />
+            app:layout_constraintTop_toBottomOf="@+id/laySearchFilter">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewActions"
+                android:layout_width="match_parent"
+                android:adapter="@{adapter}"
+                android:layout_height="0dp"
+                android:keepScreenOn="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/laySearchFilter" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/laySearchFilter"
@@ -39,7 +58,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:queryBackground="@android:color/transparent"
-                app:queryHint="Search.." />
+                app:queryHint="@string/search_hint" />
 
             <View
                 android:id="@+id/divSearch"
@@ -59,7 +78,9 @@
                 android:text="@string/sort_filter"
                 android:textAlignment="textStart"
                 android:textAllCaps="false"
+                android:textColor="@color/text"
                 app:icon="@drawable/filter_alt"
+                app:iconTint="@color/text"
                 app:iconGravity="end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -82,6 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/add_action"
+            app:backgroundTint="@color/colorAction"
             app:icon="@drawable/ic_add_circle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

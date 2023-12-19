@@ -9,25 +9,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_item_background">
 
-            <View
-                android:id="@+id/badge"
-                android:layout_width="10dp"
-                android:layout_height="0dp"
-                android:background="@color/colorActivity"
-                android:layout_marginBottom="1dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <ImageView
                 android:id="@+id/iconType"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintStart_toEndOf="@+id/badge"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/recyc_category" />
 
@@ -36,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="@string/need"
+                android:text="@string/placeholder_activity"
                 android:textAllCaps="true"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -59,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@string/clothes"
+                android:text="@string/placeholder_type"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/sep1"
                 app:layout_constraintTop_toTopOf="@+id/sep1" />
@@ -79,7 +67,7 @@
                 android:id="@+id/tvSubType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SubType"
+                android:text="@string/placeholder_subtype"
                 android:layout_marginStart="4dp"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/sep2"
@@ -99,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="Gaziantep"
+                android:text="@string/placeholder_coordinate"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/iconLocation"
                 app:layout_constraintTop_toTopOf="@+id/iconLocation" />
@@ -119,7 +107,7 @@
                 android:id="@+id/tvDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="22.10.2023 13:02"
+                android:text="@string/placeholder_date"
                 android:layout_marginStart="10dp"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/iconDate"
@@ -138,7 +126,7 @@
                 android:id="@+id/tvReliabilityScale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.98"
+                android:text="@string/placeholder_reliability"
                 android:layout_marginEnd="10dp"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -147,10 +135,10 @@
             <View
                 android:id="@+id/divider"
                 android:layout_width="0dp"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:background="@color/separator"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/badge" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

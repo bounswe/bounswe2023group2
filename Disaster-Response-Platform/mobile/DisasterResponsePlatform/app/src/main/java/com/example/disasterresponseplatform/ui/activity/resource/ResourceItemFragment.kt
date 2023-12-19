@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -23,6 +26,9 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
+import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, private val resource: ResourceBody.ResourceItem) : Fragment() {
 
@@ -32,7 +38,16 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     private val userViewModel = UserViewModel()
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        // Change ActionBar and StatusBar color
+        (activity as AppCompatActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.colorResource)))
+        (activity as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorResource)
+
         binding = FragmentResourceItemBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -49,24 +64,41 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     @SuppressLint("SetTextI18n")
     private fun fillTexts(resource: ResourceBody.ResourceItem){
         val creatorName = resource.created_by
-        binding.etCreatedBy.text = creatorName
-        binding.etType.text = resource.type
-        binding.etInitialQuantity.text = resource.initialQuantity.toString()
-        binding.etUnSuppliedQuantity.text = resource.currentQuantity.toString()
-        binding.etCoordinateX.text = resource.x.toString()
-        binding.etCoordinateY.text = resource.y.toString()
+        binding.tvCreator.text = creatorName
+        binding.tvType.text = resource.type
+        binding.tvSubType.text = resource.details["subtype"]
+        binding.tvInitialQuantity.text = resource.initialQuantity.toString()
+        binding.tvCurrentQuantity.text = resource.currentQuantity.toString()
+        coordinateToAddress(resource.x, resource.y, object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                Log.e("Network", "Error: ${e.message}")
+            }
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                val responseBody = response.body?.string()
+                Log.i("Network", "Response: $responseBody")
+                if (responseBody != null) {
+                    var address = responseBody.subSequence(
+                        responseBody.indexOf("display_name") + 15,
+                        responseBody.length
+                    )
+                    address = address.subSequence(0, address.indexOf("\""))
+                    requireActivity?.runOnUiThread {
+                        binding.tvAddress.text = address
+                    }
+                }
+            }
+        })
         binding.tvLastUpdatedTime.text = resource.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = resource.created_at.substring(0,10)
         binding.tvUpvoteCount.text = resource.upvote.toString()
         binding.tvDownVoteCount.text = resource.downvote.toString()
         binding.tvDescription.text = resource.description.toString()
-        binding.etSubType.text = resource.details["subtype"]
         fillDetails(resource.details)
         fillRecurrence(resource)
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it
-            binding.createdByRole.text = "User Role: $userRole"
+            binding.tvUserRole.text = "User Role: $userRole"
         }
     }
 
@@ -82,6 +114,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             if (fieldName != "subtype"){
                 val textView = TextView(requireContext())
                 textView.text = "$fieldName: $value"
+                textView.textSize = 16F
                 linearLayout.addView(textView)
                 val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 textView.layoutParams = layoutParams
@@ -112,6 +145,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     private fun addLayoutWithMessage(linearLayout: LinearLayout, message: String){
         val textView = TextView(requireContext())
         textView.text = message
+        textView.textSize = 16F
         linearLayout.addView(textView)
         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         textView.layoutParams = layoutParams
@@ -139,7 +173,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            addFragment(ProfileFragment(resource.created_by),"ProfileFragment")
         }
         binding.btnUpvote.setOnClickListener {
             upvoteResource(token)
@@ -177,7 +211,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -207,7 +241,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -247,6 +281,16 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         ft.replace(R.id.container, fragment)
         ft.addToBackStack(fragmentName)
         ft.commit()
+    }
+
+    private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
+        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+        client.newCall(request).enqueue(callback)
     }
 
 }

@@ -1,0 +1,223 @@
+<resources>
+
+    <!-- GENERAL -->
+    <string name="app_name">Doğal Afet Paylaşım Platformu</string>
+    <string name="emergency">Acil Durum</string>
+    <string name="need">İhtiyaç</string>
+    <string name="resource">Kaynak</string>
+    <string name="event">Olay</string>
+    <string name="action">Aksiyon</string>
+
+    <!-- MENU BOTTOM NAV  -->
+    <string name="nav_home">Ana Sayfa</string>
+    <string name="nav_map">Harita</string>
+    <string name="nav_profile">Profil</string>
+
+    <!-- MENU NAV HEADER  -->
+    <string name="open">Aç</string>
+    <string name="close">Kapat</string>
+    <string name="login">Giriş Yap</string>
+    <string name="logout">Üye Ol</string>
+
+    <!-- HOME TAB LABELS -->
+    <string name="tab_emergency">Acil Durumlar</string>
+    <string name="tab_need">İhtiyaçlar</string>
+    <string name="tab_resource">Kaynaklar</string>
+    <string name="tab_event">Olaylar</string>
+    <string name="tab_action">Aksiyonlar</string>
+
+    <!-- ACTIVITY LIST SCREEN -->
+    <string name="search_hint">Arama...</string>
+    <string name="sort_filter">Sırala\nFiltrele</string>
+    <string name="add_emergency">Acil Durum Bildir</string>
+    <string name="add_need">İhtiyaç Oluştur</string>
+    <string name="add_resource">Kaynak Oluştur</string>
+    <string name="add_event">Olay Bildir</string>
+    <string name="add_action">Aksiyon Oluştur</string>
+    <string name="no_emergency">Acil Durum kaydı bulunamadı.</string>
+
+    <!-- ACTIVITY DETAIL PAGE -->
+    <string name="act_type">Kategori:</string>
+    <string name="act_subtype">Alt Kategori:</string>
+    <string name="act_created_by">Oluşturan:</string>
+    <string name="act_user_role">Kullanıcı Rolü:</string>
+    <string name="act_view_profile">Profili Görüntüle</string>
+    <string name="act_creation_date">Oluşturulma Zamanı:</string>
+    <string name="act_creation_time">Oluşturuldu:</string>
+    <string name="act_last_updated_date">Son Güncellenme Zamanı:</string>
+    <string name="act_last_updated_time">Son Güncelleme:</string>
+    <string name="act_description">Açıklama:</string>
+    <string name="act_quantity">Miktar:</string>
+    <string name="act_initial_quantity">Başlangıç Miktarı:</string>
+    <string name="act_initial_quantity_text">başlangıç miktarı</string>
+    <string name="act_current_quantity">Mevcut Miktar:</string>
+    <string name="act_current_quantity_text">mevcut miktar</string>
+    <string name="act_unsupplied_quantity">Tedarik Edilmeyen Miktar:</string>
+    <string name="act_unsupplied_quantity_text">tedarik edilmeyen miktar</string>
+    <string name="act_urgency">Aciliyet:</string>
+    <string name="act_address">Adres:</string>
+    <string name="act_details">Detaylar:</string>
+    <string name="act_edit">Düzenle</string>
+    <string name="act_delete">Sil</string>
+    <string name="act_navigate">Yol Tarifi</string>
+    <string name="act_show_on_map">Haritada Göster</string>
+
+    <!-- SORT AND FILTER -->
+    <string name="sf_title">Sırala &amp; Filtrele</string>
+    <string name="sf_sort_by">Sıralama Kriteri:</string>
+    <string name="sf_sort_order">Sıralama Şekli:</string>
+    <string name="sf_type_filter">Kategoriye Göre Filtrele</string>
+    <string name="sf_types">Bir Kategori Seç:</string>
+    <string name="sf_subtypes">Alt Kategorileri Seç (İsteğe Bağlı):</string>
+    <string name="sf_location_filter">Konuma Göre Filtrele</string>
+    <string name="sf_location_select">Haritadan Seç</string>
+    <string name="sf_location_selected">Konum Seçildi</string>
+    <string name="sf_cancel">İptal</string>
+    <string name="sf_apply">Uygula</string>
+    <string name="sf_creation">Oluşturulma Zamanı</string>
+    <string name="sf_last_update">Son Güncellenme Zamanı</string>
+    <string name="sf_reliability">Güvenirlilik</string>
+    <string name="sf_urgency">Aciliyet</string>
+    <string name="sf_ascending">asc</string>
+    <string name="sf_descending">desc</string>
+    <string name="sf_distance">Mesafe:\n(0–20 km)</string>
+    <string name="sf_from_location">Merkez\nKonum:</string>
+    <string name="sf_upvote">upvote</string>
+
+    <!-- PAGE NAMES -->
+    <string name="activity_page">Aktivite Sayfası</string>
+    <string name="emergency_page">Acil Durum Sayfası</string>
+    <string name="need_page">İhtiyaç Sayfası</string>
+    <string name="resource_page">Kaynak Sayfası</string>
+    <string name="event_page">Olay Sayfası</string>
+    <string name="action_page">Aksiyon Sayfası</string>
+    <string name="add_emergency_page">Acil Durum Bildirme Sayfası</string>
+    <string name="add_need_page">İhtiyaç Oluşturma Sayfası</string>
+    <string name="add_resource_page">Kaynak Oluşturma Sayfası</string>
+    <string name="add_event_page">Olay Bildirme Sayfası</string>
+    <string name="add_action_page">Aksiyon Oluşturma Sayfası</string>
+    <string name="login_page">Üye Girişi Sayfası</string>
+    <string name="main_page">Ana Sayfa</string>
+    <string name="profile_page">Profil Sayfası</string>
+    <string name="registration_page">Üye Kaydı Sayfası</string>
+    <string name="forgot_password_page">Parola Sıfırlama Sayfası</string>
+    <string name="change_password_page">Parola Değiştirme Sayfası</string>
+    <string name="adding_notification_page">Bildirim Ekleme Sayfası</string>
+    <string name="past_user_actions_page">Üye Etkinlik Geçmişi Sayfası</string>
+    <string name="subscribe_notification_page">Bildirime Abone Olma Sayfası</string>
+
+
+    <!-- ADD/EDIT ACTIVITY FIELD NAMES-->
+    <string name="field_need_type">İhtiyaç Kategorisi (Seç veya Gir)</string>
+    <string name="field_resource_type">Kaynak Kategorisi (Seç veya Gir)</string>
+    <string name="field_action_type">Aksiyon Kategorisi (Seç veya Gir)</string>
+    <string name="field_event_type">Olay Kategorisi (Seç veya Gir)</string>
+    <string name="field_sub_type">Alt Kategori (Seç veya Gir)</string>
+    <string name="field_location">Konum (Haritadan Seç veya Gir)</string>
+    <string name="field_quantity">Miktar</string>
+    <string name="field_coordinate_x">X Koordinatı</string>
+    <string name="field_coordinate_y">Y Koordinatı</string>
+    <string name="submit">Gönder</string>
+    <string name="edit_need">İhtiyacı Düzenle</string>
+    <string name="edit_resource">Kaynağı Düzenle</string>
+    <string name="edit_action">Aksiyonu Düzenle</string>
+    <string name="save_changes">Değişiklikleri Kaydet</string>
+
+    <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
+    <string name="sign_up">ÜYE OL</string>
+    <string name="sign_in">GİRİŞ YAP</string>
+    <string name="sign_up_camel">Üye Ol</string>
+    <string name="sign_in_camel">Giriş Yap</string>
+    <string name="username">Kullanıcı Adı</string>
+    <string name="e_mail">E-posta</string>
+    <string name="username_or_email">Kullanıcı Adı veya E-posta</string>
+    <string name="password">Parola</string>
+    <string name="confirm_password">Parolayı Onayla</string>
+    <string name="forgot_password">Parolamı Unuttum</string>
+    <string name="reset_password">Parolayı Sıfırla</string>
+    <string name="verify">DOĞRULA</string>
+    <string name="verification_code">Doğrulama Kodu</string>
+    <string name="enter_verification_code">Doğrulama Kodunu Gir</string>
+    <string name="send_verification_code">DOĞRULAMA KODU GÖNDER</string>
+    <string name="resend_code">KODU TEKRAR GÖNDER</string>
+    <string name="full_name">İsim Soyisim</string>
+
+    <!-- MAP -->
+    <string name="more">Daha</string>
+
+    <!-- PROFILE -->
+    <string name="pr_login_required">Üye girişi yapmanız gerekiyor.</string>
+    <string name="pr_full_name">İsim Soyisim</string>
+    <string name="pr_username">Kullanıcı Adı</string>
+    <string name="pr_call">Ara</string>
+    <string name="pr_logout">Çıkış Yap</string>
+    <string name="pr_social_media">Sosyal Medya</string>
+    <string name="pr_skills">Beceriler</string>
+    <string name="pr_languages">Lisanlar</string>
+    <string name="pr_professions">Meslekler</string>
+    <string name="pr_edit_name">İsim</string>
+    <string name="pr_edit_surname">Soyisim</string>
+    <string name="pr_edit_username">Kullanıcı Adı</string>
+    <string name="pr_edit_visibility">Görünür Profil Bilgisi</string>
+    <string name="pr_edit_proficiency">Yeterlilik</string>
+    <string name="pr_edit_credibility_region">Güvenilirlik Bölgesi</string>
+    <string name="pr_edit_verified_by">Doğrulayan</string>
+    <string name="pr_edit_phone">Telefon Numarası</string>
+    <string name="pr_edit_email">E-posta</string>
+    <string name="pr_edit_nationality">Uyruk</string>
+    <string name="pr_edit_id">TC Kimlik Numarası</string>
+    <string name="pr_edit_address">Adres</string>
+    <string name="pr_edit_education">Eğitim</string>
+    <string name="pr_edit_health">Sağlık Durumu</string>
+    <string name="pr_edit_blood">Kan Grubu</string>
+    <string name="pr_hidden_profile">Gizli Profil</string>
+    <string name="pr_no_connection">Bağlantı Yok</string>
+
+    <!-- PLACEHOLDERS -->
+    <string name="placeholder_general">Örnek Metin</string>
+    <string name="placeholder_activity">İhtiyaç</string>
+    <string name="placeholder_type">Yiyecek</string>
+    <string name="placeholder_subtype">Bebek Yiyeceği</string>
+    <string name="placeholder_username">Mehmet</string>
+    <string name="placeholder_date">2023-12-31 23.59</string>
+    <string name="placeholder_coordinate">x: 41.09, y: 29.04</string>
+    <string name="placeholder_region">Marmara Bölgesi</string>
+    <string name="placeholder_quantity">123 adet</string>
+    <string name="placeholder_reliability">0.73</string>
+
+    <!-- NOTIFICATION -->
+    <string name="add_notification">Bildirim Ekle</string>
+
+    <!-- EVENT -->
+    <string name="short_note">Kısa Açıklama</string>
+    <string name="debris">Deprem</string>
+    <string name="event_date">Olay Tarihi</string>
+    <string name="event_time">Olay Zamanı</string>
+    <string name="coverage_x_km">Kapsama Alanı X(km)</string>
+    <string name="coverage_y_km">Kapsama Alanı Y(km)</string>
+    <string name="additional_notes">Ek Notlar</string>
+    <string name="edit_event">Olayı Düzenle</string>
+
+    <!-- ACTIVITY LISTS -->
+    <string name="cloth">Giyecek</string>
+    <string name="food">Yiyecek</string>
+    <string name="drink">İçecek</string>
+    <string name="shelter">Barınak</string>
+    <string name="medication">İlaç</string>
+    <string name="transportation">Ulaşım</string>
+    <string name="tool">Araç</string>
+    <string name="human">İnsan</string>
+    <string name="other">Diğer</string>
+    <string name="need_resource">İhtiyaç - Kaynak</string>
+
+
+    <string-array name="event_types">
+        <item>Enkaz</item>
+        <item>Altyapı</item>
+        <item>Afet</item>
+        <item>Yardım Noktası</item>
+    </string-array>
+
+    <!-- PROFILE LISTS -->
+
+</resources>

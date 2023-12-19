@@ -4,8 +4,11 @@ import { Button, Input } from '@nextui-org/react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation'
+import { withIronSessionSsr } from 'iron-session/next';
+import sessionConfig from '@/lib/sessionConfig';
+import getLabels from '@/lib/getLabels';
 
-export default function login() {
+export default function register({ labels }) {
   const router = useRouter()
   const { register, reset, handleSubmit, setError, formState: { isSubmitting, errors } } = useForm();
 
@@ -23,45 +26,57 @@ export default function login() {
       }
     } else if (response.ok) {
       // successful
-      toast.success("Successfully saved")
+      toast.success(labels.feedback.save_success);
       router.push("/")
     } else {
       // unknown error
-      toast.error("An unexpected error occurred while saving, please try again")
+      toast.error(labels.feedback.failure);
     }
   }
 
 
   const fields = [
-    { type: "text", name: "username", required: true, label: "Kullanıcı adı", placeholder: "Food" },
-    { type: "text", name: "first_name", required: true, label: "İsim", placeholder: "Pasta" },
-    { type: "text", name: "last_name", required: true, label: "Soyadı", placeholder: "dede"  },
-    { type: "password", name: "password", required: true, label: "Şifre", placeholder: "strong12345" },
-    { type: "phone_number", name: "phone_number", required: true, label: "Telefon numarası", placeholder: "05321234567" },
-    { type: "email", name: "email", required: true, label: "Email", placeholder: "Email" },
+    { type: "text", name: "username", required: true },
+    { type: "text", name: "first_name", required: true },
+    { type: "text", name: "last_name", required: true  },
+    { type: "password", name: "password", required: true },
+    { type: "phone_number", name: "phone_number", required: true },
+    { type: "email", name: "email", required: true },
 ]
   return <form className="rounded-xl bg-gray-200 p-10 w-8/12" onSubmit={handleSubmit(onSubmit)} >
-    <h1 className='text-6xl font-normal leading-normal mt-0 mb-1 text-center text-emerald-800'> Kayıt ol</h1>
+    <h1 className='text-6xl font-normal leading-normal mt-0 mb-1 text-center text-emerald-800'>{labels.auth.register}</h1>
           {fields.map(field => {
               return <>
                   <Input type={field.type} 
                       {...register(field.name, { required: field.required })}
                       style={{ border: 'none' }}
-                      label={field.label}
+                      label={labels.profile[field.name]}
                       labelPlacement={'outside'}
                       variant={'faded'}
                       className='mb-6'
-                      placeholder={field.placeholder}
+                      placeholder={labels.placeholders[field.name] ? labels.placeholders[field.name] : " "}
                   />
                   <div className="error" >{errors[field.name]?.message}</div>
               </>
           })}
           <Button disabled={isSubmitting} type='submit'>
-              {isSubmitting ? 'Loading' : "Submit"}
+              {isSubmitting ? labels.UI.loading : labels.UI.submit}
           </Button>
       </form>;
 }
 
-login.getLayout = function getLayout(page) {
+register.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
+
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req }) {
+    const labels = await getLabels(req.session.language);
+    return {
+      props: {
+        labels
+      }
+    };
+  },
+  sessionConfig
+)

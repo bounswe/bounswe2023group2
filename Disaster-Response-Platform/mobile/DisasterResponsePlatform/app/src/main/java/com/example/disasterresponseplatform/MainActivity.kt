@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resourceViewModel: ResourceViewModel
 
     private lateinit var mapFragment: MapFragment
-    private val profileFragment = ProfileFragment()
+    private val profileFragment = ProfileFragment(null)
     private val loginFragment = LoginFragment()
     private lateinit var homeFragment: HomeFragment
 
@@ -52,6 +52,9 @@ class MainActivity : AppCompatActivity() {
         mapFragment = MapFragment(needViewModel, resourceViewModel, actionViewModel, eventViewModel, emergencyViewModel)
         navBarListener()
 //        toggleListener()
+        // This clears the shadow of action bar and set background color
+        supportActionBar?.elevation = 0F
+        supportActionBar?.setBackgroundDrawable(getDrawable(R.color.primary))
         arrangeVisibility()
         initializeFragments()
 
@@ -79,7 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeFragments(){
-        homeFragment = HomeFragment(needViewModel,resourceViewModel, this)
+        homeFragment = HomeFragment(needViewModel,resourceViewModel,actionViewModel,eventViewModel,this)
         replaceFragment(homeFragment)
     }
 
@@ -105,8 +108,6 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState() // to be ready to use
         // able to close navigation when clicked to back arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setElevation(0F)
-        supportActionBar?.setBackgroundDrawable(getDrawable(R.color.primary))
         binding.navView.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.miLoggedInAs -> replaceNavFragment(profileFragment)

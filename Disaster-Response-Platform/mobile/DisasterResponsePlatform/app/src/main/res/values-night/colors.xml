@@ -9,10 +9,15 @@
 
     <color name="colorAction">#761EB5</color>
     <color name="colorEmergency">#A80C0C</color>
-    <color name="colorEvent">#CD9B02</color>
+    <color name="colorEvent">#7A594C</color>
     <color name="colorNeed">#0677AA</color>
     <color name="colorResource">#067A47</color>
     <color name="colorActivity">#656565</color>
     <color name="separator">#6A6A6A</color>
+
+    <color name="icon">#D3D3D3</color>
+    <color name="text">#D3D3D3</color>
+
+    <color name="bottom_sheet_bg">#2B2B2B</color>
 
 </resources>

@@ -53,6 +53,7 @@ class AddResourceFragment(
     private var requireActivity: FragmentActivity? = null
     private var selectedLocationX by Delegates.notNull<Double>()
     private var selectedLocationY by Delegates.notNull<Double>()
+    private val mapFragment = ActivityMap()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,67 +62,10 @@ class AddResourceFragment(
     ): View {
 
         binding = FragmentAddResourceBinding.inflate(inflater, container, false)
-        parentFragmentManager.setFragmentResultListener(
-            "coordinatesKey",
-            viewLifecycleOwner
-        ) { _, bundle ->
-            selectedLocationX = bundle.getDouble("x_coord")
-            selectedLocationY = bundle.getDouble("y_coord")
-            coordinateToAddress(
-                selectedLocationX,
-                selectedLocationY,
-                object : Callback {
-                    override fun onFailure(call: Call, e: java.io.IOException) {
-                        val handler = Handler(Looper.getMainLooper())
-                        handler.post {
-                            binding.etCoordinate.editText?.setText(
-                                "%.2f, %.2f".format(
-                                    selectedLocationX,
-                                    selectedLocationY
-                                )
-                            )
-                        }
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        if (response.isSuccessful) {
-                            val responseBody = response.body?.string()
-                            if (responseBody == null) {
-                                val handler = Handler(Looper.getMainLooper())
-                                handler.post {
-                                    binding.etCoordinate.editText?.setText(
-                                        "%.2f, %.2f".format(
-                                            selectedLocationX,
-                                            selectedLocationY
-                                        )
-                                    )
-                                }
-                            } else {
-                                var address = responseBody.subSequence(
-                                    responseBody.indexOf("display_name") + 15,
-                                    responseBody.length
-                                )
-                                address = address.subSequence(0, address.indexOf("\""))
-                                val handler = Handler(Looper.getMainLooper())
-                                handler.post {
-                                    binding.etCoordinate.editText?.setText(address)
-                                }
-                            }
-                        } else {
-                            val handler = Handler(Looper.getMainLooper())
-                            handler.post {
-                                binding.etCoordinate.editText?.setText(
-                                    "%.2f, %.2f".format(
-                                        selectedLocationX,
-                                        selectedLocationY
-                                    )
-                                )
-                            }
-                        }
-                    }
-
-                })
+        if (requireActivity == null) { // to handle error when user enters this page twice
+            requireActivity = requireActivity()
         }
+        trackUserPickLocation()
         binding.etCoordinate.setEndIconOnClickListener {
             navigateToMapFragment()
         }
@@ -132,13 +76,86 @@ class AddResourceFragment(
         return binding.root
     }
 
+    private fun trackUserPickLocation(){
+        mapFragment.getLocationChosen().observe(requireActivity!!){chosen ->
+            if (chosen){
+                Log.i("LocationMAP","IS CHOSEN")
+                parentFragmentManager.setFragmentResultListener(
+                    "coordinatesKey",
+                    viewLifecycleOwner
+                ) { _, bundle ->
+                    selectedLocationX = bundle.getDouble("x_coord")
+                    selectedLocationY = bundle.getDouble("y_coord")
+                    coordinateToAddress(
+                        selectedLocationX,
+                        selectedLocationY,
+                        object : Callback {
+                            override fun onFailure(call: Call, e: java.io.IOException) {
+                                val handler = Handler(Looper.getMainLooper())
+                                handler.post {
+                                    binding.etCoordinate.editText?.setText(
+                                        "%.2f, %.2f".format(
+                                            selectedLocationX,
+                                            selectedLocationY
+                                        )
+                                    )
+                                }
+                            }
+
+                            override fun onResponse(call: Call, response: Response) {
+                                if (response.isSuccessful) {
+                                    val responseBody = response.body?.string()
+                                    if (responseBody == null) {
+                                        val handler = Handler(Looper.getMainLooper())
+                                        handler.post {
+                                            binding.etCoordinate.editText?.setText(
+                                                "%.2f, %.2f".format(
+                                                    selectedLocationX,
+                                                    selectedLocationY
+                                                )
+                                            )
+                                        }
+                                    } else {
+                                        var address = responseBody.subSequence(
+                                            responseBody.indexOf("display_name") + 15,
+                                            responseBody.length
+                                        )
+                                        address = address.subSequence(0, address.indexOf("\""))
+                                        val handler = Handler(Looper.getMainLooper())
+                                        handler.post {
+                                            binding.etCoordinate.editText?.setText(address)
+                                        }
+                                    }
+                                } else {
+                                    val handler = Handler(Looper.getMainLooper())
+                                    handler.post {
+                                        binding.etCoordinate.editText?.setText(
+                                            "%.2f, %.2f".format(
+                                                selectedLocationX,
+                                                selectedLocationY
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+
+                        })
+                }
+                // to ensure it's not continuously listening the port after the location is received
+                parentFragmentManager.clearFragmentResultListener("coordinatesKey")
+            }
+        }
+    }
+
     private fun navigateToMapFragment() {
-        val mapFragment = ActivityMap()
+
+        mapFragment.isDialog = true // arrange that as a dialog instead of fragment
         mapFragment.coordinatesSelectedListener = this@AddResourceFragment
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, mapFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        mapFragment.show(parentFragmentManager, "mapDialog")
+        //val transaction = parentFragmentManager.beginTransaction()
+        //transaction.replace(R.id.container, mapFragment)
+        //transaction.addToBackStack(null)
+        //transaction.commit()
     }
 
     /** It fills the layout's fields corresponding data if it is editResource
@@ -219,9 +236,6 @@ class AddResourceFragment(
      * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
      */
     private fun submitResource(isAdd: Boolean) {
-        if (requireActivity == null) { // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
         binding.btnSubmit.setOnClickListener {
             if (!binding.btnSubmit.isEnabled) { // Prevent multiple clicks
                 return@setOnClickListener

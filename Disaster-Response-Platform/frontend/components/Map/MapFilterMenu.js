@@ -11,6 +11,7 @@ export default function MapFilterMenu({
   setNeedApiData,
   isMapSelected,
   selectMap,
+  labels
 }) {
   const [resourceChecked, setResourceChecked] = useState(false);
   const [aktifChecked, setAktifChecked] = useState(false);
@@ -25,14 +26,14 @@ export default function MapFilterMenu({
 
 
   const notifyFilter = () => {
-    toast.info("Taramak istediğiniz alanın merkezini seçiniz", {
+    toast.info(labels.map.choose_scan_center, {
       position: "top-center",
       autoClose: 5000, // Auto close the notification after 3 seconds (adjust as needed)
     });
   };
 
   const notifyAdd = () => {
-    toast.info("Haritadan lokasyon seçiniz", {
+    toast.info(labels.map.choose_location, {
       position: "top-center",
       autoClose: 5000, // Auto close the notification after 3 seconds (adjust as needed)
     });
@@ -206,7 +207,7 @@ export default function MapFilterMenu({
           <input
             type="text"
             className={styles.searchTerm}
-            placeholder="Ne arıyorsunuz ?"
+            placeholder={labels.placeholders.search_bar}
           ></input>
           <button type="submit" className={styles.searchButton}>
             <FaSearch />
@@ -214,7 +215,7 @@ export default function MapFilterMenu({
         </div>
       </div>
       <div className="CheckBox">
-        <div className={styles.header}>Filtreler</div>
+        <div className={styles.header}>{labels.sort_filter.filters}</div>
         <hr
           style={{
             background: "gray",
@@ -230,7 +231,7 @@ export default function MapFilterMenu({
           className="bg-yellow-500 hover:bg-yellow-700 text-white 
                           font-bold py-1 px-2 rounded w-full "
         >
-          Belirli alanı tara
+          {labels.map.scan_certain_area}
         </button>
 
         <div>
@@ -248,23 +249,27 @@ export default function MapFilterMenu({
             checked={aktifChecked}
             onChange={() => setAktifChecked(!aktifChecked)}
           />
-          Aktif Olanlar
+          {labels.sort_filter.active_only}
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          Kaynaklar
+          {labels.activities.resources}
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          Olaylar
+          {labels.activities.events}
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          Aktiviteler
+          {labels.activities.actions}
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          İhtiyaçlar
+          {labels.activities.needs}
+        </div>
+        <div>
+          <input type="checkbox" className={styles.checkbox} />
+          {labels.activities.emergencies}
         </div>
         <button
           onClick={() => {
@@ -273,7 +278,7 @@ export default function MapFilterMenu({
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full
                           absolute bottom-10 right-0.5"
         >
-          Filtrele
+          {labels.sort_filter.filter}
         </button>
         <button
           onClick={() => {
@@ -283,7 +288,7 @@ export default function MapFilterMenu({
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full
                           absolute bottom-0 right-0.5"
         >
-          İlan Oluştur
+          {labels.activities.add_resource}
         </button>
         {isMapSelected ? popup() : <></>}
         <ToastContainer />

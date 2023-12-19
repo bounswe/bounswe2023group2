@@ -12,41 +12,35 @@ import config
 userDb = MongoDB.get_collection('authenticated_user')
 
 def create_proficiency_request(prof_request : ProfRequest, username: str):
-
-    #old implementation which adds the request to the database to be reviewed by admin
-    # insert_result = roleRequestsDb.insert_one(prof_request.dict())
+    query = {"username": username}
     
-    # if insert_result.inserted_id:
-    #     success_response = ProfReqSuccess(
-    #         proficiency=dict(prof_request),
-    #         inserted_id=str(insert_result.inserted_id)  # Assuming 'result' is the inserted_id
-    #     )
-    #     return success_response
+
+    existing_user = userDb.find_one({"username": username})
+def create_proficiency_request(prof_request: ProfRequest, username: str):
+    # Update user role
     query = {"username": username}
     update_operation = {"$set": {"user_role": UserRole.ROLE_BASED.value}}
-    result= userDb.update_one(query, update_operation)
+    userDb.update_one(query, update_operation)
 
-    existing_user = userDb.find_one({"username": username, "proficiency": {"$elemMatch": {"proficiency": prof_request.proficiency.value}}})
+    # Check if the user already has the specified proficiency
+    existing_user = userDb.find_one({"username": username})
     if existing_user:
-        userDb.update_one(
-            {"username": username, "proficiency.proficiency": prof_request.proficiency.value},
-            {"$set": {"proficiency.$.details": prof_request.details}}
-        )
-        success_response = ProfReqSuccess(
-            proficiency=prof_request.proficiency
-        )
-        return success_response
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="This proficiency already exists for the user.",
-        )
-    result = userDb.update_one(
-        {"username": username},
-        {"$push": {"proficiency": {"$each": [prof_request.dict()]}}},
-        upsert=True,
-    )
-    if result.modified_count > 0 :
+        # Check if the proficiency already exists
+        if existing_user.get("proficiency", {}).get("proficiency") == prof_request.proficiency:
+            # Update the details of the existing proficiency
+            userDb.update_one(
+                {"username": username},
+                {"$set": {"proficiency.details": prof_request.details}}
+            )
+        else:
+            # Set the new proficiency object
+            userDb.update_one(
+                {"username": username},
+                {"$set": {"proficiency": {"proficiency": prof_request.proficiency, "details": prof_request.details}}},
+                upsert=True
+            )
+
+        # Return success response
         success_response = ProfReqSuccess(
             proficiency=prof_request.proficiency
         )

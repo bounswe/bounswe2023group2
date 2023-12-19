@@ -1,4 +1,4 @@
-from Models.need_model import Need
+from Models.need_model import Need, NeedList
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 from Services.build_API_returns import *
@@ -53,8 +53,25 @@ def create_need(need: Need) -> str:
     # return str(result.inserted_id)
 
 
-def get_need_by_id(need_id: str) -> list[dict]:
-    return get_needs(need_id)
+def get_need_by_id(need_id: str) -> list[Need]:
+    need_list=[]
+    need = needs_collection.find_one({"_id": ObjectId(need_id)})
+    if not need:
+        raise ValueError("There is no need with this id")
+    #need["x"] = str(need["_id"])
+    recurrence_id = need.get("recurrence_id")
+    if recurrence_id is not None:
+        # Find other needs with the same recurrence_id
+        additional_needs = needs_collection.find({"recurrence_id": recurrence_id})
+        additional_needs = [{**r, "_id": str(r["_id"])} for r in additional_needs]
+
+   
+        need_list.extend(additional_needs)
+    else:
+        need_dict = {**need, "_id": str(need["_id"])}
+        need_list.append(need_dict)
+        #resource_list.append(resource)
+    return NeedList(needs= need_list)
 
 def create_recurrent_needs(need:Need):
 
@@ -82,8 +99,11 @@ def get_needs(
     active: Optional[bool] = None,
     types: list = None, 
     subtypes: list = None,
+    x: float = None,
+    y: float = None,
+    distance_max: float = None,
     sort_by: str = 'created_at',
-    order: Optional[str] = 'asc'
+    order: Optional[str] = 'desc'
 ) -> list[dict]:
     projection = {
             "_id": {"$toString": "$_id"},
@@ -126,6 +146,10 @@ def get_needs(
 
     needs_cursor = needs_collection.find(query, projection).sort(sort_by, sort_order)
     needs_data = list(needs_cursor)
+
+      # Filter by distance if necessary
+    if x is not None and y is not None and distance_max is not None:
+        needs_data = [need for need in needs_data if ((need['x'] - x) ** 2 + (need['y'] - y) ** 2) ** 0.5 <= distance_max]
 
     # Formatting datetime fields
     formatted_needs_data = []

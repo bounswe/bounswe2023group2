@@ -1,6 +1,9 @@
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, RadioGroup, Radio } from "@nextui-org/react";
 
-export default function SkillModal({ isOpen, onOpenChange, topic }) {
+export default function SkillModal({ isOpen, onOpenChange, topic, labels }) {
+
+  const skill_labels = labels.profile_lists[topic.api_url];
+
 	return (
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -10,7 +13,7 @@ export default function SkillModal({ isOpen, onOpenChange, topic }) {
               <ModalBody>
               	<Input name={topic.primary} id={topic.primary} type="text"
                         className="border-none pb-6"
-                        label={topic.primary_label}
+                        label={skill_labels.primary_label}
                         labelPlacement='outside'
                         variant='bordered'
                         required
@@ -18,25 +21,25 @@ export default function SkillModal({ isOpen, onOpenChange, topic }) {
                 {topic.is_link ?
 	              	<Input name={topic.secondary} id={topic.secondary} type="url"
 	                        className="border-none pb-6"
-	                        label={topic.secondary_label}
+	                        label={skill_labels.secondary_label}
 	                        labelPlacement='outside'
 	                        variant='bordered'
 	                        required
 	                    />
 	                :
-	                <RadioGroup name={topic.secondary} id={topic.secondary} label={topic.secondary_label}>
+	                <RadioGroup name={topic.secondary} id={topic.secondary} label={skill_labels.secondary_label}>
 	                	{topic.options.map(option => (
-	                		<Radio key={`link-option-${option}`} value={option}> {option} </Radio>
+	                		<Radio key={`link-option-${option}`} value={option}> {skill_labels.options[option]} </Radio>
 	                	))}
 	                </RadioGroup>
 	            }
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Vazgeç
+                  {labels.UI.cancel}
                 </Button>
                 <Button color="primary" type="submit">
-                  Ekle
+                  {labels.UI.add}
                 </Button>
               </ModalFooter>
             </form>

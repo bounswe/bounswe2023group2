@@ -36,8 +36,7 @@ class ResourceAdapter(private val resourceList: List<ResourceBody.ResourceItem>?
 
 
         hb.tvType.text = currentResource?.type.toString()
-
-        hb.tvDate.text = currentResource?.created_at
+        hb.tvDate.text = currentResource?.created_at?.substring(0,19)
         hb.tvLocation.text = "x: ${String.format("%.2f", currentResource?.x).replace(',', '.')}, y: ${String.format("%.2f", currentResource?.y).replace(',', '.')}"
         hb.tvQuantity.text = currentResource?.currentQuantity.toString()
         hb.tvCreator.text = currentResource?.created_by

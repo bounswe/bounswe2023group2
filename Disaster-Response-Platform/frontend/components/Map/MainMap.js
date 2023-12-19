@@ -28,6 +28,7 @@ var redIcon = new L.Icon({
   shadowSize: [21, 21],
 });
 
+
 var greenIcon = new L.Icon({
   iconUrl:
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
@@ -43,7 +44,6 @@ function LocationMarker({ lat, lng }) {
   const map = useMap();
   return (
     <Marker position={[41.08714, 29.043474]}>
-      <Popup>You are here</Popup>
     </Marker>
   );
 }
@@ -53,6 +53,7 @@ export default function Map({
   activateClick,
   resourceApiData,
   needApiData,
+
 }) {
   const [MarkerArr, setMarkerArr] = useState([]);
 
@@ -199,10 +200,6 @@ export default function Map({
               },
             }}
           >
-            <Popup>
-              <h3>Tür: {resource.type}</h3>
-              {/* Other details you want to show in the popup */}
-            </Popup>
           </Marker>
         ))}
 
@@ -235,17 +232,11 @@ export default function Map({
         {MarkerArr &&
           MarkerArr.map(({ type, subType, dueDate, x_coord, y_coord }) => (
             <Marker position={[x_coord, y_coord]} icon={redIcon}>
-              <Popup>
-                <h3>Tür: {type} </h3>
-
-                <h3>Alt Tür: {subType} </h3>
-
-                <h3>Tarih: {dueDate} </h3>
-              </Popup>
             </Marker>
           ))}
       </MapContainer>
       <SidePopup card={selectedMarker} closePopup={closePopup} />
+
     </div>
   );
 }

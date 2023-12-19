@@ -1,6 +1,7 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -23,6 +26,7 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
+import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -39,6 +43,11 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        // Change ActionBar and StatusBar color
+        (activity as AppCompatActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.colorNeed)))
+        (activity as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorNeed)
+
         binding = FragmentNeedItemBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -54,13 +63,13 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
 
     private fun fillTexts(need: NeedBody.NeedItem){
         val creatorName = need.created_by
-        binding.etCreatedBy.text = creatorName
-        binding.etType.text = need.type
-        binding.etSubType.text = need.details["subtype"]
-        binding.etInitialQuantity.text = need.initialQuantity.toString()
-        binding.etUnSuppliedQuantity.text = need.unsuppliedQuantity.toString()
-        binding.etUrgency.text = need.urgency.toString()
-        binding.etCoordinate.text = "%.3f %.3f".format(need.x, need.y)
+        binding.tvCreator.text = creatorName
+        binding.tvType.text = need.type
+        binding.tvSubType.text = need.details["subtype"]
+        binding.tvInitialQuantity.text = need.initialQuantity.toString()
+        binding.tvUnsuppliedQuantity.text = need.unsuppliedQuantity.toString()
+        binding.tvUrgency.text = need.urgency.toString()
+        binding.tvAddress.text = "%.3f %.3f".format(need.x, need.y)
         coordinateToAddress(need.x, need.y, object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 Log.e("Network", "Error: ${e.message}")
@@ -75,7 +84,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
                     )
                     address = address.subSequence(0, address.indexOf("\""))
                     requireActivity?.runOnUiThread {
-                        binding.etCoordinate.text = address
+                        binding.tvAddress.text = address
                     }
                 }
             }
@@ -91,7 +100,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it
-            binding.etUserRole.text = userRole
+            binding.tvUserRole.text = userRole
         }
     }
 
@@ -107,6 +116,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
             if (fieldName != "subtype"){
                 val textView = TextView(requireContext())
                 textView.text = "$fieldName: $value"
+                textView.textSize = 16F
                 linearLayout.addView(textView)
                 val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 textView.layoutParams = layoutParams
@@ -137,6 +147,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
     private fun addLayoutWithMessage(linearLayout: LinearLayout,message: String){
         val textView = TextView(requireContext())
         textView.text = message
+        textView.textSize = 16F
         linearLayout.addView(textView)
         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         textView.layoutParams = layoutParams
@@ -164,7 +175,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
             navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
-            Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
+            addFragment(ProfileFragment(need.created_by),"ProfileFragment")
         }
         binding.btnUpvote.setOnClickListener {
             upvoteNeed(token)
@@ -203,7 +214,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -233,7 +244,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -4,12 +4,15 @@ import dynamic from "next/dynamic";
 
 import MapFilterMenu from "@/components/Map/MapFilterMenu";
 import { useState } from "react";
+import { withIronSessionSsr } from 'iron-session/next';
+import sessionConfig from '@/lib/sessionConfig';
+import getLabels from '@/lib/getLabels';
 
 const Map = dynamic(() => import("@/components/Map/MainMap"), {
   ssr: false,
 });
 
-export default function mapPage() {
+export default function mapPage({ labels }) {
   const [isClickActivated, setIsClickActivated] = useState(false);
   const [resourceApiData, setResourceApiData] = useState([]);
   const [needApiData, setNeedApiData] = useState([]);
@@ -20,20 +23,36 @@ export default function mapPage() {
 
   return (
     <>
+
       <Map
         isClickActivated={isClickActivated}
         activateClick={activateClick}
         resourceApiData={resourceApiData}
         needApiData={needApiData}
+        labels={labels}
       />
       <MapFilterMenu
         activateClick={activateClick}
         setResourceApiData={setResourceApiData}
         setNeedApiData={setNeedApiData}
+        labels={labels}
       />
+
     </>
   );
 }
 mapPage.getLayout = function getLayout(page) {
   return <MapLayout>{page}</MapLayout>;
 };
+
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req }) {
+    const labels = await getLabels(req.session.language);
+    return {
+      props: {
+        labels
+      }
+    };
+  },
+  sessionConfig
+)
