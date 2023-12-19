@@ -44,7 +44,6 @@ function LocationMarker({ lat, lng,labels }) {
   const map = useMap();
   return (
     <Marker position={[41.08714, 29.043474]}>
-      <Popup>{labels.map.you_are_here}</Popup>
     </Marker>
   );
 }
@@ -227,7 +226,6 @@ export default function Map({
           onOpenChange={onOpenChange}
           isOpen={isOpen}
           fetchData={fetchData}
-          labels={labels}
         />
         {/* {MarkerArr &&
           MarkerArr.map(({ type, subType, dueDate, x_coord, y_coord }) => (
