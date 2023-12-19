@@ -12,13 +12,10 @@ interface ResourceDao {
     @Insert
     suspend fun insertResource(resource: Resource)
 
-    @Query("SELECT ${NeedResourceCols.coordinateX} FROM ${DatabaseInfo.RESOURCE}  WHERE ${NeedResourceCols.creatorName} = :creatorName")
-    fun getX(creatorName: String): Double?
-
-    @Query("SELECT ${NeedResourceCols.coordinateY} FROM ${DatabaseInfo.RESOURCE}  WHERE ${NeedResourceCols.creatorName} = :creatorName")
-    fun getY(creatorName: String): Double?
-
     @Query("SELECT * FROM ${DatabaseInfo.RESOURCE} ORDER BY ${NeedResourceCols.id}")
     fun getAllResources(): List<Resource>?
+
+    @Query("DELETE FROM ${DatabaseInfo.RESOURCE}")
+    suspend fun deleteAllResources()
 }
 

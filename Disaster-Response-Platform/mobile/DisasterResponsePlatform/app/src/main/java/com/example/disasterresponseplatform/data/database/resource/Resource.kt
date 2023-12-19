@@ -9,24 +9,18 @@ import com.example.disasterresponseplatform.data.enums.NeedTypes
 
 @Entity(tableName = DatabaseInfo.RESOURCE)
 data class Resource(
-    @PrimaryKey()
-    @ColumnInfo(name = NeedResourceCols.id)
-    val ID: String,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo (name = NeedResourceCols.id)
+    val ID: Int?, // if user does not enter ID, it generates it automatically
     @ColumnInfo(name = NeedResourceCols.creatorName)
-    val creatorName: String,
-    @ColumnInfo(name = NeedResourceCols.condition)
-    val condition: String,
-    @ColumnInfo(name = NeedResourceCols.quantity)
-    val quantity: Int,
+    val creatorName: String, // this is for controlling who creates this. If 2 different user create when no internet connection
     @ColumnInfo(name = NeedResourceCols.type)
-    val type: NeedTypes,
-    @ColumnInfo(name = NeedResourceCols.details)
-    val details: String,
-    @ColumnInfo(name = NeedResourceCols.creationTime)
-    val creationTime: String?,
-    @ColumnInfo(name = NeedResourceCols.coordinateX)
-    val coordinateX: Double,
-    @ColumnInfo(name = NeedResourceCols.coordinateY)
-    val coordinateY: Double,
+    val type: String,
+    @ColumnInfo(name = NeedResourceCols.shortDescription)
+    val shortDescription: String,
+    @ColumnInfo(name = NeedResourceCols.additionalNotes)
+    val additionalNotes: String,
+    @ColumnInfo(name = NeedResourceCols.quantity)
+    val quantity: Int = 1,
 )
 

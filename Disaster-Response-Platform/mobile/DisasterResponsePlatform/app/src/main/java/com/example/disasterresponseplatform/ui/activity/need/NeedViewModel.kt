@@ -39,15 +39,14 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         }
     }
 
-    fun getX(creatorID: String): Double?{
-        return needRepository.getX(creatorID)
-    }
-
-    fun getY(creatorID: String): Double?{
-        return needRepository.getY(creatorID)
-    }
-
     fun getAllNeeds(): List<Need>? = needRepository.getAllNeeds()
+
+    fun deleteAllNeeds(){
+        viewModelScope.launch(Dispatchers.IO){
+            needRepository.deleteAllNeeds()
+        }
+    }
+
 
     private val networkManager = NetworkManager()
 

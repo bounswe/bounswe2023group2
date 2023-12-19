@@ -5,13 +5,9 @@ class NeedResourceCols {
     companion object{
         const val id: String = "id"
         const val type: String = "type"
-        const val details: String = "details"
-        const val creationTime: String = "creationTime"
+        const val shortDescription: String = "shortDescription"
         const val creatorName: String = "creatorName"
-        const val coordinateX: String = "coordinateX"
-        const val coordinateY: String = "coordinateY"
+        const val additionalNotes: String = "additionalNotes"
         const val quantity: String = "quantity"
-        const val urgency: String = "urgency"
-        const val condition: String = "condition"
     }
 }

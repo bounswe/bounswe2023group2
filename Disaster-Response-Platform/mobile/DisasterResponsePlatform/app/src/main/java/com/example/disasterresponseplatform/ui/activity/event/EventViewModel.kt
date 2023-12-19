@@ -223,7 +223,14 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
         }
     }
 
-    fun getLocation(creatorID: String): String{
-        return eventRepository.getLocation(creatorID)
+    fun getAllEvents(): List<Event>?{
+        return eventRepository.getAllEvents()
     }
+
+    suspend fun deleteAllEvents(){
+        viewModelScope.launch(Dispatchers.IO){
+            eventRepository.deleteAllEvents()
+        }
+    }
+
 }

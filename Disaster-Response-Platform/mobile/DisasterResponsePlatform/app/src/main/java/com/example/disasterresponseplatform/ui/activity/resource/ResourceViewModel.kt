@@ -32,15 +32,12 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
         viewModelScope.launch(Dispatchers.IO) {
             resourceRepository.insertResource(resource)
         }
-
     }
 
-    fun getX(creatorID: String): Double?{
-        return resourceRepository.getX(creatorID)
-    }
-
-    fun getY(creatorID: String): Double?{
-        return resourceRepository.getY(creatorID)
+    suspend fun deleteAllResources(){
+        viewModelScope.launch(Dispatchers.IO) {
+            resourceRepository.deleteAllResources()
+        }
     }
 
     fun getAllResources(): List<Resource>? = resourceRepository.getAllResources()
