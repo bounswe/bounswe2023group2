@@ -22,6 +22,6 @@ def search_users(query: str)-> List[dict]:
             # Add other fields if needed
         ]
     })
-    results = [User(**document) for document in cursor]
+    results = [UserInfo(**document) for document in cursor]
     return results
     
