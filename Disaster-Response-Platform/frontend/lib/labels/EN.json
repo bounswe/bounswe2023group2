@@ -103,7 +103,8 @@
 		"remove": "Remove",
 		"cancel": "Cancel",
 		"close": "Close",
-		"loading": "Loading"
+		"loading": "Loading",
+		"forgot": "Forgot password"
 	},
 	"sort_filter": {
 		"sort": "Sort",
