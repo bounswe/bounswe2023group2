@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDisclosure } from "@nextui-org/react";
 import AddResourceForm from "../AddResourceMap";
 import { useRouter } from "next/router";
-import SidePopup from './SidePopup';
+import SidePopup from "./SidePopup";
 import {
   MapContainer,
   TileLayer,
@@ -28,7 +28,19 @@ var redIcon = new L.Icon({
   shadowSize: [21, 21],
 });
 
-function LocationMarker({ lat, lng, labels }) {
+
+var greenIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [21, 21],
+});
+
+function LocationMarker({ lat, lng,labels }) {
   const map = useMap();
   return (
     <Marker position={[41.08714, 29.043474]}>
@@ -41,7 +53,8 @@ export default function Map({
   isClickActivated,
   activateClick,
   resourceApiData,
-  labels
+  labels,
+  needApiData,
 }) {
   const [MarkerArr, setMarkerArr] = useState([]);
 
@@ -152,7 +165,9 @@ export default function Map({
   };
 
   return (
-    <div className={`${styles.map} ${selectedMarker ? styles['with-popup'] : ''}`}>
+    <div
+      className={`${styles.map} ${selectedMarker ? styles["with-popup"] : ""}`}
+    >
       {/* <SidePopup resource={selectedMarker} closePopup={closePopup} /> */}
       <MapContainer
         center={center}
@@ -180,12 +195,34 @@ export default function Map({
             icon={redIcon}
             eventHandlers={{
               click: () => {
+                resource.nre = "Resource";
+                resource.feedback = 0;
                 setSelectedMarker(resource);
               },
             }}
           >
             <Popup>
               <h3>{labels.sort_criteria.type}: {resource.type}</h3>
+              {/* Other details you want to show in the popup */}
+            </Popup>
+          </Marker>
+        ))}
+
+        {needApiData.map((need, index) => (
+          <Marker
+            key={index}
+            position={[need.x, need.y]}
+            icon={greenIcon}
+            eventHandlers={{
+              click: () => {
+                need.nre = "Need";
+                need.feedback = 0;
+                setSelectedMarker(need);
+              },
+            }}
+          >
+            <Popup>
+              <h3>Tür: {need.type}</h3>
               {/* Other details you want to show in the popup */}
             </Popup>
           </Marker>
@@ -211,7 +248,8 @@ export default function Map({
             </Marker>
           ))}
       </MapContainer>
-      <SidePopup resource={selectedMarker} closePopup={closePopup} labels={labels} />
+
+      <SidePopup card={selectedMarker} closePopup={closePopup} labels ={labels} />
     </div>
   );
 }

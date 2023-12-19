@@ -14,18 +14,19 @@ const Map = dynamic(() => import("@/components/Map/MainMap"), {
 
 export default function mapPage({ labels }) {
   const [isClickActivated, setIsClickActivated] = useState(false);
-  const [resourceApiData, setResourceApiData] = useState([])
+  const [resourceApiData, setResourceApiData] = useState([]);
+  const [needApiData, setNeedApiData] = useState([]);
 
   const activateClick = () => {
     setIsClickActivated(!isClickActivated);
   };
 
-
-
   return (
     <>
+
       <Map isClickActivated={isClickActivated} activateClick={activateClick} resourceApiData={resourceApiData} labels={labels}/>
       <MapFilterMenu activateClick={activateClick} setResourceApiData={setResourceApiData} labels={labels}/>
+4e15f13 (needs are implemented, useEffect activated, upvote-downvote is also done)
     </>
   );
 }
