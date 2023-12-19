@@ -66,6 +66,47 @@ class W3CAnnotation(BaseModel):
     isBasedOn: Optional[HttpUrl]
     items: Optional[List[Annotation]]
 
+class HypothesisModel(W3CAnnotation):
+    uri:Optional[HttpUrl]
+
+sample_for_hypothesis:HypothesisModel = {
+    "uri": "http://3.218.226.215:3000/resources/annotations/65776cc6d80e93410000000b",
+    "tags": [
+        "api", "DAPP","rescue","resource"
+    ],
+    "body": {
+        "type": "TextualBody",
+        "value": "Kaynağın verdiği bilgi ve önerisi: Sağladığı yemeklerin [PSAKD binasından](https://maps.app.goo.gl/hq6PxMbf4N8SWNTV7) yüklenebileceğini, yakın yerlerde olursa taşımayı kendisinin yapabileceğini söylüyor. [Fotoğrafını görebilirsiniz](https://zaytung.com/voicepics//Ahmad.jpg) ",
+        "format": "text/plain"
+    },
+    "document": {
+        "title": "DAPP resource 65776cc6d80e934140000000b",
+        "link": [{"href":"http://3.218.226.215:3000/resources/annotations/65776cc6d80e93414cd8300b"}]
+    },
+    "target": [
+        {
+            "source": "http://3.218.226.215:3000/resources/annotations/65776cc6d80e93414cd8300b",
+            "selector": [{"type":"XPathSelector",
+                "value":"http://3.218.226.215:3000/resources/annotations/65776cc6d80e93414cd8300b"}]
+        }
+    ],
+    "user": "acct:mehmet.kuzulugil@boun.edu.tr",
+    "permissions": {
+        "read": [
+            "group:__world__"
+        ],
+        "update": [
+            "acct:mehmet.kuzulugil@boun.edu.tr"
+        ],
+        "delete": [
+            "acct:mehmet.kuzulugil@boun.edu.tr"
+        ],
+        "admin": [
+            "acct:mehmet.kuzulugil@boun.edu.tr"
+        ]
+    }
+}
+
 
 sample_annotation_data:W3CAnnotation = {
     "context": "http://www.w3.org/ns/anno.jsonld",
