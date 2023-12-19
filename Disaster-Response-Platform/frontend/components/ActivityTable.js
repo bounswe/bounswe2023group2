@@ -1,4 +1,4 @@
-import { Button, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure, Table } from "@nextui-org/react";
+import { Button, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure, Table, getKeyValue } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import ActivityModal from "./ActivityModal";
 import Filter from "./Filter";
@@ -11,9 +11,9 @@ import { GrTransaction } from "react-icons/gr";
 
 export default function ActivityTable({ chosenActivityType, labels }) {
     const [filters, setFilters] = useState({})
-    const [resources, setResources] = useState([]);
-    const [needs, setNeeds] = useState([]);
-    const [events, setEvents] = useState([]);
+    const [resources, setResources] = useState([{_id: "loading"}]);
+    const [needs, setNeeds] = useState([{_id: "loading"}]);
+    const [events, setEvents] = useState([{_id: "loading"}]);
     const [selectedKeys, setSelectedKeys] = useState(new Set(["text"]));
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [activity, setActivity] = useState({});
@@ -85,6 +85,30 @@ export default function ActivityTable({ chosenActivityType, labels }) {
             }
         }
     }
+
+    function getRows() {
+        switch (chosenActivityType) {
+            case "resources": return resources;
+            case "needs": return needs;
+            case "events": return events;
+            default: return [];
+        }
+    }
+
+    const columns = {
+        "resources": ["type", "location", "created_by", "created_at", "description"],
+        "needs": ["type", "location", "created_by", "created_at", "occur_at", "description", "recurrence_rate", "take_action"],
+        "events": ["event_type", "location", "created_by_user", "event_time", "short_description", "is_active"]
+    }
+
+    function getColumns() {
+        let result = [];
+        for (let column of columns[chosenActivityType]) {
+            result.push({"key": column, "label": labels.activity_table[column]});
+        }
+        return result;
+    }
+
     return (
 
         <div class="w-full">
@@ -101,52 +125,48 @@ export default function ActivityTable({ chosenActivityType, labels }) {
                 aria-label="activity table"
                 className='flex w-full overflow-x-auto shadow-md sm:rounded max-h-[300px]'
             >
-                <TableHeader>
-                    <TableColumn>{labels.activity_table.type}</TableColumn>
-                    <TableColumn>{labels.activity_table.location}</TableColumn>
-                    <TableColumn>{labels.activity_table.created_by}</TableColumn>
-                    <TableColumn>{labels.activity_table.created_at}</TableColumn>
-                    <TableColumn>{labels.activity_table.description}</TableColumn>
-                    <TableColumn>{labels.activity_table.take_action}</TableColumn>
+                <TableHeader columns={getColumns()} emptyContent={labels.activity_table.no_content}>
+                    {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
-                <TableBody>
-                    {chosenActivityType === "resources" && resources && resources.map((resource, index) => (
-                        <TableRow key={index} >
-                            <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.type}</TableCell>
-                            <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.x} : {resource.y}</TableCell>
-                            <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.created_by}</TableCell>
-                            <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.created_at}</TableCell>
-                            <TableCell onClick={() => { setActivity(resource); onOpen() }} >{resource.description}</TableCell>
-                            <TableCell >
-                                </TableCell>
+                <TableBody items={getRows()}>
+                    {item => (
+                        <TableRow key={item._id}>
+                            {(columnKey) => {
+                                if (item._id === "loading") {
+                                    return <TableCell> {labels.UI.loading} </TableCell>;
+                                }
+                                let content = "";
+                                switch (columnKey) {
+                                case "location":
+                                    content = `${item.x} : ${item.y}`;
+                                    break;
+                                case "take_action":
+                                    content = (
+                                        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                            <GrTransaction />
+                                        </span>
+                                    );
+                                    break;
+                                case "is_active":
+                                    content = item.is_active ? "✔" : "❌";
+                                    break;
+                                default:
+                                    content = item[columnKey];
+                                }
+                                return (
+                                    <TableCell onClick={() => {
+                                        setActivity(item);
+                                        if (columnKey === "take_action") {
+                                            onOpenNeedModal();
+                                        } else {
+                                            onOpen();
+                                        }}} >
+                                        {content}
+                                    </TableCell>
+                                );
+                            }}
                         </TableRow>
-                    ))}
-                    {chosenActivityType === "needs" && needs && needs.map((need, index) => (
-                        <TableRow key={index} >
-                            <TableCell onClick={() => { setActivity(need); onOpen() }} >{need.type}</TableCell>
-                            <TableCell onClick={() => { setActivity(need); onOpen() }}>{need.x} : {need.y}</TableCell>
-                            <TableCell onClick={() => { setActivity(need); onOpen() }}>{need.created_by}</TableCell>
-                            <TableCell onClick={() => { setActivity(need); onOpen() }}>{need.created_at}</TableCell>
-                            <TableCell onClick={() => { setActivity(need); onOpen() }}>{need.description}</TableCell>
-                            <TableCell onClick={() => { setActivity(need); onOpenNeedModal() }} >
-
-                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                    <GrTransaction />
-                                </span>
-
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                    {chosenActivityType === "events" && events && events.map((event, index) => (
-                        <TableRow key={index} >
-                            <TableCell onClick={() => { setActivity(event); onOpen() }} >{event.event_type}</TableCell>
-                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.x} : {event.y}</TableCell>
-                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.created_by_user}</TableCell>
-                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.created_time}</TableCell>
-                            <TableCell onClick={() => { setActivity(event); onOpen() }}>{event.short_description}</TableCell>
-                            <TableCell onClick={() => { setActivity(event); }} > </TableCell>
-                        </TableRow>
-                    ))}
+                    )}
                 </TableBody>
             </Table>
             <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} table_need={activity} need_type={activity.type} labels={labels}/>

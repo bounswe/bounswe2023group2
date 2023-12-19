@@ -82,11 +82,19 @@
 	},
 	"activity_table": {
 		"type": "Type",
+		"event_type": "Type",
+		"event_time": "Event Time",
+		"is_active": "Active",
 		"location": "Location",
 		"created_by": "Created by",
+		"created_by_user": "Created by",
 		"created_at": "Creation Date",
+		"occur_at": "Date of Need",
 		"description": "Description",
-		"take_action": "Take Action"
+		"short_description": "Short Description",
+		"take_action": "Take Action",
+		"recurrence_rate": "Recurrence Rate (days)",
+		"no_content": "There is no data to show."
 	},
 	"auth": {
 		"register": "Register",
