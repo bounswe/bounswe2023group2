@@ -6,7 +6,7 @@
 
 ## Progress Summary
 
-On the Backend, we have worked on annotations. Implemented file upload and email verification feature, and fixed a couple of apis. we have progress on action and recurrence, its development takes time since we need to do some research to implement.
+On the Backend, we have worked on annotations. Implemented file upload and email verification feature, fixed a couple of apis. we have progresses on action and recurrence, its development takes time since we need to do some research to implement.
 
 On the Frontend, we have:
 - translated the site to Turkish and English.
@@ -16,7 +16,8 @@ On the Frontend, we have:
 - added an event table.
 - following feedback that said the currently selected activity type wasn't clear, added a visual indicator for the selected type.
 
-On Mobile, we created Event design and backend implementation. We also redesigned the details pages of need and resources. We also implemented buttons for directing user profiles and some part of actions. Turkish language support is appended (most of the strings on UI are now defined in resources instead of hardcoded).
+On Mobile: we filtered need and resources by location succesfully and we can report malicious actions to the admin.
+We also work on email verification, CRUD Emergency pages, Save Action without connection and posted them when connection established.
 
 ### Objectives for the following week
 
@@ -49,7 +50,7 @@ Frontend will mainly be focused on emergency, annotations, recurrence and finish
 | Mobile - Email verification page design and implementation | [#538](https://github.com/bounswe/bounswe2023group2/issues/538) | Halil | 18.12.2023 | 2h | 4h + Ongoing | [PR778](https://github.com/bounswe/bounswe2023group2/pull/778/) 
 | Mobile - Sort / Filter by Location and Date | [#690](https://github.com/bounswe/bounswe2023group2/issues/690) | Halil | 16.12.2023 | 3h | 4h | [PR754](https://github.com/bounswe/bounswe2023group2/pull/754)
 | Mobile - CRUD Emergency Page | [#733](https://github.com/bounswe/bounswe2023group2/issues/733) | Halil | 19.12.2023 | 6h | 3h + Ongoing | [BR](https://github.com/bounswe/bounswe2023group2/tree/MO/feature/emergency)
-| Mobile - Report malicious activities/users to admin | [#735](https://github.com/bounswe/bounswe2023group2/issues/735) | Egecan | 19.12.2023 | 8h | Changing issue with Hasan | [Explained](https://github.com/bounswe/bounswe2023group2/issues/735#issuecomment-1863200643) |(https://github.com/bounswe/bounswe2023group2/issues/735#issuecomment-1863200643)
+| Mobile - Report malicious activities/users to admin | [#735](https://github.com/bounswe/bounswe2023group2/issues/735) | ~~Egecan~~ Hasan | 19.12.2023 | 8h | Inprogress(5h+) | [PR Report Activities](https://github.com/bounswe/bounswe2023group2/pull/762) |(https://github.com/bounswe/bounswe2023group2/issues/735#issuecomment-1863200643)
 |Mobile - Post Need & Resource when Connecting Internet Again | [#586](https://github.com/bounswe/bounswe2023group2/issues/586)| Egecan | 19.12.2023| 6h | 4h+ In Progress | [Branch](https://github.com/bounswe/bounswe2023group2/tree/MO/feature/save-added-actions) |
 |Backend - Build semantic search server.  | [#720](https://github.com/bounswe/bounswe2023group2/issues/720) [#750](https://github.com/bounswe/bounswe2023group2/issues/750)| begüm | 19.12.2023| 10h | 10h| [Commit ID](bab792f)
 |CP - Create Test Traceability Matrix | [#723](https://github.com/bounswe/bounswe2023group2/issues/723)| begüm | 19.12.2023| 3h | 3h| [Wiki Page](https://github.com/bounswe/bounswe2023group2/wiki/Test-Traceability-Matrix)|
@@ -61,7 +62,7 @@ Frontend will mainly be focused on emergency, annotations, recurrence and finish
 | Frontend - Adjusting Filter menu according to backend | [#681](https://github.com/bounswe/bounswe2023group2/issues/681) | Şahin | 15.12.2023 | 4h | 3h | In Progress
 |Frontend - Adding Upvote Downvote buttons and system to information card|[#719](https://github.com/bounswe/bounswe2023group2/issues/719)|Şahin|15.12.2023|1h|1h| [#769](https://github.com/bounswe/bounswe2023group2/pull/769)
 |Frontend - Map Page user tests|[#729](https://github.com/bounswe/bounswe2023group2/issues/729)|Şahin,Buse|15.12.2023|2h|1h| [Explained in comments](https://github.com/bounswe/bounswe2023group2/issues/729)
-|Mobile -Action implementation | [#669](https://github.com/bounswe/bounswe2023group2/issues/669) | Hasan | 19.12.2023 | 10h| Changing issue with Egecan | [Explained](https://github.com/bounswe/bounswe2023group2/issues/735#issuecomment-1863200643) |
+|Mobile -Action implementation | [#669](https://github.com/bounswe/bounswe2023group2/issues/669) | ~~Hasan~~ Egecan | 19.12.2023 | 10h | Changing assignee | [Explained](https://github.com/bounswe/bounswe2023group2/issues/735#issuecomment-1863200643) |
 | Backend - Address Translation Service | [#772](https://github.com/bounswe/bounswe2023group2/issues/722)| Burak | 19.12.2023 | 4h | 5h | [PR #763](https://github.com/bounswe/bounswe2023group2/pull/753)
 | Backend - Activities: Admin Prioritization on Sort & Filter | [#727](https://github.com/bounswe/bounswe2023group2/issues/727) | Burak | 19.12.2023 | 1h | 2h | In Progress
 | Backend - Forgot Password | [#740](https://github.com/bounswe/bounswe2023group2/issues/740) | Burak | 26.12.2023 | 3h | 6h | [PR #757](https://github.com/bounswe/bounswe2023group2/pull/757)
@@ -105,8 +106,11 @@ As a team, we were expecting to finish backend enhancement by the end of this we
 | Mobile - Sort and filter for Action/Emergency/Event  | [#799](https://github.com/bounswe/bounswe2023group2/issues/799) | Halil | 24.12.2023 | 2h |
 | Mobile - Revise the App | [#797](https://github.com/bounswe/bounswe2023group2/issues/797) | Halil,Egecan | 24.12.2023 | 5h |
 |Mobile - Post Need & Resource when Connecting Internet Again | [#586](https://github.com/bounswe/bounswe2023group2/issues/586)| Egecan | 24.12.2023| 3h | 
-|Mobile -Action implementation | [#669](https://github.com/bounswe/bounswe2023group2/issues/669) | Egecan | 25.12.2023 | 7h|
+|Mobile -Action implementation | [#669](https://github.com/bounswe/bounswe2023group2/issues/669) | Egecan | 25.12.2023 | 10h|
 |Mobile - Annotation Implementation  | [#800](https://github.com/bounswe/bounswe2023group2/issues/800) | Egecan | 25.12.2023 | 8h|
+| Mobile - Report malicious users to admin | [#735](https://github.com/bounswe/bounswe2023group2/issues/735) | Hasan | 19.12.2023 | 3h |
+| Mobile - Change Login Backend Implementation | [#807](https://github.com/bounswe/bounswe2023group2/issues/807) | Hasan | 19.12.2023 | 1h |
+| Mobile - Search Implementation | [#802](https://github.com/bounswe/bounswe2023group2/issues/802) | Hasan | 19.12.2023 | 6h |
 | Frontend - Finalize admin panel | [#775](https://github.com/bounswe/bounswe2023group2/issues/775) | Can Bora | 25.12.2023 | 10h
 | Frontend - Finalize profile page | [#776](https://github.com/bounswe/bounswe2023group2/issues/776) | Can Bora | 25.12.2023 | 6h
 | Frontend - Add emergency form | [#685](https://github.com/bounswe/bounswe2023group2/issues/685) | Can Bora | 19.12.2023 | 2h |
@@ -138,9 +142,26 @@ As a team, we were expecting to finish backend enhancement by the end of this we
 |Frontend - Feedback activity bugfix| [#793](https://github.com/bounswe/bounswe2023group2/issues/793)| Merve | 22.12.2023 | 1h  
 | Backend - Activities: Admin Prioritization on Sort & Filter | [#727](https://github.com/bounswe/bounswe2023group2/issues/727) | Burak | 21.12.2023 | 2h (Continuing from last week)| 2h 
 | Backend - User Role Authentication on Email Verification | [#801](https://github.com/bounswe/bounswe2023group2/issues/801) | Burak | 22.12.2023 | 2h 
-| Backend - Test: Email Verification Endpoints | iss| Burak |23.12.2023 | 2h 
-| Backend - Test: Address Translation Endpoints | iss| Burak |23.12.2023 | 3h 
-| Backend - Test: Forgot/Reset Password Endpoints | iss| Burak |23.12.2023 | 2h 
+| Backend - Test: Email Verification Endpoints | [#803](https://github.com/bounswe/bounswe2023group2/issues/803)| Burak |23.12.2023 | 2h 
+| Backend - Test: Address Translation Endpoints | [#804](https://github.com/bounswe/bounswe2023group2/issues/804)| Burak |23.12.2023 | 3h 
+| Backend - Test: Forgot/Reset Password Endpoints | [#806](https://github.com/bounswe/bounswe2023group2/issues/806)| Burak |23.12.2023 | 2h 
+
+## Next week - Final milestone deliverables 
+| Description | Issue | Assignee | Due | Estimated Duration |
+| ----------- | ----- | -------- | --- | ------------------ |
+| User Interface / User Experience - web #809 | [#809](https://github.com/bounswe/bounswe2023group2/issues/809) | Merve | 29.12.2023 | 4h | Ongoing
+| Software #810 | [#810](https://github.com/bounswe/bounswe2023group2/issues/810) | Merve | 29.12.2023 | 2h | Ongoing
+| Research #811| [#811](https://github.com/bounswe/bounswe2023group2/issues/811) | Merve | 29.12.2023 | 3h |
+| Project plan #812 | [#812](https://github.com/bounswe/bounswe2023group2/issues/812) | Merve | 29.12.2023 | 1h |
+| Provide progress according to requirements #813| [#813](https://github.com/bounswe/bounswe2023group2/issues/813) | Halil | 29.12.2023 | 3h |
+| Deliverables - The API documentation Link to the API #814 | [#814](https://github.com/bounswe/bounswe2023group2/issues/814) | Begum | 29.12.2023 | 2h |
+| Management #816 | [#816](https://github.com/bounswe/bounswe2023group2/issues/816) | Egecan | 29.12.2023 | 3h |
+| Final release notes #817 | [#817](https://github.com/bounswe/bounswe2023group2/issues/817) | Burak | 29.12.2023 | 1h |
+| Executive summary #818 | [#818](https://github.com/bounswe/bounswe2023group2/issues/818) | Burak | 29.12.2023 | 3h |
+| Maximum of 5 minutes video of your system being used with a good scenario. #820| [#820](https://github.com/bounswe/bounswe2023group2/issues/820) | Begum | 29.12.2023 | 3h |
+| User Manual: Instructions for how to use the system. #821 | [#821](https://github.com/bounswe/bounswe2023group2/issues/821) | Mehmet | 29.12.2023 | 3h |
+| Deliverable - Software Requirements Specification (SRS) #822 | [#822](https://github.com/bounswe/bounswe2023group2/issues/822) | Mehmet | 29.12.2023 | 3h |
+| Deliverable - System Manual #823 | [#823](https://github.com/bounswe/bounswe2023group2/issues/823) | Mehmet | 29.12.2023 | 3h |
 
 ## Risks
 
