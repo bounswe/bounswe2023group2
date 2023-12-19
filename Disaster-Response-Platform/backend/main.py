@@ -8,7 +8,8 @@ from Controllers import (resource_controller, user_controller, uprofile_optinfo_
                          uprofile_skills_controller, need_controller, event_controller, user_roles_controller, 
                          form_fields_controller, report_controller, feedback_controller, uprofile_admin_controller,
                          action_controller, file_controller, email_verification_controller, geocode_controller,
-                         forgot_password_controller)
+                         forgot_password_controller,search_controller)
+
 
 
 from fastapi.responses import JSONResponse
@@ -47,6 +48,7 @@ app.include_router(email_verification_controller.router, prefix="/api/email_veri
 app.include_router(file_controller.router, prefix="/api", tags=["File Uploads"])
 app.include_router(forgot_password_controller.router, prefix="/api/forgot_password", tags=["Forgot Password - Reset"])
 app.include_router(geocode_controller.router, prefix="/api/geocode", tags=["Geocode - Address Translation"])
+app.include_router(search_controller.router, prefix="/api/search", tags=["Search"])
 
 @app.get("/")
 async def root(some_parameter:str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
