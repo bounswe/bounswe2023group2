@@ -15,8 +15,9 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class ReportViewModel {
+class ReportViewModel@Inject constructor() {
     val networkManager = NetworkManager()
 
     private var _reportValidation = MutableLiveData<String>()
