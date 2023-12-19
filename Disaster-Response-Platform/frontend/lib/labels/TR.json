@@ -81,11 +81,19 @@
 	},
 	"activity_table": {
 		"type": "Kategori",
+		"event_type": "Kategori",
+		"event_time": "Olay Tarihi",
+		"is_active": "Aktif",
 		"location": "Konum",
 		"created_by": "Ekleyen",
-		"created_at": "Eklenme tarihi",
+		"created_by_user": "Ekleyen",
+		"created_at": "Eklenme Tarihi",
+		"occur_at": "İhtiyacın Olduğu Tarih",
 		"description": "Açıklama",
-		"take_action": "Aksiyon al"
+		"short_description": "Kısa Açıklama",
+		"take_action": "Aksiyon al",
+		"recurrence_rate": "Tekrar Sıklığı (gün)",
+		"no_content": "Gösterebileceğimiz bir veri yok."
 	},
 	"auth": {
 		"register": "Kayıt ol",
@@ -128,7 +136,7 @@
 		"subtype": "Alt kategori",
 		"upvote": "Güvenilirlik",
 		"currentQuantity": "Mevcut miktar",
-		"due_date": "Son kullanım tarihi",
+		"due_date": "Bitiş Tarihi",
 		"description": "Açıklama"
 	},
 	"feedback": {
@@ -166,7 +174,16 @@
 		"edit_profile": "Kullanıcı ayarları"
 	},
 	"forms": {
-		"other": "Diğer"
+		"event_form": {
+			"event_time": "Olay zamanı",
+			"is_active": "Hala mevcut",
+			"x": "Merkez boylamı (Batı-Doğu)",
+			"y": "Merkez enlemi (Kuzey-Güney)",
+			"max_distance_x": "Etkilenen uzaklık (Batı-Doğu)",
+			"max_distance_y": "Etkilenen uzaklık (Kuzey-Güney)",
+			"short_description": "Kısa açıklama",
+			"note": "Ek notlar"
+		}
 	},
 	"placeholders": {
 		"phone_number": "05321234567",

@@ -193,7 +193,7 @@ export default function NavBar({ labels }) {
       </NavbarContent>
       <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
       <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
-      <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} />
+      <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} labels={labels} />
       <AddActionFromId onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} />
       <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} />
     </Navbar>
