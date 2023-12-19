@@ -55,6 +55,7 @@ export default function Map({
   resourceApiData,
   labels,
   needApiData,
+  labels
 }) {
   const [MarkerArr, setMarkerArr] = useState([]);
 
@@ -221,10 +222,6 @@ export default function Map({
               },
             }}
           >
-            <Popup>
-              <h3>Tür: {need.type}</h3>
-              {/* Other details you want to show in the popup */}
-            </Popup>
           </Marker>
         ))}
 
@@ -235,21 +232,14 @@ export default function Map({
           fetchData={fetchData}
           labels={labels}
         />
-        {MarkerArr &&
+        {/* {MarkerArr &&
           MarkerArr.map(({ type, subType, dueDate, x_coord, y_coord }) => (
             <Marker position={[x_coord, y_coord]} icon={redIcon}>
-              <Popup>
-                <h3>{labels.sort_criteria.type}: {type} </h3>
-
-                <h3>{labels.sort_criteria.subtype}: {subType} </h3>
-
-                <h3>{labels.sort_criteria.due_date}: {dueDate} </h3>
-              </Popup>
             </Marker>
-          ))}
+          ))} */}
       </MapContainer>
-
       <SidePopup card={selectedMarker} closePopup={closePopup} labels ={labels} />
+
     </div>
   );
 }

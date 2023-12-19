@@ -8,6 +8,12 @@ import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
 import getLabels from '@/lib/getLabels';
 
+
+import { withIronSessionSsr } from 'iron-session/next';
+import sessionConfig from '@/lib/sessionConfig';
+import getLabels from '@/lib/getLabels';
+
+
 const Map = dynamic(() => import("@/components/Map/MainMap"), {
   ssr: false,
 });
@@ -23,10 +29,10 @@ export default function mapPage({ labels }) {
 
   return (
     <>
-
       <Map isClickActivated={isClickActivated} activateClick={activateClick} resourceApiData={resourceApiData} labels={labels}/>
       <MapFilterMenu activateClick={activateClick} setResourceApiData={setResourceApiData} labels={labels}/>
 4e15f13 (needs are implemented, useEffect activated, upvote-downvote is also done)
+
     </>
   );
 }

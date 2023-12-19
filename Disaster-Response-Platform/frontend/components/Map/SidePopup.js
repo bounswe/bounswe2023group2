@@ -5,7 +5,6 @@ import { FaRegThumbsUp } from "react-icons/fa";
 import { FaRegThumbsDown } from "react-icons/fa";
 import { api } from "@/lib/apiUtils";
 
-
 function SidePopup({ card, closePopup,labels }) {
   if (!card) return null;
   
@@ -56,6 +55,7 @@ function SidePopup({ card, closePopup,labels }) {
     <div className={`${styles.sidePopup} ${card ? styles.open : ""}`}>
       <button onClick={closePopup} className={styles.closeButton}>
         Close
+
         {labels.UI.close}
       </button>
       <div className={styles.text}>
