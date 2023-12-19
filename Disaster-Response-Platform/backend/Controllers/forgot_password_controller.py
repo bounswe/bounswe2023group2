@@ -21,7 +21,7 @@ async def reset_password_page(request: Request, email: str = Query(None, descrip
 
     # change based on the server url.
     base_url_backend = "http://3.218.226.215:8000"
-    base_url_frontend = "http://3.218.226.215:8000"
+    base_url_frontend = "http://3.218.226.215:3000"
      
     template = f"""
     <!DOCTYPE html>
