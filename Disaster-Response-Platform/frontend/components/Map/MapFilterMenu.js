@@ -235,11 +235,11 @@ export default function MapFilterMenu({
         </button>
 
         <div>
-          Türler
+          {labels.sort_criteria.type}
           <input className=""/>
         </div>
         <div>
-          Alt Türler
+          {labels.sort_criteria.subtype}
           <input className=""/>
         </div>
         <div>
