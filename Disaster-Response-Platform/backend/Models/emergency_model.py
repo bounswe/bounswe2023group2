@@ -31,11 +31,6 @@ class EmergencyTypesEnum(str, Enum):
 class Emergency(BaseModel):
     _id: str = Field(default=None)
     emergency_type: EmergencyTypesEnum = Field(default=None)
-    # center_location_x: float = Field(default=None)
-    # center_location_y: float = Field(default=None)
-    #
-    # max_distance_x: float = Field(default=None)
-    # max_distance_y: float = Field(default=None)
 
     x: float = Field(default=None)
     y: float = Field(default=None)
@@ -46,12 +41,9 @@ class Emergency(BaseModel):
     note: str = Field(default=None)
     short_description: str = Field(default=None)
 
-    is_active: bool = Field(default=None)
-    is_verified: bool = Field(default=None)
-    is_disproved: bool = Field(default=None)
-
-    upvote: int = Field(default=0)
-    downvote: int = Field(default=0)
+    is_active: bool = Field(default=True)
+    is_verified: bool = Field(default=False)
+    # is_disproved: bool = Field(default=None)
 
     created_time: datetime = Field(default=None)
     created_by_user: str = Field(default=None)
@@ -60,7 +52,6 @@ class Emergency(BaseModel):
     dealt_by_user: str = Field(default=None)
 
     verification_note: str = Field(default=None)
-
     last_updated_time: datetime = Field(default=None)
 
 

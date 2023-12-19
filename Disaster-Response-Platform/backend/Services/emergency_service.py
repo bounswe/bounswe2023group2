@@ -11,7 +11,8 @@ from Services.build_API_returns import *
 
 # Get the resources collection using the MongoDB class
 emergencies_collection = MongoDB.get_collection('emergencies')
-def create_event(emergency: Emergency) -> str:
+
+def create_emergency(emergency: Emergency) -> str:
     if not all([emergency.created_by_user, emergency.created_time,
                 emergency.emergency_type, emergency.short_description, (emergency.is_active is not None)]):
         raise ValueError("Some mandatory fields missing.")
