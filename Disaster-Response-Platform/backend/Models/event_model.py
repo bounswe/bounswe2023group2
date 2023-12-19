@@ -36,8 +36,8 @@ class Event(BaseModel):
     event_time: datetime = Field(default=None)
     end_time: datetime = Field(default=None)
     is_active: bool = Field(default=None)
-    center_location_x: float = Field(default=None)
-    center_location_y: float = Field(default=None)
+    x: float = Field(default=None)
+    y: float = Field(default=None)
 
     max_distance_x: float = Field(default=None)
     max_distance_y: float = Field(default=None)
