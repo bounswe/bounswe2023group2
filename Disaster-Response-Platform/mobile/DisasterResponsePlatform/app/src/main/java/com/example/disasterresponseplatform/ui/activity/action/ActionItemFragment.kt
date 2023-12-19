@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +23,7 @@ import com.example.disasterresponseplatform.data.models.VoteBody
 import com.example.disasterresponseplatform.databinding.FragmentActionItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
+import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheetFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import okhttp3.OkHttpClient
@@ -117,6 +117,9 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
         }
         binding.btnDownvote.setOnClickListener {
             downvoteAction(token)
+        }
+        binding.btnReport.setOnClickListener {
+            showBottomSheet()
         }
     }
 
@@ -215,6 +218,11 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
     private fun navigateToMapFragment() {
         val mapFragment = ActivityMap()
         addFragment(mapFragment,"ActivityMap")
+    }
+
+    private fun showBottomSheet() {
+        val bottomSheetFragment = ReportBottomSheetFragment(action._id, "actions")
+        bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 
     private fun addFragment(fragment: Fragment, fragmentName: String) {
