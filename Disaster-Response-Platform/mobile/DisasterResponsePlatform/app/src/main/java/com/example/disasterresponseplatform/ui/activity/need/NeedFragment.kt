@@ -1,8 +1,12 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -31,8 +35,10 @@ import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.gson.Gson
@@ -64,8 +70,31 @@ class NeedFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //checkInternetConnection()
         arrangeView()
     }
+
+
+    // Internet yoksa sharedPrefe internet yok diye son durum yazılmalı
+    // Add için açılan form farklı olmalı submitleyince local DBde kaydedilmeli, ama user da uyarılmalı
+    // buradaki form internet olmadığından olabildiğince hardCoded olmalı
+    // internet bağlantısı sağlandığında sharedPreften önceki durum kontrol edilmeli, eğer internet bağlantısı öncesinde yoksa
+    // DBlere bakılarak kaydedilen bir şey varsa bunlar backende pushlanmalı
+    // sonrasında sharedPrefe internet bağlantısı var yazılmalı
+    /** This function checks whether device is connected to the internet
+     * It makes some operations if it is connected,
+     */
+    private fun checkInternetConnection(){
+        if (isAdded){ // first check if it is attached to context to prevent errors
+            if (GeneralUtil.isInternetAvailable(requireContext())) {
+                Log.i("InternetConnection","OK")
+            } else {
+                Log.i("InternetConnection","NOT OK")
+            }
+        }
+    }
+
+
 
     /**
      * It refresh the recycler view whenever returned this page (i.e after adding/editing/deleting item)
@@ -115,8 +144,14 @@ class NeedFragment(
     private fun addNeed(){
         val token = DiskStorageManager.getKeyValue("token")
         if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
-            val addNeedFragment = AddNeedFragment(needViewModel,null)
-            addFragment(addNeedFragment,"AddNeedFragment")
+            // check whether it is connected to the internet
+            if (GeneralUtil.isInternetAvailable(requireContext())){
+                val addNeedFragment = AddNeedFragment(needViewModel,null)
+                addFragment(addNeedFragment,"AddNeedFragment")
+            } else { // if there is no Connection
+                val addNoInternetFormFragment = AddNoInternetFormFragment(needViewModel)
+                addFragment(addNoInternetFormFragment,"AddNoInternetFormFragment")
+            }
         }
         else{
             Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()
@@ -140,7 +175,7 @@ class NeedFragment(
         if (requireActivity == null){ // to handle error when user enters this page twice
             requireActivity = requireActivity()
         }
-
+        checkInternetConnection()
         needViewModel.sendGetAllRequest(queries)
         needViewModel.getLiveDataResponse().observe(requireActivity!!){ needResponse ->
             arrangeRecyclerView(needResponse.needs)
