@@ -2,7 +2,6 @@ package com.example.disasterresponseplatform.ui.activity.event
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.ColorDrawable
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,6 +23,7 @@ import com.example.disasterresponseplatform.data.models.VoteBody
 import com.example.disasterresponseplatform.databinding.FragmentEventItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
+import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheetFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
@@ -139,6 +139,9 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         binding.btnDownvote.setOnClickListener {
             downvoteNeed(token)
         }
+        binding.btnReport.setOnClickListener {
+            showBottomSheet()
+        }
     }
 
     private var voted = false // if user change his/her some arrangements will happen with this parameter
@@ -170,7 +173,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -200,7 +203,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You need to log in!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -240,6 +243,11 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         ft.replace(R.id.container, fragment)
         ft.addToBackStack(fragmentName)
         ft.commit()
+    }
+
+    private fun showBottomSheet() {
+        val bottomSheetFragment = ReportBottomSheetFragment(event._id, "events")
+        bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 
 

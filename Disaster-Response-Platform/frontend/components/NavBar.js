@@ -15,7 +15,9 @@ import AddNeedForm from "./AddNeed";
 import AddEventForm from "./AddEvent";
 import AddActionFromId from "./AddActionFromId";
 import AddEmergencyForm from "./AddEmergency";
-export default function NavBar() {
+
+
+export default function NavBar({ labels }) {
   const { user, mutateUser } = useUser();
   const router = useRouter();
   const isMapPage = router.pathname === '/map';
@@ -40,6 +42,19 @@ export default function NavBar() {
     onOpen: onOpenEmergencyModal,
     onOpenChange: onOpenChangeEmergencyModal,
   } = useDisclosure();
+
+
+  async function toggleLanguage() {
+    const response = await fetch('/api/set-language', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({"language": labels.other_language})
+    });
+    // need to do a full reload to re-run server-side rendering with new language
+    router.reload();
+  }
 
 
   return (
@@ -79,16 +94,16 @@ export default function NavBar() {
               </DropdownTrigger>
               <DropdownMenu aria-label="Add Activity" className='text-black' variant="flat">
                 <DropdownItem key="kaynak" onClick={onOpen} >
-                  Kaynak ekle
+                  {labels.activities.add_resource}
                 </DropdownItem>
                 <DropdownItem key="need" onClick={onOpenNeedModal}>
-                  İhtiyaç ekle
+                  {labels.activities.add_need}
                 </DropdownItem>
                 <DropdownItem key="event" onClick={onOpenEventModal}>
-                  Olay bildir
+                  {labels.activities.report_event}
                 </DropdownItem>
                 <DropdownItem key="aksiyon" onClick={onOpenActionModal}>
-                  Aksiyon ekle
+                  {labels.activities.add_action}
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -98,6 +113,11 @@ export default function NavBar() {
       </NavbarContent>
 
       <NavbarContent className="" justify="end" >
+        <NavbarItem >
+          <Button className="hover:-translate-y-1 duration-300 bg-white font-bold rounded-full" onPress={toggleLanguage}>
+            {labels.other_language}
+          </Button>
+        </NavbarItem>
         <NavbarItem >
           {user?.isLoggedIn === false &&
             <Dropdown placement="bottom-start">
@@ -109,11 +129,11 @@ export default function NavBar() {
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" className='text-black' variant="flat">
-                <DropdownItem key="profile" >
-                  <a href={`/login`}> Giriş yap </a>
+                <DropdownItem key="login" >
+                  <a href={`/login`}> {labels.auth.login} </a>
                 </DropdownItem>
-                <DropdownItem key="profile">
-                  <a href={`/register`}> Kayıt ol  </a>
+                <DropdownItem key="register">
+                  <a href={`/register`}> {labels.auth.register}  </a>
                 </DropdownItem>
                 <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
               </DropdownMenu>
@@ -134,15 +154,15 @@ export default function NavBar() {
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" className="">
                   <a href={`/profile`} className=''>
-                    <p className="font-semibold">Profil</p>
+                    <p className="font-semibold">{labels.navbar.profile}</p>
                   </a>
                 </DropdownItem>
                 <DropdownItem key="settings">
                   <a href={"profile/edit"}>
-                    Kullanıcı Ayarları
+                    {labels.navbar.edit_profile}
                   </a>
                 </DropdownItem>
-                <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+                <DropdownItem key="help_and_feedback">{labels.navbar.help_feedback}</DropdownItem>
                 <DropdownItem key="logout" color="danger">
                   <a
                     href="/api/logout"
@@ -155,7 +175,7 @@ export default function NavBar() {
                       router.push("/");
                     }}
                   >
-                    Çıkış yap
+                    {labels.auth.logout}
                   </a>
 
                 </DropdownItem>
@@ -165,13 +185,15 @@ export default function NavBar() {
         </NavbarItem>
         <NavbarItem>
           <Button color="primary" className={styles.button} onPress={onOpenEmergencyModal}>
-            Acil Durum
+            <span className="font-bold">
+              {labels.activities.EMERGENCY}
+            </span>
           </Button>
         </NavbarItem>
       </NavbarContent>
       <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
       <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
-      <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} />
+      <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} labels={labels} />
       <AddActionFromId onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} />
       <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} />
     </Navbar>
