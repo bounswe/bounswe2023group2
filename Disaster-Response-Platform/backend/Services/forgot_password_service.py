@@ -74,7 +74,7 @@ def send_reset_password_email(email):
             <p>Hello,</p>
             <p>To reset your password, please click the following link:</p>
             <p><a href="{reset_link}" style="color:#007FFF;">Reset Password</a></p>
-            <p>This link will expire in 10 minutes.</p>
+            <p>This link will expire in 10 minutes. If you are unable to use the provided link, please use your reset password token manually: <strong style='color:#007FFF;'>{token}</strong></p>
             <p>If you did not request a password reset, please ignore this email.</p>
             <p>Thank you for using our service.</p>
             <p>Sincerely,<br>
