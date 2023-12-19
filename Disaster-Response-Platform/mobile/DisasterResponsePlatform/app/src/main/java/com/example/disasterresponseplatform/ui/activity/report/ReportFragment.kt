@@ -1,7 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.report
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,23 +30,11 @@ class ReportBottomSheetFragment(val id: String, val type: String) : BottomSheetD
         actions = "actions"
         events = "events"
          */
-        val reportOptions : List<String>
-        if (type != "users") {
-             reportOptions = listOf(
-                "Inappropriate Content",
-                "Spam",
-                "Bullying",
-                "Fake News",
-                "Hate Speech"
-            )
+
+        val reportOptions: List<String> = if (type != "users") {
+            resources.getStringArray(R.array.report_options_non_users).toList()
         } else {
-            reportOptions = listOf(
-                "Fake User",
-                "Misleading Characters",
-                "Bullying",
-                "Fake News",
-                "Hate Speech"
-            )
+            resources.getStringArray(R.array.report_options_users).toList()
         }
         val reportList = view.findViewById<RecyclerView>(R.id.reportList)
 
@@ -60,7 +47,6 @@ class ReportBottomSheetFragment(val id: String, val type: String) : BottomSheetD
         reportList.adapter = reportAdapter
 
         reportViewModel.reportValidation.observe(viewLifecycleOwner, Observer { message ->
-            Log.i("yupp",message)
             showToast(message)
             dismiss()
             })
@@ -70,9 +56,6 @@ class ReportBottomSheetFragment(val id: String, val type: String) : BottomSheetD
     private fun showToast(message: String) {
 
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-    private fun sendReport() {
-
     }
 }
 

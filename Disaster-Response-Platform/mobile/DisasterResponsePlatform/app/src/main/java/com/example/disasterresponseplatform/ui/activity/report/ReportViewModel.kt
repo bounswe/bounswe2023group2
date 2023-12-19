@@ -24,7 +24,6 @@ class ReportViewModel {
 
     fun sendReport(id: String, type: String, description: String) {
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
         if (token.isNullOrEmpty()) {
             return
         }
@@ -38,7 +37,6 @@ class ReportViewModel {
         val gson = Gson()
         val json = gson.toJson(reportRequestBody)
         val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        Log.i("request bodyy", json.toString())
         Log.i("ResponseInfo","RequestBody: $requestBody")
         networkManager.makeRequest(
             endpoint = Endpoint.REPORTS,

@@ -13,7 +13,7 @@
         android:id="@+id/reportCellText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Inappropriate Content"
+        android:text="@string/inappropriate_content"
         android:textSize="16sp"
         android:textStyle="bold"
         android:drawableRight="@android:drawable/ic_delete"

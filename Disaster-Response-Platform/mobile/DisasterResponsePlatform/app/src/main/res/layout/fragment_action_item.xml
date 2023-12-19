@@ -410,8 +410,7 @@
             android:id="@+id/btnReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Report"
-            android:onClick="onReportButtonClick" />
+            android:text="@string/report" />
 
     </LinearLayout>
 </ScrollView>

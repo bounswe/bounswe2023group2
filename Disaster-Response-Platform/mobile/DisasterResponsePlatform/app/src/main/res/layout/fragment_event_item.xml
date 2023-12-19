@@ -371,8 +371,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Report"
-                android:onClick="onReportButtonClick"
+                android:text="@string/report"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/btnSeeProfile"
                 app:layout_constraintTop_toBottomOf="@+id/btnSeeProfile" />
