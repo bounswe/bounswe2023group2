@@ -30,6 +30,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 import kotlin.properties.Delegates
@@ -63,7 +66,13 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
             binding.tvAddEvent.text = getString(R.string.edit_event)
             binding.btnSubmit.text = getString(R.string.save_changes)
             binding.spEventType.setText(event.event_type)
-            binding.etDate.editText?.setText(event.event_time) // TODO seperate it as date and time with util func
+            Log.i("Event Time",event.event_time)
+            if (event.event_time.isNotEmpty()){
+                val eventDate = getDate(event.event_time)
+                val eventTime = getTime(event.event_time)
+                binding.etDate.editText?.setText(eventDate)
+                binding.etTime.editText?.setText(eventTime)
+            }
             if (event.max_distance_x != null) binding.etCoverageX.setText(event.max_distance_x.toString())
             if (event.max_distance_y != null) binding.etCoverageY.setText(event.max_distance_y.toString())
             binding.etShortDescription.setText(event.short_description)
@@ -74,6 +83,25 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
             coordinateToAddress()
         }
     }
+
+    private fun getDate(input: String): String{
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val date = inputFormat.parse(input)
+        val formattedDate = outputDateFormat.format(date!!)
+        Log.i("Event formattedDate",formattedDate)
+        return formattedDate
+    }
+
+    private fun getTime(input: String): String{
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val outputTimeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val date = inputFormat.parse(input)
+        val formattedTime = outputTimeFormat.format(date!!)
+        Log.i("Event formattedTime",formattedTime)
+        return formattedTime
+    }
+
 
     @SuppressLint("ResourceType")
     private fun initView(){
@@ -101,7 +129,10 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
             }
             binding.btnSubmit.isEnabled = false
             val layAddEvent = binding.layAddEvent
-            if (validateFields(layAddEvent)) {
+            // users can submit if both time and date is filled or neither of them filled
+            val dateAndTimeFilled: Boolean = !binding.etDateInput.text.isNullOrEmpty() && !binding.etTimeInput.text.isNullOrEmpty()
+            val dateAndTimeNotFilled = binding.etDateInput.text.isNullOrEmpty() && binding.etTimeInput.text.isNullOrEmpty()
+            if (validateFields(layAddEvent) && (dateAndTimeFilled || dateAndTimeNotFilled)) {
 
                 var creationEventDate: String? = null
                 if (binding.etDateInput.text != null && binding.etTimeInput.text != null){
@@ -120,8 +151,8 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
                     }
                 val additionalNote = binding.etNotes.text.toString().trim()
                 val shortNote = binding.etShortDescription.text.toString().trim()
-                val maxDistanceX = if (binding.etCoverageX.text != null) binding.etCoverageX.text.toString().trim().toDouble() else null
-                val maxDistanceY = if (binding.etCoverageY.text != null) binding.etCoverageY.text.toString().trim().toDouble() else null
+                val maxDistanceX = if (!binding.etCoverageX.text.isNullOrEmpty()) binding.etCoverageX.text.toString().trim().toDouble() else null
+                val maxDistanceY = if (!binding.etCoverageY.text.isNullOrEmpty()) binding.etCoverageY.text.toString().trim().toDouble() else null
                 val createdTime = "${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}"
                 val postedEvent = EventBody.EventPostBody(
                     event_type = eventType,
@@ -138,7 +169,7 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
                 if (isAdd) {
                     eventViewModel.postEvent(postedEvent)
                 } else {
-                    val eventID = "/" + event!!._id // comes from older need
+                    val eventID = event!!._id // comes from older need
                     eventViewModel.postEvent(postedEvent, eventID)
                 }
                 eventViewModel.getLiveDataEventID().observe(requireActivity!!) {

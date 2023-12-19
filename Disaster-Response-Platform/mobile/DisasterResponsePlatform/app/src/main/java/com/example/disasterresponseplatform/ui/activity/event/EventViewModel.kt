@@ -105,7 +105,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
             val json = gson.toJson(postRequest)
             val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
             Log.i("ResponseInfo","RequestBody: $requestBody")
-            val requestType = if (id == null) RequestType.POST else RequestType.PUT
+            val requestType = if (id == null) RequestType.POST else RequestType.PATCH
 
             Log.d("requestBody", json.toString())
             networkManager.makeRequest(

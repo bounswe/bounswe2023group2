@@ -149,7 +149,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You action to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -179,7 +179,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You action to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
