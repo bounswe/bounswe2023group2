@@ -53,9 +53,9 @@ export default function Map({
   isClickActivated,
   activateClick,
   resourceApiData,
-  labels,
   needApiData,
   labels
+  
 }) {
   const [MarkerArr, setMarkerArr] = useState([]);
 
@@ -185,7 +185,7 @@ export default function Map({
             position={[selectedPosition.x_coord, selectedPosition.y_coord]}
             icon={redIcon}
           >
-            <Popup>{/* Popup content */}</Popup>
+            
           </Marker>
         )}
 
@@ -202,10 +202,7 @@ export default function Map({
               },
             }}
           >
-            <Popup>
-              <h3>{labels.sort_criteria.type}: {resource.type}</h3>
-              {/* Other details you want to show in the popup */}
-            </Popup>
+           
           </Marker>
         ))}
 

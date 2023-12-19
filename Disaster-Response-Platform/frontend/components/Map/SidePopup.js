@@ -54,8 +54,6 @@ function SidePopup({ card, closePopup,labels }) {
   return (
     <div className={`${styles.sidePopup} ${card ? styles.open : ""}`}>
       <button onClick={closePopup} className={styles.closeButton}>
-        Close
-
         {labels.UI.close}
       </button>
       <div className={styles.text}>
