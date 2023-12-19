@@ -173,7 +173,16 @@
 		"edit_profile": "Kullanıcı ayarları"
 	},
 	"forms": {
-		"other": "Diğer"
+		"event_form": {
+			"event_time": "Olay zamanı",
+			"is_active": "Hala mevcut",
+			"x": "Merkez boylamı (Batı-Doğu)",
+			"y": "Merkez enlemi (Kuzey-Güney)",
+			"max_distance_x": "Etkilenen uzaklık (Batı-Doğu)",
+			"max_distance_y": "Etkilenen uzaklık (Kuzey-Güney)",
+			"short_description": "Kısa açıklama",
+			"note": "Ek notlar"
+		}
 	},
 	"placeholders": {
 		"phone_number": "05321234567",

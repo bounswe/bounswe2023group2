@@ -173,6 +173,18 @@
 		"profile": "Profile",
 		"edit_profile": "User Settings"
 	},
+	"forms": {
+		"event_form": {
+			"event_time": "Event time",
+			"is_active": "Still active",
+			"x": "Center longitude (West-East)",
+			"y": "Center latitude (North-South)",
+			"max_distance_x": "Affected distance (West-East)",
+			"max_distance_y": "Affected distance (North-South)",
+			"short_description": "Short description",
+			"note": "Extra notes"
+		}
+	},
 	"placeholders": {
 		"phone_number": "05321234567",
 		"password": "Password must contain an uppercase letter and a number",
