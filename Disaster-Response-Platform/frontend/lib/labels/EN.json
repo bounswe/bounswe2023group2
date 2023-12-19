@@ -1,0 +1,203 @@
+{
+	"_comment": "The labels were mostly categorized by their subject. The dynamic parts are stored in the backend and in components/forms.json.",
+	"this_language": "EN",
+	"other_language": "TR",
+	"profile": {
+		"username": "Username",
+		"first_name": "First Name",
+		"last_name": "Last Name",
+		"password": "Password",
+		"phone_number": "Phone Number",
+		"email": "Email",
+	    "date_of_birth": "Date of Birth",
+	    "nationality": "Nationality",
+	    "identity_number": "ID Number",
+	    "education": "Education",
+	    "health_condition": "Health Condition",
+	    "blood_type": "Blood Type",
+	    "Address": "Address"
+	},
+	"profile_lists": {
+		"professions": {
+ 			"title": "Professions",
+ 			"add_title": "Add Profession",
+ 			"primary_label": "Profession",
+ 			"secondary_label": "Level",
+ 			"options": {
+ 				"amateur": "Amateur",
+ 				"pro": "Professional",
+ 				"certified pro": "Certified Pro"
+ 			}
+		},
+		"languages": {
+ 			"title": "Languages",
+ 			"add_title": "Add Language",
+ 			"primary_label": "Language",
+ 			"secondary_label": "Level",
+ 			"options": {
+ 				"beginner": "Beginner",
+ 				"intermediate": "Intermediate",
+ 				"advanced": "Advanced",
+ 				"native": "Native"
+ 			}
+		},
+		"socialmedia-links": {
+ 			"title": "Social Media",
+ 			"add_title": "Add Account",
+ 			"primary_label": "Site name",
+ 			"secondary_label": "Profile URL"
+
+		},
+		"skills": {
+ 			"title": "Skills",
+ 			"add_title": "Add Skill",
+ 			"primary_label": "Skill Definition",
+ 			"secondary_label": "Level",
+ 			"options": {
+ 				"beginner": "Beginner",
+ 				"basic": "Basic",
+ 				"intermediate": "Intermediate",
+ 				"skilled": "Skilled",
+ 				"expert": "Expert"
+ 			}
+		}
+	},
+	"activities": {
+		"resource": "Resource",
+		"need": "Need",
+		"action": "Action",
+		"event": "Event",
+		"emergency": "Emergency",
+		"EMERGENCY": "EMERGENCY",
+		"resources": "Resources",
+		"needs": "Needs",
+		"actions": "Actions",
+		"events": "Events",
+		"emergencies": "Emergencies",
+		"add_resource": "Add Resource",
+		"add_need": "Add Need",
+		"add_action": "Add Action",
+		"report_event": "Report Event",
+		"report_emergency": "Report Emergency"
+	},
+	"activity_table": {
+		"type": "Type",
+		"event_type": "Type",
+		"event_time": "Event Time",
+		"is_active": "Active",
+		"location": "Location",
+		"created_by": "Created by",
+		"created_by_user": "Created by",
+		"created_at": "Creation Date",
+		"occur_at": "Date of Need",
+		"description": "Description",
+		"short_description": "Short Description",
+		"take_action": "Take Action",
+		"recurrence_rate": "Recurrence Rate (days)",
+		"no_content": "There is no data to show."
+	},
+	"auth": {
+		"register": "Register",
+		"login": "Log in",
+		"logout": "Log out",
+		"redirect_to_login": "Redirecting to login page...",
+		"phone_email_username": "Phone number, email, or username"
+	},
+	"UI": {
+		"edit": "Edit",
+		"submit": "Submit",
+		"add": "Add",
+		"update": "Update",
+		"remove": "Remove",
+		"cancel": "Cancel",
+		"close": "Close",
+		"loading": "Loading",
+		"forgot": "Forgot password"
+	},
+	"sort_filter": {
+		"sort": "Sort",
+		"filter": "Filter",
+		"filters": "Filters",
+		"sort_criterion": "Sorting metric",
+		"sort_direction": "Sort direction",
+		"ASC": "Ascending",
+		"DESC": "Descending",
+		"types": "Types",
+		"urgency": "Urgency",
+		"status": "Status",
+		"active": "Active",
+		"active_only": "Active only",
+		"inactive": "Inactive"
+	},
+	"sort_criteria": {
+		"urgency": "Urgency",
+		"status": "Status",
+		"occur_at": "Date of need",
+		"type": "Type",
+		"subtype": "Subtype",
+		"upvote": "Reliability",
+		"currentQuantity": "Current quantity",
+		"due_date": "Due Date",
+		"description": "Description"
+	},
+	"feedback": {
+		"save_success": "Successfully saved",
+		"add_success": "Successfully added",
+		"remove_success": "Succesfully removed",
+		"failure": "An error occurred during the last operation, please try again",
+		"report_success": "Your report has been received. Thank you for your help"
+	},
+	"profile_pages": {
+	    "main_info": "Main Info",
+	    "info": "Information",
+	    "optional_info": "Misc. Info",
+		"no_phone_mail": "You have to give a phone number or an email address",
+	    "private_account": "Hide personal info"
+	},
+	"admin": {
+		"no_access": "You do not have access to the admin panel.",
+		"user_reports": "User Reports",
+		"activity_reports": "Activity Reports",
+		"banned_users": "Banned Users",
+		"reporter": "Reporter",
+		"reported": "Reported",
+		"description": "Description",
+		"details": "Details",
+		"actions": "Actions",
+		"report": "Report",
+		"reject_report": "Reject report",
+		"ban_user": "Ban user",
+		"remove_activity": "Remove activity"
+	},
+	"navbar": {
+		"help_feedback": "Help & Feedback",
+		"profile": "Profile",
+		"edit_profile": "User Settings"
+	},
+	"forms": {
+		"event_form": {
+			"event_time": "Event time",
+			"is_active": "Still active",
+			"x": "Center longitude (West-East)",
+			"y": "Center latitude (North-South)",
+			"max_distance_x": "Affected distance (West-East)",
+			"max_distance_y": "Affected distance (North-South)",
+			"short_description": "Short description",
+			"note": "Extra notes"
+		}
+	},
+	"placeholders": {
+		"phone_number": "05321234567",
+		"password": "Password must contain an uppercase letter and a number",
+		"email": "example@address.com",
+		"search_bar": "Enter your search",
+		"resource_type": "Food",
+		"resource_subtype": "Canned food"
+	},
+	"map": {
+		"choose_scan_center": "Choose the center of the area you want to scan",
+		"choose_location": "Choose your location in the map",
+		"scan_certain_area": "Scan a certain area",
+		"you_are_here": "You are here"
+	}
+}

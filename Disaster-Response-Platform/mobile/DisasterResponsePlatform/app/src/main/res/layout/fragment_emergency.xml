@@ -67,7 +67,9 @@
                 android:text="@string/sort_filter"
                 android:textAlignment="textStart"
                 android:textAllCaps="false"
+                android:textColor="@color/text"
                 app:icon="@drawable/filter_alt"
+                app:iconTint="@color/text"
                 app:iconGravity="end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +93,7 @@
             android:layout_margin="20dp"
             android:text="@string/add_emergency"
             app:icon="@drawable/ic_add_circle"
+            app:backgroundTint="@color/colorEmergency"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

@@ -34,4 +34,6 @@ enum class Endpoint(val path: String) {
     UPVOTE("feedback/upvote"),
     DOWNVOTE("feedback/downvote"),
     GETUSER("userroles/role"),
+    EVENT("events"),
+    REPORTS("reports")
 }

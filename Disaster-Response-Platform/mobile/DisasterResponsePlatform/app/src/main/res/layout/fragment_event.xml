@@ -3,22 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="adapter"
+            type="com.example.disasterresponseplatform.adapter.EventAdapter" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activity.event.EventFragment">
+        tools:context=".ui.activity.event.EventFragment"
+        tools:ignore="MissingClass">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/laySearchFilter">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewEvents"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:adapter="@{adapter}"
             android:keepScreenOn="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/laySearchFilter" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/laySearchFilter"
@@ -59,7 +75,9 @@
                 android:text="@string/sort_filter"
                 android:textAlignment="textStart"
                 android:textAllCaps="false"
+                android:textColor="@color/text"
                 app:icon="@drawable/filter_alt"
+                app:iconTint="@color/text"
                 app:iconGravity="end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -82,9 +100,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/add_event"
+            app:backgroundTint="@color/colorEvent"
             app:icon="@drawable/ic_add_circle"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

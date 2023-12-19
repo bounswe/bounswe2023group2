@@ -32,8 +32,8 @@ def get_events(event_id:str = None) -> list[dict]:
                   "event_time": 1,
                   "end_time": 1,
                   "is_active":1,
-                  "center_location_x": 1,
-                  "center_location_y": 1,
+                  "x": 1,
+                  "y": 1,
                   "max_distance_x": 1,
                   "max_distance_y": 1,
                   "created_time": 1,
@@ -41,6 +41,8 @@ def get_events(event_id:str = None) -> list[dict]:
                   "last_confirmed_time": 1,
                   "confirmed_by_user": 1,
                   "short_description": 1,
+                  "downvote": 1,
+                  "upvote": 1,
                   "note": 1
     }
 

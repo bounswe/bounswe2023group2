@@ -4,12 +4,10 @@ import { useRouter } from "next/router";
 import styles from "./MainLayout.module.scss";
 import NavBar from "@/components/NavBar";
 
-function MainLayout({ children}) {
-
-
+function MainLayout({ children }) {
   return (
     <div className={styles.main}>
-      <NavBar />
+      <NavBar labels={children.props?.labels}/>
       <div className={styles.body}>{children}</div>
     </div>
   );

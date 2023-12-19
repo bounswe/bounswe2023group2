@@ -90,6 +90,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="View User Profile"
                 android:textSize="12sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -405,7 +406,11 @@
             android:layout_marginTop="16dp"
             android:text="Navigate"
             android:textSize="12sp" />
-
+        <Button
+            android:id="@+id/btnReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/report" />
 
     </LinearLayout>
 </ScrollView>
