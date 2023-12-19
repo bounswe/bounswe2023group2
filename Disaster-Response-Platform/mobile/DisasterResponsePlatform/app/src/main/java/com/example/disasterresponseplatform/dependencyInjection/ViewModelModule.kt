@@ -10,6 +10,7 @@ import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
+import com.example.disasterresponseplatform.ui.activity.report.ReportViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
 import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
 import com.example.disasterresponseplatform.ui.authentication.AuthenticationViewModel
@@ -69,4 +70,8 @@ class ViewModelModule {
     @Provides
     @ViewModelScoped
     fun provideMapViewModel(): MapViewModel = MapViewModel()
+
+    @Provides
+    @ViewModelScoped
+    fun provideReportViewModel(): ReportViewModel = ReportViewModel()
 }

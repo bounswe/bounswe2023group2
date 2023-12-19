@@ -24,6 +24,7 @@ import com.example.disasterresponseplatform.data.models.VoteBody
 import com.example.disasterresponseplatform.databinding.FragmentNeedItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
+import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheetFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
@@ -183,6 +184,9 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         binding.btnDownvote.setOnClickListener {
             downvoteNeed(token)
         }
+        binding.btnReport.setOnClickListener {
+            showBottomSheet()
+        }
     }
 
     private var voted = false // if user change his/her some arrangements will happen with this parameter
@@ -275,6 +279,11 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
                     parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
             }, 200)
         }
+    }
+
+    private fun showBottomSheet() {
+        val bottomSheetFragment = ReportBottomSheetFragment(need._id, "needs")
+        bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 
     private fun navigateToMapFragment() {
