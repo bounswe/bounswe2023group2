@@ -101,7 +101,7 @@ export default function MapFilterMenu({
         const xValue = resource.x;
         const yValue = resource.y;
         console.log(
-          `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+          `Event ID: ${event._id}, x: ${xValue}, y: ${yValue}`
         );
       });
 
