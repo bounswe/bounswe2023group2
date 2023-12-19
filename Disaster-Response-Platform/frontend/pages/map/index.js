@@ -11,18 +11,26 @@ const Map = dynamic(() => import("@/components/Map/MainMap"), {
 
 export default function mapPage() {
   const [isClickActivated, setIsClickActivated] = useState(false);
-  const [resourceApiData, setResourceApiData] = useState([])
+  const [resourceApiData, setResourceApiData] = useState([]);
+  const [needApiData, setNeedApiData] = useState([]);
 
   const activateClick = () => {
     setIsClickActivated(!isClickActivated);
   };
 
-
-
   return (
     <>
-      <Map isClickActivated={isClickActivated} activateClick={activateClick} resourceApiData={resourceApiData}/>
-      <MapFilterMenu activateClick={activateClick} setResourceApiData={setResourceApiData}/>
+      <Map
+        isClickActivated={isClickActivated}
+        activateClick={activateClick}
+        resourceApiData={resourceApiData}
+        needApiData={needApiData}
+      />
+      <MapFilterMenu
+        activateClick={activateClick}
+        setResourceApiData={setResourceApiData}
+        setNeedApiData={setNeedApiData}
+      />
     </>
   );
 }

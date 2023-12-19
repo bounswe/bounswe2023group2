@@ -1,6 +1,6 @@
 import styles from "./MapFilterMenu.module.scss";
 import { FaSearch } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { api } from "@/lib/apiUtils";
@@ -8,6 +8,7 @@ import { api } from "@/lib/apiUtils";
 export default function MapFilterMenu({
   activateClick,
   setResourceApiData,
+  setNeedApiData,
   isMapSelected,
   selectMap,
 }) {
@@ -16,6 +17,12 @@ export default function MapFilterMenu({
   const [eventChecked, setEventChecked] = useState(false);
   const [actionsChecked, setActionsChecked] = useState(false);
   const [needsChecked, setNeedsChecked] = useState(false);
+
+  useEffect(() => {
+    fetchResources();
+    fetchNeeds();
+  }, []);
+
 
   const notifyFilter = () => {
     toast.info("Taramak istediğiniz alanın merkezini seçiniz", {
@@ -30,13 +37,11 @@ export default function MapFilterMenu({
       autoClose: 5000, // Auto close the notification after 3 seconds (adjust as needed)
     });
   };
-
-  const handleFilterClick = async () => {
-    console.log("I am in handleFilterClick");
+  const fetchResources = async () => {
     try {
       // Make API call to filter resources based on the search term
       //const searchTerm = /* Get the search term from your input field */;
-      const response = await api.get(
+      const resourceResponse = await api.get(
         `/api/resources/?sort_by=created_at&order=asc`,
         {
           method: "GET",
@@ -45,19 +50,100 @@ export default function MapFilterMenu({
           },
           // Additional headers or credentials if needed
         }
-        
       );
-      console.log("consolelog:",response.status);
-      if (response.status == 200) {
-         const resources = await response.data;
+      console.log("consolelog:", resourceResponse.status);
+      if (resourceResponse.status == 200) {
+        const resources = await resourceResponse.data;
         // Process the data as needed
         console.log("Filtered Resources:", resources);
         setResourceApiData(resources.resources);
-        resources.resources.forEach(resource => {
+        resources.resources.forEach((resource) => {
           const xValue = resource.x;
           const yValue = resource.y;
-          console.log(`Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`);
+          console.log(
+            `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+          );
+        });
+
+        
+      } else {
+        // Handle errors
+        console.error(
+          "Error fetching filtered resources:",
+          response.statusText
+        );
+      } 
+
+  }catch (error) {
+    // Handle unexpected errors
+    console.error("Error:", error);
+  }};
+
+  const fetchNeeds = async () => {
+    const needResponse = await api.get(
+      `/api/needs/?sort_by=created_at&order=asc`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Additional headers or credentials if needed
+      }
+    );
+    console.log("consolelog:", needResponse.status);
+    if (needResponse.status == 200) {
+      const needs = await needResponse.data;
+      // Process the data as needed
+      console.log("Filtered Needs:",  needs);
+      setNeedApiData(needs.needs);
+      needs.needs.forEach((resource) => {
+        const xValue = resource.x;
+        const yValue = resource.y;
+        console.log(
+          `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+        );
       });
+
+      
+    } else {
+      // Handle errors
+      console.error(
+        "Error fetching filtered resources:",
+        needs.statusText
+      );
+    }
+  };
+
+  const handleFilterClick = async () => {
+    console.log("I am in handleFilterClick");
+    try {
+      // Make API call to filter resources based on the search term
+      //const searchTerm = /* Get the search term from your input field */;
+      const resourceResponse = await api.get(
+        `/api/resources/?sort_by=created_at&order=asc`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
+          // Additional headers or credentials if needed
+        }
+      );
+      console.log("consolelog:", resourceResponse.status);
+      if (resourceResponse.status == 200) {
+        const resources = await resourceResponse.data;
+        // Process the data as needed
+        console.log("Filtered Resources:", resources);
+        setResourceApiData(resources.resources);
+        resources.resources.forEach((resource) => {
+          const xValue = resource.x;
+          const yValue = resource.y;
+          console.log(
+            `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+          );
+        });
+
+        
       } else {
         // Handle errors
         console.error(
@@ -65,6 +151,42 @@ export default function MapFilterMenu({
           response.statusText
         );
       }
+
+      const needResponse = await api.get(
+        `/api/needs/?sort_by=created_at&order=asc`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Additional headers or credentials if needed
+        }
+      );
+      console.log("consolelog:", needResponse.status);
+      if (needResponse.status == 200) {
+        const needs = await needResponse.data;
+        // Process the data as needed
+        console.log("Filtered Needs:",  needs);
+        setNeedApiData(needs.needs);
+        needs.needs.forEach((resource) => {
+          const xValue = resource.x;
+          const yValue = resource.y;
+          console.log(
+            `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+          );
+        });
+
+        
+      } else {
+        // Handle errors
+        console.error(
+          "Error fetching filtered resources:",
+          needs.statusText
+        );
+      }
+
+
+
     } catch (error) {
       // Handle unexpected errors
       console.error("Error:", error);
@@ -112,7 +234,12 @@ export default function MapFilterMenu({
         </button>
 
         <div>
-          <input className=""></input>
+          Türler
+          <input className=""/>
+        </div>
+        <div>
+          Alt Türler
+          <input className=""/>
         </div>
         <div>
           <input
