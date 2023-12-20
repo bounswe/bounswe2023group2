@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,6 +69,15 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
                 binding.tvUserRole.text = userRole
             }
         } else {
+            // Hide Creation time
+            binding.iconCreationTime.visibility = View.GONE
+            binding.tvCreationTimeTitle.visibility = View.GONE
+            binding.tvCreationTime.visibility = View.GONE
+            // Hide Update time
+            binding.iconUpdate.visibility = View.GONE
+            binding.tvLastUpdatedTimeTitle.visibility = View.GONE
+            binding.tvLastUpdatedTime.visibility = View.GONE
+
             binding.tvCreator.text = emergency.creator_name
             binding.tvUserRole.text = "GUEST"
         }
@@ -78,26 +86,31 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
         binding.tvDescription.text = emergency.description
         binding.tvCreationTime.text = emergency.created_at
         binding.tvLastUpdatedTime.text = emergency.last_updated_at
-        binding.tvAddress.text = "%.3f %.3f".format(emergency.x, emergency.y)
-        coordinateToAddress(emergency.x, emergency.y, object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
-                Log.e("Network", "Error: ${e.message}")
-            }
-            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                val responseBody = response.body?.string()
-                Log.i("Network", "Response: $responseBody")
-                if (responseBody != null) {
-                    var address = responseBody.subSequence(
-                        responseBody.indexOf("display_name") + 15,
-                        responseBody.length
-                    )
-                    address = address.subSequence(0, address.indexOf("\""))
-                    requireActivity?.runOnUiThread {
-                        binding.tvAddress.text = address
-                    }
-                }
-            }
-        })
+        binding.tvAddress.text = emergency.location
+
+
+//        !!--- Emergency is currently running locally ---!!
+//
+//        binding.tvAddress.text = "%.3f %.3f".format(emergency.x, emergency.y)
+//        coordinateToAddress(emergency.x, emergency.y, object : okhttp3.Callback {
+//            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+//                Log.e("Network", "Error: ${e.message}")
+//            }
+//            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+//                val responseBody = response.body?.string()
+//                Log.i("Network", "Response: $responseBody")
+//                if (responseBody != null) {
+//                    var address = responseBody.subSequence(
+//                        responseBody.indexOf("display_name") + 15,
+//                        responseBody.length
+//                    )
+//                    address = address.subSequence(0, address.indexOf("\""))
+//                    requireActivity?.runOnUiThread {
+//                        binding.tvAddress.text = address
+//                    }
+//                }
+//            }
+//        })
 
     }
 
@@ -118,14 +131,16 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
             binding.btnSeeProfile.setOnClickListener {
                 addFragment(ProfileFragment(emergency.created_by),"ProfileFragment")
             }
+            binding.btnNavigate.setOnClickListener {
+                navigateToMapFragment()
+            }
         } else {
             binding.btnDelete.visibility = View.GONE
             binding.btnEdit.visibility = View.GONE
             binding.btnSeeProfile.visibility = View.GONE
+            binding.btnNavigate.visibility = View.GONE
         }
-        binding.btnNavigate.setOnClickListener {
-            navigateToMapFragment()
-        }
+
         binding.btnUpvote.setOnClickListener {
             upvoteEmergency(token)
         }

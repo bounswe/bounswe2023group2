@@ -11,6 +11,9 @@ class EmergencyRepository @Inject constructor(private val emergencyDao: Emergenc
         emergencyDao.insertEmergency(emergency)
     }
 
-    fun getNotes(creatorName: String): String = emergencyDao.getNotes(creatorName)
+    fun getAllEmergencies(): List<Emergency>? = emergencyDao.getAllEmergencies()
 
+    suspend fun deleteAllEmergencies(){
+        emergencyDao.deleteAllEmergencies()
+    }
 }
