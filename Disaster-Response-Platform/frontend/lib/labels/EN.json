@@ -112,7 +112,8 @@
 		"cancel": "Cancel",
 		"close": "Close",
 		"loading": "Loading",
-		"forgot": "Forgot password"
+		"forgot": "Forgot password",
+		"details": "Details"
 	},
 	"sort_filter": {
 		"sort": "Sort",
@@ -217,6 +218,8 @@
 		"rescue_member": "Search and Rescue Personnel",
 		"infrastructure_engineer": "Infrastructure Engineer",
 		"it_specialist": "IT Specialist",
-		"other": "Other"
+		"other": "Other",
+		"field": "Field",
+		"add_proficiency": "Add Area of Expertise"
 	}
 }

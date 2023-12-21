@@ -111,7 +111,8 @@
 		"cancel": "Vazgeç",
 		"close": "Kapat",
 		"loading": "Yükleniyor",
-		"forgot": "Şifremi Unuttum"
+		"forgot": "Şifremi Unuttum",
+		"details": "Detaylar"
 	},
 	"sort_filter": {
 		"sort": "Sırala",
@@ -216,6 +217,8 @@
 		"rescue_member": "Arama Kurtarma Personeli",
 		"infrastructure_engineer": "Altyapı Mühendisi",
 		"it_specialist": "Bilişim Uzmanı",
-		"other": "Diğer"
+		"other": "Diğer",
+		"field": "Alan",
+		"add_proficiency": "Uzmanlık Alanı Ekle"
 	}
 }
