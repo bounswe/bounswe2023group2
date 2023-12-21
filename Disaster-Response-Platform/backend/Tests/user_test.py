@@ -166,7 +166,7 @@ def test_signup7():
     digitless_password_signup_body)
     assert response.status_code == 401
 
-def test_signup7():
+def test_signup8():
     response = client.post("/api/users/signup", json=
     wrong_email_signup_body)
     assert response.status_code == 422
