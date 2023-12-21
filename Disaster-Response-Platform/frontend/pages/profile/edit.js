@@ -9,6 +9,7 @@ import { useState } from "react";
 import getLabels from '@/lib/getLabels';
 import { useDisclosure } from "@nextui-org/react";
 import ProficiencyModal from '@/components/profile/ProficiencyModal';
+import { ToastContainer } from 'react-toastify';
 
 export default function Edit({ guest, expired, current_main_fields, current_optional_fields, accessToken, labels }) {
 
@@ -86,9 +87,11 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
               <input name='private_account' id='private_account' type='checkbox' defaultChecked={checked} onChange={() => setChecked((state) => !state)} />
               <label htmlFor='private_account' class="ml-2">{labels.profile_pages.private_account}</label>
             </div>
-            <div class="my-3 w-full text-center">
-              <button type="button" onClick={onOpenProficiency} class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{labels.proficiency.add_proficiency}</button>
-            </div>
+            {current_main_fields.is_email_verified ? (
+              <div class="my-3 w-full text-center">
+                <button type="button" onClick={onOpenProficiency} class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{labels.proficiency.add_proficiency}</button>
+              </div>
+            ) : null}
           </GrayBox>
           <GrayBox className="w-96">
             <h3 class="object-top text-center text-xl"> {labels.profile_pages.optional_info} </h3>
@@ -104,7 +107,11 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
           <button type="submit" class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{labels.UI.update}</button>
         </div>
       </form>
-      <ProficiencyModal isOpen={isOpenProficiency} onOpenChange={onOpenChangeProficiency} labels={labels} />
+      {current_main_fields.is_email_verified ? (
+        <>
+          <ProficiencyModal isOpen={isOpenProficiency} onOpenChange={onOpenChangeProficiency} labels={labels} />
+        </>
+      ) : null}
     </main>
   )
 }
