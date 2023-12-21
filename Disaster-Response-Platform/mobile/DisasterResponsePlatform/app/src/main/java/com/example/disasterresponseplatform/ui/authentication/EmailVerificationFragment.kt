@@ -75,6 +75,7 @@ class EmailVerificationFragment : Fragment() {
     private fun sendVerificationEmail() {
         // Setting up a click listener for the "Resend Code" button to re-trigger email verification
         authViewModel.sendEmailVerification()
+        val resendCodeText = getString(R.string.resend_code)
         val btResendCode = binding.btResendCode
         if (btResendCode.isClickable) {
             // Disable button temporarily
@@ -85,15 +86,17 @@ class EmailVerificationFragment : Fragment() {
             object : CountDownTimer(10000, 1000) { // 10 seconds, tick every 1 second
                 override fun onTick(millisUntilFinished: Long) {
                     // Update button text with countdown value
-                    val countdownText = "${getString(R.string.resend_code)} (${(millisUntilFinished / 1000)+1})"
+                    val countdownText = "$resendCodeText (${(millisUntilFinished / 1000) + 1})"
                     btResendCode.text = countdownText
                 }
 
                 override fun onFinish() {
                     // Enable button and reset text when countdown finishes
-                    btResendCode.isClickable = true
-                    btResendCode.isEnabled = true
-                    btResendCode.text = getString(R.string.resend_code)
+                    context?.let {
+                        btResendCode.isClickable = true
+                        btResendCode.isEnabled = true
+                        btResendCode.text = getString(R.string.resend_code)
+                    }
                 }
             }.start()
         }
