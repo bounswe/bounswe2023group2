@@ -208,7 +208,7 @@
 	"map": {
 		"choose_scan_center": "Taramak istediğiniz alanın merkezini seçiniz",
 		"choose_location": "Haritada yerinizi işaretleyin",
-		"scan_certain_area": "Belirli bir alanı tara",
+		"scan_certain_area": "Bu alanı tara",
 		"you_are_here": "You are here"
 	},
 	"user_roles": {

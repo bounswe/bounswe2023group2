@@ -209,7 +209,7 @@
 	"map": {
 		"choose_scan_center": "Choose the center of the area you want to scan",
 		"choose_location": "Choose your location in the map",
-		"scan_certain_area": "Scan a certain area",
+		"scan_certain_area": "Scan this area",
 		"you_are_here": "You are here"
 	},
 	"user_roles": {

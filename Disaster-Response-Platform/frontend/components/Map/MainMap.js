@@ -59,6 +59,8 @@ function LocationMarker({ lat, lng,labels }) {
   );
 }
 
+
+
 export default function Map({
   isClickActivated,
   activateClick,
@@ -67,6 +69,14 @@ export default function Map({
   labels
   
 }) {
+  function MapBounds() {
+    const map = useMapEvents({
+      moveend: () => {
+        setBounds(map.getBounds().toBBoxString()); // Alerts the bounds as a string
+      },
+    });
+    return null; // This component does not render anything
+  }
   const [MarkerArr, setMarkerArr] = useState([]);
 
   useEffect(() => {
@@ -79,6 +89,7 @@ export default function Map({
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [center, setCenter] = useState({ lat: 41.08714, lng: 29.043474 });
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [bounds,setBounds] = useState(null);
   const [selectedPosition, setSelectedPosition] = useState({
     x_coord: "",
     y_coord: "",
@@ -198,7 +209,7 @@ export default function Map({
             
           </Marker>
         )}
-
+        <MapBounds/>
         {resourceApiData.map((resource, index) => (
           <Marker
             key={index}
