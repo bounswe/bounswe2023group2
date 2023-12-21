@@ -192,6 +192,25 @@ class NetworkManager {
                     call.enqueue(callback)
                 }
             }
+            Endpoint.GETUSER -> {
+                Log.d("RESPONSE", callback.toString())
+                id?.let {
+                    val call = api.getData("${endpoint.path}/$id", headers)
+                    call.enqueue(callback)
+                }
+            }
+            Endpoint.EMAIL_VERIFICATION_VERIFY -> {
+                Log.d("RESPONSE", callback.toString())
+                if (queries.isNullOrEmpty()) {
+                    Log.d("RESPONSE", callback.toString())
+                    requestBody?.let { api.postData(endpoint.path, headers, it) }
+                        ?.enqueue(callback)
+                } else {
+                    Log.d("RESPONSE", callback.toString())
+                    requestBody?.let { api.postQueryData(endpoint.path, headers, it, queries) }
+                        ?.enqueue(callback)
+                }
+            }
             else -> {
                 when (requestType) {
                     RequestType.GET -> {
@@ -252,6 +271,14 @@ interface ApiService {
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
         @Body requestBody: RequestBody,
+    ): Call<ResponseBody>
+
+    @POST("{endpoint}")
+    fun postQueryData(
+        @Path("endpoint") endpoint: String,
+        @HeaderMap headers: Map<String, String>,
+        @Body requestBody: RequestBody,
+        @QueryMap queries: Map<String, String>?
     ): Call<ResponseBody>
 
     @PUT("{endpoint}")
