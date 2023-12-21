@@ -79,7 +79,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                 user = AuthenticatedUser("", "", "", "", "")
 
                 networkManager.makeRequest(
-                    endpoint = Endpoint.USERROLE,
+                    endpoint = Endpoint.GETUSER,
                     requestType = RequestType.GET,
                     headers = headers,
                     callback = object : Callback<ResponseBody> {
@@ -375,7 +375,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                 user = AuthenticatedUser("", "", "", "", "")
 
                 networkManager.makeRequest(
-                    endpoint = Endpoint.USERROLE,
+                    endpoint = Endpoint.GETUSER,
                     requestType = RequestType.GET,
                     headers = headers,
                     id = username,
