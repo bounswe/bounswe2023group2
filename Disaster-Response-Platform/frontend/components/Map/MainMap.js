@@ -28,7 +28,6 @@ var redIcon = new L.Icon({
   shadowSize: [21, 21],
 });
 
-
 var greenIcon = new L.Icon({
   iconUrl:
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
@@ -51,23 +50,19 @@ var blueIcon = new L.Icon({
   shadowSize: [21, 21],
 });
 
-function LocationMarker({ lat, lng,labels }) {
+function LocationMarker({ lat, lng, labels }) {
   const map = useMap();
-  return (
-    <Marker position={[41.08714, 29.043474]}>
-    </Marker>
-  );
+  return <Marker position={[41.08714, 29.043474]}></Marker>;
 }
-
-
 
 export default function Map({
   isClickActivated,
   activateClick,
   resourceApiData,
   needApiData,
-  labels
-  
+  eventApiData,
+  labels,
+  setBounds,
 }) {
   function MapBounds() {
     const map = useMapEvents({
@@ -89,7 +84,7 @@ export default function Map({
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [center, setCenter] = useState({ lat: 41.08714, lng: 29.043474 });
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const [bounds,setBounds] = useState(null);
+
   const [selectedPosition, setSelectedPosition] = useState({
     x_coord: "",
     y_coord: "",
@@ -205,11 +200,9 @@ export default function Map({
           <Marker
             position={[selectedPosition.x_coord, selectedPosition.y_coord]}
             icon={redIcon}
-          >
-            
-          </Marker>
+          ></Marker>
         )}
-        <MapBounds/>
+        <MapBounds />
         {resourceApiData.map((resource, index) => (
           <Marker
             key={index}
@@ -222,9 +215,7 @@ export default function Map({
                 setSelectedMarker(resource);
               },
             }}
-          >
-           
-          </Marker>
+          ></Marker>
         ))}
 
         {needApiData.map((need, index) => (
@@ -239,8 +230,23 @@ export default function Map({
                 setSelectedMarker(need);
               },
             }}
-          >
-          </Marker>
+          ></Marker>
+        ))}
+
+        {eventApiData.map((event, index) => (
+          
+          <Marker
+            key={index}
+            position={[event.x, event.y]}
+            icon={redIcon}
+            eventHandlers={{
+              click: () => {
+                event.nre = "Event";
+                event.feedback = 0;
+                setSelectedMarker(event);
+              },
+            }}
+          ></Marker>
         ))}
 
         {isClickActivated ? <MarkerAdd /> : <></>}
@@ -256,8 +262,11 @@ export default function Map({
             </Marker>
           ))} */}
       </MapContainer>
-      <SidePopup card={selectedMarker} closePopup={closePopup} labels ={labels} />
-
+      <SidePopup
+        card={selectedMarker}
+        closePopup={closePopup}
+        labels={labels}
+      />
     </div>
   );
 }

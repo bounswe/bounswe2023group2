@@ -9,9 +9,11 @@ export default function MapFilterMenu({
   activateClick,
   setResourceApiData,
   setNeedApiData,
+  setEventApiData,
   isMapSelected,
   selectMap,
-  labels
+  labels,
+  bounds,
 }) {
   const [resourceChecked, setResourceChecked] = useState(false);
   const [aktifChecked, setAktifChecked] = useState(false);
@@ -22,8 +24,8 @@ export default function MapFilterMenu({
   useEffect(() => {
     fetchResources();
     fetchNeeds();
+    fetchEvents();
   }, []);
-
 
   const notifyFilter = () => {
     toast.info(labels.map.choose_scan_center, {
@@ -65,20 +67,18 @@ export default function MapFilterMenu({
             `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
           );
         });
-
-        
       } else {
         // Handle errors
         console.error(
           "Error fetching filtered resources:",
           response.statusText
         );
-      } 
-
-  }catch (error) {
-    // Handle unexpected errors
-    console.error("Error:", error);
-  }};
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      console.error("Error:", error);
+    }
+  };
 
   const fetchNeeds = async () => {
     const needResponse = await api.get(
@@ -95,22 +95,47 @@ export default function MapFilterMenu({
     if (needResponse.status == 200) {
       const needs = await needResponse.data;
       // Process the data as needed
-      console.log("Filtered Needs:",  needs);
+      console.log("Filtered Needs:", needs);
       setNeedApiData(needs.needs);
       needs.needs.forEach((resource) => {
         const xValue = resource.x;
         const yValue = resource.y;
+        console.log(`Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`);
+      });
+    } else {
+      // Handle errors
+      console.error("Error fetching filtered resources:", needs.statusText);
+    }
+  };
+  const fetchEvents = async () => {
+    const eventResponse = await api.get(
+      `/api/events/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Additional headers or credentials if needed
+      }
+    );
+    console.log("consolelog:", eventResponse.status);
+    if (eventResponse.status == 200) {
+      const events = await eventResponse.data;
+      // Process the data as needed
+      console.log("Filtered events:", events);
+      setEventApiData(events.events);
+      events.events.forEach((event) => {
+        const xValue = event.x;
+        const yValue = event.y;
         console.log(
-          `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+          `Event ID: ${event._id}, X: ${xValue}, Y: ${yValue}`
         );
       });
-
-      
     } else {
       // Handle errors
       console.error(
         "Error fetching filtered resources:",
-        needs.statusText
+        eventResponse.statusText
       );
     }
   };
@@ -120,13 +145,50 @@ export default function MapFilterMenu({
     try {
       // Make API call to filter resources based on the search term
       //const searchTerm = /* Get the search term from your input field */;
+
+
+      const eventResponse = await api.get(
+        `/api/resources/?sort_by=created_at&order=asc`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Additional headers or credentials if needed
+        }
+      );
+      console.log("consolelog:", eventResponse.status);
+      if (eventResponse.status == 200) {
+        const events = await eventResponse.data;
+        // Process the data as needed
+        console.log("Filtered Resources:", events);
+        setResourceApiData(events.events);
+        events.events.forEach((event) => {
+          const xValue = event.x;
+          const yValue = event.y;
+          console.log(
+            `Resource ID: ${event._id}, X: ${xValue}, Y: ${yValue}`
+          );
+        });
+      } else {
+        // Handle errors
+        console.error(
+          "Error fetching filtered resources:",
+          eventResponse.statusText
+        );
+      }
+
+
+
+
+
       const resourceResponse = await api.get(
         `/api/resources/?sort_by=created_at&order=asc`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-          }
+          },
           // Additional headers or credentials if needed
         }
       );
@@ -143,8 +205,6 @@ export default function MapFilterMenu({
             `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
           );
         });
-
-        
       } else {
         // Handle errors
         console.error(
@@ -167,7 +227,7 @@ export default function MapFilterMenu({
       if (needResponse.status == 200) {
         const needs = await needResponse.data;
         // Process the data as needed
-        console.log("Filtered Needs:",  needs);
+        console.log("Filtered Needs:", needs);
         setNeedApiData(needs.needs);
         needs.needs.forEach((resource) => {
           const xValue = resource.x;
@@ -176,18 +236,10 @@ export default function MapFilterMenu({
             `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
           );
         });
-
-        
       } else {
         // Handle errors
-        console.error(
-          "Error fetching filtered resources:",
-          needs.statusText
-        );
+        console.error("Error fetching filtered resources:", needs.statusText);
       }
-
-
-
     } catch (error) {
       // Handle unexpected errors
       console.error("Error:", error);
@@ -233,14 +285,32 @@ export default function MapFilterMenu({
         >
           {labels.map.scan_certain_area}
         </button>
-
         <div>
-          Türler
-          <input className=""/>
+          <form action="#">
+            <label for="types">{labels.sort_criteria.type}</label>
+            <select name="types" id="types">
+              <option value="need"> {labels.activities.needs} </option>
+              <option value="resource"> {labels.activities.resource} </option>
+              <option value="event"> {labels.activities.events} </option>
+            </select>
+          </form>
         </div>
         <div>
-          Alt Türler
-          <input className=""/>
+          <form action="#">
+            <label for="types">{labels.sort_criteria.type}</label>
+            <select name="types" id="types">
+              <option value="a"> anaaaa </option>
+            </select>
+          </form>
+        </div>
+
+        <div>
+          <form action="#">
+            <label for="types">{labels.sort_criteria.subtype}</label>
+            <select name="types" id="types">
+              <option value="a"> a </option>
+            </select>
+          </form>
         </div>
         <div>
           <input
