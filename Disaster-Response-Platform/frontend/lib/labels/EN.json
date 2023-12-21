@@ -152,7 +152,9 @@
 	    "info": "Information",
 	    "optional_info": "Misc. Info",
 		"no_phone_mail": "You have to give a phone number or an email address",
-	    "private_account": "Hide personal info"
+	    "private_account": "Hide personal info",
+	    "contact_info": "Contact Info",
+	    "contact_hidden": "This user has not set their contact info visible."
 	},
 	"admin": {
 		"no_access": "You do not have access to the admin panel.",
@@ -199,5 +201,22 @@
 		"choose_location": "Choose your location in the map",
 		"scan_certain_area": "Scan a certain area",
 		"you_are_here": "You are here"
+	},
+	"user_roles": {
+		"GUEST": "Unverified User",
+		"AUTHENTICATED": "Authenticated User",
+		"ROLE_BASED": "Specialist",
+		"CREDIBLE": "Credible User",
+		"ADMIN": "Administrator",
+		"area_of_expertise": "Area of Expertise"
+	},
+	"proficiency": {
+		"doctor": "Doctor",
+		"driver": "Driver",
+		"pharmacist": "Pharmacist",
+		"rescue_member": "Search and Rescue Personnel",
+		"infrastructure_engineer": "Infrastructure Engineer",
+		"it_specialist": "IT Specialist",
+		"other": "Other"
 	}
 }
