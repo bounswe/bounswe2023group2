@@ -1,125 +1,69 @@
-from pydantic import BaseModel, Field, HttpUrl
-from typing import List, Optional
+from typing import Union, List, Optional
+from pydantic import BaseModel, EmailStr, AnyUrl, json, Field
 
-class TargetSelector(BaseModel):
-    source: Optional[str]
-    selector: Optional[str]
 
-class TextQuoteSelector(BaseModel):
-    exact: str
-    prefix: Optional[str]
-    suffix: Optional[str]
+import datetime
 
-class TextPositionSelector(BaseModel):
-    start: int
-    end: Optional[int]
-
-class DataPositionSelector(BaseModel):
-    start: int
-    end: Optional[int]
-
-class SvgSelector(BaseModel):
-    value: str
-
-class RangeSelector(BaseModel):
-    startSelector: TargetSelector
-    endSelector: TargetSelector
-    type: str = "Range"
-
-class AnnotationBody(BaseModel):
-    type: str
-    purpose: Optional[str]
-    value: Optional[str]
-
-class ImageBody(BaseModel):
-    type: str = "Image"
-    format: str
-    url: str
-class Annotation(BaseModel):
-    id: Optional[str]
-    type: str = "Annotation"
-    motivation: List[str]
-    body: List[AnnotationBody]
-    target: List[TargetSelector]
-
-class W3CAnnotation(BaseModel):
-    class Config:
-        fields = {'@context': {'alias': 'context'},
-                  '@type': {'alias': 'type'}}
-    context: Optional[str]
-    type: str = "Annotation"
-    id: Optional[str]
+class Link(BaseModel):
+    href: str
     type: Optional[str]
-    motivation: Optional[List[str]]
-    creator: Optional[str]
-    created: Optional[str]
-    modified: Optional[str]
-    generator: Optional[HttpUrl]
-    body: Optional[List[AnnotationBody]]
-    target: Optional[List[TargetSelector]]
-    stylesheet: Optional[HttpUrl]
-    renderedVia: Optional[HttpUrl]
-    rights: Optional[str]
-    canonical: Optional[HttpUrl]
-    conformsTo: Optional[HttpUrl]
-    partOf: Optional[HttpUrl]
-    isBasedOn: Optional[HttpUrl]
-    items: Optional[List[Annotation]]
+class Document(BaseModel):
+    title: Optional[str]  # Must be one of "Text", "Image", "Data"
+    link: Optional[List[Link]]
 
-class HypothesisModel(W3CAnnotation):
-    uri:Optional[HttpUrl]
+class Body(BaseModel):
+    type: str  # Must be one of "Text", "Image", "Data"
+    value: Union[str, AnyUrl]  # Adjust based on specific data types for each body type
 
-sample_for_hypothesis:HypothesisModel = {
-    "uri": "http://3.218.226.215:3000/resources/annotations/65776cc6d80e93410000000b",
-    "tags": [
-        "api", "DAPP","rescue","resource"
-    ],
-    "body": {
-        "type": "TextualBody",
-        "value": "Kaynağın verdiği bilgi ve önerisi: Sağladığı yemeklerin [PSAKD binasından](https://maps.app.goo.gl/hq6PxMbf4N8SWNTV7) yüklenebileceğini, yakın yerlerde olursa taşımayı kendisinin yapabileceğini söylüyor. [Fotoğrafını görebilirsiniz](https://zaytung.com/voicepics//Ahmad.jpg) ",
-        "format": "text/plain"
-    },
-    "document": {
-        "title": "DAPP resource 65776cc6d80e934140000000b",
-        "link": [{"href":"http://3.218.226.215:3000/resources/annotations/65776cc6d80e93414cd8300b"}]
-    },
-    "target": [
-        {
-            "source": "http://3.218.226.215:3000/resources/annotations/65776cc6d80e93414cd8300b",
-            "selector": [{"type":"XPathSelector",
-                "value":"http://3.218.226.215:3000/resources/annotations/65776cc6d80e93414cd8300b"}]
-        }
-    ],
-    "user": "acct:mehmet.kuzulugil@boun.edu.tr",
-    "permissions": {
-        "read": [
-            "group:__world__"
-        ],
-        "update": [
-            "acct:mehmet.kuzulugil@boun.edu.tr"
-        ],
-        "delete": [
-            "acct:mehmet.kuzulugil@boun.edu.tr"
-        ],
-        "admin": [
-            "acct:mehmet.kuzulugil@boun.edu.tr"
-        ]
-    }
-}
+class Selector(BaseModel):
+    type: str  # e.g., "XPath", "CSS", "TEI"
+    value: str
+class Target(BaseModel):
+    id: Optional[str]
+    selector: Optional[List[Selector]] # For specific targeting within resources (optional)
+    source: Optional[AnyUrl]  # Source of the target resource (optional)
+    type: str  # Required, must be one of "Text", "Image", "Data"
+    # Specify URL support based on type
+    url: Optional[AnyUrl]
+
+class Motivation(BaseModel):
+    type: str  # e.g., "describing", "classifying", "tagging"
+
+class Annotation(BaseModel):
+    id: str
+    body: Optional[Body]
+    text:Optional[str]
+    uri:AnyUrl
+    document: Optional[Document]
+    target: List[Target]
+    motivation: Motivation
+    creator: Optional[EmailStr]
+    created: Optional[datetime.datetime]  # Adjust import as needed
+    modified: Optional[datetime.datetime]
+    tags: Optional[List[str]]
+    group:str = Field(default="q1VEo531")
+    references: Optional[List[AnyUrl]]  # Links to related annotations or resources
 
 
-sample_annotation_data:W3CAnnotation = {
-    "context": "http://www.w3.org/ns/anno.jsonld",
-    "type": "Annotation",
-    "id": "http://dapp.org/annotated",
-    "motivation": ["commenting", "highlighting"],
-    "body": [
-        {"type": "TextualBody", "value": "Elbiseler soğuk hava koşulları düşünülerek edinilmelidir"},
-        {"type": "TextualBody", "value": "Çocuk giysilerine öncelik verilebilir"},
-        {"type": "ImageBody", "format": "image/jpeg", "url": "http://dapp.org/9102211123.jpg"},
-        {"type": "URL", "url": "https://www.defacto.com.tr/takim-2812969"},
-    ],
-    "target": [
-        {"source": "http://dapp.org/annotated/needs/", "data_selector": {"start": 0x653ff479d6b8de0728e51b15, "end": 0x653ff479d6b8de0728e51b15}},
-    ],
-}
+# You can further extend this model with additional fields from the WAM spec
+
+# Example usage
+
+annotation_text = Annotation(
+    id="https://example.org/annotations/1",
+    body=Body(type="Text", value="This is a beautiful sunset picture."),
+    target=[Target(type="Text", id="https://example.org/poem.txt")],
+    motivation=Motivation(type="bookmarking"),
+    uri="https://example.org/annotations/1",
+)
+
+annotation_image = Annotation(
+    id="https://example.org/annotations/2",
+    uri="https://example.org/annotations/2",
+    body=Body(type="Image", value="Sun setting over the horizon."),
+    target=[Target(type="Image", url="https://example.org/images/sunset.jpg")],
+    motivation=Motivation(type="testing")
+)
+
+print(annotation_text.json())
+print(annotation_image.json())
