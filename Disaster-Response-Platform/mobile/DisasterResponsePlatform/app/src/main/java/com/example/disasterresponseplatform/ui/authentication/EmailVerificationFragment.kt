@@ -1,13 +1,14 @@
 package com.example.disasterresponseplatform.ui.authentication
 
 import android.os.Bundle
-import android.util.Log
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentEmailVerificationBinding
 
 class EmailVerificationFragment : Fragment() {
@@ -28,11 +29,11 @@ class EmailVerificationFragment : Fragment() {
         authViewModel = ViewModelProvider(requireActivity()).get(AuthenticationViewModel::class.java)
 
         // Triggering the sending of an email verification when the fragment is created
-        authViewModel.sendEmailVerification()
+        sendVerificationEmail()
 
         // Setting up a click listener for the "Resend Code" button to re-trigger email verification
         binding.btResendCode.setOnClickListener {
-            authViewModel.sendEmailVerification()
+            sendVerificationEmail()
         }
 
         // Observing the success message after sending email verification
@@ -70,4 +71,32 @@ class EmailVerificationFragment : Fragment() {
             }
         }
     }
+
+    private fun sendVerificationEmail() {
+        // Setting up a click listener for the "Resend Code" button to re-trigger email verification
+        authViewModel.sendEmailVerification()
+        val btResendCode = binding.btResendCode
+        if (btResendCode.isClickable) {
+            // Disable button temporarily
+            btResendCode.isClickable = false
+            btResendCode.isEnabled = false
+
+            // Countdown directly inside the onClickListener
+            object : CountDownTimer(10000, 1000) { // 10 seconds, tick every 1 second
+                override fun onTick(millisUntilFinished: Long) {
+                    // Update button text with countdown value
+                    val countdownText = "${getString(R.string.resend_code)} (${(millisUntilFinished / 1000)+1})"
+                    btResendCode.text = countdownText
+                }
+
+                override fun onFinish() {
+                    // Enable button and reset text when countdown finishes
+                    btResendCode.isClickable = true
+                    btResendCode.isEnabled = true
+                    btResendCode.text = getString(R.string.resend_code)
+                }
+            }.start()
+        }
+    }
+
 }
