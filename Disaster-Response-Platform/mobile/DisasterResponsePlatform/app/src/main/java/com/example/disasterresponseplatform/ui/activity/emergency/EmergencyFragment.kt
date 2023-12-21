@@ -6,13 +6,13 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -145,9 +145,6 @@ class EmergencyFragment(
         val adapter = EmergencyAdapter(emergencyList)
         binding.adapter = adapter
 
-
-//        !!--- Emergency is currently running locally ---!!
-
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
             openEmergencyItemFragment(it)
@@ -211,6 +208,8 @@ class EmergencyFragment(
         typeSwitch.setOnClickListener {
             typeLay.visibility = if (typeSwitch.isChecked) View.VISIBLE else View.GONE
         }
+
+
 
         // Set up Location Filter switch listener
         locationSwitch.setOnClickListener {

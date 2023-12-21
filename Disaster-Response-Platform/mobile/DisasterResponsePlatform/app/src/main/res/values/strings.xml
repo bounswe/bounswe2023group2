@@ -294,4 +294,25 @@
         <item>University</item>
     </string-array>
 
+    <!-- Reports -->
+    <string name="inappropriate_content">Inappropriate Content</string>
+    <string name="report">Report</string>
+    <!-- Report Options for non-users type -->
+    <string-array name="report_options_non_users">
+        <item>Inappropriate Content</item>
+        <item>Spam</item>
+        <item>Bullying</item>
+        <item>Fake News</item>
+        <item>Hate Speech</item>
+    </string-array>
+
+    <!-- Report Options for users type -->
+    <string-array name="report_options_users">
+        <item>Fake User</item>
+        <item>Misleading Characters</item>
+        <item>Bullying</item>
+        <item>Fake News</item>
+        <item>Hate Speech</item>
+    </string-array>
+
 </resources>

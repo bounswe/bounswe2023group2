@@ -223,6 +223,27 @@
         <item>Yardım Noktası</item>
     </string-array>
 
-    <!-- PROFILE LISTS -->
+    <!-- Reports -->
+    <string name="inappropriate_content">Uygunsuz İçerik</string>
+    <string name="report">Raporla</string>
+
+    <!-- Report Options for non-users type -->
+    <string-array name="report_options_non_users">
+        <item>Uygunsuz İçerik</item>
+        <item>Spam</item>
+        <item>Taciz</item>
+        <item>Yanıltıcı Haber</item>
+        <item>Nefret Söylemi</item>
+    </string-array>
+
+    <!-- Report Options for users type -->
+    <string-array name="report_options_users">
+        <item>Sahte Kullanıcı</item>
+        <item>Yanıltıcı Karakterler</item>
+        <item>Taciz</item>
+        <item>Yanıltıcı Haber</item>
+        <item>Nefret Söylemi</item>
+    </string-array>
+
 
 </resources>

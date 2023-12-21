@@ -44,7 +44,7 @@ def get_all_needs(
     y: float = Query(None, description="Y coordinate for distance calculation"),
     distance_max: float = Query(None, description="Maximum distance for filtering"),
     sort_by: str = Query('created_at', description="Field to sort by"),
-    order: Optional[str] = Query('asc', description="Sort order")
+    order: Optional[str] = Query('desc', description="Sort order")
 ):
 
     if types:
