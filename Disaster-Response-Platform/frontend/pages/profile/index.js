@@ -52,7 +52,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
             <button type="submit" class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{labels.UI.edit}</button>
           </Link>
         </div>
-        <ActivityTable labels={labels} />
+        <ActivityTable labels={labels} userFilter={username} />
         <SkillModal isOpen={isOpen} onOpenChange={onOpenChange} topic={modalState} labels={labels} />
         <ToastContainer />
       </main>

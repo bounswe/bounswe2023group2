@@ -9,7 +9,7 @@ import AddActionForm from "./AddAction";
 import { GrTransaction } from "react-icons/gr";
 
 
-export default function ActivityTable({ labels }) {
+export default function ActivityTable({ labels, userFilter }) {
     const [chosenActivityType, setChosenActivityType] = useState("resources");
     const [filters, setFilters] = useState({})
     const [resources, setResources] = useState([{_id: "loading"}]);
@@ -28,8 +28,11 @@ export default function ActivityTable({ labels }) {
         const response = await fetch('/api/resource/get', { method: 'GET', headers: { "Content-Type": "application/json" } });
         let res = await response.json();
         if (response.ok) {
-
-            setResources(res.resources)
+            if (userFilter === undefined) {
+                setResources(res.resources);
+            } else {
+                setResources(res.resources.filter(entry => entry.created_by === userFilter));
+            }
         } else {
             toast.error(labels.feedback.failure);
         }
@@ -38,7 +41,11 @@ export default function ActivityTable({ labels }) {
         const response = await fetch('/api/need/get', { method: 'GET', headers: { "Content-Type": "application/json" } });
         let res = await response.json();
         if (response.ok) {
-            setNeeds(res.needs)
+            if (userFilter === undefined) {
+                setNeeds(res.needs);
+            } else {
+                setNeeds(res.needs.filter(entry => entry.created_by === userFilter));
+            }
         } else {
             toast.error(labels.feedback.failure);
         }
@@ -48,7 +55,11 @@ export default function ActivityTable({ labels }) {
         let res = await response.json();
         console.log(res)
         if (response.ok) {
-            setEvents(res.events);
+            if (userFilter === undefined) {
+                setEvents(res.events);
+            } else {
+                setEvents(res.events.filter(entry => entry.created_by_user === userFilter));
+            }
         } else {
             toast.error(labels.feedback.failure);
         }

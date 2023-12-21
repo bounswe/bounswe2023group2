@@ -66,7 +66,7 @@ export default function OtherProfile({ unauthorized, self_role, main_info, optio
           : null
         }
       </div>
-      <ActivityTable labels={labels} />
+      <ActivityTable labels={labels} userFilter={username} />
       <ReportModal isOpen={isOpen} onOpenChange={onOpenChange} reported={username} labels={labels}/>
       <ToastContainer />
     </main>
@@ -97,7 +97,7 @@ export const getServerSideProps = withIronSessionSsr(
 
     let self_role;
     try {
-    ({ user_role: self_role } = await api.get(`/api/userroles/role`, {
+    ({ data: { user_role: self_role }} = await api.get(`/api/userroles/role`, {
       headers: {
         'Authorization': `Bearer ${self.accessToken}` 
       }
