@@ -352,10 +352,13 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
             "Content-Type" to "application/json",
         )
 
+        val emptyRequestBody = "".toRequestBody("application/json".toMediaTypeOrNull())
+
         networkManager.makeRequest(
             endpoint = Endpoint.EMAIL_VERIFICATION_SEND,
             requestType = RequestType.POST,
             headers = headers,
+            requestBody = emptyRequestBody,
             callback = object : Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,
@@ -363,8 +366,6 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                 ) {
                     Log.d("ResponseInfo", "Status Code: ${response.code()}")
                     Log.d("ResponseInfo", "Headers: ${response.headers()}")
-                    println("1")
-
 
                     if (response.isSuccessful) {
                         _emailVerificationSendSuccess.value = true
