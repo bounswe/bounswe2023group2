@@ -12,7 +12,7 @@ async function reportRoute(req, res) {
   }
 
   const body = {
-    "description": req.body.reason,
+    "description": req.body.description,
     "type": "user",
     "details": {
       "reported_user_id": req.body.reported

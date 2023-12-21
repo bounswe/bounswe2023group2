@@ -30,7 +30,7 @@ def create_event(event:Event, response:Response, current_user: str = Depends(aut
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
 
-# Get the resource with the specified ID.
+# Get the event with the specified ID.
 @router.get("/{event_id}", responses={
     status.HTTP_200_OK: {"model": Events},
     status.HTTP_404_NOT_FOUND: {"model": Error},

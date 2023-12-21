@@ -3,6 +3,7 @@ package com.example.disasterresponseplatform.ui.profile
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,7 +14,10 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.example.disasterresponseplatform.R
@@ -76,6 +80,11 @@ class EditProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        // Change ActionBar and StatusBar color
+        (activity as AppCompatActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.primary)))
+        (activity as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
+
         binding = FragmentProfileEditBinding.inflate(inflater, container,false)
         return binding.root
     }
@@ -136,7 +145,6 @@ class EditProfileFragment : Fragment() {
             if (user.education != null) {
                 profileProficiency.setText(user.roleBasedProficiency)
             }
-
 
             if (user.birth != null) {
                 profileBirthLayout.visibility = View.VISIBLE

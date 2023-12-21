@@ -5,15 +5,16 @@ import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell
 import { useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/apiUtils';
+import getLabels from '@/lib/getLabels';
 
-export default function AdminPanel({ unauthorized, reports, userList, bannedList }) {
+export default function AdminPanel({ unauthorized, reports, userList, bannedList, labels }) {
   const router = useRouter();
   if (unauthorized) {
     useEffect(() => {setTimeout(() => {router.push("/")}, 2000)});
     return (
       <div class="text-center text-xl">
         <br /><br /><br />
-        Admin paneline erişiminiz yok.
+        {labels.admin.no_access}
       </div>
     );
   }
@@ -28,11 +29,11 @@ export default function AdminPanel({ unauthorized, reports, userList, bannedList
 
   }
 
-  const dismissButton = report_id => <Button onPress={() => dismiss(report_id)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600">Raporu reddet</Button>;
-  const banButton = (report_id, username) => <Button onPress={() => ban(report_id, username)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">Kullanıcıyı engelle</Button>;
-  const removeButton = (report_id, activity_id) => <Button onPress={() => remove(report_id, activity_id)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">Aktiviteyi kaldır</Button>;
+  const dismissButton = report_id => <Button onPress={() => dismiss(report_id)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject_report} </Button>;
+  const banButton = (report_id, username) => <Button onPress={() => ban(report_id, username)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.ban_user} </Button>;
+  const removeButton = (report_id, activity_id) => <Button onPress={() => remove(report_id, activity_id)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.remove_activity} </Button>;
 
-  const userReports = (reports.filter(elem => elem.type === "user")
+  const userReports = (reports.filter(elem => (elem.type === "users" && elem.status === "undefined"))
                               .map(
                                 (
                                   {created_by: reporter, description, type, _id, "details": {reported_user_id: reported}}
@@ -42,7 +43,7 @@ export default function AdminPanel({ unauthorized, reports, userList, bannedList
                               )
   );
 
-  const activityReports = (reports.filter(elem => elem.type === "activity")
+  const activityReports = (reports.filter(elem => (elem.type !== "users" && elem.status === "undefined"))
                                   .map(
                                     (
                                       {created_by: reporter, description, type, _id, "details": {reported_activity_id: reported}}
@@ -55,13 +56,13 @@ export default function AdminPanel({ unauthorized, reports, userList, bannedList
   return (
     <main>
       <div class="my-10">
-        <h3 class="object-top text-center text-xl mb-3"> Kullanıcı Raporları </h3>
+        <h3 class="object-top text-center text-xl mb-3"> {labels.admin.user_reports} </h3>
         <Table aria-label="Kullanıcı Raporları">
           <TableHeader>
-            <TableColumn key="reporter">Raporlayan</TableColumn>
-            <TableColumn key="reported">Raporlanan</TableColumn>
-            <TableColumn key="description">Açıklama</TableColumn>
-            <TableColumn key="actions">Aksiyonlar</TableColumn>
+            <TableColumn key="reporter">{labels.admin.reporter}</TableColumn>
+            <TableColumn key="reported">{labels.admin.reported}</TableColumn>
+            <TableColumn key="description">{labels.admin.description}</TableColumn>
+            <TableColumn key="actions">{labels.admin.actions}</TableColumn>
           </TableHeader>
           <TableBody items={userReports}>
             {(item) => (
@@ -73,13 +74,13 @@ export default function AdminPanel({ unauthorized, reports, userList, bannedList
         </Table>
       </div>
       <div class="my-10">
-        <h3 class="object-top text-center text-xl mb-3"> Aktivite Raporları </h3>
+        <h3 class="object-top text-center text-xl mb-3"> {labels.admin.activity_reports} </h3>
         <Table aria-label="Aktivite Raporları">
           <TableHeader>
-            <TableColumn key={0}>Raporlayan</TableColumn>
-            <TableColumn key={1}>Raporlanan</TableColumn>
-            <TableColumn key={2}>Detaylar</TableColumn>
-            <TableColumn key={3}>Aksiyonlar</TableColumn>
+            <TableColumn key="reporter">{labels.admin.reporter}</TableColumn>
+            <TableColumn key="reported">{labels.admin.reported}</TableColumn>
+            <TableColumn key="description">{labels.admin.description}</TableColumn>
+            <TableColumn key="actions">{labels.admin.actions}</TableColumn>
           </TableHeader>
           <TableBody items={activityReports}>
             {(item) => (
@@ -91,11 +92,11 @@ export default function AdminPanel({ unauthorized, reports, userList, bannedList
         </Table>
       </div>
       <div class="my-10">
-        <h3 class="object-top text-center text-xl mb-3"> Engellenmiş Kullanıcı Listesi </h3>
+        <h3 class="object-top text-center text-xl mb-3"> {labels.admin.banned_users} </h3>
         <Table aria-label="Engellenmiş Kullanıcı Listesi">
           <TableHeader>
-            <TableColumn key={0}>Kullanıcı ismi</TableColumn>
-            <TableColumn key={1}>Aksiyonlar</TableColumn>
+            <TableColumn key="username">{labels.profile.username}</TableColumn>
+            <TableColumn key="actions">{labels.admin.actions}</TableColumn>
           </TableHeader>
           <TableBody items={bannedList}>
             {(item) => (
@@ -117,6 +118,7 @@ export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps({ req }) {
 
     let user;
+    const labels = await getLabels(req.session.language);
 
     try {
       user = req.session.user;
@@ -126,8 +128,8 @@ export const getServerSideProps = withIronSessionSsr(
     }
 
     if (!user?.accessToken) {
-      console.log("A guest is trying to view own admin panel");
-      return { props: { unauthorized: true } };
+      console.log("A guest is trying to view admin panel");
+      return { props: { unauthorized: true, labels}};
     }
 
     let reports;
@@ -139,9 +141,9 @@ export const getServerSideProps = withIronSessionSsr(
         }
       }));
     } catch (AxiosError) {
-      console.log("A token expired");
+      console.log("Either the token expired or the user is not an admin");
       console.log(AxiosError);
-      return { props: { unauthorized: true } };
+      return { props: { unauthorized: true, labels}};
     }
 
     const userList = {};
@@ -149,7 +151,8 @@ export const getServerSideProps = withIronSessionSsr(
     return {"props": {
       reports,
       userList,
-      bannedList
+      bannedList,
+      labels
     }};
   },
   sessionConfig

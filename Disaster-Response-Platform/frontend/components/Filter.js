@@ -2,7 +2,7 @@ import React from "react";
 import { Popover, PopoverTrigger, PopoverContent, Button, Input, CheckboxGroup, Checkbox, Divider } from "@nextui-org/react";
 import { FaFilter, FaSort } from "react-icons/fa";
 
-export default function Filter({ filters, setFilters, filterActivities}) {
+export default function Filter({ filters, setFilters, filterActivities, labels}) {
   const types = ["cloth","food","drink","shelter","medication","transportation","tool","human","other"];
   const urgency = [1, 2, 3, 4, 5]
   const status = ['active', 'inactive']
@@ -12,21 +12,21 @@ export default function Filter({ filters, setFilters, filterActivities}) {
     <Popover placement="bottom" showArrow offset={10}>  
       <PopoverTrigger>
         <Button color="primary">
-          <FaFilter/>Filter
+          <FaFilter/>{labels.sort_filter.filter}
           </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px]">
 
         <div className="px-1 py-2 w-full">
           <p className="text-small font-bold text-foreground" >
-            Filtreler
+            {labels.sort_filter.filter}
           </p>
           <div className="mt-2 flex flex-col gap-2 w-full">
             
           <Divider />
           
               <CheckboxGroup
-                label="Ürün Seçiniz"
+                label={labels.sort_filter.types}
                 orientation="horizontal"
                 color="secondary"
                 defaultValue={[]}
@@ -36,7 +36,7 @@ export default function Filter({ filters, setFilters, filterActivities}) {
               </CheckboxGroup>
 
               <CheckboxGroup
-                label="Acil Durum Seçiniz"
+                label={labels.sort_filter.urgency}
                 orientation="horizontal"
                 color="secondary"
                 defaultValue={[]}
@@ -47,15 +47,15 @@ export default function Filter({ filters, setFilters, filterActivities}) {
               </CheckboxGroup>
 
               <CheckboxGroup
-                label="Status Seçiniz"
+                label={labels.sort_filter.status}
                 orientation="horizontal"
                 color="secondary"
                 defaultValue={[]}
                 onValueChange={(e) => { setFilters({ ...filters, status: e}) }}
               >
-               {status.map((stat)=>  <Checkbox value={stat}>{stat}</Checkbox>)}  
+               {status.map((stat)=>  <Checkbox value={stat}>{labels.sort_filter[stat]}</Checkbox>)}  
               </CheckboxGroup>
-              <Button onClick={()=>{filterActivities()}}> Filtrele </Button>
+              <Button onClick={()=>{filterActivities()}}> {labels.sort_filter.filter} </Button>
 
     
 

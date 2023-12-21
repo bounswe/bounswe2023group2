@@ -1,8 +1,12 @@
 .map{
-    width:100% !important;
+    width:100% ;
     float: left;
     height:90vh !important;
     margin-right: 0.2rem;
     border-radius: 5px;
     z-index: 1 !important;
+
+    &.with-popup {
+      width: calc(100% - 0px); /* Adjust the width when popup is open */
+    }
   }

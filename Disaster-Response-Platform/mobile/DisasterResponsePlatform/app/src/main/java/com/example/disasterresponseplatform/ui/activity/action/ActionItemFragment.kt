@@ -1,16 +1,18 @@
 package com.example.disasterresponseplatform.ui.activity.action
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -21,6 +23,7 @@ import com.example.disasterresponseplatform.data.models.VoteBody
 import com.example.disasterresponseplatform.databinding.FragmentActionItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.VoteViewModel
+import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheetFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import okhttp3.OkHttpClient
@@ -39,6 +42,11 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        // Change ActionBar and StatusBar color
+        (activity as AppCompatActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.colorAction)))
+        (activity as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorAction)
+
         binding = FragmentActionItemBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -110,6 +118,9 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
         binding.btnDownvote.setOnClickListener {
             downvoteAction(token)
         }
+        binding.btnReport.setOnClickListener {
+            showBottomSheet()
+        }
     }
 
     private var voted = false // if user change his/her some arrangements will happen with this parameter
@@ -141,7 +152,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You action to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -171,7 +182,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
             }
         } else{
             if (isAdded)
-                Toast.makeText(requireContext(),"You action to log in!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -207,6 +218,11 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
     private fun navigateToMapFragment() {
         val mapFragment = ActivityMap()
         addFragment(mapFragment,"ActivityMap")
+    }
+
+    private fun showBottomSheet() {
+        val bottomSheetFragment = ReportBottomSheetFragment(action._id, "actions")
+        bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 
     private fun addFragment(fragment: Fragment, fragmentName: String) {

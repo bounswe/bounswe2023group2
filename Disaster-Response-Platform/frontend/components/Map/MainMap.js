@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDisclosure } from "@nextui-org/react";
 import AddResourceForm from "../AddResourceMap";
-
+import { useRouter } from "next/router";
+import SidePopup from "./SidePopup";
 import {
   MapContainer,
   TileLayer,
@@ -24,36 +25,56 @@ var redIcon = new L.Icon({
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+  shadowSize: [21, 21],
 });
 
-function LocationMarker({ lat, lng }) {
+
+var greenIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [21, 21],
+});
+
+function LocationMarker({ lat, lng,labels }) {
   const map = useMap();
   return (
     <Marker position={[41.08714, 29.043474]}>
-      <Popup>You are here</Popup>
     </Marker>
   );
 }
 
-export default function Map({ isClickActivated, activateClick }) {
+export default function Map({
+  isClickActivated,
+  activateClick,
+  resourceApiData,
+  needApiData,
+  labels
+  
+}) {
   const [MarkerArr, setMarkerArr] = useState([]);
 
   useEffect(() => {
-    const storedMarkerArr = JSON.parse(localStorage.getItem('markerArr'));
-
-    setMarkerArr(storedMarkerArr);
-    console.log("stored Marker Arr :", storedMarkerArr);
-  }, []);
+    // Here you can use apiData to set markers or perform other actions
+    if (resourceApiData.length > 0) {
+      // Process and use the apiData
+    }
+  }, [resourceApiData]);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [center, setCenter] = useState({ lat: 41.08714, lng: 29.043474 });
-
+  const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedPosition, setSelectedPosition] = useState({
     x_coord: "",
     y_coord: "",
   });
-
+  const closePopup = () => {
+    setSelectedMarker(null);
+  };
   const [data, setData] = useState({
     name: "",
     type: "",
@@ -66,8 +87,6 @@ export default function Map({ isClickActivated, activateClick }) {
   const ZOOM_LEVEL = 15;
   const mapRef = useRef();
 
-  
-
   const storeMarkerArr = (array) => {
     console.log("load data : ", array);
 
@@ -76,6 +95,24 @@ export default function Map({ isClickActivated, activateClick }) {
 
   const fetchData = (newData) => {
     setData({
+      // created_by: "Şahin",
+      // description: ,
+      // initialQuantity: ,
+      // currentQuantity: ,
+      // type: ,
+      // details: ,
+      // x: selectedPosition.x_coord,
+      // y: selectedPosition.y_coord,
+      // recurrence_id: ,
+      // recurrence_rate: ,
+      // recurrence_deadline: ,
+      // active: ,
+      // occur_at: ,
+      // created_at: ,
+      // last_updated_at: ,
+      // upvote: 0,
+      // downvote: 0,
+
       name: newData.name,
       type: newData.type,
       subType: newData.sub_type,
@@ -84,10 +121,9 @@ export default function Map({ isClickActivated, activateClick }) {
       y_coord: selectedPosition.y_coord,
     });
 
-    setMarkerArr(MarkerArr => [...MarkerArr, data]);
+    setMarkerArr((MarkerArr) => [...MarkerArr, data]);
 
-
-    const storeData = MarkerArr
+    const storeData = MarkerArr;
     storeMarkerArr(storeData);
   };
 
@@ -119,20 +155,20 @@ export default function Map({ isClickActivated, activateClick }) {
             x_coord: selectedPosition.x_coord,
             y_coord: selectedPosition.y_coord,
           });
-          
+
           //setMarkerArr(MarkerArr => [...MarkerArr, data]);
         }
       },
-
-
-      
     });
 
     return <></>;
   };
 
   return (
-    <div className={styles.map}>
+    <div
+      className={`${styles.map} ${selectedMarker ? styles["with-popup"] : ""}`}
+    >
+      {/* <SidePopup resource={selectedMarker} closePopup={closePopup} /> */}
       <MapContainer
         center={center}
         zoom={ZOOM_LEVEL}
@@ -143,38 +179,62 @@ export default function Map({ isClickActivated, activateClick }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        selectedPosition ?
-        <Marker
-          position={[selectedPosition.x_coord, selectedPosition.y_coord]}
-          icon={redIcon}
-        >
-          <Popup>
-            <h3>Tür: {data.type} </h3>
+        {selectedPosition && (
+          <Marker
+            position={[selectedPosition.x_coord, selectedPosition.y_coord]}
+            icon={redIcon}
+          >
+            
+          </Marker>
+        )}
 
-            <h3>Alt Tür: {data.subType} </h3>
+        {resourceApiData.map((resource, index) => (
+          <Marker
+            key={index}
+            position={[resource.x, resource.y]}
+            icon={redIcon}
+            eventHandlers={{
+              click: () => {
+                resource.nre = "Resource";
+                resource.feedback = 0;
+                setSelectedMarker(resource);
+              },
+            }}
+          >
+           
+          </Marker>
+        ))}
 
-            <h3>Tarih: {data.dueDate} </h3>
-          </Popup>
-        </Marker>
-        :<></>
+        {needApiData.map((need, index) => (
+          <Marker
+            key={index}
+            position={[need.x, need.y]}
+            icon={greenIcon}
+            eventHandlers={{
+              click: () => {
+                need.nre = "Need";
+                need.feedback = 0;
+                setSelectedMarker(need);
+              },
+            }}
+          >
+          </Marker>
+        ))}
+
         {isClickActivated ? <MarkerAdd /> : <></>}
         <AddResourceForm
           onOpenChange={onOpenChange}
           isOpen={isOpen}
           fetchData={fetchData}
         />
-        {MarkerArr && MarkerArr.map(({ type, subType, dueDate, x_coord, y_coord }) => (
+        {/* {MarkerArr &&
+          MarkerArr.map(({ type, subType, dueDate, x_coord, y_coord }) => (
             <Marker position={[x_coord, y_coord]} icon={redIcon}>
-              <Popup>
-                <h3>Tür: {type} </h3>
-
-                <h3>Alt Tür: {subType} </h3>
-
-                <h3>Tarih: {dueDate} </h3>
-              </Popup>
             </Marker>
-          ))}
+          ))} */}
       </MapContainer>
+      <SidePopup card={selectedMarker} closePopup={closePopup} labels ={labels} />
+
     </div>
   );
 }

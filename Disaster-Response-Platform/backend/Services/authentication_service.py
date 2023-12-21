@@ -29,12 +29,16 @@ def get_current_user(token: str = Depends(auth_scheme)):
     )
   
     try:
-        if not  token.credentials is None:
+        # if not  token.credentials is None:
+        #     token = token.credentials
+        # payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if not isinstance(token, str) and not  token.credentials is None:
             token = token.credentials
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+         
 
+            # If token is an instance of Token, access its credentials attribute
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
-        
         if username is None:
          
             raise credentials_exception
@@ -55,6 +59,12 @@ def get_current_admin_user(current_user: UserProfile = Depends(get_current_user)
 
 def get_current_username(current_user: LoginUserRequest= Depends(get_current_user)):
     return current_user.username
+
+def get_current_email(current_user: LoginUserRequest= Depends(get_current_user)):
+    if current_user.email:
+        return current_user.email
+    else:
+        raise HTTPException(status_code=404, detail="Email not found for the current user")
 
 def update_user(username: str, updated_user: UpdateUserRequest):
  
@@ -106,7 +116,10 @@ def create_jwt_token(data: dict, expires_delta: timedelta):
     expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+    user= get_current_user(encoded_jwt)
+    if user.proficiency is not None:
+        return LoginResponse(access_token= encoded_jwt, token_type='Bearer', user_role=user.user_role, proficiency= user.proficiency )
+    return LoginResponse(access_token= encoded_jwt, token_type='Bearer', user_role=user.user_role )
 
 def create_user(user: CreateUserRequest):
 
@@ -129,8 +142,8 @@ def create_user(user: CreateUserRequest):
         
     hash= get_password_hash(user.password)
     user.password=hash
-    user.proficiency= []
-    user.user_role= UserRole.AUTHENTICATED.value #default signed up user is authenticated
+    user.proficiency= {}
+    user.user_role= UserRole.GUEST.value #default signed up user is authenticated
   
     insert_result = userDb.insert_one(user.dict())
 
@@ -159,7 +172,7 @@ def get_user(username_or_email_or_phone: str):
             {"phone_number": username_or_email_or_phone}
         ]
     })
-
+    print("hey")
     if user_document is not None:
         return UserProfile(**user_document)
 
