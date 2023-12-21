@@ -20,8 +20,9 @@ async def reset_password_page(request: Request, email: str = Query(None, descrip
     # Render the HTML page for resetting the password
 
     # change based on the server url.
-    base_url = "http://3.218.226.215:8000"
-
+    base_url_backend = "http://3.218.226.215:8000"
+    base_url_frontend = "http://3.218.226.215:3000"
+     
     template = f"""
     <!DOCTYPE html>
     <html lang="en">
@@ -132,20 +133,31 @@ async def reset_password_page(request: Request, email: str = Query(None, descrip
                 }}
 
                 if (!is_valid_password(newPassword)) {{
-                    resultMessage.style.display = "block";
+                     document.getElementById("resultMessage").style.display = "block"
                     resultMessage.innerText = "Password is not valid. It must contain at least one digit.";
                     return;
                 }}
 
-                const response = await fetch(`/api/forgot_password/reset?email=`+ email + `&token=` + token + `&new_password=` + newPassword, {{
-                    method: "POST"
+                const data = {{ new_password: newPassword }};
+
+                const response = await fetch(`/api/forgot_password/reset?email=${{encodeURIComponent(email)}}&token=${{encodeURIComponent(token)}}`, {{
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {{
+                        'Content-Type': 'application/json'
+                    }}
                 }});
 
                 if (response.status === 200) {{
-                    document.getElementById("resultMessage").innerText = "Password reset successful. You can close this tab.";
+                     document.getElementById("resultMessage").style.display = "block"
+                    document.getElementById("resultMessage").innerText = "Password reset successful. You are being redirected to the login page unless you close this tab...";
                     document.getElementById("resultMessage").style.color = "#104569";
+                    setTimeout(function() {{
+                        window.location.href = '{base_url_frontend}/login';
+                    }}, 3000);
                 }} else {{
-                    document.getElementById("resultMessage").innerText = "Password reset failed: Invalid token or token expired. Please resend reset request.";
+                     document.getElementById("resultMessage").style.display = "block"
+                    document.getElementById("resultMessage").innerText = "Password reset failed: Invalid token or token expired. Please close this tab and resend reset request.";
                 }}
             }}
     </script>
@@ -155,11 +167,14 @@ async def reset_password_page(request: Request, email: str = Query(None, descrip
     return HTMLResponse(content=template)
 
 @router.post("/reset", status_code=200)
-async def reset_user_password(email: str = Query(None, description="Email associated with the user"),
-                            token: str = Query(None, description="Verification token obtained from email"), 
-                            new_password: str = Query(None, description="New password")):
-                            
+async def reset_user_password(email: str = Query(..., description="Email associated with the user"),
+                             token: str = Query(..., description="Verification token obtained from email"),
+                             new_password_data: dict = Body(..., description="New password data")):
+    
+    new_password = new_password_data.get('new_password')
+
     if reset_password(email, token, new_password):
         return {"message": "Password reset successful."}
     else:
         raise HTTPException(status_code=400, detail="Invalid token or token expired")
+

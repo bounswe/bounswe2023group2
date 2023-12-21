@@ -366,6 +366,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tvUserRoleTitle"
                 app:layout_constraintTop_toBottomOf="@+id/iconUserRole" />
+            <Button
+                android:id="@+id/btnReport"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/report"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/btnSeeProfile"
+                app:layout_constraintTop_toBottomOf="@+id/btnSeeProfile" />
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
