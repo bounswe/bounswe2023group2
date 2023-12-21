@@ -548,8 +548,8 @@ class ProfileFragment(var username: String?) : Fragment() {
                     profileProficiency.text = "Profficient User"
                 }
                 Role.ADMIN -> {
-                    profileRegionLayout.visibility = View.VISIBLE
-                    profileRegion.text = "Admin"
+                    profileAdminLayout.visibility = View.VISIBLE
+                    profileAdmin.text = "Admin"
                 }
                 else -> {}
             }
