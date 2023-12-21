@@ -192,13 +192,6 @@ class NetworkManager {
                     call.enqueue(callback)
                 }
             }
-            Endpoint.GETUSER -> {
-                Log.d("RESPONSE", callback.toString())
-                id?.let {
-                    val call = api.getData("${endpoint.path}/$id", headers)
-                    call.enqueue(callback)
-                }
-            }
             else -> {
                 when (requestType) {
                     RequestType.GET -> {
