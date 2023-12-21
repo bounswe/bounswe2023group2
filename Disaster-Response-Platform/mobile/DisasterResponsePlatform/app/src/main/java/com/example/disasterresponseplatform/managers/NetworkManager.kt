@@ -192,13 +192,6 @@ class NetworkManager {
                     call.enqueue(callback)
                 }
             }
-            Endpoint.GETUSER -> {
-                Log.d("RESPONSE", callback.toString())
-                id?.let {
-                    val call = api.getData("${endpoint.path}/$id", headers)
-                    call.enqueue(callback)
-                }
-            }
             Endpoint.EMAIL_VERIFICATION_VERIFY -> {
                 Log.d("RESPONSE", callback.toString())
                 if (queries.isNullOrEmpty()) {

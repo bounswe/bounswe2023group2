@@ -189,6 +189,7 @@
 
     <!-- NOTIFICATION -->
     <string name="add_notification">Add Notification</string>
+    <string name="proficiency">Proficiency</string>
 
     <!-- EVENT -->
     <string name="short_note">Short Description</string>
