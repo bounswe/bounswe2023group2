@@ -16,7 +16,8 @@ export default function mapPage({ labels }) {
   const [isClickActivated, setIsClickActivated] = useState(false);
   const [resourceApiData, setResourceApiData] = useState([]);
   const [needApiData, setNeedApiData] = useState([]);
-
+  const [eventApiData, setEventApiData] = useState([]);
+  const [bounds,setBounds] = useState(null);
   const activateClick = () => {
     setIsClickActivated(!isClickActivated);
   };
@@ -28,13 +29,17 @@ export default function mapPage({ labels }) {
         activateClick={activateClick}
         resourceApiData={resourceApiData}
         needApiData={needApiData}
+        eventApiData={eventApiData}
         labels={labels}
+        setBounds={setBounds}
       />
       <MapFilterMenu
         activateClick={activateClick}
         setResourceApiData={setResourceApiData}
         setNeedApiData={setNeedApiData}
+        setEventApiData={setEventApiData}
         labels={labels}
+        bounds={bounds}
       />
     </>
   );
