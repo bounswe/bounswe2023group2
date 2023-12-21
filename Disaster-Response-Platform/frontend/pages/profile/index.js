@@ -79,7 +79,7 @@ export const getServerSideProps = withIronSessionSsr(
 
     if (!user?.accessToken) {
       console.log("A guest is trying to view own profile");
-      return { props: { guest: true } };
+      return { props: { guest: true, labels } };
     }
 
     let main_info;
@@ -91,7 +91,7 @@ export const getServerSideProps = withIronSessionSsr(
       }));
     } catch (AxiosError) {
       console.log("A token expired");
-      return { props: { expired: true } };
+      return { props: { expired: true, labels } };
     }
 
     const { data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/user-optional-infos', {

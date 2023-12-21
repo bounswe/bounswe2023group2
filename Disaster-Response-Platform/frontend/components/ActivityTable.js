@@ -1,4 +1,4 @@
-import { Button, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure, Table, getKeyValue } from "@nextui-org/react";
+import { Button, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure, Table, Tabs, Tab } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import ActivityModal from "./ActivityModal";
 import Filter from "./Filter";
@@ -9,7 +9,8 @@ import AddActionForm from "./AddAction";
 import { GrTransaction } from "react-icons/gr";
 
 
-export default function ActivityTable({ chosenActivityType, labels }) {
+export default function ActivityTable({ labels }) {
+    const [chosenActivityType, setChosenActivityType] = useState("resources");
     const [filters, setFilters] = useState({})
     const [resources, setResources] = useState([{_id: "loading"}]);
     const [needs, setNeeds] = useState([{_id: "loading"}]);
@@ -110,67 +111,94 @@ export default function ActivityTable({ chosenActivityType, labels }) {
     }
 
     return (
-
-        <div class="w-full">
-            <div className=' '>
-                <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} labels={labels} />
-                <Sort chosenActivityType={chosenActivityType} filterActivities={filterActivities} setFilters={setFilters} filters={filters} labels={labels} />
+        <div>
+            <div className="text-center">
+                <Tabs
+                    selectedKey={chosenActivityType}
+                    onSelectionChange={setChosenActivityType}
+                    size="lg"
+                    color="primary"
+                    variant="underlined"
+                    classNames={{tab: "py-8"}}
+                >
+                    <Tab key="needs" titleValue={labels.activities.needs} title={(
+                        <div className="bg-need dark:bg-need-dark px-2 py-1.5 rounded-xl text-black">
+                            {labels.activities.needs}
+                        </div>
+                    )}/>
+                    <Tab key="resources" titleValue={labels.activities.resources} title={(
+                        <div className="bg-resource dark:bg-resource-dark px-2 py-1.5 rounded-xl text-black">
+                            {labels.activities.resources}
+                        </div>
+                    )}/>
+                    <Tab key="events" titleValue={labels.activities.events} title={(
+                        <div className="bg-event dark:bg-event-dark px-2 py-1.5 rounded-xl text-black">
+                            {labels.activities.events}
+                        </div>
+                    )}/>
+                </Tabs>
             </div>
+            <div class="w-full">
+                
+                <div className=' '>
+                    <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} labels={labels} />
+                    <Sort chosenActivityType={chosenActivityType} filterActivities={filterActivities} setFilters={setFilters} filters={filters} labels={labels} />
+                </div>
 
-            <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={chosenActivityType} />
+                <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={chosenActivityType} />
 
-            <Table
-                isHeaderSticky
-                selectionMode="single"
-                aria-label="activity table"
-                className='flex w-full overflow-x-auto shadow-md sm:rounded max-h-[300px]'
-            >
-                <TableHeader columns={getColumns()} emptyContent={labels.activity_table.no_content}>
-                    {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-                </TableHeader>
-                <TableBody items={getRows()}>
-                    {item => (
-                        <TableRow key={item._id}>
-                            {(columnKey) => {
-                                if (item._id === "loading") {
-                                    return <TableCell> {labels.UI.loading} </TableCell>;
-                                }
-                                let content = "";
-                                switch (columnKey) {
-                                case "location":
-                                    content = `${item.x} : ${item.y}`;
-                                    break;
-                                case "take_action":
-                                    content = (
-                                        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                            <GrTransaction />
-                                        </span>
+                <Table
+                    isHeaderSticky
+                    selectionMode="single"
+                    aria-label="activity table"
+                    className='flex w-full overflow-x-auto shadow-md sm:rounded max-h-[300px]'
+                >
+                    <TableHeader columns={getColumns()} emptyContent={labels.activity_table.no_content}>
+                        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+                    </TableHeader>
+                    <TableBody items={getRows()}>
+                        {item => (
+                            <TableRow key={item._id}>
+                                {(columnKey) => {
+                                    if (item._id === "loading") {
+                                        return <TableCell> {labels.UI.loading} </TableCell>;
+                                    }
+                                    let content = "";
+                                    switch (columnKey) {
+                                    case "location":
+                                        content = `${item.x} : ${item.y}`;
+                                        break;
+                                    case "take_action":
+                                        content = (
+                                            <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                                <GrTransaction />
+                                            </span>
+                                        );
+                                        break;
+                                    case "is_active":
+                                        content = item.is_active ? "✔" : "❌";
+                                        break;
+                                    default:
+                                        content = item[columnKey];
+                                    }
+                                    return (
+                                        <TableCell onClick={() => {
+                                            setActivity(item);
+                                            if (columnKey === "take_action") {
+                                                onOpenNeedModal();
+                                            } else {
+                                                onOpen();
+                                            }}} >
+                                            {content}
+                                        </TableCell>
                                     );
-                                    break;
-                                case "is_active":
-                                    content = item.is_active ? "✔" : "❌";
-                                    break;
-                                default:
-                                    content = item[columnKey];
-                                }
-                                return (
-                                    <TableCell onClick={() => {
-                                        setActivity(item);
-                                        if (columnKey === "take_action") {
-                                            onOpenNeedModal();
-                                        } else {
-                                            onOpen();
-                                        }}} >
-                                        {content}
-                                    </TableCell>
-                                );
-                            }}
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-            <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} table_need={activity} need_type={activity.type} labels={labels}/>
+                                }}
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+                <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} table_need={activity} need_type={activity.type} labels={labels}/>
+            </div>
         </div>
-
     );
 }
