@@ -30,29 +30,28 @@ class EmergencyTypesEnum(str, Enum):
 
 class Emergency(BaseModel):
     _id: str = Field(default=None)
+    created_by_user: str = Field(default=None)
+    contact_name: str = Field(default=None)
+    contact_number: str = Field(default=None)
+    created_at: datetime = Field(default=None)
+    last_updated_at: datetime = Field(default=None)
     emergency_type: EmergencyTypesEnum = Field(default=None)
-
+    description: str = Field(default=None)
+    upvote: int = Field(default=0)
+    downvote: int = Field(default=0)
     x: float = Field(default=None)
     y: float = Field(default=None)
-
-    emergency_contact_name: str = Field(default=None)
-    emergency_contact_number: str = Field(default=None)
-
-    note: str = Field(default=None)
-    short_description: str = Field(default=None)
+    location: str = Field(default=None)
 
     is_active: bool = Field(default=True)
     is_verified: bool = Field(default=False)
-    # is_disproved: bool = Field(default=None)
-
-    created_time: datetime = Field(default=None)
-    created_by_user: str = Field(default=None)
-
-    dealt_time: datetime = Field(default=None)
-    dealt_by_user: str = Field(default=None)
-
+    
     verification_note: str = Field(default=None)
-    last_updated_time: datetime = Field(default=None)
+
+    # is_disproved: bool = Field(default=None)
+    # note: str = Field(default=None)
+    # dealt_time: datetime = Field(default=None)
+    # dealt_by_user: str = Field(default=None)
 
 
 class Emergencies(BaseModel):
