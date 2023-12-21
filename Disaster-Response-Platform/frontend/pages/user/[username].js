@@ -14,7 +14,7 @@ import { Button } from "@nextui-org/react";
 import { ToastContainer } from 'react-toastify';
 import getLabels from '@/lib/getLabels';
 
-export default function OtherProfile({ unauthorized, admin, main_info, optional_info, list_info, labels }) {
+export default function OtherProfile({ unauthorized, self_role, main_info, optional_info, list_info, labels }) {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -34,7 +34,7 @@ export default function OtherProfile({ unauthorized, admin, main_info, optional_
     ADMIN: 2
   }
 
-  let visibility = (admin
+  let visibility = (self_role === "ADMIN"
                     ? visibilityEnum.ADMIN
                     : main_info.private_account
                       ? visibilityEnum.PRIVATE
@@ -54,7 +54,7 @@ export default function OtherProfile({ unauthorized, admin, main_info, optional_
           ? <OptionalInfo className="w-80" fields={optional_info_tr} labels={labels} />
           : null
         }
-        {visibility >= visibilityEnum.ADMIN //temporary, change with visibilityEnum.DEFAULT when backend is properly updated
+        {visibility >= visibilityEnum.ADMIN // change to visibilityEnum.DEFAULT if backend is one day set to accept regular users
           ? (
             <div>
               <SkillList list={social.list} topic={social.topic} username={username} wide={visibility < visibilityEnum.ADMIN} labels={labels} noedit/>
@@ -95,9 +95,9 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels } };
     }
 
-    let main_info;
+    let self_role;
     try {
-    ({ data: main_info } = await api.get(`/api/users/${params.username}`, {
+    ({ user_role: self_role } = await api.get(`/api/userroles/role`, {
       headers: {
         'Authorization': `Bearer ${self.accessToken}` 
       }
@@ -107,14 +107,23 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels } };
     }
 
-    const { data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/user-optional-infos', {
-      params: {
-        'anyuser': params.username
-      },
+    const { data: main_info } = await api.get(`/api/users/${params.username}`, {
       headers: {
-        'Authorization': `Bearer ${self.accessToken}`
+        'Authorization': `Bearer ${self.accessToken}` 
       }
     });
+
+    let optional_info_list = [];
+    if (self_role === "ADMIN") {
+      ({ data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/user-optional-infos', {
+        params: {
+          'anyuser': params.username
+        },
+        headers: {
+          'Authorization': `Bearer ${self.accessToken}`
+        }
+      }));
+    }
     const optional_info = optional_info_list.length > 0 ? optional_info_list[0] : {};
     delete optional_info.username;
 
@@ -150,14 +159,12 @@ export const getServerSideProps = withIronSessionSsr(
       list_info[topic.api_url] = {"list": fields ? fields : [], "topic": topic};
     }
 
-    const admin = false;
-
     return {
       props: {
         main_info,
         optional_info,
         list_info,
-        admin,
+        self_role,
         labels
       },
     };
