@@ -155,7 +155,9 @@
 		"no_phone_mail": "You have to give a phone number or an email address",
 	    "private_account": "Hide personal info",
 	    "contact_info": "Contact Info",
-	    "contact_hidden": "This user has not set their contact info visible."
+	    "contact_hidden": "This user has not set their contact info visible.",
+	    "upload_avatar": "Upload a profile picture",
+	    "upload_avatar_confirm": "Use this picture?"
 	},
 	"admin": {
 		"no_access": "You do not have access to the admin panel.",

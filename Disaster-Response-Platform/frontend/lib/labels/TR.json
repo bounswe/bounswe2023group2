@@ -154,7 +154,9 @@
 		"no_phone_mail": "Telefon ya da e-posta adresi sağlamalısınız",
 	    "private_account": "Kişisel bilgilerim gizlensin",
 	    "contact_info": "İletişim Bilgileri",
-	    "contact_hidden": "Bu kullanıcı iletişim bilgilerini görünür kılmamış."
+	    "contact_hidden": "Bu kullanıcı iletişim bilgilerini görünür kılmamış.",
+	    "upload_avatar": "Profil resmi yükleyin",
+	    "upload_avatar_confirm": "Bu resim mi kullanılsın?"
 	},
 	"admin": {
 		"no_access": "Admin paneline erişiminiz yok.",
