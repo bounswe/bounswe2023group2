@@ -4,7 +4,10 @@ def correctDates(anyDictable):
     if callable(invert_op):
         return_dict = anyDictable.dict()
         for key, value in return_dict.items():
-            if isinstance(value, datetime.date) or isinstance(value, datetime.datetime):
+            if isinstance(value, datetime.datetime):
+                if value is not None:
+                    return_dict[key] = datetime.datetime.strptime(str(return_dict[key]), "%Y-%m-%d %H:%M:%S")
+            elif isinstance(value, datetime.date):
                 if value is not None:
                     return_dict[key] = datetime.datetime.strptime(str(return_dict[key]), "%Y-%m-%d")
     else:

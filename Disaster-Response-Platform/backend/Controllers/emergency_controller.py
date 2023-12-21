@@ -21,7 +21,7 @@ def create_emergency(emergency: Emergency, response:Response):
         # need.created_by = current_user
         emergency_result = emergency_service.create_emergency(emergency)
         response.status_code = HTTPStatus.OK
-        return json.loads(need_result)
+        return json.loads(emergency_result)
     except ValueError as err:
         err_json = create_json_for_error("Emergency create error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
