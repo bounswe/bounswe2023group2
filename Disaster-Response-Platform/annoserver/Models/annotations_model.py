@@ -49,21 +49,21 @@ class Annotation(BaseModel):
 
 # Example usage
 
-annotation_text = Annotation(
-    id="https://example.org/annotations/1",
-    body=Body(type="Text", value="This is a beautiful sunset picture."),
-    target=[Target(type="Text", id="https://example.org/poem.txt")],
-    motivation=Motivation(type="bookmarking"),
-    uri="https://example.org/annotations/1",
-)
+#annotation_text = Annotation(
+#    id="https://example.org/annotations/1",
+#    body=Body(type="Text", value="This is a beautiful sunset picture."),
+#    target=[Target(type="Text", id="https://example.org/poem.txt")],
+#    motivation=Motivation(type="bookmarking"),
+#    uri="https://example.org/annotations/1",
+#)
 
-annotation_image = Annotation(
-    id="https://example.org/annotations/2",
-    uri="https://example.org/annotations/2",
-    body=Body(type="Image", value="Sun setting over the horizon."),
-    target=[Target(type="Image", url="https://example.org/images/sunset.jpg")],
-    motivation=Motivation(type="testing")
-)
+#annotation_image = Annotation(
+#    id="https://example.org/annotations/2",
+#    uri="https://example.org/annotations/2",
+#    body=Body(type="Image", value="Sun setting over the horizon."),
+#    target=[Target(type="Image", url="https://example.org/images/sunset.jpg")],
+#    motivation=Motivation(type="testing")
+#)
 
-print(annotation_text.json())
-print(annotation_image.json())
+#print(annotation_text.json())
+#print(annotation_image.json())
