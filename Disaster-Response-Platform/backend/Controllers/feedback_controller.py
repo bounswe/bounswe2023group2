@@ -1,7 +1,7 @@
 import json
 from http import HTTPStatus
 
-from fastapi import APIRouter, HTTPException, Response, Depend, Query
+from fastapi import APIRouter, HTTPException, Response, Depends, Query
 from Models.feedback_model import Feedback, VoteUpdate
 import Services.feedback_service as feedback_service
 
