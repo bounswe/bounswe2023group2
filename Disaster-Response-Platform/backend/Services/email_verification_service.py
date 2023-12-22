@@ -120,3 +120,14 @@ def verify_user(username, provided_token):
 
     return False
 
+# Check if the user is verified or not
+def check_verified(username):
+    user_entry = user_collection.find_one({"username": username})
+    if user_entry:
+        if user_entry['is_email_verified'] == True:
+            return "verified"
+        else:
+            return "not verified"
+    else:
+        return "user not found"
+
