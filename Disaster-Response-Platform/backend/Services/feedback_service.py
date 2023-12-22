@@ -1,39 +1,87 @@
 from Models.feedback_model import Feedback, EntityTypeEnum
+from Models.user_model import UserRole,UserInfo
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 
 from Services.build_API_returns import *
-
+from Services.user_roles_service import *
 
 feedback_collection = MongoDB.get_collection('feedback')
 
 def vote(entityType:str, entityID:str, current_user:str, voteType:str) -> bool:
+    user_role=current_user.user_role
     existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID, "username": current_user})   
     if existing_vote and existing_vote['vote']== voteType:
         raise ValueError(f"Current user already voted")
     elif existing_vote:
         result = feedback_collection.update_one({"entityType": entityType, "entityID": entityID, "username": current_user}, {"$set": {"vote": voteType}})
         if voteType == "upvote":
-            set_upvote(entityType, entityID, 1)
-            set_downvote(entityType, entityID, -1)
+            if user_role== "ADMIN":
+               set_upvote(entityType, entityID, 100) 
+               set_downvote(entityType, entityID, -100)
+            elif user_role== "CREDIBLE":
+               set_upvote(entityType, entityID, 10) 
+               set_downvote(entityType, entityID, -10) 
+            elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":    
+                set_upvote(entityType, entityID, 1)
+                set_downvote(entityType, entityID, -1)
+            
+            # set_upvote(entityType, entityID, 1)
+            # set_downvote(entityType, entityID, -1)
         else:
-            set_upvote(entityType, entityID, -1)
-            set_downvote(entityType, entityID, 1)
+            if user_role== "ADMIN":
+               set_upvote(entityType, entityID, -100) 
+               set_downvote(entityType, entityID, 100)
+            elif user_role== "CREDIBLE":
+               set_upvote(entityType, entityID, -10) 
+               set_downvote(entityType, entityID, 10) 
+            elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":    
+                set_upvote(entityType, entityID, -1)
+                set_downvote(entityType, entityID,1)
+                
+            # set_upvote(entityType, entityID, -1)
+            # set_downvote(entityType, entityID, 1)
     else:
         insert_result = feedback_collection.insert_one({"entityType":entityType, "entityID":entityID, "username": current_user, "vote": voteType})        
         if voteType=="upvote":
-            set_upvote(entityType, entityID, 1)
+            if user_role== "ADMIN":
+               set_upvote(entityType, entityID, 100) 
+            elif user_role== "CREDIBLE":
+               set_upvote(entityType, entityID, 10)  
+            elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
+                set_upvote(entityType, entityID, 1)
+             
         else:
-            set_downvote(entityType, entityID, 1)
+            if user_role== "ADMIN":
+               set_downvote(entityType, entityID, 100) 
+            elif user_role== "CREDIBLE":
+               set_downvote(entityType, entityID, 10)  
+            elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
+                set_downvote(entityType, entityID, 1)
+            
             
 def unvote(entityType:str, entityID:str, current_user:str) -> bool:
+    user_role=current_user.user_role
     existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID, "username": current_user})   
     if existing_vote:
         result = feedback_collection.delete_one({"entityType": entityType, "entityID": entityID, "username": current_user})
         if existing_vote['vote'] == "upvote":
-            set_upvote(entityType, entityID, -1)
+            if user_role== "ADMIN":
+               set_upvote(entityType, entityID, -100) 
+            elif user_role== "CREDIBLE":
+               set_upvote(entityType, entityID, -10)  
+            elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
+                set_upvote(entityType, entityID, -1)
+            
+            # set_upvote(entityType, entityID, -1)
         else:
-            set_downvote(entityType, entityID, -1)
+            if user_role== "ADMIN":
+               set_downvote(entityType, entityID, -100) 
+            elif user_role== "CREDIBLE":
+               set_downvote(entityType, entityID, -10)  
+            elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
+                set_downvote(entityType, entityID, -1)
+            #set_downvote(entityType, entityID, -1)
     else:
         raise ValueError(f"Current user has not voted yet")
         
