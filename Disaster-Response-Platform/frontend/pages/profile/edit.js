@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import getLabels from '@/lib/getLabels';
 import { useDisclosure, Input } from "@nextui-org/react";
 import ProficiencyModal from '@/components/profile/ProficiencyModal';
@@ -15,7 +15,7 @@ import { toast, ToastContainer } from 'react-toastify';
 export default function Edit({ guest, expired, current_main_fields, current_optional_fields, accessToken, labels }) {
 
   const router = useRouter();
-  const [checked, setChecked] = useState(current_main_fields.private_account);
+  const [checked, setChecked] = useState(current_main_fields?.private_account);
   const [pictureFile, setPictureFile] = useState(undefined);
   const { isOpen: isOpenProficiency, onOpen: onOpenProficiency, onOpenChange: onOpenChangeProficiency } = useDisclosure();
   const { isOpen: isOpenAvatar, onOpen: onOpenAvatar, onOpenChange: onOpenChangeAvatar } = useDisclosure();
@@ -152,7 +152,7 @@ export const getServerSideProps = withIronSessionSsr(
 
     if (!user?.accessToken) {
       console.log("A guest is trying to edit");
-      return { props: {guest: true} };
+      return { props: {guest: true, labels } };
     }
 
     let current_main_fields;
@@ -164,7 +164,7 @@ export const getServerSideProps = withIronSessionSsr(
       }));
     } catch (AxiosError) {
       console.log("A token expired");
-      return { props: { expired: true } };
+      return { props: { expired: true, labels } };
     }
 
     const { data: { user_optional_infos: current_optional_fields_list } } = await api.get('/api/profiles/user-optional-infos', {
