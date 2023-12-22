@@ -17,7 +17,7 @@ pip3 install -r requirements.txt
 pip3 freeze > requirements.txt
 ```
 - To run code you should do
-    uvicorn main:app --reload
+    uvicorn main:app --reload --port 18000
 
 - We are writing by fastAPI you can find the manual from [fastAPI](https://fastapi.tiangolo.com/).
 - __init__.py files are for package initializition.
@@ -31,7 +31,4 @@ docker-compose up -d --build annoserver
 - To run tests
 pytest "test file"
 
-##### File Upload Tutorial
-- `api/uploadfile/` is the endpoint for uploading the any file type to the S3, despite restricting the file types is a good practice :).
-- this endpoint returns the url of the file, the client side (front, mobile) should put this url to the object url field and send update request again
-- This endpoint requires AWS keys, the necessary aws key can be found in the discord channel. DO NOT PUSH THE KEYS REPO 🫡
+
