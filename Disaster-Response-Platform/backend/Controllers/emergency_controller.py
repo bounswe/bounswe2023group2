@@ -13,11 +13,16 @@ router = APIRouter()
 @router.post("/", status_code=201)
 def create_emergency(emergency: Emergency, response:Response):
     try:
-        try:
-            emergency.created_by_user = authentication_service.get_current_user().username
-        except:
-            emergency.created_by_user = "GUEST"
+        # emergency.created_by_user = current_user if current_user else "GUEST"
+
+        # user= authentication_service.get_current_user().username
         
+        # try:
+        #     emergency.created_by_user = authentication_service.get_current_username()
+        # except:
+        #     emergency.created_by_user = "GUEST"
+        
+        emergency.created_by_user = authentication_service.get_current_username_without_validation()
         # need.created_by = current_user
         emergency_result = emergency_service.create_emergency(emergency)
         response.status_code = HTTPStatus.OK

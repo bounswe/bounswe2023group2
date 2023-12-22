@@ -17,8 +17,11 @@ def create_emergency(emergency: Emergency) -> str:
                 emergency.emergency_type, emergency.description, emergency.x, emergency.y,  emergency.location]):
         raise ValueError("Some mandatory fields missing : created_by_user, created_at, emergency_type, description, x, y,  location,")
     
-    if emergency.created_by_user == "GUEST" and not emergency.contact_name and not emergency.contact_number:
+    if emergency.created_by_user == "GUEST" and (not emergency.contact_name and not emergency.contact_number):
         raise ValueError("Contact name and number are required for guest users.")
+    
+    
+    Services.utilities.validate_coordinates(emergency.x, emergency.y)
     emergency_dict = Services.utilities.correctDates(emergency)
     insert_result = emergencies_collection.insert_one(emergency_dict)
 
