@@ -5,16 +5,16 @@ from bson.objectid import ObjectId
 
 from Services.build_API_returns import *
 from Services.user_roles_service import *
+from Services.authentication_service import *
 
 feedback_collection = MongoDB.get_collection('feedback')
 
-def vote(entityType:str, entityID:str, current_user:str, voteType:str) -> bool:
-    user_role=current_user.user_role
-    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID, "username": current_user})   
+def vote(entityType:str, entityID:str, username:str, user_role:str,voteType:str) -> bool:
+    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID, "username": username})   
     if existing_vote and existing_vote['vote']== voteType:
         raise ValueError(f"Current user already voted")
     elif existing_vote:
-        result = feedback_collection.update_one({"entityType": entityType, "entityID": entityID, "username": current_user}, {"$set": {"vote": voteType}})
+        result = feedback_collection.update_one({"entityType": entityType, "entityID": entityID, "username": username}, {"$set": {"vote": voteType}})
         if voteType == "upvote":
             if user_role== "ADMIN":
                set_upvote(entityType, entityID, 100) 
@@ -42,7 +42,7 @@ def vote(entityType:str, entityID:str, current_user:str, voteType:str) -> bool:
             # set_upvote(entityType, entityID, -1)
             # set_downvote(entityType, entityID, 1)
     else:
-        insert_result = feedback_collection.insert_one({"entityType":entityType, "entityID":entityID, "username": current_user, "vote": voteType})        
+        insert_result = feedback_collection.insert_one({"entityType":entityType, "entityID":entityID, "username": username, "vote": voteType})        
         if voteType=="upvote":
             if user_role== "ADMIN":
                set_upvote(entityType, entityID, 100) 
@@ -59,12 +59,11 @@ def vote(entityType:str, entityID:str, current_user:str, voteType:str) -> bool:
             elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
                 set_downvote(entityType, entityID, 1)
             
-            
-def unvote(entityType:str, entityID:str, current_user:str) -> bool:
-    user_role=current_user.user_role
-    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID, "username": current_user})   
+
+def unvote(entityType:str, entityID:str, username:str,user_role:str) -> bool:
+    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID, "username": username})   
     if existing_vote:
-        result = feedback_collection.delete_one({"entityType": entityType, "entityID": entityID, "username": current_user})
+        result = feedback_collection.delete_one({"entityType": entityType, "entityID": entityID, "username": username})
         if existing_vote['vote'] == "upvote":
             if user_role== "ADMIN":
                set_upvote(entityType, entityID, -100) 

@@ -1,6 +1,6 @@
 import json
 from http import HTTPStatus
-
+from Models.user_model import UserProfile
 from fastapi import APIRouter, HTTPException, Response, Depends, Query
 from Models.feedback_model import Feedback, VoteUpdate
 import Services.feedback_service as feedback_service
@@ -12,34 +12,35 @@ router = APIRouter()
 
 
 @router.put("/upvote")
-def set_upvote(voteUpdate: VoteUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def set_upvote(voteUpdate: VoteUpdate, response: Response, user: UserProfile = Depends(authentication_service.get_current_user)):
     try:        
-        feedback_service.vote(voteUpdate.entityType, voteUpdate.entityID, current_user, 'upvote')
+        
+        feedback_service.vote(voteUpdate.entityType, voteUpdate.entityID, user.username, user.user_role.value, 'upvote')
         # feedback_service.set_upvote(voteUpdate.entityType, voteUpdate.entityID)
         response.status_code = HTTPStatus.OK
-        return {"message": f"{current_user} upvoted {voteUpdate.entityType} with ID {voteUpdate.entityID}"}
+        return {"message": f"{user.username} upvoted {voteUpdate.entityType} with ID {voteUpdate.entityID}"}
     except ValueError as err:
         err_json = create_json_for_error("Upvote error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
     
 @router.put("/downvote")
-def set_downvote(voteUpdate: VoteUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def set_downvote(voteUpdate: VoteUpdate, response: Response,  user: UserProfile = Depends(authentication_service.get_current_user)):
     try:
-        feedback_service.vote(voteUpdate.entityType, voteUpdate.entityID, current_user, 'downvote')
+        feedback_service.vote(voteUpdate.entityType, voteUpdate.entityID, user.username, user.user_role.value, 'downvote')
         response.status_code = HTTPStatus.OK
-        return {"message": f"{current_user} downvoted {voteUpdate.entityType} with ID {voteUpdate.entityID}"}
+        return {"message": f"{user.username} downvoted {voteUpdate.entityType} with ID {voteUpdate.entityID}"}
     except ValueError as err:
         err_json = create_json_for_error("Downvote error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
     
 @router.put("/unvote")
-def set_downvote(voteUpdate: VoteUpdate, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+def set_downvote(voteUpdate: VoteUpdate, response: Response,  user: UserProfile = Depends(authentication_service.get_current_user)):
     try:
-        feedback_service.unvote(voteUpdate.entityType, voteUpdate.entityID, current_user)
+        feedback_service.unvote(voteUpdate.entityType, voteUpdate.entityID, user.username,user.user_role.value)
         response.status_code = HTTPStatus.OK
-        return {"message": f"{current_user} unvoted {voteUpdate.entityType} with ID {voteUpdate.entityID}"}
+        return {"message": f"{user.username} unvoted {voteUpdate.entityType} with ID {voteUpdate.entityID}"}
     except ValueError as err:
         err_json = create_json_for_error("Unvote error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
