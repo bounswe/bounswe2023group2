@@ -55,4 +55,10 @@ class Emergency(BaseModel):
 
 
 class Emergencies(BaseModel):
-    events: List[Emergency]
+    emergencies: List[Emergency]
+    
+class EmergencyKey(BaseModel):
+    _id: str = Field(default=None)
+    
+class EmergencyKeys(BaseModel):
+    emergencies: List[EmergencyKey]
