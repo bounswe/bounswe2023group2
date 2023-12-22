@@ -57,10 +57,14 @@
     <string name="act_urgency">Urgency:</string>
     <string name="act_address">Address:</string>
     <string name="act_details">Details:</string>
+    <string name="act_short_note">Short Description:</string>
     <string name="act_edit">Edit</string>
     <string name="act_delete">Delete</string>
     <string name="act_navigate">Navigate</string>
     <string name="act_show_on_map">Show On Map</string>
+    <string name="act_reliability">Give Feedback About Reliability:</string>
+    <string name="act_upvote">Reliable</string>
+    <string name="act_downvote">Not Reliable</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sort &amp; Filter</string>
@@ -82,7 +86,7 @@
     <string name="sf_descending">desc</string>
     <string name="sf_distance">Distance:\n(0–20 km)</string>
     <string name="sf_from_location">From\nLocation:</string>
-    <string name="sf_upvote">upvote</string>
+
 
     <!-- PAGE NAMES -->
     <string name="activity_page">Activity Page</string>

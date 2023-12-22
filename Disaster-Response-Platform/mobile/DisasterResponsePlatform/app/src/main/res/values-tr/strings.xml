@@ -57,10 +57,14 @@
     <string name="act_urgency">Aciliyet:</string>
     <string name="act_address">Adres:</string>
     <string name="act_details">Detaylar:</string>
+    <string name="act_short_note">Kısa Açıklama:</string>
     <string name="act_edit">Düzenle</string>
     <string name="act_delete">Sil</string>
     <string name="act_navigate">Yol Tarifi</string>
     <string name="act_show_on_map">Haritada Göster</string>
+    <string name="act_reliability">Güvenilirlik Hakkında Geri Bildirim Ver:</string>
+    <string name="act_upvote">Güvenilir</string>
+    <string name="act_downvote">Güvenilmez</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sırala &amp; Filtrele</string>
@@ -82,7 +86,6 @@
     <string name="sf_descending">desc</string>
     <string name="sf_distance">Mesafe:\n(0–20 km)</string>
     <string name="sf_from_location">Merkez\nKonum:</string>
-    <string name="sf_upvote">upvote</string>
 
     <!-- PAGE NAMES -->
     <string name="activity_page">Aktivite Sayfası</string>
