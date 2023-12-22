@@ -1,3 +1,4 @@
+
 import json
 
 import requests
@@ -16,9 +17,9 @@ def hypothesis_store(post_data:Annotation):
     for iTarget in post_data.target:
         iTarget = iTarget.dict()
 
-    link = Link(href=url)
+    link = Link(href=url, type="URL")
     if post_data.document is None:
-        post_data.document = Document(title=url, link=link)
+        post_data.document = Document(title=url, link=[link])
     else:
         if post_data.document.title is None:
             post_data.document.title = url

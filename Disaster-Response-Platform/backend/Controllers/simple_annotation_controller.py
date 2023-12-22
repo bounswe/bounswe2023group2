@@ -40,7 +40,7 @@ def create_simple_annotation(url: str, annotation_text: str, tags:str,  response
                                  motivation=Motivation(type="bookmarking"),
                                  uri=url)
 
-    hypoAPIurl = "http://annoserver:18000/api/annotations"
+    hypoAPIurl = "http://annoserver:8000/api/annotations"
     data = json.dumps(annotation_data.dict())
     responseFrom = requests.request("POST", hypoAPIurl, data=data)
     if responseFrom.status_code != 200:
