@@ -1,28 +1,48 @@
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import { api } from '@/lib/apiUtils';
 
-export default function AvatarModal({ isOpen, onOpenChange, file, labels }) {
+export default function AvatarModal({ isOpen, onOpenChange, file, username, accessToken, labels }) {
 
   async function submitAvatar() {
 
-    const body = {};
+    /*
+      Normally, doing uploads in an API route might have been a better idea
+      However Node.js with the pages router doesn't support req.formData() or req.json() from the fetch API
+      and that massively complicates things when it comes to reading the request
+    */
 
-    toast("So far so good!")
+    const extension = file.name.substring(file.name.lastIndexOf(".")+1);
+    const filename = `${username}-pic.${extension}`;
+    const renamed_file = new File([file], filename, {type: file.type});
 
-    /*const response = await fetch('/api/profiles/upload-user-profile-picture', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body)
+    const body = new FormData();
+    body.set("file", renamed_file);
+
+    const upload_response = await api.post("/api/uploadfile", body, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data'
+        }
     });
 
-    if (!response.ok) {
-      toast(labels.feedback.failure);
+    if (upload_response.status !== 200) {
+      toast(`${labels.feedback.failure} (picture upload: ${upload_response.statusText})`);
       return;
     }
-    toast(labels.feedback.save_success);*/
+
+    /*const profile_response = await api.post("/api/profiles/user-optional-infos/add-user-optional-info", 
+      { username, profile_picture: upload_response?.data?.url},
+      { headers: { 'Authorization': `Bearer ${accessToken}` } }
+    );
+
+    if (upload_response.status !== 200) {
+      toast(`${labels.feedback.failure} (picture URL save: ${upload_response.statusText})`);
+      return;
+    }*/
+
+    toast(labels.feedback.add_success);
 
   }
 
