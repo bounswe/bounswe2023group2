@@ -43,15 +43,17 @@ export default function OtherProfile({ unauthorized, self_role, main_info, optio
 
   const username = router.query.username;
   const {professions, languages, "socialmedia-links": social, skills} = list_info;
-  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [labels.profile[key], val]);
-  optional_info_tr.sort();
+  const optional_info_labels = Object.entries(optional_info)
+                                     .filter(([key, val]) => key !== "profile_picture")
+                                     .map(([key, val]) => [labels.profile[key], val]);
+  optional_info_labels.sort();
   return (
   <>
     <main>
       <div class="flex justify-around space-x-8">
         <MainInfo className={visibility >= visibilityEnum.ADMIN ? "w-60" : "w-64"} info={main_info} img={optional_info.profile_picture} onOpen={onOpen} contact={visibility >= visibilityEnum.DEFAULT} labels={labels} report/>
         {visibility >= visibilityEnum.ADMIN
-          ? <OptionalInfo className="w-80" fields={optional_info_tr} labels={labels} />
+          ? <OptionalInfo className="w-80" fields={optional_info_labels} labels={labels} />
           : null
         }
         {visibility >= visibilityEnum.ADMIN // change to visibilityEnum.DEFAULT if backend is one day set to accept regular users

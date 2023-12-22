@@ -32,14 +32,16 @@ export default function Profile({guest, expired, main_info, optional_info, list_
 
   const username = main_info.username;
   const {professions, languages, "socialmedia-links": social, skills} = list_info;
-  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [labels.profile[key], val]);
-  optional_info_tr.sort();
+  const optional_info_labels = Object.entries(optional_info)
+                                     .filter(([key, val]) => key !== "profile_picture")
+                                     .map(([key, val]) => [labels.profile[key], val]);
+  optional_info_labels.sort();
   return (
     <>
       <main>
         <div class="flex justify-around space-x-8">
           <MainInfo className="w-60" info={main_info} img={optional_info.profile_picture} contact={true} labels={labels} />
-          <OptionalInfo className="w-80" fields={optional_info_tr} labels={labels} />
+          <OptionalInfo className="w-80" fields={optional_info_labels} labels={labels} />
           <div>
             <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
             <SkillList list={skills.list} topic={skills.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
