@@ -1,0 +1,114 @@
+{
+    "resource": {
+        "fields": [
+            {"name": "description", "label": "Açıklama", "type": "text"},
+            {"name": "initialQuantity", "label": "Başlangıç Miktarı", "type": "number"},
+            {"name": "type", "label": "Tür", "type": "select", "options": ["giysi", "yiyecek", "içecek", "barınak", "ilaç", "taşıma", "araç", "insan", "diğer"]},
+            {"name": "x", "label": "X Koordinatı", "type": "number"},
+            {"name": "y", "label": "Y Koordinatı", "type": "number"},
+            {"name": "occur_at", "label": "Oluşma Tarihi", "type": "date"},
+            {"name": "recurrence_rate", "label": "Tekrar Oranı", "type": "select", "options": [1,7]},
+            {"name": "recurrence_deadline", "label": "Tekrar Son Tarihi", "type": "date"}
+        ]
+    },
+    "need": {
+        "fields": [
+            {"name": "description", "label": "Açıklama", "type": "text"},
+            {"name": "initialQuantity", "label": "Başlangıç Miktarı", "type": "number"},
+            {"name": "urgency", "label": "Aciliyet", "type": "select", "options": [1, 2, 3, 4, 5]},
+            {"name": "type", "label": "Tür", "type": "select", "options": ["giysi", "yiyecek", "içecek", "barınak", "ilaç", "taşıma", "araç", "insan", "diğer"]},
+            {"name": "x", "label": "X Koordinatı", "type": "number"},
+            {"name": "y", "label": "Y Koordinatı", "type": "number"},
+            {"name": "occur_at", "label": "Oluşma Tarihi", "type": "date"},
+            {"name": "recurrence_rate", "label": "Tekrar Oranı", "type": "select", "options": [1,7]},
+            {"name": "recurrence_deadline", "label": "Tekrar Son Tarihi", "type": "date"}
+        ]
+    },
+    "action": {
+        "fields": [
+            {"name": "created_by", "label": "Oluşturan", "type": "text"},
+            {"name": "description", "label": "Açıklama", "type": "text"},
+            {"name": "type", "label": "Tür", "type": "select", "options": ["ihtiyaç_kaynağı"]},
+            {"name": "occur_at", "label": "Oluşma Tarihi", "type": "date"},
+            {"name": "end_at", "label": "Bitiş Tarihi", "type": "date"},
+            {
+                "name": "related_groups",
+                "label": "Eylem Grup Listesi",
+                "type": "array",
+                "fields": [
+                    {
+                        "name": "related_needs",
+                        "label": "İlgili İhtiyaçlar",
+                        "type": "array",
+                        "fields": [{"name": "id", "label": "ID", "type": "text"}]
+                    },
+                    {
+                        "name": "related_resources",
+                        "label": "İlgili Kaynaklar",
+                        "type": "array",
+                        "fields": [{"name": "id", "label": "ID", "type": "text"}]
+                    }
+                ]
+            }
+        ]
+    },
+    "type": {
+        "giysi": {
+            "fields": [
+                {"name": "size", "label": "Boyut", "type": "text"},
+                {"name": "gender", "label": "Cinsiyet", "type": "text"},
+                {"name": "age_group", "label": "Yaş Grubu", "type": "select", "options": ["bebek", "çocuk", "genç", "yetişkin", "yaşlı", "karışık"]},
+                {"name": "subtype", "label": "Alt Tür", "type": "select", "options": ["pantolon", "gömlek", "tişört", "palto", "bot", "ayakkabı"]},
+                {"name": "condition", "label": "Durum", "type": "select", "options": ["yeni", "kullanılmış"]}
+            ]
+        },
+        "yiyecek": {
+            "fields": [
+                {"name": "expiration_date", "label": "Son Kullanma Tarihi", "type": "date"},
+                {"name": "allergens", "label": "Alerjenler", "type": "text"},
+                {"name": "subtype", "label": "Alt Tür", "type": "select", "options": ["tahıllar", "sebzeler", "meyveler", "etler", "süt ürünleri", "bebek maması", "konserve gıda"]}
+            ]
+        },
+        "içecek": {
+            "fields": [
+                {"name": "subtype", "label": "Alt Tür", "type": "select", "options": ["su", "meyve suyu", "süt", "gazlı içecek", "çay", "kahve", "kola", "sarılı kola"]}
+            ]
+        },
+        "barınak": {
+            "fields": [
+                {"name": "number_of_people", "label": "Kişi Sayısı", "type": "number"},
+                {"name": "weather_condition", "label": "Hava Durumu", "type": "text"},
+                {"name": "subtype", "label": "Alt Tür", "type": "select", "options": ["çadır", "geçici yapı", "kalıcı yapı"]}
+            ]
+        },
+        "ilaç": {
+            "fields": [
+                {"name": "disease_name", "label": "Hastalık Adı", "type": "text"},
+                {"name": "medicine_name", "label": "İlaç Adı", "type": "text"},
+                {"name": "age_group", "label": "Yaş Grubu", "type": "select", "options": ["bebek", "çocuk", "genç", "yetişkin", "yaşlı", "karışık"]},
+                {"name": "subtype", "label": "Alt Tür", "type": "select", "options": ["antibiyotikler", "analjezikler", "antiviraller", "aşılar"]}
+            ]
+        },
+        "taşıma": {
+            "fields": [
+                {"name": "start_location", "label": "Başlangıç Konumu", "type": "text"},
+                {"name": "end_location", "label": "Bitiş Konumu", "type": "text"},
+                {"name": "subtype", "label": "Alt Tür", "type": "select", "options": ["araba", "otobüs", "tren", "uçak"]}
+            ]
+        },
+        "araç": {
+            "fields": [
+                {"name": "tool_type", "label": "Araç Türü", "type": "text"},
+                {"name": "estimated_weight", "label": "Tahmini Ağırlık", "type": "number"},
+                {"name": "subtype", "label": "Alt Tür", "type": "select", "options": ["el aletleri", "güç aletleri", "bahçe aletleri", "inşaat aletleri", "kurtarma aletleri"]}
+            ]
+        },
+        "insan": {
+            "fields": [
+                {"name": "proficiency", "label": "Yeterlilik", "type": "text"},
+                {"name": "number_of_people", "label": "Kişi Sayısı", "type": "number"},
+                {"name": "subtype", "label": "Alt Tür", "type": "select", "options": ["doktor", "mühendis", "öğretmen", "işçi"]}
+            ]
+        }
+    }
+}
