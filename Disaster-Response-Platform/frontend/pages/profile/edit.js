@@ -130,7 +130,7 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
           <ProficiencyModal isOpen={isOpenProficiency} onOpenChange={onOpenChangeProficiency} labels={labels} />
         </>
       ) : null}
-      <AvatarModal isOpen={isOpenAvatar} onOpenChange={onOpenChangeAvatar} file={pictureFile} username={current_main_fields.username} accessToken={accessToken} labels={labels}/>
+      <AvatarModal isOpen={isOpenAvatar} onOpenChange={onOpenChangeAvatar} file={pictureFile} username={current_main_fields.username} accessToken={accessToken} optional_fields={current_optional_fields} labels={labels}/>
       <ToastContainer />
     </main>
   )

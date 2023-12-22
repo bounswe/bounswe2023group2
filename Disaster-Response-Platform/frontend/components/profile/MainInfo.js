@@ -2,14 +2,13 @@ import Image from 'next/image';
 import GrayBox from '../GrayBox';
 import { Button, Divider } from "@nextui-org/react";
 
-export default function MainInfo({ className, info, report, onOpen, contact, labels }) {
+export default function MainInfo({ className, info, report, onOpen, contact=true, img, labels }) {
 	let {username, first_name, last_name, email, phone_number, user_role, proficiency} = info;
 	const name = `${first_name} ${last_name}`;
-	const img = null; // TODO
 	if (user_role === null) user_role = "GUEST";
 	return (
 		<GrayBox className={className}>
-			<Image className="block mx-auto" src={img ? img : "/images/default_pp.jpg"} width={135} height={135} alt={"Profile picture of" + name}/>
+			<Image className="block mx-auto my-3" src={img ? img : "/images/default_pp.jpg"} width={135} height={135} alt={"Profile picture of" + name}/>
 			<div className="text-center">
 				<span className="text-md lg:text-lg">{username}</span>
 				<br /> <span className="text-md lg:text-lg">{labels.user_roles[user_role]}</span>

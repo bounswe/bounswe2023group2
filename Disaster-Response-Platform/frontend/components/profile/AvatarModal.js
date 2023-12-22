@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { api } from '@/lib/apiUtils';
 
-export default function AvatarModal({ isOpen, onOpenChange, file, username, accessToken, labels }) {
+export default function AvatarModal({ isOpen, onOpenChange, file, username, accessToken, optional_fields, labels }) {
 
   async function submitAvatar() {
 
@@ -32,15 +32,15 @@ export default function AvatarModal({ isOpen, onOpenChange, file, username, acce
       return;
     }
 
-    /*const profile_response = await api.post("/api/profiles/user-optional-infos/add-user-optional-info", 
-      { username, profile_picture: upload_response?.data?.url},
+    const profile_response = await api.post("/api/profiles/user-optional-infos/add-user-optional-info", 
+      { ...optional_fields, profile_picture: upload_response?.data?.url},
       { headers: { 'Authorization': `Bearer ${accessToken}` } }
     );
 
     if (upload_response.status !== 200) {
       toast(`${labels.feedback.failure} (picture URL save: ${upload_response.statusText})`);
       return;
-    }*/
+    }
 
     toast(labels.feedback.add_success);
 

@@ -49,7 +49,7 @@ export default function OtherProfile({ unauthorized, self_role, main_info, optio
   <>
     <main>
       <div class="flex justify-around space-x-8">
-        <MainInfo className={visibility >= visibilityEnum.ADMIN ? "w-60" : "w-64"} info={main_info} onOpen={onOpen} contact={visibility >= visibilityEnum.DEFAULT} labels={labels} report/>
+        <MainInfo className={visibility >= visibilityEnum.ADMIN ? "w-60" : "w-64"} info={main_info} img={optional_info.profile_picture} onOpen={onOpen} contact={visibility >= visibilityEnum.DEFAULT} labels={labels} report/>
         {visibility >= visibilityEnum.ADMIN
           ? <OptionalInfo className="w-80" fields={optional_info_tr} labels={labels} />
           : null

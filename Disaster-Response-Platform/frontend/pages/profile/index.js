@@ -38,7 +38,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
     <>
       <main>
         <div class="flex justify-around space-x-8">
-          <MainInfo className="w-60" info={main_info} contact={true} labels={labels} />
+          <MainInfo className="w-60" info={main_info} img={optional_info.profile_picture} contact={true} labels={labels} />
           <OptionalInfo className="w-80" fields={optional_info_tr} labels={labels} />
           <div>
             <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
