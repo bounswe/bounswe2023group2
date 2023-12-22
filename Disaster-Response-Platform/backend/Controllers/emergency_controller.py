@@ -7,22 +7,18 @@ import Services.emergency_service as emergency_service
 import Services.authentication_service as authentication_service
 from Services.build_API_returns import create_json_for_error
 from typing import List, Optional
+from Models.user_model import UserProfile
 
 router = APIRouter()
 
 @router.post("/", status_code=201)
-def create_emergency(emergency: Emergency, response:Response):
+def create_emergency(emergency: Emergency, response:Response, user: UserProfile = Depends(authentication_service.get_current_user)):
     try:
-        # emergency.created_by_user = current_user if current_user else "GUEST"
-
-        # user= authentication_service.get_current_user().username
+        if user.user_role.value == "GUEST":
+            emergency.created_by_user = "GUEST"
+        else:
+             emergency.created_by_user = user.username
         
-        # try:
-        #     emergency.created_by_user = authentication_service.get_current_username()
-        # except:
-        #     emergency.created_by_user = "GUEST"
-        
-        emergency.created_by_user = authentication_service.get_current_username_without_validation()
         # need.created_by = current_user
         emergency_result = emergency_service.create_emergency(emergency)
         response.status_code = HTTPStatus.OK
