@@ -23,9 +23,8 @@ from datetime import date, datetime
 class EmergencyTypesEnum(str, Enum):
     news = "News"
     debris = "Debris"
-    infrastructure = "Infrastructure"
-    disaster = "Disaster"
-    helparrived = "Help-Arrived"
+    fire = "Fire"
+    medical = "Medical Emergency"
 
 
 class Emergency(BaseModel):
