@@ -46,9 +46,11 @@ def set_downvote(voteUpdate: VoteUpdate, response: Response, current_user: str =
         return json.loads(err_json)
     
 @router.get("/check", status_code=200)
-def check(voteUpdate: VoteUpdate, current_user: str = Depends(authentication_service.get_current_username)):
+def check(entityType: str = Query(None, description="Entity type (needs, resources, actions, events)"),
+            entityID: str = Query(None, description="ID of the entity"), 
+            current_user: str = Depends(authentication_service.get_current_username)):
     try:
-        response = feedback_service.check_feeedback(voteUpdate.entityType, voteUpdate.entityID, current_user)
+        response = feedback_service.check_feeedback(entityType, entityID, current_user)
         return {"message": response}
     except ValueError as err:
         raise HTTPException(status_code = 500, detail="An error occured while checking the user feedback")
