@@ -27,9 +27,20 @@ open class AuthenticatedUser(var username: String, var email: String, var phone:
     var languages: MutableList<Language> = mutableListOf()
     var professions: MutableList<Profession> = mutableListOf()
 
+    var role: Role = Role.AUTHENTICATED
+    var credibleRegion: String? = null
+    var roleBasedProficiency: String = ""
+
     class SocialMedia(var platformName: String, var profileURL: String)
     class Skill(var definition: String, var level: String, var document: String)
     class Language(var language: String, var level: String)
     class Profession(var profession: String, var level: String)
 
+}
+
+enum class Role {
+    AUTHENTICATED,
+    CREDIBLE,
+    ROLE_BASED,
+    ADMIN
 }
