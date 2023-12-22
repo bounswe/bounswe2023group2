@@ -109,6 +109,11 @@ def verify_user(username, provided_token):
         update_operation = {"$set": {"is_email_verified": True}}
         result = user_collection.update_one(query, update_operation)
 
+        user_entry = user_collection.find_one({"username": username})
+        if user_entry['user_role'] == "GUEST":
+            update_operation_role = {"$set": {"user_role": "AUTHENTICATED"}}
+            user_collection.update_one(query, update_operation_role)
+
         if result.modified_count == 0:
             # Handle the case where the update didn't go through, e.g., user not found
             raise ValueError("Email verification update failed or was unnecessary.")
@@ -119,4 +124,3 @@ def verify_user(username, provided_token):
         return True
 
     return False
-
