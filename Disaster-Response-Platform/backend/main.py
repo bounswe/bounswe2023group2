@@ -10,6 +10,8 @@ from Controllers import (resource_controller, user_controller, uprofile_optinfo_
                          action_controller, file_controller, email_verification_controller, geocode_controller,
                          forgot_password_controller)
 
+from Controllers import simple_annotation_controller
+
 
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
@@ -47,6 +49,8 @@ app.include_router(email_verification_controller.router, prefix="/api/email_veri
 app.include_router(file_controller.router, prefix="/api", tags=["File Uploads"])
 app.include_router(forgot_password_controller.router, prefix="/api/forgot_password", tags=["Forgot Password - Reset"])
 app.include_router(geocode_controller.router, prefix="/api/geocode", tags=["Geocode - Address Translation"])
+
+app.include_router(simple_annotation_controller.router, prefix="/api/simple_annotation", tags=["Using our annotation server"])
 
 @app.get("/")
 async def root(some_parameter:str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):
