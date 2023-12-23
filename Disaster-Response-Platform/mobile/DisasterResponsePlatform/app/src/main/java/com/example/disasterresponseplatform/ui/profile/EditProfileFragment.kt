@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.enums.Endpoint
@@ -860,12 +861,7 @@ class EditProfileFragment : Fragment() {
         binding.apply {
             profileImage.setOnClickListener {
                 val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-                try {
-                    changeImage.launch(intent)
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Some unexpected error occurred", Toast.LENGTH_LONG).show()
-                    println(e)
-                }
+                changeImage.launch(intent)
             }
 
             profileEditConfirmButton.setOnClickListener {
@@ -896,7 +892,7 @@ class EditProfileFragment : Fragment() {
         if (saveEndCount == 3 + socialMediaCount + skillCount + languageCount + professionCount) {
             println("WHUTT")
 //            Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
-            parentFragmentManager.popBackStack()
+            parentFragmentManager.popBackStack("EditProfileFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
     }
 

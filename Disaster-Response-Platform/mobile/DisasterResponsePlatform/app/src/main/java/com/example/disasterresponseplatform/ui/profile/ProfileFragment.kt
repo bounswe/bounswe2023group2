@@ -46,7 +46,6 @@ import retrofit2.Response
 class ProfileFragment(var username: String?) : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    private val editProfileFragment = EditProfileFragment()
     private var profileLevel: Int = 0
 
     override fun onCreateView(
@@ -658,6 +657,7 @@ class ProfileFragment(var username: String?) : Fragment() {
     private fun clickButtons(user: AuthenticatedUser) {
 
         binding.profileEditButton.setOnClickListener {
+            val editProfileFragment = EditProfileFragment()
             addFragment(editProfileFragment, user)
         }
     }
@@ -668,7 +668,7 @@ class ProfileFragment(var username: String?) : Fragment() {
         bundle.putSerializable("user", user)
         fragment.arguments = bundle
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack("EditProfileFragment")
         ft.commit()
     }
 
