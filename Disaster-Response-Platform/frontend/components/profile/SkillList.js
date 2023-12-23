@@ -18,7 +18,7 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
       const file = document.getElementById("certificate")?.files?.[0];
       if (file) {
         const extension = file.name.substring(file.name.lastIndexOf(".")+1);
-        const filename = `${topic.api_url}-${formData[topic.primary]}-certificate.${extension}`;
+        const filename = `${topic.api_url}-${username}-${formData[topic.primary]}-certificate.${extension}`;
         const upload_response = await uploadFile(file, filename, accessToken);
         formData[topic.certificate] = upload_response?.data?.url;
       }
