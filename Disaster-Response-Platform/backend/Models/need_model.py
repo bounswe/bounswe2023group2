@@ -13,6 +13,7 @@ class Need(BaseModel):
     details: Dict[str, Any] = Field(default=None)
     x: float = Field(default=0.0)
     y: float = Field(default=0.0)
+    open_address : str = Field(default=None)
     
 class QuantityUpdate(BaseModel):
     quantity: int
