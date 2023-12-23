@@ -34,7 +34,7 @@ object DiskStorageManager {
     fun checkToken(): Boolean{
         val token = getKeyValue("token")
         Log.i("token", "Token $token")
-        return (hasKey("token") && !token.isNullOrEmpty())
+        return (hasKey("token") and !token.isNullOrEmpty())
     }
 
     /**

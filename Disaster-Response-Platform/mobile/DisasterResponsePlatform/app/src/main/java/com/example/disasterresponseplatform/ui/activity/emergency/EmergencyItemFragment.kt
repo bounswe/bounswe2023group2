@@ -128,11 +128,11 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
             binding.btnDelete.setOnClickListener {
                 deleteEmergency()
             }
-            binding.btnSeeProfile.setOnClickListener {
-                addFragment(ProfileFragment(emergency.created_by),"ProfileFragment")
+            binding.btnUpvote.setOnClickListener {
+                upvoteEmergency(token)
             }
-            binding.btnNavigate.setOnClickListener {
-                navigateToMapFragment()
+            binding.btnDownvote.setOnClickListener {
+                downvoteEmergency(token)
             }
         } else {
             binding.btnDelete.visibility = View.GONE
@@ -140,14 +140,12 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
             binding.btnSeeProfile.visibility = View.GONE
             binding.btnNavigate.visibility = View.GONE
         }
-
-        binding.btnUpvote.setOnClickListener {
-            upvoteEmergency(token)
+        binding.btnSeeProfile.setOnClickListener {
+            addFragment(ProfileFragment(emergency.created_by),"ProfileFragment")
         }
-        binding.btnDownvote.setOnClickListener {
-            downvoteEmergency(token)
+        binding.btnNavigate.setOnClickListener {
+            navigateToMapFragment()
         }
-
     }
 
 
