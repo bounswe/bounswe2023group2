@@ -31,19 +31,9 @@ def create_need(need: Need) -> str:
 
     validate_coordinates(need.x, need.y)
     validate_quantities(need.initialQuantity, need.unsuppliedQuantity)
-    if(need.recurrence_rate!= None):
-        if not all([need.recurrence_deadline, need.occur_at]):
-            raise ValueError("Recurrence fields need to be entered")
-        need.recurrence_id=r_id
-        need.recurrence_rate = need.recurrence_rate.value
-        insert_result = needs_collection.insert_one(need.dict())
-        print("need added ", insert_result, need.recurrence_id, need.occur_at)
-        insert_ids=create_recurrent_needs(need)
-        print(insert_ids)
-        r_id+=1
-    else:
-        insert_result = needs_collection.insert_one(need.dict())
-        print("need added ", insert_result, need.recurrence_id, need.occur_at)
+    
+    insert_result = needs_collection.insert_one(need.dict())
+    print("need added ", insert_result, need.occur_at)
 
     if insert_result.inserted_id:
         result = "{\"needs\":[{\"_id\":" + f"\"{insert_result.inserted_id}\""+"}]}"
