@@ -29,6 +29,9 @@ class Need(BaseModel):
     created_at: datetime.datetime = Field(default_factory=current_time_gmt3)
     last_updated_at: datetime.datetime = Field(default_factory=current_time_gmt3)
     action_used: int = Field(default=0)
+    
+    verified_voter_username: str = Field(default = None)
+    verified_vote_type: str = Field(default = None)
 
     @validator('recurrence_deadline', 'occur_at', pre=True)
     def convert_str_to_datetime(cls, value):

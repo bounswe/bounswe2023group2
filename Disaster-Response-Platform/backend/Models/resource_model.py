@@ -39,6 +39,9 @@ class Resource(BaseModel):
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
     actions_used: List[ActionHistory]= Field(default=None)
+    
+    verified_upvote: str = Field(default = None)
+    verified_downvote: str = Field(default = None)
 
     @validator('recurrence_deadline', 'occur_at', pre=True)
     def convert_str_to_datetime(cls, value):

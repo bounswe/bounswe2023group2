@@ -19,22 +19,32 @@ def vote(entityType:str, entityID:str, username:str, user_role:str,voteType:str)
             if user_role== "ADMIN":
                set_upvote(entityType, entityID, 100) 
                set_downvote(entityType, entityID, -100)
+               
+               set_verified(entityType, entityID, username,'upvote') 
+               
             elif user_role== "CREDIBLE":
                set_upvote(entityType, entityID, 10) 
                set_downvote(entityType, entityID, -10) 
+               
+               set_verified(entityType, entityID, username,'upvote') 
+                
             elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":    
                 set_upvote(entityType, entityID, 1)
                 set_downvote(entityType, entityID, -1)
-            
-            # set_upvote(entityType, entityID, 1)
-            # set_downvote(entityType, entityID, -1)
+   
         else:
             if user_role== "ADMIN":
                set_upvote(entityType, entityID, -100) 
                set_downvote(entityType, entityID, 100)
+               
+               set_verified(entityType, entityID, username,'downvote') #delete_verified_upvote
+               
             elif user_role== "CREDIBLE":
                set_upvote(entityType, entityID, -10) 
                set_downvote(entityType, entityID, 10) 
+               
+               set_verified(entityType, entityID, username,'downvote')  # if there is already her verified upvote delete it
+               
             elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":    
                 set_upvote(entityType, entityID, -1)
                 set_downvote(entityType, entityID,1)
@@ -46,16 +56,20 @@ def vote(entityType:str, entityID:str, username:str, user_role:str,voteType:str)
         if voteType=="upvote":
             if user_role== "ADMIN":
                set_upvote(entityType, entityID, 100) 
+               set_verified(entityType, entityID, username,'upvote') 
             elif user_role== "CREDIBLE":
                set_upvote(entityType, entityID, 10)  
+               set_verified(entityType, entityID, username,'upvote') 
             elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
                 set_upvote(entityType, entityID, 1)
              
         else:
             if user_role== "ADMIN":
                set_downvote(entityType, entityID, 100) 
+               set_verified(entityType, entityID, username,'downvote') 
             elif user_role== "CREDIBLE":
                set_downvote(entityType, entityID, 10)  
+               set_verified(entityType, entityID, username,'downvote') 
             elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
                 set_downvote(entityType, entityID, 1)
             
@@ -67,20 +81,24 @@ def unvote(entityType:str, entityID:str, username:str,user_role:str) -> bool:
         if existing_vote['vote'] == "upvote":
             if user_role== "ADMIN":
                set_upvote(entityType, entityID, -100) 
+               set_verified(entityType, entityID, username,'unvote') 
             elif user_role== "CREDIBLE":
-               set_upvote(entityType, entityID, -10)  
+               set_upvote(entityType, entityID, -10) 
+               set_verified(entityType, entityID, username,'unvote')  
             elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
                 set_upvote(entityType, entityID, -1)
             
-            # set_upvote(entityType, entityID, -1)
+
         else:
             if user_role== "ADMIN":
                set_downvote(entityType, entityID, -100) 
+               set_verified(entityType, entityID, username,'unvote') 
             elif user_role== "CREDIBLE":
-               set_downvote(entityType, entityID, -10)  
+               set_downvote(entityType, entityID, -10) 
+               set_verified(entityType, entityID, username,'unvote')   
             elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
                 set_downvote(entityType, entityID, -1)
-            #set_downvote(entityType, entityID, -1)
+                
     else:
         raise ValueError(f"Current user has not voted yet")
         
@@ -96,6 +114,41 @@ def set_upvote(entity_type: EntityTypeEnum, entity_id: str, num: int) -> bool:
 def set_downvote(entity_type: EntityTypeEnum, entity_id: str, num: int) -> bool:
     collection = MongoDB.get_collection(entity_type.value)
     res = collection.update_one({"_id": ObjectId(entity_id)}, {"$inc": {"downvote": num}})
+    if res.matched_count == 0:
+        raise ValueError(f"Entity type {entity_type.value} with entity id {entity_id} not found")
+    return True
+
+#set_verified(entityType, entityID, username,'unvote') 
+def set_verified(entity_type: EntityTypeEnum, entity_id: str, username: str, vote: str) -> bool:
+    entity_collection = MongoDB.get_collection(entity_type.value)
+    
+    #vote unvotesa sil 
+    # ama eski verified userin verificationi da olmuyo problemmm
+    if vote=="unvote":   #delete verification info from entity
+        res=entity_collection.update_one({"entityType": entity_type, "entityID": entity_id, "username": username}, 
+        {"$set": { 
+        "verified_voter_username": None,
+        "verified_vote_type": None }
+         }  )
+        if not res:
+            raise ValueError(f"Current user has not voted yet")
+        return True
+    
+    #entity yi verified olarak guncelleyip voter usernamei guncelle
+    res = entity_collection.update_one({"_id": ObjectId(entity_id)}, 
+        {"$set": {                #voteun verified fieldini  verified_id   verified_type: set et 
+        "verified_voter_username": username,
+        "verified_vote_type": vote }
+         }                     )
+    
+    #feedbacki verified olarak guncelle
+    vote = feedback_collection.update_one({"entityType": entity_type, "entityID": entity_id, "username": username},
+        {"$set":{
+        "verified_username": username,
+        "verified_type": vote
+            }
+         }                                )
+    
     if res.matched_count == 0:
         raise ValueError(f"Entity type {entity_type.value} with entity id {entity_id} not found")
     return True
