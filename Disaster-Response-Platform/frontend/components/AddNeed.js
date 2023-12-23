@@ -5,15 +5,17 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-
 } from "@nextui-org/modal";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
-import forms from "./forms.json"
+import needForm from "./needForm.json"
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { api } from "@/lib/apiUtils";
 import { useRouter } from "next/router";
-export default function AddNeedForm({ isOpen, onOpenChange }) {
+import { withIronSessionSsr } from "iron-session/next";
+import sessionConfig from "@/lib/sessionConfig";
+import addressService from "@/services/addressService";
+export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
   const [form, setForm] = useState([]);
   const [subform, setSubform] = useState([]);
   const { reset, handleSubmit, control, formState: { isSubmitting }, setValue } = useForm();
@@ -21,33 +23,11 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
   const [types, setTypes] = useState({});
   const [fields, setFields] = useState([]);
   const router = useRouter();
-  const getFrom = async () => {
-    const result = await api.get('/api/form_fields/need')
-    const desiredForm = result.data.fields;
-    setForm(desiredForm)
-    desiredForm.map((res) => {
-      let can3 = {}
-      can3[res.name] = res.type
-      setTypes((prev) => { return { ...prev, ...can3 } })
 
-      if (res.name === 'type') {
-        let tmp = []
-        res.options.map((e, index) => {
-
-          tmp = [...tmp, { key: e, value: e, label: e, index: index }]
-
-        })
-        res.options = tmp
-      }
-      else if (res.type === 'select') {
-        let tmp = []
-        res.options.map((e, index) => {
-          tmp = [...tmp, { key: e, value: e, label: e, index: index }]
-        })
-        res.options = tmp
-        console.log(res.options)
-      }
-    })
+  const getForm = () => {
+    const desiredForm = needForm['tr'];
+    setForm(desiredForm);
+    console.log(desiredForm)
   }
 
   const getSubtypes = async (value) => {
@@ -60,24 +40,20 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
           tmp = [...tmp, { key: e, value: e, label: e, index: index }]
         })
         res.options = tmp
-        console.log(res.options)
       }
     })
     setSubform(_subform)
   }
 
-
-
   useEffect(() => {
-    getFrom();
+    
+    getForm(lang);
+
   }, [])
 
   const can = async (data) => {
-    console.log(data)
     const prepared = {}
     Object.keys(data).map((key, index) => {
-      console.log(types, key)
-
       if (data[key] === '') { }
       else if (types[key] === 'number' | key === 'urgency' | key === 'recurrence_rate') {
         prepared[key] = parseInt(data[key])
@@ -86,11 +62,18 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
         prepared[key] = data[key]
       }
     })
-
     prepared['type'] = chosen
     console.log(prepared)
+    try{
+      let coordinats = await addressService.addressToXY(data.open_address);
+      console.log(coordinats)
+      prepared['x'] = coordinats.payload.x
+      prepared['y'] = coordinats.payload.y
+    }
+    catch(e){
+      toast.error("Address should contain city, street, street number")
+    }
     prepared['unsuppliedQuantity'] = prepared['initialQuantity']
-    prepared['currentQuantity'] = prepared['initialQuantity']
     const response = await fetch('/api/need/add', {
       method: 'POST',
       body: JSON.stringify(prepared)
@@ -98,10 +81,6 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
 
     if (response.status === 400) {
       toast.error("An unexpected error occurred while saving, please try again")
-      // const fieldToErrorMessage = await response.json()
-      // for (const [fieldName, errorMessage] of Object.entries(fieldToErrorMessage)) {
-      //   setError(fieldName, { type: 'custom', message: errorMessage })
-      // }
     } else if (response.ok) {
       // successful
       toast.success("Successfully saved")
@@ -131,9 +110,9 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
 
 
                 >
-                  {(type) => <SelectItem value={type.value} className='text-black'>{type.value}</SelectItem>}
+                  {(type) => <SelectItem value={type.value} className='text-black'>{type.label}</SelectItem>}
                 </Select>
-
+              
                 else if (res.type === 'select') return <Controller
                   name={res.name}
                   control={control}
@@ -150,7 +129,7 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
                       variant={'bordered'}
                       {...field}
                     >
-                      {(type) => <SelectItem key={type.value} className='text-black'>{type.value}</SelectItem>}
+                      {(type) => <SelectItem key={type.value} className='text-black'>{type.label}</SelectItem>}
                     </Select>
                   )}
                 />
@@ -190,7 +169,7 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
                       variant={'bordered'}
                       {...field}
                     >
-                      {(type) => <SelectItem key={type.value} className='text-black'>{type.value}</SelectItem>}
+                      {(type) => <SelectItem key={type.value} className='text-black'>{type.label}</SelectItem>}
                     </Select>
                   )}
                 />
@@ -213,8 +192,6 @@ export default function AddNeedForm({ isOpen, onOpenChange }) {
                     )}
                   />
               })}
-
-
               <Button type='submit'>
                 {isSubmitting ? 'Loading' : "Submit"}
               </Button>

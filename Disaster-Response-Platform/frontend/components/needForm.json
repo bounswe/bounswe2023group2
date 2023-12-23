@@ -1,0 +1,144 @@
+{
+  "en": [
+    {
+      "name": "type",
+      "label": "Type",
+      "type": "select",
+      "options": [
+        {"key":"cloth", "value":"cloth", "label":"Cloth", "index": 0 },
+        {"key":"food", "value":"food", "label":"food", "index": 1 },
+        {"key":"drink", "value":"drink", "label":"drink", "index": 2 },
+        {"key":"shelter", "value":"shelter", "label":"shelter", "index": 3 },
+        {"key":"medication", "value":"medication", "label":"medication", "index": 4 },
+        {"key":"transportation", "value":"transportation", "label":"transportation", "index": 5 },
+        {"key":"tool", "value":"tool", "label":"tool", "index": 6 },
+        {"key":"human", "value":"human", "label":"human", "index": 7 },  
+        {"key":"other", "value":"other", "label":"other", "index": 8 }
+      ]
+    },
+      {
+        "name": "description",
+        "label": "Description",
+        "type": "text"
+      },
+      {
+        "name": "initialQuantity",
+        "label": "Required Quantity",
+        "type": "number"
+      },
+      {
+        "name": "urgency",
+        "label": "Urgency",
+        "type": "select",
+        "options": [ 
+          {"key":1, "value":1, "label":"Minimal Concern", "index":0},
+          {"key":2, "value":2, "label":"Low Priority", "index":1},
+          {"key":3, "value":3, "label":"Moderate Urgency", "index":2},
+          {"key":4, "value":4, "label":"High Priority", "index":3},
+          {"key":5, "value":5, "label":"Critical Emergency", "index":4}
+        ]
+      },
+      {
+        "name": "open_address",
+        "label": "Address",
+        "type": "text"
+      },
+      {
+        "name": "occur_at",
+        "label": "Occur At",
+        "type": "date"
+      },
+      {
+        "name": "recurrence_rate",
+        "label": "Recurrence Rate",
+        "type": "select",
+        "options": [
+          {"key":1, "value":1, "label":1, "index":0},
+          {"key":7, "value":7, "label":7, "index":1}
+        ]
+      },
+      {
+        "name": "recurrence_deadline",
+        "label": "Recurrence Deadline",
+        "type": "date"
+      }
+    ],
+  "tr": [
+      {
+        "name": "description",
+        "label": "Açıklama",
+        "type": "text"
+      },
+      {
+        "name": "initialQuantity",
+        "label": "Başlangıç Miktarı",
+        "type": "number"
+      },
+      {
+        "name": "urgency",
+        "label": "Aciliyet",
+        "type": "select",
+        "options": [
+          {"key":1, "value":1, "label":"Endişeye Mahal Yok", "index":0},
+          {"key":2, "value":2, "label":"Düşük Öncelik", "index":1},
+          {"key":3, "value":3, "label":"Orta Aciliyet", "index":2},
+          {"key":4, "value":4, "label":"Yüksek Öncelik", "index":3},
+          {"key":5, "value":5, "label":"Kritik Acil", "index":4}
+        ]
+      },
+      {
+        "name": "type",
+        "label": "Tür",
+        "type": "select",
+        "options": [
+          {"key":"cloth", "value":"cloth", "label":"Giysi", "index": 0 },
+          {"key":"food", "value":"food", "label":"Yemek", "index": 1 },
+          {"key":"drink", "value":"drink", "label":"İçecek", "index": 2 },
+          {"key":"shelter", "value":"shelter", "label":"Barınma", "index": 3 },
+          {"key":"medication", "value":"medication", "label":"İlaç", "index": 4 },
+          {"key":"transportation", "value":"transportation", "label":"Ulaşım", "index": 5 },
+          {"key":"tool", "value":"tool", "label":"Araç-gereç", "index": 6 },
+          {"key":"human", "value":"human", "label":"İnsan", "index": 7 },  
+          {"key":"other", "value":"other", "label":"Diğer", "index": 8 }
+        ]
+      },
+      {
+        "name": "open_address",
+        "label": "Adres",
+        "type": "text"
+      },
+      {
+        "name": "recurrence_rate",
+        "label": "Tekrar Oranı",
+        "type": "select",
+        "options": [
+          {"key":1, "value":1, "label":1, "index":0},
+          {"key":7, "value":7, "label":7, "index":1}
+        ]
+      },
+      {
+        "name": "recurrence_deadline",
+        "label": "Tekrar Bitiş Tarihi",
+        "type": "date"
+      },
+      {
+        "name": "occur_at",
+        "label": "Oluşma Zamanı",
+        "type": "date"
+      },
+      {
+        "name": "recurrence_rate",
+        "label": "Tekrar Oranı",
+        "type": "select",
+        "options": [
+          {"key":1, "value":1, "label":1, "index":0},
+          {"key":7, "value":7, "label":7, "index":1}
+        ]
+      },
+      {
+        "name": "recurrence_deadline",
+        "label": "Tekrar Bitiş Tarihi",
+        "type": "date"
+      }
+    ]
+}
