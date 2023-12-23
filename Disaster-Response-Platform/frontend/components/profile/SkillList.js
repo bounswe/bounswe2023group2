@@ -57,6 +57,16 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
   async function deleteSkill(event, skill) {
     event.preventDefault();
 
+    if (topic.certificate) {
+      const filename = skill[topic.certificate].substring(skill[topic.certificate].lastIndexOf('/')+1);
+      const upload_response = await fetch(`/api/delete-file/${filename}`, { method: 'DELETE' } );
+
+      if (upload_response.status !== 200) {
+        toast(labels.feedback.failure);
+        return;
+      }
+    }
+
     const response = await fetch('/api/delete-skill', {
       method: 'POST',
       headers: {
