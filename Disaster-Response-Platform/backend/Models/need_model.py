@@ -17,6 +17,7 @@ class Need(BaseModel):
     unsuppliedQuantity: int = Field(default=None)
     type: str = Field(default=None)
     details: Dict[str, Any] = Field(default=None)
+    open_address : str = Field(default=None)
     recurrence_id: str = Field(default = None)
     recurrence_rate: Recurrence = Field(default=None)
     recurrence_deadline: datetime.datetime = Field(default=None)
@@ -38,6 +39,7 @@ class Need(BaseModel):
             except ValueError:
                 raise ValueError("Incorrect date format, should be YYYY-MM-DD")
         return value
+
     
 class QuantityUpdate(BaseModel):
     quantity: int
