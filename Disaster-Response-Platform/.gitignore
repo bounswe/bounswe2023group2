@@ -12,3 +12,4 @@ config.py
 *.jpg
 *.jpeg
 *.pdf
+*.json
