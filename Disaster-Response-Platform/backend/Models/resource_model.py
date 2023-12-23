@@ -11,10 +11,6 @@ class ConditionEnum(str, Enum):
     new = "new"
     used = "used"
 
-class Recurrence(Enum):
-    Daily= 1
-    Weekly= 7
-
 class ActionHistory(BaseModel):
     quantity: int = Field(default=0)
     action_id: str= Field(None)
@@ -38,6 +34,7 @@ class Resource(BaseModel):
     downvote: int = Field(default=0)
     actions_used: List[ActionHistory]= Field(default=None)
     action_list: List[str]= Field(default=[])
+    recurrence: str= Field(default = None)
 
     @validator('occur_at', pre=True)
     def convert_str_to_datetime(cls, value):

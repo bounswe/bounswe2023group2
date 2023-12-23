@@ -12,7 +12,6 @@ from datetime import datetime, timedelta
 
 router = APIRouter()
 #TODO as soon as do_action
-#TODO as soon as recurringe
 
 @router.get("/")
 def getAll( response: Response):
@@ -25,7 +24,6 @@ def getAll( response: Response):
         response.status_code= HTTPStatus.BAD_REQUEST
         response.response_model= Error
         return error
-
 
 @router.get("/{id}")
 def get(id:str, response: Response):
@@ -92,5 +90,14 @@ def get_related_resources(id: str, response: Response):
         response.response_model= Error
         return error
 
-@router.get('/do_action')
-def 
+@router.get('/perform_action')
+def perform_action(id: str, response: Response):
+    try:
+        response.status_code = HTTPStatus.OK
+        resource_list = action_service_v2.do_action(id)
+        return json.loads(resource_list)
+    except ValueError as err:
+        error= Error(ErrorMessage="Resources could not be fetched", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error

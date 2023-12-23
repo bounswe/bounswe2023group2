@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, validator
 from typing import Dict, Any, List
 from enum import Enum
 import datetime
-from Models.resource_model import Recurrence
+
 from bson.objectid import ObjectId
 
 # Function to get current time in GMT+3

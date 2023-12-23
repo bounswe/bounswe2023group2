@@ -3,17 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 import Services.authentication_service as authentication_service
 from Services import resource_service
 from Services.build_API_returns import *
+from datetime import datetime
+import  Scheduler.schedule as schedule
 from Controllers import (resource_controller, user_controller, uprofile_optinfo_controller,
                          uprofile_languages_controller, uprofile_SocMed_controller, uprofile_professions_controller,
                          uprofile_skills_controller, need_controller, event_controller, user_roles_controller, 
                          form_fields_controller, report_controller, feedback_controller, uprofile_admin_controller,
                          action_controller, file_controller, email_verification_controller, geocode_controller,
                          action_controller_v2, file_controller
-                         ,forgot_password_controller,search_controller)
-
-
-from Controllers import simple_annotation_controller
-
+                         ,forgot_password_controller,search_controller, recurrence_controller, simple_annotation_controller)
 
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
@@ -52,8 +50,10 @@ app.include_router(file_controller.router, prefix="/api", tags=["File Uploads"])
 app.include_router(forgot_password_controller.router, prefix="/api/forgot_password", tags=["Forgot Password - Reset"])
 app.include_router(geocode_controller.router, prefix="/api/geocode", tags=["Geocode - Address Translation"])
 app.include_router(search_controller.router, prefix="/api/search", tags=["Search"])
-
 app.include_router(simple_annotation_controller.router, prefix="/api/simple_annotation", tags=["Using our annotation server"])
+app.include_router(recurrence_controller.router, prefix="/api/recurrence", tags=["Recurrence - Recurring Activities"])
+schedule.start()
+schedule.schedule_recurrence()
 
 @app.get("/")
 async def root(some_parameter:str, response:Response, current_user: str = Depends(authentication_service.get_current_user)):

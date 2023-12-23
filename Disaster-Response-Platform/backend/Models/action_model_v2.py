@@ -54,7 +54,7 @@ class Action(BaseModel):
     location_coordinates: List[float] = Field(default=None)
     resources: List[str] = Field(default_factory=list) #TODO group same activiy types
     needs: List[str] = Field(default_factory=list)
-    recurrence: Recurrence = Field(default=None)
+    recurrence: str = Field(default=None) # Object_id
 
     @validator('end_at', 'start_at', pre=True)
     def convert_str_to_datetime(cls, value):

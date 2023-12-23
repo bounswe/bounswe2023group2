@@ -21,7 +21,6 @@ def create_action(action: Action) -> str:
     if (action.type== ActionType.need_resource):
         if action.resources == [] or action.needs == []:
             raise ValueError("At least one need and resource is needed")
-        actions_collection.insert_one(action.dict())
         insert_result = actions_collection.insert_one(action.dict())
 
         if insert_result.inserted_id:
