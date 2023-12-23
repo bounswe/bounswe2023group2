@@ -87,9 +87,7 @@ def unvote(entityType:str, entityID:str, username:str,user_role:str) -> bool:
                set_verified(entityType, entityID, username,'unvote')  
             elif user_role== "AUTHENTICATED" or user_role=="ROLE_BASED":  
                 set_upvote(entityType, entityID, -1)
-            
-
-        else:
+        if existing_vote['vote'] == "downvote":
             if user_role== "ADMIN":
                set_downvote(entityType, entityID, -100) 
                set_verified(entityType, entityID, username,'unvote') 
@@ -125,13 +123,11 @@ def set_verified(entity_type: EntityTypeEnum, entity_id: str, username: str, vot
     #vote unvotesa sil 
     # ama eski verified userin verificationi da olmuyo problemmm
     if vote=="unvote":   #delete verification info from entity
-        res=entity_collection.update_one({"entityType": entity_type, "entityID": entity_id, "username": username}, 
+        res=entity_collection.update_one({"entityType": entity_type, "entityID": entity_id, "verified_voter_username": username}, 
         {"$set": { 
         "verified_voter_username": None,
         "verified_vote_type": None }
          }  )
-        if not res:
-            raise ValueError(f"Current user has not voted yet")
         return True
     
     #entity yi verified olarak guncelleyip voter usernamei guncelle
