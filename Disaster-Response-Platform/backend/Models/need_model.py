@@ -24,6 +24,7 @@ class Need(BaseModel):
     unsuppliedQuantity: int = Field(default=None)
     type: str = Field(default=None)
     details: Dict[str, Any] = Field(default=None)
+    open_address : str = Field(default=None)
     x: float = Field(default=None)
     y: float = Field(default=None)
     active: bool = Field(default=True)
@@ -44,6 +45,7 @@ class Need(BaseModel):
             except ValueError:
                 raise ValueError("Incorrect date format, should be YYYY-MM-DD")
         return value
+
     
 class QuantityUpdate(BaseModel):
     quantity: int

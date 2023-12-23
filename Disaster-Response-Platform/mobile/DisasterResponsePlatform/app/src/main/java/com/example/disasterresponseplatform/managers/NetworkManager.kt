@@ -207,11 +207,17 @@ class NetworkManager {
             else -> {
                 when (requestType) {
                     RequestType.GET -> {
-                        Log.d("RESPONSE", callback.toString())
                         var endpoint = endpoint.path
                         if (id != null) endpoint += "/$id"
-                        val call = api.getData(endpoint, headers)
-                        call.enqueue(callback)
+                        if (queries.isNullOrEmpty()) {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getData(endpoint, headers)
+                            call.enqueue(callback)
+                        } else {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getQueryData(endpoint, headers, queries)
+                            call.enqueue(callback)
+                        }
                     }
                     RequestType.POST -> {
                         Log.d("RESPONSE", callback.toString())

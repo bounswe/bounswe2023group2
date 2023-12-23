@@ -19,6 +19,9 @@
     <color name="icon">#797979</color>
     <color name="text">#797979</color>
     <color name="red">#E80000</color>
+    <color name="upvote">#00BA69</color>
+    <color name="downvote">#D84315</color>
+
 
 
     <color name="black">#000000</color>
