@@ -107,6 +107,10 @@ class AddEmergencyFragment(
                     location = binding.etCoordinate.editText?.text.toString())
                 emergencyViewModel.insertEmergency(newEmergency) //insert local db
 
+                if (isAdded) { // to ensure it attached a context
+                    Toast.makeText(requireContext(), "It is saved in Local, It will be uploaded when you connect to the internet", Toast.LENGTH_LONG).show()
+                }
+                parentFragmentManager.popBackStack()
 
 //              !!--- Emergency is currently running locally ---!!
 //
@@ -139,11 +143,6 @@ class AddEmergencyFragment(
                     Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
                 binding.btnSubmit.isEnabled = true
             }
-
-            if (isAdded) { // to ensure it attached a context
-                Toast.makeText(requireContext(), "It is saved in Local, It will be uploaded when you connect to the internet", Toast.LENGTH_LONG).show()
-            }
-            parentFragmentManager.popBackStack()
         }
     }
 
