@@ -68,7 +68,7 @@ class ProfileFragment(var username: String?) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         profileLevel = 0
         lateinit var user: AuthenticatedUser
-        if (!DiskStorageManager.hasKey("token")) {
+        if (!DiskStorageManager.checkToken()) {
             binding.profileLoginFirstText.visibility = View.VISIBLE
             binding.profileProgressBar.visibility = View.GONE
             replaceFragment(LoginFragment())

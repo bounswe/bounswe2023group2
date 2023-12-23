@@ -142,8 +142,7 @@ class NeedFragment(
      * It opens add Need fragment if user is authenticated, else warns the user
      */
     private fun addNeed(){
-        val token = DiskStorageManager.getKeyValue("token")
-        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             // check whether it is connected to the internet
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addNeedFragment = AddNeedFragment(needViewModel,null)
@@ -403,7 +402,7 @@ class NeedFragment(
         // Find type-specific fields and subType list
         val networkManager = NetworkManager()
         val headers = mapOf(
-            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            //"Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"), //TODO gerek yok sanki
             "Content-Type" to "application/json"
         )
 

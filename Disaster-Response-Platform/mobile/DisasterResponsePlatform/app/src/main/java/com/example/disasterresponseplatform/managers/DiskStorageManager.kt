@@ -2,6 +2,7 @@ package com.example.disasterresponseplatform.managers
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import java.io.Serializable
 
 object DiskStorageManager {
@@ -32,6 +33,7 @@ object DiskStorageManager {
      */
     fun checkToken(): Boolean{
         val token = getKeyValue("token")
+        Log.i("token", "Token $token")
         return (hasKey("token") && !token.isNullOrEmpty())
     }
 

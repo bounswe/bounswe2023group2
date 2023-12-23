@@ -135,8 +135,7 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
      */
     fun postNeedRequest(postRequest: NeedBody.NeedRequestBody, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val headers = mapOf(
                 "Authorization" to "bearer $token",
                 "Content-Type" to "application/json"

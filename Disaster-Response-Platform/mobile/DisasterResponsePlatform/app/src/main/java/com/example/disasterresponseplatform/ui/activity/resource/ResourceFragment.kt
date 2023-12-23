@@ -29,7 +29,6 @@ import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
-import com.example.disasterresponseplatform.ui.activity.need.AddNeedFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.GeneralUtil
@@ -114,8 +113,7 @@ class ResourceFragment(
      * If it is created resource should be null, else resource should be the clicked item
      */
     private fun addResource(){
-        val token = DiskStorageManager.getKeyValue("token")
-        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addResourceFragment = AddResourceFragment(resourceViewModel,null)
                 addFragment(addResourceFragment,"AddResourceFragment")
@@ -371,7 +369,7 @@ class ResourceFragment(
         // Find type-specific fields and subType list
         val networkManager = NetworkManager()
         val headers = mapOf(
-            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            //"Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"), //TODO
             "Content-Type" to "application/json"
         )
 

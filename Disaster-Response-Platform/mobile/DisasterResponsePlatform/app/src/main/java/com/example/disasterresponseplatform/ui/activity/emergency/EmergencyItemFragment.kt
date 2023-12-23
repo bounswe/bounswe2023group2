@@ -121,7 +121,7 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
     private fun arrangeButtons(){
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (!token.isNullOrEmpty() and (username == emergency.created_by)) {
+        if (DiskStorageManager.checkToken() and (username == emergency.created_by)) {
             binding.btnEdit.setOnClickListener {
                 editEmergency()
             }

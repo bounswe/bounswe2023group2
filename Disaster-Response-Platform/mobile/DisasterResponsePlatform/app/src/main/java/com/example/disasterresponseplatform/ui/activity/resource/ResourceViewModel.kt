@@ -129,8 +129,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
      */
     fun postResourceRequest(postRequest: ResourceBody.ResourceRequestBody, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val headers = mapOf(
                 "Authorization" to "bearer $token",
                 "Content-Type" to "application/json"

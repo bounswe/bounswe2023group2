@@ -113,8 +113,7 @@ class ActionFragment(
      * It opens add Action fragment if user is authenticated, else warns the user
      */
     private fun addAction(){
-        val token = DiskStorageManager.getKeyValue("token")
-        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val addActionFragment = AddActionFragment(actionViewModel,null)
             addFragment(addActionFragment,"AddActionFragment")
         }

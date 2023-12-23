@@ -115,7 +115,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
 
-        if (token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             binding.iconReliability.visibility = View.GONE
             binding.tvReliability.visibility = View.GONE
             binding.btnUpvote.visibility = View.GONE
@@ -153,7 +153,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         }
 
         // Arrange vote buttons and set on click listener
-        arrangeVoteButtons(token)
+        arrangeVoteButtons()
         binding.btnUpvote.setOnClickListener {
             voteEvent(token, "up")
         }
@@ -166,12 +166,12 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         }
     }
 
-    private fun arrangeVoteButtons(token: String?) {
+    private fun arrangeVoteButtons() {
 
         val btnUpvote = binding.btnUpvote
         val btnDownvote = binding.btnDownvote
 
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             voteViewModel.checkvote("events", event._id)
             voteViewModel.getLiveDataMessage().observe(requireActivity!!) {
                 when (it) {
