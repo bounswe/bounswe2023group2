@@ -114,7 +114,8 @@ def get_needs(
             "created_at": 1,
             "last_updated_at": 1,
             "upvote": 1,
-            "downvote": 1
+            "downvote": 1,
+            "open_address":1
             # Add other fields if necessary
         }
     

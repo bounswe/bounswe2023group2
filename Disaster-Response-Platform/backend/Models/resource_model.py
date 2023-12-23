@@ -35,6 +35,7 @@ class Resource(BaseModel):
     actions_used: List[ActionHistory]= Field(default=None)
     action_list: List[str]= Field(default=[])
     recurrence: str= Field(default = None)
+    open_address :str =Field(default = None)
 
     @validator('occur_at', pre=True)
     def convert_str_to_datetime(cls, value):
