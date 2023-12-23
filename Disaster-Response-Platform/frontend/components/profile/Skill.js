@@ -1,5 +1,5 @@
 import { PiCertificate } from "react-icons/pi";
-import { Button } from "@nextui-org/react";
+import { Link } from "@nextui-org/react";
 
 export default function Skill({ skill, topic, deleteSelf, noedit }) {
 	return (
@@ -10,8 +10,14 @@ export default function Skill({ skill, topic, deleteSelf, noedit }) {
 					<span className="text-sm text-gray-600 mr-2 flex-grow"> {skill[topic.primary]} ({skill[topic.secondary]}) </span>
 				}
 				{
-					topic.certificate ? (
-						<Button isIconOnly className="text-lg w-6 h-6 rounded-sm mx-2"> <PiCertificate /> </Button>
+					skill[topic.certificate] ? (
+						<Link
+						      isExternal
+						      showAnchorIcon
+						      href={skill[topic.certificate]}
+						      anchorIcon={<PiCertificate className="text-2xl"/>}
+						    >
+						    </Link>
 					) : null
 				}
 				{noedit ? null : 
