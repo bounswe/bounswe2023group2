@@ -131,6 +131,7 @@
     <string name="debris_button">There Is Someone Under Debris</string>
     <string name="fire_button">Immediate Response to Fire Required</string>
     <string name="medical_button">Medical Team Urgently Needed</string>
+    <string name="select_1_5">Urgency: Low-Priority(1) to Critical(5) </string>
 
 
     <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
