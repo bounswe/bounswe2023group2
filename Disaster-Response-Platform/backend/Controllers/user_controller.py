@@ -102,7 +102,9 @@ async def get_self_info(response:Response,user: UserProfile = Depends(authentica
                         last_name=user.last_name,
                         phone_number=user.phone_number,
                         is_email_verified=user.is_email_verified,
-                        private_account=user.private_account)
+                        private_account=user.private_account,
+                       user_role= user.user_role,
+                       proficiency=user.proficiency)
 
     return user_info
   
