@@ -123,11 +123,20 @@ def set_verified(entity_type: EntityTypeEnum, entity_id: str, username: str, vot
     #vote unvotesa sil 
     # ama eski verified userin verificationi da olmuyo problemmm
     if vote=="unvote":   #delete verification info from entity
-        res=entity_collection.update_one({"entityType": entity_type, "entityID": entity_id, "verified_voter_username": username}, 
-        {"$set": { 
-        "verified_voter_username": None,
-        "verified_vote_type": None }
-         }  )
+
+        res = entity_collection.update_one(
+            {
+                "_id": ObjectId(entity_id),
+                "verified_voter_username": username
+            },
+            {
+                "$set": {
+                    "verified_voter_username": None,
+                    "verified_vote_type": None
+                }
+            }
+        )
+
         return True
     
     #entity yi verified olarak guncelleyip voter usernamei guncelle
