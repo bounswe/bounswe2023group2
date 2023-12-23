@@ -13,7 +13,7 @@ from Database.mongo import MongoDB
 from Models.user_model import *
 from Models.search_model import *
 from Services.build_API_returns import create_json_for_error
-
+import requests
 router = APIRouter()
 db = MongoDB.getInstance()
 userDb = MongoDB.get_collection('authenticated_user')
@@ -30,26 +30,33 @@ async def search_users(response:Response,query: str, current_user: UserProfile =
 
 
 
-# @router.get("/actions/{query}", responses={
-#     status.HTTP_200_OK: {"model": SearchResults},
-#     status.HTTP_403_FORBIDDEN: {"model": Error}
-# })
-# async def search_actions(response:Response,query: str, current_user: UserProfile = Depends(authentication_service.get_current_user)):
-#     userList = search_service.search_users(query)
+@router.get("/actions/{query}", responses={
+    status.HTTP_200_OK: {"model": SearchResults},
+    status.HTTP_403_FORBIDDEN: {"model": Error}
+})
+async def search_actions(response:Response,query: str, current_user: UserProfile = Depends(authentication_service.get_current_user)):
+    try:
+        actionList = search_service.search_actions(query)
+        return  actionList
+    except ValueError as err:
+        error= Error(ErrorMessage="Action Search Failed", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+
+        return error
+
     
 
-#     return  userList
 
-
-# @router.get("/events/{query}", responses={
-#     status.HTTP_200_OK: {"model": SearchResults},
-#     status.HTTP_403_FORBIDDEN: {"model": Error}
-# })
-# async def search_events(response:Response,query: str, current_user: UserProfile = Depends(authentication_service.get_current_user)):
-#     userList = search_service.search_events(query)
+@router.get("/events/{query}", responses={
+    status.HTTP_200_OK: {"model": SearchResults},
+    status.HTTP_403_FORBIDDEN: {"model": Error}
+})
+async def search_events(response:Response,query: str, current_user: UserProfile = Depends(authentication_service.get_current_user)):
+    userList = search_service.search_events(query)
     
 
-#     return  userList
+    return  userList
 
 
 @router.get("/needs/{query}", responses={
