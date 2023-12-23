@@ -31,7 +31,7 @@ async def create_upload_file(file: UploadFile, response:Response, current_user: 
     status.HTTP_200_OK: {"model": str},
     status.HTTP_400_BAD_REQUEST: {"model": Error}
 })
-async def create_download_file( 
+async def create_resource_download_file( 
     response:Response, 
     active: Optional[bool] = Query(None, description="Filter by active status"),
     types: List[str] = Query(None, description="Filter by types of resources"),
@@ -40,7 +40,8 @@ async def create_download_file(
     y: float = Query(None, description="Y coordinate for distance calculation"),
     distance_max: float = Query(None, description="Maximum distance for filtering"),
     sort_by: str = Query('created_at', description="Field to sort by"),
-    order: Optional[str] = Query('desc', description="Sort order")):
+    order: Optional[str] = Query('desc', description="Sort order"),
+    activity_type: str = Query(None, description="It can be 'Need' or 'Resource' ")):
     if types:
         types_list = types[0].split(',')
     else:
@@ -59,7 +60,8 @@ async def create_download_file(
             y=y,
             distance_max=distance_max,
             sort_by=sort_by,
-            order=order
+            order=order,
+            activity_type=activity_type
         )
         response.status_code = HTTPStatus.OK
         return {"url": result }
@@ -69,7 +71,8 @@ async def create_download_file(
         response.response_model= Error
         return error
    
-   
+
+  
 @router.delete("/deletefile/{file_name}", responses ={
     HTTPStatus.OK: {"model": str},
     HTTPStatus.BAD_REQUEST: {"model": Error}
