@@ -3,6 +3,7 @@ package com.example.disasterresponseplatform.ui.profile
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -13,13 +14,18 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
@@ -37,11 +43,13 @@ import com.example.disasterresponseplatform.databinding.ProfileEditSkillBinding
 import com.example.disasterresponseplatform.databinding.ProfileEditSocialMediaBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.utils.ImageUploadTask
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
+import java.io.ByteArrayOutputStream
 
 class EditProfileFragment : Fragment() {
 
@@ -63,15 +71,19 @@ class EditProfileFragment : Fragment() {
         "Content-Type" to "application/json"
     )
     private val gson = Gson()
+    private var imageChanged = false
 
-    private val changeImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private var changeImage: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result -> onResult(result) }
+
+    private fun onResult(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK) {
             try {
                 val data: Intent? = result.data
                 val selectedImage: Uri? = data?.data
-                globalProfileImage.setImageURI(selectedImage)
+                selectedImage.let { uri -> Glide.with(requireContext()).load(uri).into(globalProfileImage) }
+                imageChanged = true
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Too big file", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Profile picture could not be updated", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -481,6 +493,83 @@ class EditProfileFragment : Fragment() {
         }
     }
 
+    private fun updateOptional() {
+        binding.apply {
+            val backendLevelArray: Array<String> =
+                arrayOf("ilk", "orta", "lise", "yuksekokul", "universite")
+            val obody = ProfileOptionalBody(
+                username = profileUsername.text.toString(),
+                dateOfBirth = date.ifBlank { null },
+                nationality = if (profileNationality.text.isBlank()) null else profileNationality.text.toString(),
+                identityNumber = if (profileIdNumber.text.isBlank()) null else profileIdNumber.text.toString(),
+                education = if (spEducation.text.isBlank()) null else backendLevelArray[education],
+                healthCondition = if (profileHealthCondition.text.isBlank()) null else profileHealthCondition.text.toString(),
+                bloodType = if (spBloodType.text.isBlank()) null else resources.getStringArray(R.array.blood_types)[bloodType],
+                address = if (profileAddress.text.isBlank()) null else profileAddress.text.toString(),
+                profilePicture = user.profilePhoto
+            )
+            val json2 = gson.toJson(obody)
+            println("gonderiyorum")
+            println(json2)
+            val requestBody2 =
+                json2.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+            networkManager.makeRequest(
+                endpoint = Endpoint.ME_OPTIONAL_DELETE,
+                requestType = RequestType.DELETE,
+                headers = headers,
+                callback = object : retrofit2.Callback<ResponseBody> {
+                    override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Network error: ${t.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        println("optional fail")
+                        saveEnded()
+                    }
+
+                    override fun onResponse(
+                        call: retrofit2.Call<ResponseBody>,
+                        response: retrofit2.Response<ResponseBody>
+                    ) {
+                        println("Delete response:")
+                        println(response.code())
+                        println(response.body())
+                        networkManager.makeRequest(
+                            endpoint = Endpoint.ME_OPTIONAL_SET,
+                            requestType = RequestType.POST,
+                            headers = headers,
+                            requestBody = requestBody2,
+                            callback = object : retrofit2.Callback<ResponseBody> {
+                                override fun onFailure(
+                                    call: retrofit2.Call<ResponseBody>,
+                                    t: Throwable
+                                ) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Network error: ${t.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
+                                    println("delete fail")
+                                    saveEnded()
+                                }
+
+                                override fun onResponse(
+                                    call: retrofit2.Call<ResponseBody>,
+                                    response: retrofit2.Response<ResponseBody>
+                                ) {
+                                    println("delete response")
+                                    saveEnded()
+                                }
+                            }
+                        )
+                    }
+                }
+            )
+        }
+    }
+
     private fun saveChanges(user: AuthenticatedUser) {
         binding.apply {
             //                when (user) {
@@ -495,6 +584,27 @@ class EditProfileFragment : Fragment() {
                 phoneNumber = profilePhoneNumber.text.toString(),
                 privateAccount = !profileInfoVisible.isChecked
             )
+            // send image data as multipart
+            println("uploading image")
+            if (imageChanged)
+                ImageUploadTask(globalProfileImage.drawable.toBitmap(), user.username, object : ImageUploadTask.OnImageUploadListener {
+                    override fun onImageUploadSuccess(response: String) {
+                        println("Image upload successful")
+                        var url = response.substring(response.indexOf("\"url\":\"") + 7)
+                        url = url.substring(0, url.indexOf("\""))
+                        url = url.replace("\\/", "/")
+                        user.profilePhoto = url
+                        updateOptional()
+                    }
+
+                    override fun onImageUploadFailure(errorMessage: String) {
+                        println("Image upload error: $errorMessage")
+                        Toast.makeText(requireContext(), "Profile picture could not be updated", Toast.LENGTH_LONG).show()
+                        updateOptional()
+                    }
+                }).execute()
+            else updateOptional()
+
             val json = gson.toJson(body)
             val requestBody =
                 json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
@@ -553,75 +663,7 @@ class EditProfileFragment : Fragment() {
                         }
                     }
                 )
-            } else saveEndCount++
-
-            val backendLevelArray: Array<String> = arrayOf("ilk", "orta", "lise", "yuksekokul", "universite")
-            val obody = ProfileOptionalBody(
-                username = profileUsername.text.toString(),
-                dateOfBirth = date.ifBlank { null },
-                nationality = if (profileNationality.text.isBlank()) null else profileNationality.text.toString(),
-                identityNumber = if (profileIdNumber.text.isBlank()) null else profileIdNumber.text.toString(),
-                education = if (spEducation.text.isBlank()) null else backendLevelArray[education],
-                healthCondition = if (profileHealthCondition.text.isBlank()) null else profileHealthCondition.text.toString(),
-                bloodType = if (spBloodType.text.isBlank()) null else resources.getStringArray(R.array.blood_types)[bloodType],
-                address = if (profileAddress.text.isBlank()) null else profileAddress.text.toString()
-            )
-            val json2 = gson.toJson(obody)
-            println("gonderiyorum")
-            println(json2)
-            val requestBody2 =
-                json2.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-            networkManager.makeRequest(
-                endpoint = Endpoint.ME_OPTIONAL_DELETE,
-                requestType = RequestType.DELETE,
-                headers = headers,
-                callback = object : retrofit2.Callback<ResponseBody> {
-                    override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Network error: ${t.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        println("optional fail")
-                        saveEnded()
-                    }
-
-                    override fun onResponse(
-                        call: retrofit2.Call<ResponseBody>,
-                        response: retrofit2.Response<ResponseBody>
-                    ) {
-                        println("Delete response:")
-                        println(response.code())
-                        println(response.body())
-                        networkManager.makeRequest(
-                            endpoint = Endpoint.ME_OPTIONAL_SET,
-                            requestType = RequestType.POST,
-                            headers = headers,
-                            requestBody = requestBody2,
-                            callback = object : retrofit2.Callback<ResponseBody> {
-                                override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Network error: ${t.message}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-
-                                    println("delete fail")
-                                    saveEnded()
-                                }
-
-                                override fun onResponse(
-                                    call: retrofit2.Call<ResponseBody>,
-                                    response: retrofit2.Response<ResponseBody>
-                                ) {
-                                    println("delete response")
-                                    saveEnded()
-                                }
-                            }
-                        )
-                    }
-                }
-            )
+            } else saveEnded()
 
 
             // social media
@@ -822,6 +864,7 @@ class EditProfileFragment : Fragment() {
                     changeImage.launch(intent)
                 } catch (e: Exception) {
                     Toast.makeText(requireContext(), "Some unexpected error occurred", Toast.LENGTH_LONG).show()
+                    println(e)
                 }
             }
 
@@ -851,7 +894,8 @@ class EditProfileFragment : Fragment() {
     private fun saveEnded() {
         saveEndCount++
         if (saveEndCount == 3 + socialMediaCount + skillCount + languageCount + professionCount) {
-            Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
+            println("WHUTT")
+//            Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
         }
     }

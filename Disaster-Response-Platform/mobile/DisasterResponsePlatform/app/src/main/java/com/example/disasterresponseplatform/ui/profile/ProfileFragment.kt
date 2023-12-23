@@ -197,6 +197,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                     user.healthCondition = res.healthCondition
                                     user.bloodType = res.bloodType
                                     user.address = res.address
+                                    user.profilePhoto = res.profilePicture
                                 } else {
                                     println("res null")
                                 }
