@@ -109,18 +109,18 @@ export const getServerSideProps = withIronSessionSsr(
     const topics = [
       {"api_url": "professions", "key": "user_professions",
         "title": "Meslekler", "primary": "profession", "secondary": "profession_level", "is_link": false,
-        "post": "/add-profession", "delete": "",
+        "post": "professions/add-profession", "delete": "delete-professions",
         "options": ["amateur", "pro", "certified pro"]},
       {"api_url": "languages", "key": "user_languages",
         "title": "Diller", "primary": "language", "secondary": "language_level", "is_link": false,
-        "post": "/add-language", "delete": "/delete-language",
+        "post": "languages/add-language", "delete": "languages/delete-language",
         "options": ["beginner", "intermediate", "advanced", "native"]},
       {"api_url": "socialmedia-links", "key": "user_socialmedia_links",
         "title": "Sosyal Medya", "primary": "platform_name", "secondary": "profile_URL", "is_link": true,
-        "post": "/add-socialmedia-link", "delete": ""},
+        "post": "socialmedia-links/add-socialmedia-link", "delete": "delete-socialmedia-links"},
       {"api_url": "skills", "key": "user_skills",
         "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", certificate: "skill_document", "is_link": false,
-        "post": "/add-skill", "delete": "",
+        "post": "skills/add-skill", "delete": "delete-skill",
         "options": ["beginner", "basic", "intermediate", "skilled", "expert"]},
     ]
 

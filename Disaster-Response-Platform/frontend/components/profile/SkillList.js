@@ -35,7 +35,7 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
       method: 'POST',
       headers: {
       "Content-Type": "application/json",
-      }, body: JSON.stringify({skill: newSkill, url: `${topic.api_url}${topic.post}`})
+      }, body: JSON.stringify({skill: newSkill, url: `${topic.post}`})
     });
 
     if (!response.ok) {
@@ -57,7 +57,7 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
   async function deleteSkill(event, skill) {
     event.preventDefault();
 
-    if (topic.certificate) {
+    if (topic.certificate && skill[topic.certificate]) {
       const filename = skill[topic.certificate].substring(skill[topic.certificate].lastIndexOf('/')+1);
       const upload_response = await fetch(`/api/delete-file/${filename}`, { method: 'DELETE' } );
 
@@ -71,7 +71,7 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
       method: 'POST',
       headers: {
       "Content-Type": "application/json",
-      }, body: JSON.stringify({skill: skill, url: `${topic.api_url}${topic.delete}`})
+      }, body: JSON.stringify({skill: skill, url: `${topic.delete}`})
     });
 
     if (!response.ok) {
