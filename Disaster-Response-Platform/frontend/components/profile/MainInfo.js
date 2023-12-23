@@ -18,8 +18,9 @@ export default function MainInfo({ className, info, report, onOpen, contact=true
 						<br /> <span className="text-sm lg:text-md"> {proficiency.details} </span>
 					</>
 				) : null}
-				<Divider className="my-6" />
-				<h3 class="object-top text-center text-xl mb-2"> {labels.profile_pages.contact_info} </h3>
+				<Divider className="mt-6" />
+				<h3 class="object-top text-center text-xl my-1"> {labels.profile_pages.contact_info} </h3>
+				<Divider className="mb-3"  />
 				{contact ? (
 					<>
 						<span className="text-lg lg:text-xl">{name}</span>
