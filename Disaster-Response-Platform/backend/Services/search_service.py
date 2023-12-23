@@ -138,7 +138,7 @@ def search_resources(query: str)-> List[dict]:
     if results:
         return SearchList(results=results)
     try:
-        query= translate(query)
+        #query= translate(query)
 
         resources = resource_collection.find({}, {"_id": 0, "description": 1, "type": 1, "details.subtype":1}).limit(100)
         resources= list(resources)
