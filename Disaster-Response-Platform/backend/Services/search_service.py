@@ -27,7 +27,7 @@ def translate(query):
     querystring = {"text":{query},"lang":"en"}
     headers = {
         "content-type": "application/json",
-        "X-RapidAPI-Key": "ae2a5516b0msh08809beba0c158bp1902d5jsndcce710a1fea", #bunları config e taşı
+        "X-RapidAPI-Key": config.X_RAPIDAPI_KEY, #bunları config e taşı
         "X-RapidAPI-Host": "google-translate-api8.p.rapidapi.com"
     }
 
@@ -62,7 +62,7 @@ def process_and_fetch_users(query, field_name, list, type):
         name_relevance_pairs = zip(list, relevances)
         filtered_pairs = filter(lambda x: x[1] > 0.15, name_relevance_pairs)
         sorted_pairs = sorted(filtered_pairs, key=lambda x: x[1], reverse=True)
-        print("pairs", sorted_pairs)
+
         relevant_names = [name for name, _ in sorted_pairs]
 
         if type==0:        
@@ -70,7 +70,7 @@ def process_and_fetch_users(query, field_name, list, type):
             return [UserInfo(**convert_objectid(user)) for user in relevant_users]
         elif type==1 :
             if field_name=="details_type":
-                relevant_resources = resource_collection.find({"details.type": {"$in": relevant_names}})
+                relevant_resources = resource_collection.find({"details.subtype": {"$in": relevant_names}})
             else:
                 relevant_resources= resource_collection.find({field_name: {"$in": relevant_names}})
                 relevant_resources = sorted(relevant_resources, key=lambda x: relevant_names.index(x[field_name]))
@@ -78,7 +78,7 @@ def process_and_fetch_users(query, field_name, list, type):
             return [Resource(**resource) for resource in relevant_resources]
         elif type==2:
             if field_name=="details_type":
-                relevant_needs = need_collection.find({"details.type": {"$in": relevant_names}})
+                relevant_needs = need_collection.find({"details.subtype": {"$in": relevant_names}})
             else:
                 relevant_needs= need_collection.find({field_name: {"$in": relevant_names}})
                 relevant_needs = sorted(relevant_needs, key=lambda x: relevant_names.index(x[field_name]))
@@ -138,18 +138,21 @@ def search_resources(query: str)-> List[dict]:
     if results:
         return SearchList(results=results)
     try:
-        #query= translate(query)
+        query= translate(query)
 
         resources = resource_collection.find({}, {"_id": 0, "description": 1, "type": 1, "details.subtype":1}).limit(100)
         resources= list(resources)
         detail_types = [resource.get("details", {}).get("subtype") for resource in resources if resource.get("details", {}).get("subtype") is not None]
         top_resources_list = process_and_fetch_users(query,"details_type", detail_types , 1)
+ 
         if not top_resources_list:
             descriptions = types = [resource["description"] for resource in resources if resource.get("description") is not None]
-            top_resources_list = process_and_fetch_users(query,"description", descriptions , 1)  
+            top_resources_list = process_and_fetch_users(query,"description", descriptions , 1) 
+   
             if not top_resources_list:
                 types = [resource["type"] for resource in resources]
                 top_resources_list = process_and_fetch_users(query,"type", types, 1)  
+      
         return SearchList(results=top_resources_list) 
     except requests.RequestException as e:
         raise HTTPException(status_code=400, detail=str(e)) 
@@ -227,7 +230,7 @@ def search_events(query: str)-> List[dict]:
     try:
         events = events_collection.find({}, {"_id": 0, "event_type": 1, "short_description": 1}).limit(100)
         events= list(events)
-        print(events)
+  
         descriptions = [event["short_description"] for event in events if event.get("short_description") is not None]
         top_events_list = process_and_fetch_users(query,"short_description", descriptions , 4)  
         if not top_events_list:

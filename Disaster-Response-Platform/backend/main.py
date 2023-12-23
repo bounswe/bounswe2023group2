@@ -10,8 +10,8 @@ from Controllers import (resource_controller, user_controller, uprofile_optinfo_
                          uprofile_skills_controller, need_controller, event_controller, user_roles_controller, 
                          form_fields_controller, report_controller, feedback_controller, uprofile_admin_controller,
                          action_controller, file_controller, email_verification_controller, geocode_controller,
-                         action_controller_v2, file_controller, emergency_controller,
-                         forgot_password_controller,search_controller, recurrence_controller, simple_annotation_controller)
+                         action_controller_v2, file_controller,emergency_controller
+                         ,forgot_password_controller,search_controller, recurrence_controller, simple_annotation_controller)
 
 
 from fastapi.responses import JSONResponse
