@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Body, Query
-from Services.email_verification_service import send_verification_email, verify_user
+from Services.email_verification_service import send_verification_email, verify_user, check_verified
 from Services.authentication_service import get_current_username, get_current_email
 
 router = APIRouter()
@@ -18,3 +18,15 @@ async def verify_email(token: str = Query(None, description="Verification token 
         return {"message": "Email verified successfully."}
     else:
         raise HTTPException(status_code=400, detail="Invalid token or token expired")
+
+@router.get("/check", status_code=200)
+async def check_verification_of_user(username: str = Depends(get_current_username)):
+    status = check_verified(username)
+    if status == "verified":
+        return {"message": "verified"}
+    elif status == "not verified":
+        return {"message": "not verified"}
+    else:
+        raise HTTPException(status_code=404, detail="user not found")
+
+

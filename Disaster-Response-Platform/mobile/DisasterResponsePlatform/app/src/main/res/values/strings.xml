@@ -57,10 +57,15 @@
     <string name="act_urgency">Urgency:</string>
     <string name="act_address">Address:</string>
     <string name="act_details">Details:</string>
+    <string name="act_short_note">Short Description:</string>
+    <string name="act_phone_number">Phone Number:</string>
     <string name="act_edit">Edit</string>
     <string name="act_delete">Delete</string>
     <string name="act_navigate">Navigate</string>
     <string name="act_show_on_map">Show On Map</string>
+    <string name="act_reliability">Give Feedback About Reliability:</string>
+    <string name="act_upvote">Reliable</string>
+    <string name="act_downvote">Not Reliable</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sort &amp; Filter</string>
@@ -117,11 +122,16 @@
     <string name="field_quantity">Quantity</string>
     <string name="field_coordinate_x">X Coordinate</string>
     <string name="field_coordinate_y">Y Coordinate</string>
+    <string name="field_description">Description</string>
     <string name="submit">Submit</string>
     <string name="edit_need">Edit Need</string>
     <string name="edit_resource">Edit Resource</string>
     <string name="edit_action">Edit Action</string>
     <string name="save_changes">Save Changes</string>
+    <string name="debris_button">There Is Someone Under Debris</string>
+    <string name="fire_button">Immediate Response to Fire Required</string>
+    <string name="medical_button">Medical Team Urgently Needed</string>
+
 
     <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
     <string name="sign_up">SIGN UP</string>
@@ -140,6 +150,8 @@
     <string name="enter_verification_code">Enter Verification Code</string>
     <string name="send_verification_code">SEND VERIFICATION CODE</string>
     <string name="resend_code">RESEND CODE</string>
+    <string name="email_verification_title">E-mail Verification</string>
+    <string name="email_verification_description">To verify your e-mail address, enter the verification code sent to you by e-mail.</string>
     <string name="full_name">Full Name</string>
 
     <!-- MAP -->
@@ -187,6 +199,7 @@
 
     <!-- NOTIFICATION -->
     <string name="add_notification">Add Notification</string>
+    <string name="proficiency">Proficiency</string>
 
     <!-- EVENT -->
     <string name="short_note">Short Description</string>

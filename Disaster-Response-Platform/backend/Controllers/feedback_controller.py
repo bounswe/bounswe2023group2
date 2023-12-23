@@ -1,7 +1,7 @@
 import json
 from http import HTTPStatus
 
-from fastapi import APIRouter, HTTPException, Response, Depends
+from fastapi import APIRouter, HTTPException, Response, Depends, Query
 from Models.feedback_model import Feedback, VoteUpdate
 import Services.feedback_service as feedback_service
 
@@ -45,3 +45,12 @@ def set_downvote(voteUpdate: VoteUpdate, response: Response, current_user: str =
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
     
+@router.get("/check", status_code=200)
+def check(entityType: str = Query(None, description="Entity type (needs, resources, actions, events)"),
+            entityID: str = Query(None, description="ID of the entity"), 
+            current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        response = feedback_service.check_feeedback(entityType, entityID, current_user)
+        return {"message": response}
+    except ValueError as err:
+        raise HTTPException(status_code = 500, detail="An error occured while checking the user feedback")

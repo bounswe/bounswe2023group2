@@ -62,6 +62,11 @@ data class UsersMeResponse(
     val privateAccount: Boolean,
 )
 
+data class UserRolesResponse(
+@SerializedName("user_role")
+    val user_role: String,
+)
+
 data class UsersMeOptionalResponse(
     @SerializedName("username")
     val username: String,
@@ -103,6 +108,11 @@ data class ProfileOptionalBody(
     @SerializedName("health_condition") val healthCondition: String?,
     @SerializedName("blood_type") val bloodType: String?,
     @SerializedName("Address") val address: String?,
+)
+
+data class ProfficiencyRequest(
+    @SerializedName("proficiency") val proficiency: String,
+    @SerializedName("details") val details: String,
 )
 
 data class Skill(

@@ -57,10 +57,15 @@
     <string name="act_urgency">Aciliyet:</string>
     <string name="act_address">Adres:</string>
     <string name="act_details">Detaylar:</string>
+    <string name="act_phone_number">Telefon Numarası:</string>
+    <string name="act_short_note">Kısa Açıklama:</string>
     <string name="act_edit">Düzenle</string>
     <string name="act_delete">Sil</string>
     <string name="act_navigate">Yol Tarifi</string>
     <string name="act_show_on_map">Haritada Göster</string>
+    <string name="act_reliability">Güvenilirlik Hakkında Geri Bildirim Ver:</string>
+    <string name="act_upvote">Güvenilir</string>
+    <string name="act_downvote">Güvenilmez</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sırala &amp; Filtrele</string>
@@ -117,11 +122,15 @@
     <string name="field_quantity">Miktar</string>
     <string name="field_coordinate_x">X Koordinatı</string>
     <string name="field_coordinate_y">Y Koordinatı</string>
+    <string name="field_description">Açıklama</string>
     <string name="submit">Gönder</string>
     <string name="edit_need">İhtiyacı Düzenle</string>
     <string name="edit_resource">Kaynağı Düzenle</string>
     <string name="edit_action">Aksiyonu Düzenle</string>
     <string name="save_changes">Değişiklikleri Kaydet</string>
+    <string name="debris_button">Enkaz Altında Olan Var</string>
+    <string name="fire_button">Yangına Acil Müdahale Gerekli</string>
+    <string name="medical_button">Acilen Sağlık Ekibine İhtiyaç Var</string>
 
     <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
     <string name="sign_up">ÜYE OL</string>
@@ -140,6 +149,8 @@
     <string name="enter_verification_code">Doğrulama Kodunu Gir</string>
     <string name="send_verification_code">DOĞRULAMA KODU GÖNDER</string>
     <string name="resend_code">KODU TEKRAR GÖNDER</string>
+    <string name="email_verification_title">E-posta Doğrulama</string>
+    <string name="email_verification_description">E-posta adresinizi doğrulamak için size e-posta olarak gönderilen doğrulama kodunu giriniz.</string>
     <string name="full_name">İsim Soyisim</string>
 
     <!-- MAP -->
@@ -187,6 +198,7 @@
 
     <!-- NOTIFICATION -->
     <string name="add_notification">Bildirim Ekle</string>
+    <string name="proficiency">Yetkinlik</string>
 
     <!-- EVENT -->
     <string name="short_note">Kısa Açıklama</string>

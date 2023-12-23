@@ -192,21 +192,32 @@ class NetworkManager {
                     call.enqueue(callback)
                 }
             }
-            Endpoint.GETUSER -> {
+            Endpoint.EMAIL_VERIFICATION_VERIFY -> {
                 Log.d("RESPONSE", callback.toString())
-                id?.let {
-                    val call = api.getData("${endpoint.path}/$id", headers)
-                    call.enqueue(callback)
+                if (queries.isNullOrEmpty()) {
+                    Log.d("RESPONSE", callback.toString())
+                    requestBody?.let { api.postData(endpoint.path, headers, it) }
+                        ?.enqueue(callback)
+                } else {
+                    Log.d("RESPONSE", callback.toString())
+                    requestBody?.let { api.postQueryData(endpoint.path, headers, it, queries) }
+                        ?.enqueue(callback)
                 }
             }
             else -> {
                 when (requestType) {
                     RequestType.GET -> {
-                        Log.d("RESPONSE", callback.toString())
                         var endpoint = endpoint.path
                         if (id != null) endpoint += "/$id"
-                        val call = api.getData(endpoint, headers)
-                        call.enqueue(callback)
+                        if (queries.isNullOrEmpty()) {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getData(endpoint, headers)
+                            call.enqueue(callback)
+                        } else {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getQueryData(endpoint, headers, queries)
+                            call.enqueue(callback)
+                        }
                     }
                     RequestType.POST -> {
                         Log.d("RESPONSE", callback.toString())
@@ -259,6 +270,14 @@ interface ApiService {
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
         @Body requestBody: RequestBody,
+    ): Call<ResponseBody>
+
+    @POST("{endpoint}")
+    fun postQueryData(
+        @Path("endpoint") endpoint: String,
+        @HeaderMap headers: Map<String, String>,
+        @Body requestBody: RequestBody,
+        @QueryMap queries: Map<String, String>?
     ): Call<ResponseBody>
 
     @PUT("{endpoint}")
