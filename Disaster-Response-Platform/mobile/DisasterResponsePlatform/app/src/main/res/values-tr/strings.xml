@@ -58,10 +58,14 @@
     <string name="act_address">Adres:</string>
     <string name="act_details">Detaylar:</string>
     <string name="act_phone_number">Telefon Numarası:</string>
+    <string name="act_short_note">Kısa Açıklama:</string>
     <string name="act_edit">Düzenle</string>
     <string name="act_delete">Sil</string>
     <string name="act_navigate">Yol Tarifi</string>
     <string name="act_show_on_map">Haritada Göster</string>
+    <string name="act_reliability">Güvenilirlik Hakkında Geri Bildirim Ver:</string>
+    <string name="act_upvote">Güvenilir</string>
+    <string name="act_downvote">Güvenilmez</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sırala &amp; Filtrele</string>
