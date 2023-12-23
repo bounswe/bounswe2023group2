@@ -7,7 +7,7 @@ class MongoDB(object):
     __instance = None
 
     @staticmethod
-    def getInstance(address="localhost", port=27017, username=None, password=None):
+    def getInstance(address="mongo", port=27017, username=None, password=None):
         """ Static access method. """
         if MongoDB.__instance == None:
             db_url = f"mongodb://{address}:{port}/"
@@ -37,7 +37,7 @@ class MongoDB(object):
     #
     #     user_id = user_file.insert_one(user)
 
-    def __init__(self, mongoUrl="mongodb://localhost:27017/"):
+    def __init__(self, mongoUrl="mongodb://mongo:27017/"):
         client = MongoClient(mongoUrl)
         db_list = client.list_database_names()
         self.db = client[DARP_DATABASE_NAME]
