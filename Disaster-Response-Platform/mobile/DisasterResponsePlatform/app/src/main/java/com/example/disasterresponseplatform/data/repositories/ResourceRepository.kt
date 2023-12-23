@@ -10,10 +10,9 @@ class ResourceRepository @Inject constructor(private val resourceDao: ResourceDa
         resourceDao.insertResource(resource)
     }
 
-    suspend fun deleteAllResources(){
-        resourceDao.deleteAllResources()
+    suspend fun deleteResource(id: Int){
+        resourceDao.deleteResource(id)
     }
-
 
     fun getAllResources(): List<Resource>? = resourceDao.getAllResources()
 }

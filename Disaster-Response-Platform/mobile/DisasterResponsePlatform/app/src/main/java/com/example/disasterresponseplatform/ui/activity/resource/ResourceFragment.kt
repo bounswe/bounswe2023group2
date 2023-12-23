@@ -28,8 +28,11 @@ import com.example.disasterresponseplatform.databinding.FragmentResourceBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
+import com.example.disasterresponseplatform.ui.activity.need.AddNeedFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.gson.Gson
@@ -113,8 +116,13 @@ class ResourceFragment(
     private fun addResource(){
         val token = DiskStorageManager.getKeyValue("token")
         if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
-            val addResourceFragment = AddResourceFragment(resourceViewModel,null)
-            addFragment(addResourceFragment,"AddResourceFragment")
+            if (GeneralUtil.isInternetAvailable(requireContext())){
+                val addResourceFragment = AddResourceFragment(resourceViewModel,null)
+                addFragment(addResourceFragment,"AddResourceFragment")
+            } else { // if there is no Connection
+                val addNoInternetFormFragment = AddNoInternetFormFragment(resourceViewModel)
+                addFragment(addNoInternetFormFragment,"AddNoInternetFormFragment")
+            }
         }
         else{
             Toast.makeText(context, "You need to Logged In !", Toast.LENGTH_LONG).show()

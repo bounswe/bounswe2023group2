@@ -6,12 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disasterresponseplatform.data.database.event.Event
+import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.EventBody
+import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.repositories.EventRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -157,7 +160,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
                                 liveDataEventID.postValue("-1")
                                 Log.d(
                                     "ResponseSuccess",
-                                    "Body: $errorBody Response Code: $responseCode"
+                                    "Error Body: $errorBody Response Code: $responseCode"
                                 )
                             }
                         }
@@ -227,10 +230,29 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
         return eventRepository.getAllEvents()
     }
 
-    suspend fun deleteAllEvents(){
+    fun deleteEvent(id: Int){
         viewModelScope.launch(Dispatchers.IO){
-            eventRepository.deleteAllEvents()
+            eventRepository.deleteEvent(id)
         }
+    }
+
+    /**
+     * This functions get the local object and prepare it as to send to the backend
+     */
+    fun prepareBodyFromLocal(event: Event): EventBody.EventPostBody {
+        val type =
+            when (event.type){
+                "Enkaz" -> "Debris"
+                "Altyapı" -> "Infrastructure"
+                "Afet" -> "Disaster"
+                "Yardım Noktası" -> "Help-Arrived"
+                else -> event.type
+            }
+        val additionalNotes = "No Internet Connection "+ event.additionalNotes + " address: " + event.address
+        val shortDescription = event.shortDescription
+        val createdTime = "${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}"
+        return EventBody.EventPostBody(type,null,true,0.0,0.0,null,null,
+            createdTime,shortDescription,additionalNotes)
     }
 
 }

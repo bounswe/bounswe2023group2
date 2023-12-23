@@ -1,7 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.repositories.NeedRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
-import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -41,10 +39,30 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
 
     fun getAllNeeds(): List<Need>? = needRepository.getAllNeeds()
 
-    fun deleteAllNeeds(){
+    fun deleteNeed(id: Int){
         viewModelScope.launch(Dispatchers.IO){
-            needRepository.deleteAllNeeds()
+            needRepository.deleteNeed(id)
         }
+    }
+
+    /**
+     * This functions get the local object and prepare it as to send to the backend
+     */
+    fun prepareBodyFromLocal(need: Need): NeedBody.NeedRequestBody {
+        val quantity = need.quantity
+        val type = need.type
+        val additionalNotes = need.additionalNotes
+        val address = need.address
+        val shortDescription = need.shortDescription
+        //details
+        val detailsMap = mutableMapOf<String, String>()
+        detailsMap["address"] = address
+        detailsMap["additionalNotes"] = additionalNotes
+        detailsMap["subtype"] = "No Internet Connection"
+        return NeedBody.NeedRequestBody(
+            shortDescription, quantity, 1, quantity, type, detailsMap,
+            0.0, 0.0, null, null, null, true, 0, 0
+        )
     }
 
 
@@ -95,8 +113,8 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                     } else {
                         val errorBody = response.errorBody()?.string()
                         if (errorBody != null) {
-                            var responseCode = response.code()
-                            Log.d("ResponseSuccess", "Body: $errorBody")
+                            val responseCode = response.code()
+                            Log.d("ResponseSuccess", "Error Body: $errorBody Response Code: $responseCode")
                         }
                     }
                 }

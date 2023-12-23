@@ -8,5 +8,6 @@ class EventCols {
         const val shortDescription: String = "shortDescription"
         const val creatorName: String = "creatorName"
         const val additionalNotes: String = "additionalNotes"
+        const val address: String = "address"
     }
 }

@@ -175,7 +175,7 @@ class NeedFragment(
         if (requireActivity == null){ // to handle error when user enters this page twice
             requireActivity = requireActivity()
         }
-        checkInternetConnection()
+        //checkInternetConnection()
         needViewModel.sendGetAllRequest(queries)
         needViewModel.getLiveDataResponse().observe(requireActivity!!){ needResponse ->
             arrangeRecyclerView(needResponse.needs)

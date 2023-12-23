@@ -14,8 +14,8 @@ interface EventDao {
     @Query("SELECT * FROM ${DatabaseInfo.EVENT}")
     fun getAllEvents(): List<Event>?
 
-    @Query("DELETE FROM ${DatabaseInfo.EVENT}")
-    fun deleteAllEvents()
+    @Query("DELETE FROM ${DatabaseInfo.EVENT} WHERE ${EventCols.id} = :id")
+    fun deleteEvent(id: Int)
 
 
 }

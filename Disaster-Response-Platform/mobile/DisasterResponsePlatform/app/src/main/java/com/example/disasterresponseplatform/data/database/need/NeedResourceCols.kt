@@ -9,5 +9,6 @@ class NeedResourceCols {
         const val creatorName: String = "creatorName"
         const val additionalNotes: String = "additionalNotes"
         const val quantity: String = "quantity"
+        const val address: String = "address"
     }
 }

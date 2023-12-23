@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.disasterresponseplatform.data.database.DatabaseInfo
+import com.example.disasterresponseplatform.data.database.need.NeedResourceCols
 
 @Entity(tableName = DatabaseInfo.EMERGENCY)
 data class Emergency(
@@ -17,5 +18,7 @@ data class Emergency(
     @ColumnInfo(name = EmergencyCols.shortDescription)
     val shortDescription: String,
     @ColumnInfo(name = EmergencyCols.additionalNotes)
-    val additionalNotes: String
+    val additionalNotes: String,
+    @ColumnInfo(name = EmergencyCols.address)
+    val address: String
 )

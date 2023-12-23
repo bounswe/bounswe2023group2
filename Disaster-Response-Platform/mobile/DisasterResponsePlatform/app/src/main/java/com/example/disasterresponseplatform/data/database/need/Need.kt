@@ -22,4 +22,6 @@ data class Need(
     val additionalNotes: String,
     @ColumnInfo(name = NeedResourceCols.quantity)
     val quantity: Int = 1,
+    @ColumnInfo(name = NeedResourceCols.address)
+    val address: String
 )

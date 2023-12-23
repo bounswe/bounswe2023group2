@@ -34,13 +34,31 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
         }
     }
 
-    suspend fun deleteAllResources(){
+    fun deleteResource(id: Int){
         viewModelScope.launch(Dispatchers.IO) {
-            resourceRepository.deleteAllResources()
+            resourceRepository.deleteResource(id)
         }
     }
 
     fun getAllResources(): List<Resource>? = resourceRepository.getAllResources()
+
+    /**
+     * This functions get the local object and prepare it as to send to the backend
+     */
+    fun prepareBodyFromLocal(resource: Resource): ResourceBody.ResourceRequestBody {
+        val quantity = resource.quantity
+        val type = resource.type
+        val additionalNotes = resource.additionalNotes
+        val address = resource.address
+        val shortDescription = resource.shortDescription
+        //details
+        val detailsMap = mutableMapOf<String, String>()
+        detailsMap["address"] = address
+        detailsMap["additionalNotes"] = additionalNotes
+        detailsMap["subtype"] = "No Internet Connection"
+        return ResourceBody.ResourceRequestBody(shortDescription,quantity,quantity,type,detailsMap,0.0,0.0,
+            null,null,null,true,0,0)
+    }
 
     private val networkManager = NetworkManager()
 
@@ -90,7 +108,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                         val errorBody = response.errorBody()?.string()
                         if (errorBody != null) {
                             var responseCode = response.code()
-                            Log.d("ResponseSuccess", "Body: $errorBody")
+                            Log.d("ResponseSuccess", "Error Body: $errorBody Response Code: $responseCode")
                         }
                     }
                 }

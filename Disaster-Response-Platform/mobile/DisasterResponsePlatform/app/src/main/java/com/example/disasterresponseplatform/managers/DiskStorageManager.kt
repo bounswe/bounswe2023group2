@@ -27,6 +27,22 @@ object DiskStorageManager {
         sharedPreferences.edit().remove(key).apply()
     }
 
+    /**
+     * Checks whether it has a not null token (user logs in)
+     */
+    fun checkToken(): Boolean{
+        val token = getKeyValue("token")
+        return (hasKey("token") && !token.isNullOrEmpty())
+    }
+
+    /**
+     * Checks whether current user's username is the same as requested
+     */
+    fun checkUsername(username: String): Boolean{
+        val currentUsername = getKeyValue("username").toString()
+        return (currentUsername == username)
+    }
+
     fun clearAll() {
         sharedPreferences.edit().clear().apply()
     }

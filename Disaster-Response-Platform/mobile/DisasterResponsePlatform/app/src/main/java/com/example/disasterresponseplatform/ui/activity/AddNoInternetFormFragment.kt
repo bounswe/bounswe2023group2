@@ -96,24 +96,25 @@ class AddNoInternetFormFragment(private val viewModel: ViewModel) : Fragment() {
         if (validateFields()){
             val shortDescription = binding.etShortDescription.text!!.toString().trim()
             val additionalNotes = binding.etNotes.text!!.toString().trim()
+            val address = binding.etAddress.text!!.toString().trim()
             val type = binding.spType.text!!.toString().trim()
             when (viewModel){
                 is EventViewModel -> {
-                    val savedEvent = Event(null,username,type,shortDescription,additionalNotes)
+                    val savedEvent = Event(null,username,type,shortDescription,additionalNotes,address)
                     viewModel.insertEvent(savedEvent)
                 }
                 is NeedViewModel -> {
                     val quantity =
                         if (binding.etQuantity.text.isNullOrEmpty()) 1
                         else binding.etQuantity.text!!.toString().trim().toInt()
-                    val savedNeed = Need(null,username,type,shortDescription,additionalNotes,quantity)
+                    val savedNeed = Need(null,username,type,shortDescription,additionalNotes,quantity,address)
                     viewModel.insertNeed(savedNeed)
                 }
                 is ResourceViewModel -> {
                     val quantity =
                         if (binding.etQuantity.text.isNullOrEmpty()) 1
                         else binding.etQuantity.text!!.toString().trim().toInt()
-                    val savedResource = Resource(null,username,type,shortDescription,additionalNotes,quantity)
+                    val savedResource = Resource(null,username,type,shortDescription,additionalNotes,quantity,address)
                     viewModel.insertResource(savedResource)
                 }
                 else -> {}
@@ -140,6 +141,10 @@ class AddNoInternetFormFragment(private val viewModel: ViewModel) : Fragment() {
         }
         if (binding.spType.text.isNullOrEmpty()){
             binding.boxType.error = "Cannot be empty"
+            returnVal = false
+        }
+        if (binding.etAddress.text.isNullOrEmpty()){
+            binding.tvAddress.error = "Cannot be empty"
             returnVal = false
         }
         return returnVal

@@ -31,8 +31,6 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 import kotlin.properties.Delegates
@@ -78,8 +76,8 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
             binding.etShortDescription.setText(event.short_description)
             binding.etNotes.setText(event.note)
 
-            selectedLocationX = event.center_location_x
-            selectedLocationY = event.center_location_y
+            selectedLocationX = event.x
+            selectedLocationY = event.y
             coordinateToAddress()
         }
     }
@@ -158,8 +156,8 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
                     event_type = eventType,
                     event_time =  creationEventDate,
                     is_active = true,
-                    center_location_x = selectedLocationX,
-                    center_location_y = selectedLocationY,
+                    x = selectedLocationX,
+                    y = selectedLocationY,
                     max_distance_x = maxDistanceX,
                     max_distance_y = maxDistanceY,
                     created_time = createdTime ,

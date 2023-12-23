@@ -22,9 +22,9 @@ class EmergencyViewModel@Inject constructor(private val emergencyRepository: Eme
 
     fun getAllEmergencies(): List<Emergency>? = emergencyRepository.getAllEmergencies()
 
-    suspend fun deleteAllEmergencies(){
+    suspend fun deleteEmergency(id: Int){
         viewModelScope.launch(Dispatchers.IO){
-            emergencyRepository.deleteAllEmergencies()
+            emergencyRepository.deleteEmergency(id)
         }
     }
 

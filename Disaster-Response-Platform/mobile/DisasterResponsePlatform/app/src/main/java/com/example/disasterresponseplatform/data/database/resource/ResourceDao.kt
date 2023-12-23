@@ -15,7 +15,7 @@ interface ResourceDao {
     @Query("SELECT * FROM ${DatabaseInfo.RESOURCE} ORDER BY ${NeedResourceCols.id}")
     fun getAllResources(): List<Resource>?
 
-    @Query("DELETE FROM ${DatabaseInfo.RESOURCE}")
-    suspend fun deleteAllResources()
+    @Query("DELETE FROM ${DatabaseInfo.RESOURCE} WHERE ${NeedResourceCols.id} = :id")
+    fun deleteResource(id: Int)
 }
 

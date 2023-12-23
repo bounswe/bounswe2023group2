@@ -2,7 +2,6 @@ package com.example.disasterresponseplatform.ui.activity.event
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.ColorDrawable
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -87,8 +86,8 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
             val userRole = if (it == "null") "AUTHENTICATED" else it
             binding.tvUserRole.text = userRole
         }
-        binding.tvAddress.text = "%.3f %.3f".format(event.center_location_x, event.center_location_y)
-        coordinateToAddress(event.center_location_x, event.center_location_y, object : okhttp3.Callback {
+        binding.tvAddress.text = "%.3f %.3f".format(event.x, event.y)
+        coordinateToAddress(event.x, event.y, object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 Log.e("Network", "Error: ${e.message}")
             }

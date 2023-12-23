@@ -12,8 +12,8 @@ class NeedRepository @Inject constructor(private val needDao: NeedDao) {
 
     fun getAllNeeds(): List<Need>? = needDao.getAllNeeds()
 
-    suspend fun deleteAllNeeds() {
-        needDao.deleteAllNeeds()
+    suspend fun deleteNeed(id: Int) {
+        needDao.deleteNeed(id)
     }
 
 }
