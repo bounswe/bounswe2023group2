@@ -13,7 +13,10 @@ export default function MainInfo({ className, info, report, onOpen, contact=true
 				<span className="text-md lg:text-lg">{username}</span>
 				<br /> <span className="text-md lg:text-lg">{labels.user_roles[user_role]}</span>
 				{proficiency?.proficiency ? (
-					<> <br /> <span className="text-md lg:text-lg"> {labels.proficiency[proficiency.proficiency]} </span> </>
+					<>
+						<br /> <span className="text-md lg:text-lg"> {labels.proficiency[proficiency.proficiency]} </span>
+						<br /> <span className="text-sm lg:text-md"> {proficiency.details} </span>
+					</>
 				) : null}
 				<Divider className="my-6" />
 				<h3 class="object-top text-center text-xl mb-2"> {labels.profile_pages.contact_info} </h3>
