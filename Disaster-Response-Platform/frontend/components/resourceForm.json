@@ -62,50 +62,13 @@
       ]
     },
     {
-      "name": "urgency",
-      "label": "Urgency",
-      "type": "select",
-      "options": [
-        {
-          "key": 1,
-          "value": 1,
-          "label": "Minimal Concern",
-          "index": 0
-        },
-        {
-          "key": 2,
-          "value": 2,
-          "label": "Low Priority",
-          "index": 1
-        },
-        {
-          "key": 3,
-          "value": 3,
-          "label": "Moderate Urgency",
-          "index": 2
-        },
-        {
-          "key": 4,
-          "value": 4,
-          "label": "High Priority",
-          "index": 3
-        },
-        {
-          "key": 5,
-          "value": 5,
-          "label": "Critical Emergency",
-          "index": 4
-        }
-      ]
-    },
-    {
       "name": "open_address",
       "label": "Address",
       "type": "text"
     },
     {
       "name": "initialQuantity",
-      "label": "Required Quantity",
+      "label": "Provided Quantity",
       "type": "number"
     },
     {
@@ -181,50 +144,12 @@
         }
       ]
     },
-    {
-      "name": "urgency",
-      "label": "Aciliyet",
-      "type": "select",
-      "options": [
-        {
-          "key": 1,
-          "value": 1,
-          "label": "Endişeye Mahal Yok",
-          "index": 0
-        },
-        {
-          "key": 2,
-          "value": 2,
-          "label": "Düşük Öncelik",
-          "index": 1
-        },
-        {
-          "key": 3,
-          "value": 3,
-          "label": "Orta Aciliyet",
-          "index": 2
-        },
-        {
-          "key": 4,
-          "value": 4,
-          "label": "Yüksek Öncelik",
-          "index": 3
-        },
-        {
-          "key": 5,
-          "value": 5,
-          "label": "Kritik Acil",
-          "index": 4
-        }
-      ]
-    },
     
     {
       "name": "initialQuantity",
-      "label": "Başlangıç Miktarı",
+      "label": "Sağlanan Miktar",
       "type": "number"
-    },
-    
+    }, 
     {
       "name": "open_address",
       "label": "Adres",

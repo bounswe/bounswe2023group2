@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import GenericForm from "./GenericForm";
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
 } from "@nextui-org/modal";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
 import needForm from "./needForm.json"
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -27,7 +26,7 @@ export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
   const getForm = () => {
     const desiredForm = needForm['tr'];
     setForm(desiredForm);
-    console.log(desiredForm)
+   
   }
 
   const getSubtypes = async (value) => {
@@ -46,7 +45,7 @@ export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
   }
 
   useEffect(() => {
-    
+
     getForm(lang);
 
   }, [])
@@ -64,13 +63,13 @@ export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
     })
     prepared['type'] = chosen
     console.log(prepared)
-    try{
+    try {
       let coordinats = await addressService.addressToXY(data.open_address);
       console.log(coordinats)
       prepared['x'] = coordinats.payload.x
       prepared['y'] = coordinats.payload.y
     }
-    catch(e){
+    catch (e) {
       toast.error("Address should contain city, street, street number")
     }
     prepared['unsuppliedQuantity'] = prepared['initialQuantity']
@@ -112,7 +111,7 @@ export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
                 >
                   {(type) => <SelectItem value={type.value} className='text-black'>{type.label}</SelectItem>}
                 </Select>
-              
+
                 else if (res.type === 'select') return <Controller
                   name={res.name}
                   control={control}
@@ -131,6 +130,23 @@ export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
                     >
                       {(type) => <SelectItem key={type.value} className='text-black'>{type.label}</SelectItem>}
                     </Select>
+                  )}
+                />
+                else if (res.name === 'description') return <Controller
+                  name={`details.${res.name}`}
+                  control={control}
+                  defaultValue=""
+                  label={res.label}
+                  placeholder={res.label}
+                  render={({ field }) => (
+                    <Textarea type={res.type}
+                      style={{ border: 'none' }}
+                      label={res.label}
+                      placeholder={res.label}
+                      className="max-xs"
+                      variant={'bordered'}
+                      {...field}
+                    />
                   )}
                 />
                 return <Controller
@@ -192,7 +208,7 @@ export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
                     )}
                   />
               })}
-              <Button type='submit'>
+              <Button type='submit' color='primary'>
                 {isSubmitting ? 'Loading' : "Submit"}
               </Button>
             </form>
