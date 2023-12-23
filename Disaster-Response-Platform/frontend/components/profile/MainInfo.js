@@ -2,7 +2,7 @@ import Image from 'next/image';
 import GrayBox from '../GrayBox';
 import { Button, Divider } from "@nextui-org/react";
 
-export default function MainInfo({ className, info, report, onOpen, contact=true, img, labels }) {
+export default function MainInfo({ className, info, report, onOpen, contact=true, img, labels, onOpenDelete }) {
 	let {username, first_name, last_name, email, phone_number, user_role, proficiency} = info;
 	const name = `${first_name} ${last_name}`;
 	if (user_role === null) user_role = "GUEST";
@@ -27,7 +27,8 @@ export default function MainInfo({ className, info, report, onOpen, contact=true
 					<span className="text-gray-600 text-sm lg:text-md"> {labels.profile_pages.contact_hidden} </span>
 				)}
 			</div>
-			{report ? <Button onPress={onOpen} className="mx-auto block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">{labels.admin.report}</Button> : null}
+			{report ? <Button onPress={onOpen} className="mx-auto my-3 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">{labels.admin.report}</Button> : null}
+			{onOpenDelete ? <Button onPress={onOpenDelete} className="mx-auto my-3 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">{labels.profile_pages.delete_account}</Button> : null}
 		</GrayBox>
 	)
 }

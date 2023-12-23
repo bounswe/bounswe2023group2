@@ -5,6 +5,7 @@ import OptionalInfo from '@/components/profile/OptionalInfo';
 import ActivityTable from '@/components/ActivityTable';
 import SkillList from '@/components/profile/SkillList';
 import SkillModal from '@/components/profile/SkillModal';
+import DeleteModal from '@/components/profile/DeleteModal';
 import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
@@ -18,6 +19,7 @@ import getLabels from '@/lib/getLabels';
 export default function Profile({guest, expired, main_info, optional_info, list_info, accessToken, labels }) {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen: isOpenDelete, onOpen: onOpenDelete, onOpenChange: onOpenChangeDelete } = useDisclosure();
   const [ modalState, setModalState ] = useState({options:[]});
 
   if (guest || expired) {
@@ -40,7 +42,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
     <>
       <main>
         <div class="flex justify-around space-x-8">
-          <MainInfo className="w-60" info={main_info} img={optional_info.profile_picture} contact={true} labels={labels} />
+          <MainInfo className="w-60" info={main_info} img={optional_info.profile_picture} contact={true} labels={labels} onOpenDelete={onOpenDelete}/>
           <OptionalInfo className="w-80" fields={optional_info_labels} labels={labels} />
           <div>
             <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen} setModalState={setModalState} accessToken={accessToken} labels={labels} />
@@ -56,6 +58,7 @@ export default function Profile({guest, expired, main_info, optional_info, list_
         </div>
         <ActivityTable labels={labels} userFilter={username} />
         <SkillModal isOpen={isOpen} onOpenChange={onOpenChange} topic={modalState} labels={labels} />
+        <DeleteModal isOpen={isOpenDelete} onOpenChange={onOpenChangeDelete} labels={labels} />
         <ToastContainer />
       </main>
     </>

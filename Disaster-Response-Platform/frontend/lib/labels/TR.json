@@ -108,6 +108,7 @@
 		"add": "Ekle",
 		"update": "Güncelle",
 		"remove": "Kaldır",
+		"delete": "Sil",
 		"cancel": "Vazgeç",
 		"close": "Kapat",
 		"loading": "Yükleniyor",
@@ -145,7 +146,8 @@
 		"add_success": "Başarıyla eklendi",
 		"remove_success": "Başarıyla kaldırıldı",
 		"failure": "Son işlem sırasında bir hata oluştu, lütfen tekrar deneyin",
-		"report_success": "Raporunuz alındı. Bildiriminiz için teşekkürler"
+		"report_success": "Raporunuz alındı. Bildiriminiz için teşekkürler",
+		"account_deleted": "Hesabınız silindi."
 	},
 	"profile_pages": {
 	    "main_info": "Ana Bilgiler",
@@ -159,7 +161,9 @@
 	    "upload_avatar_confirm": "Bu resim mi kullanılsın?",
 	    "upload_certificate": "Sertifika yükleyin (opsiyonel)",
 	    "certificate_uploaded": "Yüklenmiş sertifika: ",
-	    "none": "Yok"
+	    "none": "Yok",
+	    "delete_account": "Hesabımı Sil",
+	    "are_you_sure_delete": "Hesabınızı silmek istediğinizden emin misiniz?"
 	},
 	"admin": {
 		"no_access": "Admin paneline erişiminiz yok.",
