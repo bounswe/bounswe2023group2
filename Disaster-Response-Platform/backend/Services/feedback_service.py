@@ -8,11 +8,11 @@ from Services.build_API_returns import *
 feedback_collection = MongoDB.get_collection('feedback')
 
 def vote(entityType:str, entityID:str, current_user:str, voteType:str) -> bool:
-    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID})   
+    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID, "username": current_user})   
     if existing_vote and existing_vote['vote']== voteType:
         raise ValueError(f"Current user already voted")
     elif existing_vote:
-        result = feedback_collection.update_one({"entityType": entityType, "entityID": entityID}, {"$set": {"vote": voteType}})
+        result = feedback_collection.update_one({"entityType": entityType, "entityID": entityID, "username": current_user}, {"$set": {"vote": voteType}})
         if voteType == "upvote":
             set_upvote(entityType, entityID, 1)
             set_downvote(entityType, entityID, -1)
@@ -27,9 +27,9 @@ def vote(entityType:str, entityID:str, current_user:str, voteType:str) -> bool:
             set_downvote(entityType, entityID, 1)
             
 def unvote(entityType:str, entityID:str, current_user:str) -> bool:
-    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID})   
+    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID, "username": current_user})   
     if existing_vote:
-        result = feedback_collection.delete_one({"entityType": entityType, "entityID": entityID})
+        result = feedback_collection.delete_one({"entityType": entityType, "entityID": entityID, "username": current_user})
         if existing_vote['vote'] == "upvote":
             set_upvote(entityType, entityID, -1)
         else:
@@ -53,3 +53,14 @@ def set_downvote(entity_type: EntityTypeEnum, entity_id: str, num: int) -> bool:
         raise ValueError(f"Entity type {entity_type.value} with entity id {entity_id} not found")
     return True
 
+
+# Check the feedback status of the current user, entity pair.
+def check_feeedback(entityType:str, entityID:str, current_user:str):
+    existing_vote = feedback_collection.find_one({"entityType": entityType, "entityID": entityID, "username": current_user})
+    if existing_vote:
+        if existing_vote['vote'] == "upvote":
+            return "upvote"
+        else:
+            return "downvote"
+    else:
+        return "none"

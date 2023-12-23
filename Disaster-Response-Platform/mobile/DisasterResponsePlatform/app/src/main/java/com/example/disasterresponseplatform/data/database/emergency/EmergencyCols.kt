@@ -5,9 +5,9 @@ class EmergencyCols {
     companion object{
         const val id: String = "id"
         const val type: String = "type"
-        const val shortDescription: String = "shortDescription"
+        const val description: String = "description"
         const val creatorName: String = "creatorName"
-        const val additionalNotes: String = "additionalNotes"
-        const val address: String = "address"
+        const val contactNumber: String = "contactNumber"
+        const val location: String = "location"
     }
 }

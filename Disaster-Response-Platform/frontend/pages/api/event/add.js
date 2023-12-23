@@ -10,8 +10,6 @@ async function addEventRoute(req, res) {
         res.status(401).json({});
         return;
     }
-
-    console.log(req.body);
     
     try {
         await api.post(`/api/events`, req.body, {

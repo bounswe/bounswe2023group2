@@ -13,6 +13,27 @@ services:
     networks:
       - practice-network
     restart: on-failure
+  annoserver:
+    build:
+      context: ./annoserver
+    container_name: annoserver
+    hostname: annoserver
+    ports:
+      - "18443:8000"
+      - "18000:8000"
+    networks:
+      - practice-network
+    restart: on-failure
+  search_server:
+    build:
+      context: ./search_server
+    container_name: search_server
+    hostname: search_server
+    ports:
+      - "9060:9060"
+    networks:
+      - practice-network
+    restart: on-failure
   mongo:
     container_name: mongo
     image: mongo:latest

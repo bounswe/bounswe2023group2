@@ -24,14 +24,14 @@ import com.example.disasterresponseplatform.data.models.authModels.LanguageArray
 import com.example.disasterresponseplatform.data.models.authModels.ProfessionArray
 import com.example.disasterresponseplatform.data.models.authModels.SkillArray
 import com.example.disasterresponseplatform.data.models.authModels.SocialMediaArray
+import com.example.disasterresponseplatform.data.models.authModels.UserRolesResponse
 import com.example.disasterresponseplatform.data.models.authModels.UsersMeOptionalResponse
 import com.example.disasterresponseplatform.data.models.authModels.UsersMeResponse
 import com.example.disasterresponseplatform.data.models.authModels.UsersOptionalArray
 import com.example.disasterresponseplatform.databinding.FragmentProfileBinding
 import com.example.disasterresponseplatform.databinding.ProfileItemBinding
 import com.example.disasterresponseplatform.data.models.usertypes.AuthenticatedUser
-import com.example.disasterresponseplatform.data.models.usertypes.CredibleUser
-import com.example.disasterresponseplatform.data.models.usertypes.RoleBasedUser
+import com.example.disasterresponseplatform.data.models.usertypes.Role
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
@@ -85,6 +85,48 @@ class ProfileFragment(var username: String?) : Fragment() {
                     replaceFragment(LoginFragment())
                 }
                 user = AuthenticatedUser("", "", "", "", "")
+
+                networkManager.makeRequest(
+                    endpoint = Endpoint.GETUSER,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, UserRolesResponse::class.java)
+                                println("USER ROLE: " + res.user_role)
+                                when (res.user_role) {
+                                    "CREDIBLE" -> {
+                                        user.role = Role.CREDIBLE
+                                    }
+                                    "ROLE_BASED" -> {
+                                        user.role = Role.ROLE_BASED
+                                    }
+                                    "ADMIN" -> {
+                                        user.role = Role.ADMIN
+                                    }
+                                    else -> {}
+                                }
+                                fillInformations(user)
+                            } else {
+                                println("response not successful")
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            println("userrole request failed")
+                        }
+
+                    }
+                )
+
                 networkManager.makeRequest(
                     endpoint = Endpoint.ME,
                     requestType = RequestType.GET,
@@ -339,6 +381,49 @@ class ProfileFragment(var username: String?) : Fragment() {
                     }
                 }
                 user = AuthenticatedUser("", "", "", "", "")
+
+                networkManager.makeRequest(
+                    endpoint = Endpoint.GETUSER,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    id = username,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, UserRolesResponse::class.java)
+                                println("USER ROLE: " + res.user_role)
+                                when (res.user_role) {
+                                    "CREDIBLE" -> {
+                                        user.role = Role.CREDIBLE
+                                    }
+                                    "ROLE_BASED" -> {
+                                        user.role = Role.ROLE_BASED
+                                    }
+                                    "ADMIN" -> {
+                                        user.role = Role.ADMIN
+                                    }
+                                    else -> {}
+                                }
+                                fillInformations(user)
+                            } else {
+                                println("response not successful")
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            println("userrole request failed")
+                        }
+
+                    }
+                )
+
                 networkManager.makeRequest(
                     endpoint = Endpoint.USERS,
                     requestType = RequestType.GET,
@@ -437,7 +522,7 @@ class ProfileFragment(var username: String?) : Fragment() {
     private fun fillInformations(user: AuthenticatedUser) {
         profileLevel += 1
         println("profileLevel: " + profileLevel)
-        if (profileLevel < 6) return
+        if (profileLevel < 7) return
         binding.apply {
             // read image from url and set it to profilePhoto
             profileProgressBar.visibility = View.GONE
@@ -453,16 +538,20 @@ class ProfileFragment(var username: String?) : Fragment() {
                 if (user.isEmailVerified) View.VISIBLE else View.GONE
             profilePhoneVerifiedIcon.visibility =
                 if (user.isPhoneVerified) View.VISIBLE else View.GONE
-            when (user) {
-                is CredibleUser -> {
+            when (user.role) {
+                Role.CREDIBLE -> {
                     profileRegionLayout.visibility = View.VISIBLE
-                    profileRegion.text = "Credible User in " + user.region
+                    profileRegion.text = "Credible User"
                 }
-
-                is RoleBasedUser -> {
+                Role.ROLE_BASED -> {
                     profileProficiencyLayout.visibility = View.VISIBLE
-                    profileProficiency.text = "Profficient User: " + user.proficiency
+                    profileProficiency.text = "Profficient User"
                 }
+                Role.ADMIN -> {
+                    profileAdminLayout.visibility = View.VISIBLE
+                    profileAdmin.text = "Admin"
+                }
+                else -> {}
             }
             when (user.verificationLevel) {
                 1 -> {

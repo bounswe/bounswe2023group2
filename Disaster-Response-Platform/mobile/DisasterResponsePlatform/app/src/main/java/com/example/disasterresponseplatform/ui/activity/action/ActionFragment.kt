@@ -119,7 +119,7 @@ class ActionFragment(
             addFragment(addActionFragment,"AddActionFragment")
         }
         else{
-            Toast.makeText(context, "You action to Logged In !", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, getString(R.string.pr_login_required), Toast.LENGTH_LONG).show()
         }
     }
 

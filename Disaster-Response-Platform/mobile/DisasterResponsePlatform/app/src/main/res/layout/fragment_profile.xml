@@ -81,7 +81,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:elevation="13dp"
-                        android:src="@drawable/admin_icon"
+                        android:src="@drawable/profile_admin_icon"
                         android:visibility="gone" />
 
                 </FrameLayout>
@@ -144,6 +144,28 @@
 
                 <TextView
                     android:id="@+id/profile_proficiency"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"/>
+            </LinearLayout>
+
+            <!-- Admin -->
+            <LinearLayout
+                android:id="@+id/profile_admin_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/profile_admin_icon" />
+
+                <TextView
+                    android:id="@+id/profile_admin"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"

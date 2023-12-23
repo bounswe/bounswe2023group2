@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {Button, Checkbox, CheckboxGroup, Divider, Popover, PopoverContent, PopoverTrigger, Radio, RadioGroup } from "@nextui-org/react";
 import { FaSort } from "react-icons/fa";
 
-export default function Sort({ needFilter, resourceFilter, filters, setFilters, filterActivities, labels}) {
+export default function Sort({ chosenActivityType, filters, setFilters, filterActivities, labels}) {
   const needSorts = ['urgency', 'status', 'occur_at', 'type', 'upvote']
   const resourceSorts = ['currentQuantity', 'status', 'upvote', 'type']
   return (
@@ -29,8 +29,8 @@ export default function Sort({ needFilter, resourceFilter, filters, setFilters, 
               defaultValue={[]}
               onValueChange={(e) => { setFilters({ ...filters, sort_by: e }) }}
             >
-             {needFilter && needSorts.map((type)=>  <Checkbox value={type}>{labels.sort_criteria[type]}</Checkbox>)}  
-              {resourceFilter && resourceSorts.map((type)=>  <Checkbox value={type}>{labels.sort_criteria[type]}</Checkbox>)}
+             {chosenActivityType === "needs" && needSorts.map((type)=>  <Checkbox value={type}>{labels.sort_criteria[type]}</Checkbox>)}  
+              {chosenActivityType === "resources" && resourceSorts.map((type)=>  <Checkbox value={type}>{labels.sort_criteria[type]}</Checkbox>)}
             </CheckboxGroup>
 
             <RadioGroup

@@ -31,8 +31,8 @@ class Error(BaseModel):
     ErrorMessage: str
     ErrorDetail: str
 class ProficiencyEnum(str, Enum):
-    bilingual = "bilingual"
     doctor = "doctor"
+    driver= "driver"
     pharmacist ="pharmacist"
     rescue_member="rescue_member"
     infrastructure_engineer="infrastructure_engineer"
@@ -61,7 +61,7 @@ class CreateUserRequest(BaseModel):
         min_length=8,
     )
     user_role: UserRole = Field(default=None)
-    proficiency: Optional[List[ProfRequest]] = None
+    proficiency: Optional[ProfRequest] = None
 
 
 
@@ -74,7 +74,7 @@ class UserProfile(User):
     is_email_verified: bool = False
     private_account: bool = False
     user_role: UserRole = Field(default=None)
-    proficiency: Optional[List[ProfRequest]] = None
+    proficiency: Optional[ProfRequest] = None
 
 
 
@@ -84,9 +84,11 @@ class UserInfo(BaseModel):
     first_name: str
     last_name: str
     phone_number: str | None= None
-    is_email_verified: bool = False
+    is_email_verified: bool | None= None
     private_account: bool = False
-    
+    user_role: UserRole = Field(default=None)
+    proficiency: Optional[ProfRequest] = None
+
 
 
 class UpdateUserRequest(BaseModel):
@@ -114,13 +116,14 @@ class UserRoleResponse(BaseModel):
     
 class ProfResponse(BaseModel):
     user_role: str
-    proficiency: Optional[List[ProfRequest]] = None
+    proficiency: Optional[ProfRequest] = None
 
 class UserUsername(BaseModel):
     username: str
+
 
 class LoginResponse(BaseModel):
     access_token: str
     token_type: str
     user_role: UserRole
-    proficiency: Optional[List[ProfRequest]] = None
+    proficiency: Optional[ProfRequest] = None
