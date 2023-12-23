@@ -20,6 +20,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 auth_scheme = HTTPBearer()
 userDb = MongoDB.get_collection('authenticated_user')
+deleted_users= MongoDB.get_collection('deleted_users')
+resources_collection = MongoDB.get_collection('resources')
+needs_collection = MongoDB.get_collection('needs')
 # Verify JWT token
 def get_current_user(token: str = Depends(auth_scheme)):
     credentials_exception = HTTPException(
@@ -247,3 +250,21 @@ def unauthorize_user(username: str):
 def is_admin(username: str):
     user = get_user(username)
     return (user.user_role == user.user_role.ADMIN)
+
+def delete_user(username: str):
+
+    user_from_db= userDb.find_one({"username": username})
+
+    deleted_users.insert_one(user_from_db)
+    userDb.delete_one({"username": user_from_db.get("username")})
+
+    update_result = resources_collection.update_many(
+    {"created_by": user_from_db.get("username")},
+    {"$set": {"active": False}}
+    )
+    update_result = needs_collection.update_many(
+    {"created_by": user_from_db.get("username")},
+    {"$set": {"active": False}}
+    )
+
+    return True
