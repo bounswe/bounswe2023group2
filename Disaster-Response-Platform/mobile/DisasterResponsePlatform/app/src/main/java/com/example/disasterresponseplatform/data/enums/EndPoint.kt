@@ -33,6 +33,8 @@ enum class Endpoint(val path: String) {
     FORM_FIELDS_TYPE("form_fields/type"),
     UPVOTE("feedback/upvote"),
     DOWNVOTE("feedback/downvote"),
+    UNVOTE("feedback/unvote"),
+    CHECKVOTE("feedback/check"),
     GETUSER("userroles/role"),
     PROFICIENCY_REQUEST("userroles/proficiency-request"),
     EVENT("events"),
