@@ -15,7 +15,7 @@ import { useDisclosure } from "@nextui-org/react";
 import { ToastContainer } from 'react-toastify';
 import getLabels from '@/lib/getLabels';
 
-export default function Profile({guest, expired, main_info, optional_info, list_info, labels }) {
+export default function Profile({guest, expired, main_info, optional_info, list_info, accessToken, labels }) {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [ modalState, setModalState ] = useState({options:[]});
@@ -43,10 +43,10 @@ export default function Profile({guest, expired, main_info, optional_info, list_
           <MainInfo className="w-60" info={main_info} img={optional_info.profile_picture} contact={true} labels={labels} />
           <OptionalInfo className="w-80" fields={optional_info_labels} labels={labels} />
           <div>
-            <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
-            <SkillList list={skills.list} topic={skills.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
-            <SkillList list={languages.list} topic={languages.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
-            <SkillList list={professions.list} topic={professions.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
+            <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen} setModalState={setModalState} accessToken={accessToken} labels={labels} />
+            <SkillList list={skills.list} topic={skills.topic} username={username} onOpen={onOpen} setModalState={setModalState} accessToken={accessToken} labels={labels} />
+            <SkillList list={languages.list} topic={languages.topic} username={username} onOpen={onOpen} setModalState={setModalState} accessToken={accessToken} labels={labels} />
+            <SkillList list={professions.list} topic={professions.topic} username={username} onOpen={onOpen} setModalState={setModalState} accessToken={accessToken} labels={labels} />
           </div>
         </div>
         <div class="my-10 w-full text-center">
@@ -119,7 +119,7 @@ export const getServerSideProps = withIronSessionSsr(
         "title": "Sosyal Medya", "primary": "platform_name", "secondary": "profile_URL", "is_link": true,
         "post": "/add-socialmedia-link", "delete": ""},
       {"api_url": "skills", "key": "user_skills",
-        "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", "is_link": false,
+        "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", certificate: "skill_document", "is_link": false,
         "post": "/add-skill", "delete": "",
         "options": ["beginner", "basic", "intermediate", "skilled", "expert"]},
     ]
@@ -138,6 +138,7 @@ export const getServerSideProps = withIronSessionSsr(
         main_info,
         optional_info,
         list_info,
+        accessToken: user.accessToken,
         labels
       },
     };

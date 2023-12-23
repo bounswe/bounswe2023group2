@@ -156,7 +156,10 @@
 	    "contact_info": "İletişim Bilgileri",
 	    "contact_hidden": "Bu kullanıcı iletişim bilgilerini görünür kılmamış.",
 	    "upload_avatar": "Profil resmi yükleyin",
-	    "upload_avatar_confirm": "Bu resim mi kullanılsın?"
+	    "upload_avatar_confirm": "Bu resim mi kullanılsın?",
+	    "upload_certificate": "Sertifika yükleyin (opsiyonel)",
+	    "certificate_uploaded": "Yüklenmiş sertifika: ",
+	    "none": "Yok"
 	},
 	"admin": {
 		"no_access": "Admin paneline erişiminiz yok.",

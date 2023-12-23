@@ -157,7 +157,10 @@
 	    "contact_info": "Contact Info",
 	    "contact_hidden": "This user has not set their contact info visible.",
 	    "upload_avatar": "Upload a profile picture",
-	    "upload_avatar_confirm": "Use this picture?"
+	    "upload_avatar_confirm": "Use this picture?",
+	    "upload_certificate": "Upload a certificate (optional)",
+	    "certificate_uploaded": "Uploaded certificate: ",
+	    "none": "None"
 	},
 	"admin": {
 		"no_access": "You do not have access to the admin panel.",

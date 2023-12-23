@@ -56,7 +56,7 @@ export default function OtherProfile({ unauthorized, self_role, main_info, optio
           ? <OptionalInfo className="w-80" fields={optional_info_labels} labels={labels} />
           : null
         }
-        {visibility >= visibilityEnum.ADMIN // change to visibilityEnum.DEFAULT if backend is one day set to accept regular users
+        {visibility >= visibilityEnum.DEFAULT
           ? (
             <div>
               <SkillList list={social.list} topic={social.topic} username={username} wide={visibility < visibilityEnum.ADMIN} labels={labels} noedit/>
@@ -144,7 +144,7 @@ export const getServerSideProps = withIronSessionSsr(
         "title": "Sosyal Medya", "primary": "platform_name", "secondary": "profile_URL", "is_link": true,
         "post": "/add-socialmedia-link", "delete": ""},
       {"api_url": "skills", "key": "user_skills",
-        "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", "is_link": false,
+        "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", certificate: "skill_document", "is_link": false,
         "post": "/add-skill", "delete": "",
         "options": ["beginner", "basic", "intermediate", "skilled", "expert"]},
     ]

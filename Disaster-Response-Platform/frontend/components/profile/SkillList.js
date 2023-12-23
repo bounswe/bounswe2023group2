@@ -3,13 +3,48 @@ import GrayBox from '../GrayBox';
 import { useState } from 'react';
 import { Button } from "@nextui-org/react";
 import { toast } from 'react-toastify';
+import { api } from '@/lib/apiUtils';
 
-export default function SkillList({ list, topic, username, onOpen, setModalState, noedit, wide, labels }) {
+export default function SkillList({ list, topic, username, onOpen, setModalState, noedit, wide, accessToken, labels }) {
   let [ skills, setSkills ] = useState(list);
+
+  async function uploadFile(file, filename) {
+    const renamed_file = new File([file], filename, {type: file.type});
+
+    const body = new FormData();
+    body.set("file", renamed_file);
+
+    const response = await api.post("/api/uploadfile", body, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data'
+        }
+    });
+
+    if (response.status !== 200) {
+      toast(`${labels.feedback.failure} (certificate upload: ${response.statusText})`);
+    }
+    
+    return response;
+  }
+
   async function addSkill(event) {
     event.preventDefault();
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
+
+    if (topic.certificate) {
+      const file = document.getElementById("certificate")?.files?.[0];
+      if (file) {
+        const extension = file.name.substring(file.name.lastIndexOf(".")+1);
+        const filename = `${topic.api_url}-${formData[topic.primary]}-certificate.${extension}`;
+        const upload_response = await uploadFile(file, filename);
+        formData[topic.certificate] = upload_response?.data?.url;
+      }
+    }
+
+    delete formData.certificate;
+    
     const newSkill = {
       ...formData,
       username: username
