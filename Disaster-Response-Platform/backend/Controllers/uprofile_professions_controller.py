@@ -18,14 +18,23 @@ router = APIRouter()
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def get_user_profession_level(response: Response, anyuser:str= None, profession:str = None, current_username: str = Depends(authentication_service.get_current_username)):
+async def get_user_profession_level(response: Response, profession:str = None, anyuser: str = None,
+                                    current_username: str = Depends(authentication_service.get_current_username)):
     if anyuser is None:
         if profession is None:
             username = current_username
         else:
-            username = None
+            if (authentication_service.is_admin(current_username)):
+                username = None
+            else:
+                response.status_code = HTTPStatus.UNAUTHORIZED
+                return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
     else:
-        username = anyuser
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
 
     try:
         result = uprofile_professions_service.get_user_profession(username, profession)
@@ -40,9 +49,19 @@ async def get_user_profession_level(response: Response, anyuser:str= None, profe
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def add_a_language_currentuser(user_profession: UserProfession, response: Response, anyuser:str= None, current_username: str = Depends(authentication_service.get_current_username)):
+async def add_a_profession_currentuser(user_profession: UserProfession, response: Response, anyuser: str = None,
+                                       current_username: str = Depends(authentication_service.get_current_username)):
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
+
     try:
-        user_profession.username = current_username
+        user_profession.username = username
         result = uprofile_professions_service.add_user_profession(user_profession)
         response.status_code = HTTPStatus.OK
         return json.loads(result)
@@ -51,14 +70,51 @@ async def add_a_language_currentuser(user_profession: UserProfession, response: 
         err_json =  create_json_for_error("User profession not updated", str(err))
         return json.loads(err_json)
 
-@router.delete("/professions", responses= {status.HTTP_200_OK: {"model": UserProfession},
+#Here for compatibility - replaced by delete-professions
+@router.post("/professions", responses= {status.HTTP_200_OK: {"model": UserProfession},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def delete_current_users_language(user_profession: UserProfession, response: Response, anyuser:str= None, current_username: str = Depends(authentication_service.get_current_username)):
+async def delete_users_profession(user_profession: UserProfession, response: Response, anyuser: str = None,
+                                  current_username: str = Depends(authentication_service.get_current_username)):
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
+
 
     try:
-        user_profession.username = current_username
+        user_profession.username = username
+        result = uprofile_professions_service.delete_user_profession(user_profession)
+        response.status_code = HTTPStatus.OK
+        return json.loads(result)
+    except ValueError as err:
+        response.status_code = HTTPStatus.NOT_FOUND
+        err_json =  create_json_for_error("User profession not fetched", str(err))
+        return json.loads(err_json)
+
+@router.post("/delete-professions", responses= {status.HTTP_200_OK: {"model": UserProfession},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}
+})
+async def delete_professions_for_user(user_profession: UserProfession, response: Response, anyuser: str = None,
+                                  current_username: str = Depends(authentication_service.get_current_username)):
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
+
+
+    try:
+        user_profession.username = username
         result = uprofile_professions_service.delete_user_profession(user_profession)
         response.status_code = HTTPStatus.OK
         return json.loads(result)

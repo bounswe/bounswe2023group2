@@ -1,0 +1,109 @@
+{
+    "resource": {
+        "fields": [
+            {"name": "description", "label": "Description", "type": "text"},
+            {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
+            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "drink", "shelter", "medication", "transportation", "tool", "human", "other"]},
+            {"name": "x", "label": "X Coordinate", "type": "number"},
+            {"name": "y", "label": "Y Coordinate", "type": "number"},
+            {"name": "occur_at", "label": "Occur At", "type": "date"},
+            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": [1,7]},
+            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
+        ]
+    },
+    "need": {
+        "fields": [
+            {"name": "description", "label": "Description", "type": "text"},
+            {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
+            {"name": "urgency", "label": "Urgency", "type": "select", "options": [1, 2, 3, 4, 5]},
+            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "drink", "shelter", "medication", "transportation", "tool", "human", "other"]},
+            {"name": "x", "label": "X Coordinate", "type": "number"},
+            {"name": "y", "label": "Y Coordinate", "type": "number"},
+            {"name": "occur_at", "label": "Occur At", "type": "date"},
+            {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": [1,7]},
+            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
+        ]
+    },
+    "action": {
+        "fields": [
+            {"name": "description", "label": "Description", "type": "text"},
+            {"name": "type", "label": "Type", "type": "select", "options": ["need_resource"]},
+            {"name": "occur_at", "label": "Occur date", "type": "date"},
+            {"name": "end_at", "label": "End date", "type": "date"},
+            {
+                "name": "related_groups","label": "List of Action Group","type": "array",
+                "fields": [
+                    {
+                        "name": "related_needs","label": "Related Needs","type": "array",
+                        "fields": [{"name": "id", "label": "ID", "type": "text"}]
+                    },
+                    {
+                        "name": "related_resources",
+                        "label": "Related Resources",
+                        "type": "array",
+                        "fields": [{"name": "id", "label": "ID", "type": "text"}]
+                    }
+                ]
+            }
+        ]
+    },
+    "type": {
+        "cloth": {
+            "fields": [
+                {"name": "size", "label": "Size", "type": "text"},
+                {"name": "gender", "label": "Gender", "type": "text"},
+                {"name": "age_group", "label": "Age Group", "type": "select", "options": ["baby", "child", "teen", "adult", "elder", "mixed"]},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["pants", "shirt", "t-shirt", "coat", "boots", "shoes"]},
+                {"name": "condition", "label": "Condition", "type": "select", "options": ["new", "used"]}
+            ]
+        },
+        "food": {
+            "fields": [
+                {"name": "expiration_date", "label": "Expiration Date", "type": "date"},
+                {"name": "allergens", "label": "Allergens", "type": "text"},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["grains", "vegetables", "fruits", "meats", "dairy", "baby food", "conserved food","warm food"]}
+            ]
+        },
+        "drink": {
+            "fields": [
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["water", "juice", "milk", "soda", "tea", "coffee", "cola", "yellow cola"]}
+            ]
+        },
+        "shelter": {
+            "fields": [
+                {"name": "number_of_people", "label": "Number of People", "type": "number"},
+                {"name": "weather_condition", "label": "Weather Condition", "type": "text"},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["tent", "temporary structure", "permanent structure"]}
+            ]
+        },
+        "medication": {
+            "fields": [
+                {"name": "disease_name", "label": "Disease Name", "type": "text"},
+                {"name": "medicine_name", "label": "Medicine Name", "type": "text"},
+                {"name": "age_group", "label": "Age Group", "type": "select", "options": ["baby", "child", "teen", "adult", "elder", "mixed"]},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["antibiotics", "analgesics", "antivirals", "vaccines"]}
+            ]
+        },
+        "transportation": {
+            "fields": [
+                {"name": "start_location", "label": "Start Location", "type": "text"},
+                {"name": "end_location", "label": "End Location", "type": "text"},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["car", "bus", "train", "airplane"]}
+            ]
+        },
+        "tool": {
+            "fields": [
+                {"name": "tool_type", "label": "Tool Type", "type": "text"},
+                {"name": "estimated_weight", "label": "Estimated Weight", "type": "number"},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["hand tools", "power tools", "gardening tools", "construction tools", "rescue tools"]}
+            ]
+        },
+        "human": {
+            "fields": [
+                {"name": "proficiency", "label": "Proficiency", "type": "text"},
+                {"name": "number_of_people", "label": "Number of People", "type": "number"},
+                {"name": "subtype", "label": "Subtype", "type": "select", "options": ["doctor", "engineer", "teacher", "laborer"]}
+            ]
+        }
+    }
+}

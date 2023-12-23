@@ -1,64 +1,60 @@
-
 import { Inter } from 'next/font/google';
 import MainLayout from '@/layouts/MainLayout';
 import MainInfo from '@/components/profile/MainInfo';
 import OptionalInfo from '@/components/profile/OptionalInfo';
 import ActivityTable from '@/components/ActivityTable';
-import InfoList from '@/components/profile/InfoList';
+import SkillList from '@/components/profile/SkillList';
+import SkillModal from '@/components/profile/SkillModal';
 import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useDisclosure } from "@nextui-org/react";
+import { ToastContainer } from 'react-toastify';
+import getLabels from '@/lib/getLabels';
 
-export default function Profile({guest, expired, main_info, optional_info, list_info }) {
+export default function Profile({guest, expired, main_info, optional_info, list_info, labels }) {
   const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [ modalState, setModalState ] = useState({options:[]});
+
   if (guest || expired) {
-    useEffect(() => router.push("/login"));
+    useEffect(() => {router.push("/login")});
     return (
       <div class="text-center text-xl">
         <br /><br /><br />
-        Oturum açmaya yönlendiriliyorsunuz...
+        {labels.auth.redirect_to_login}
       </div>
     );
   }
 
-  // const {misc, activities} = TODO;
+  const username = main_info.username;
   const {professions, languages, "socialmedia-links": social, skills} = list_info;
-  const prof_str = professions.map(prof => `${prof.profession} (${prof.profession_level})`);
-  const lang_str = languages.map(lang => `${lang.language} (${lang.language_level})`);
-  const skill_str = skills.map(skill => `${skill.skill_definition} (${skill.skill_level})`);
-  const social_str = social.map(social => <a href={social.profile_URL}>{platform_name}</a>);
-  const dictionary_tr = {
-    "username": "Kullanıcı Adı",
-    "date_of_birth": "Doğum Tarihi",
-    "nationality": "Ülke",
-    "identity_number": "Kimlik No",
-    "education": "Öğrenim",
-    "health_condition": "Sağlık Durumu",
-    "blood_type": "Kan Grubu",
-    "Address": "Adres"
-  }
-  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [dictionary_tr[key], val])
+  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [labels.profile[key], val]);
   optional_info_tr.sort();
   return (
     <>
       <main>
         <div class="flex justify-around space-x-8">
-          <MainInfo className="w-60" info={main_info}/>
-          <OptionalInfo className="w-96" fields={optional_info_tr} />
+          <MainInfo className="w-60" info={main_info} contact={true} labels={labels} />
+          <OptionalInfo className="w-80" fields={optional_info_tr} labels={labels} />
+          <div>
+            <SkillList list={social.list} topic={social.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
+            <SkillList list={skills.list} topic={skills.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
+            <SkillList list={languages.list} topic={languages.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
+            <SkillList list={professions.list} topic={professions.topic} username={username} onOpen={onOpen} setModalState={setModalState} labels={labels} />
+          </div>
         </div>
         <div class="my-10 w-full text-center">
           <Link href='/profile/edit'>
-            <button type="submit" class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Düzenle</button>
+            <button type="submit" class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{labels.UI.edit}</button>
           </Link>
         </div>
-        <InfoList list={social_str} />
-        <InfoList list={skill_str} />
-        <InfoList list={lang_str} />
-        <InfoList list={prof_str} />
-        <ActivityTable />
+        <ActivityTable labels={labels} />
+        <SkillModal isOpen={isOpen} onOpenChange={onOpenChange} topic={modalState} labels={labels} />
+        <ToastContainer />
       </main>
     </>
   )
@@ -71,6 +67,8 @@ export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps({ req, locale }) {
 
     let user;
+
+    const labels = await getLabels(req.session.language);
 
     try {
       user = req.session.user;
@@ -96,29 +94,49 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { expired: true } };
     }
 
-    const { data: { user_optional_infos: [optional_info] } } = await api.get('/api/profiles/get-user-optional-info', {
+    const { data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/user-optional-infos', {
       headers: {
         'Authorization': `Bearer ${user.accessToken}` 
       }
     });
+    const optional_info = optional_info_list.length > 0 ? optional_info_list[0] : {};
+    delete optional_info.username;
 
     let list_info = {}
 
-    for (let topic of ["professions", "languages", "socialmedia-links", "skills"]) {
-      let key = `user_${topic.replaceAll("-", "_")}`;
-      const { data: { [key]: fields } } = await api.get(`/api/profiles/${topic}`, {
+    const topics = [
+      {"api_url": "professions", "key": "user_professions",
+        "title": "Meslekler", "primary": "profession", "secondary": "profession_level", "is_link": false,
+        "post": "/add-profession", "delete": "",
+        "options": ["amateur", "pro", "certified pro"]},
+      {"api_url": "languages", "key": "user_languages",
+        "title": "Diller", "primary": "language", "secondary": "language_level", "is_link": false,
+        "post": "/add-language", "delete": "/delete-language",
+        "options": ["beginner", "intermediate", "advanced", "native"]},
+      {"api_url": "socialmedia-links", "key": "user_socialmedia_links",
+        "title": "Sosyal Medya", "primary": "platform_name", "secondary": "profile_URL", "is_link": true,
+        "post": "/add-socialmedia-link", "delete": ""},
+      {"api_url": "skills", "key": "user_skills",
+        "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", "is_link": false,
+        "post": "/add-skill", "delete": "",
+        "options": ["beginner", "basic", "intermediate", "skilled", "expert"]},
+    ]
+
+    for (let topic of topics) {
+      const { data: { [topic.key]: fields } } = await api.get(`/api/profiles/${topic.api_url}`, {
         headers: {
           'Authorization': `Bearer ${user.accessToken}` 
         }
       });
-      list_info[topic] = fields;
+      list_info[topic.api_url] = {"list": fields ? fields : [], "topic": topic};
     }
 
     return {
       props: {
         main_info,
         optional_info,
-        list_info
+        list_info,
+        labels
       },
     };
   },

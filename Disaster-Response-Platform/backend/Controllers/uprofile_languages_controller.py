@@ -36,7 +36,11 @@ async def get_user_and_language_level(response: Response, anyuser:str= None, lan
         else:
             username = None
     else:
-        username = anyuser
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
 
     try:
         result = uprofile_languages_service.get_user_language(username, language)
@@ -52,7 +56,7 @@ async def get_user_and_language_level(response: Response, anyuser:str= None, lan
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def add_a_language_currentuser(user_language: UserLanguage, response: Response, anyuser:str= None, current_username: str = Depends(authentication_service.get_current_username)):
+async def add_a_language_to_user(user_language: UserLanguage, response: Response, anyuser:str= None, current_username: str = Depends(authentication_service.get_current_username)):
     """
     Add a language skill to the current user. If the language skill is allready set for the user, level is updated (if different)
 
@@ -63,9 +67,17 @@ async def add_a_language_currentuser(user_language: UserLanguage, response: Resp
         - **language_level**: One of     beginner, intermediate, advanced. native
 
     """
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
 
     try:
-        user_language.username = current_username
+        user_language.username = username
         result = uprofile_languages_service.add_user_language(user_language)
         response.status_code = HTTPStatus.OK
         return json.loads(result)
@@ -74,7 +86,7 @@ async def add_a_language_currentuser(user_language: UserLanguage, response: Resp
         err_json =  create_json_for_error("User language not updated", str(err))
         return json.loads(err_json)
 
-@router.delete("/languages/delete-language", responses={
+@router.post("/languages/delete-language", responses={
     status.HTTP_200_OK: {"model": Languages},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
@@ -89,9 +101,17 @@ async def delete_current_users_language(user_language: UserLanguage, response: R
         - **language**: Any language like German, Spanish, Zulu etc.
 
     """
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
 
     try:
-        user_language.username = current_username
+        user_language.username = username
         result = uprofile_languages_service.delete_user_language(user_language)
         response.status_code = HTTPStatus.OK
         return json.loads(result)

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#5B7FC8</color>
+    <color name="primaryVariant">#8098CA</color>
+    <color name="onPrimary">#202020</color>
+    <color name="secondary">#D84315</color>
+    <color name="secondaryVariant">#F4511E</color>
+    <color name="onSecondary">#FFFFFF</color>
+
+    <color name="colorAction">#761EB5</color>
+    <color name="colorEmergency">#A80C0C</color>
+    <color name="colorEvent">#7A594C</color>
+    <color name="colorNeed">#0677AA</color>
+    <color name="colorResource">#067A47</color>
+    <color name="colorActivity">#656565</color>
+    <color name="separator">#6A6A6A</color>
+
+    <color name="icon">#D3D3D3</color>
+    <color name="text">#D3D3D3</color>
+    <color name="upvote">#067A47</color>
+    <color name="downvote">#A80C0C</color>
+
+    <color name="bottom_sheet_bg">#2B2B2B</color>
+
+</resources>

@@ -1,21 +1,204 @@
 import styles from "./MapFilterMenu.module.scss";
 import { FaSearch } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { api } from "@/lib/apiUtils";
 
-import {ToastContainer, toast} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+export default function MapFilterMenu({
+  activateClick,
+  setResourceApiData,
+  setNeedApiData,
+  isMapSelected,
+  selectMap,
+  labels
+}) {
+  const [resourceChecked, setResourceChecked] = useState(false);
+  const [aktifChecked, setAktifChecked] = useState(false);
+  const [eventChecked, setEventChecked] = useState(false);
+  const [actionsChecked, setActionsChecked] = useState(false);
+  const [needsChecked, setNeedsChecked] = useState(false);
 
-export default function MapFilterMenu({activateClick,isMapSelected,selectMap}) {
-  const notify = () => {
-    toast.info('Haritadan lokasyon seçiniz', {
-      position: 'top-center',
+  useEffect(() => {
+    fetchResources();
+    fetchNeeds();
+  }, []);
+
+
+  const notifyFilter = () => {
+    toast.info(labels.map.choose_scan_center, {
+      position: "top-center",
       autoClose: 5000, // Auto close the notification after 3 seconds (adjust as needed)
     });
   };
+
+  const notifyAdd = () => {
+    toast.info(labels.map.choose_location, {
+      position: "top-center",
+      autoClose: 5000, // Auto close the notification after 3 seconds (adjust as needed)
+    });
+  };
+  const fetchResources = async () => {
+    try {
+      // Make API call to filter resources based on the search term
+      //const searchTerm = /* Get the search term from your input field */;
+      const resourceResponse = await api.get(
+        `/api/resources/?sort_by=created_at&order=asc`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Additional headers or credentials if needed
+        }
+      );
+      console.log("consolelog:", resourceResponse.status);
+      if (resourceResponse.status == 200) {
+        const resources = await resourceResponse.data;
+        // Process the data as needed
+        console.log("Filtered Resources:", resources);
+        setResourceApiData(resources.resources);
+        resources.resources.forEach((resource) => {
+          const xValue = resource.x;
+          const yValue = resource.y;
+          console.log(
+            `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+          );
+        });
+
+        
+      } else {
+        // Handle errors
+        console.error(
+          "Error fetching filtered resources:",
+          response.statusText
+        );
+      } 
+
+  }catch (error) {
+    // Handle unexpected errors
+    console.error("Error:", error);
+  }};
+
+  const fetchNeeds = async () => {
+    const needResponse = await api.get(
+      `/api/needs/?sort_by=created_at&order=asc`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Additional headers or credentials if needed
+      }
+    );
+    console.log("consolelog:", needResponse.status);
+    if (needResponse.status == 200) {
+      const needs = await needResponse.data;
+      // Process the data as needed
+      console.log("Filtered Needs:",  needs);
+      setNeedApiData(needs.needs);
+      needs.needs.forEach((resource) => {
+        const xValue = resource.x;
+        const yValue = resource.y;
+        console.log(
+          `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+        );
+      });
+
+      
+    } else {
+      // Handle errors
+      console.error(
+        "Error fetching filtered resources:",
+        needs.statusText
+      );
+    }
+  };
+
+  const handleFilterClick = async () => {
+    console.log("I am in handleFilterClick");
+    try {
+      // Make API call to filter resources based on the search term
+      //const searchTerm = /* Get the search term from your input field */;
+      const resourceResponse = await api.get(
+        `/api/resources/?sort_by=created_at&order=asc`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
+          // Additional headers or credentials if needed
+        }
+      );
+      console.log("consolelog:", resourceResponse.status);
+      if (resourceResponse.status == 200) {
+        const resources = await resourceResponse.data;
+        // Process the data as needed
+        console.log("Filtered Resources:", resources);
+        setResourceApiData(resources.resources);
+        resources.resources.forEach((resource) => {
+          const xValue = resource.x;
+          const yValue = resource.y;
+          console.log(
+            `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+          );
+        });
+
+        
+      } else {
+        // Handle errors
+        console.error(
+          "Error fetching filtered resources:",
+          response.statusText
+        );
+      }
+
+      const needResponse = await api.get(
+        `/api/needs/?sort_by=created_at&order=asc`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Additional headers or credentials if needed
+        }
+      );
+      console.log("consolelog:", needResponse.status);
+      if (needResponse.status == 200) {
+        const needs = await needResponse.data;
+        // Process the data as needed
+        console.log("Filtered Needs:",  needs);
+        setNeedApiData(needs.needs);
+        needs.needs.forEach((resource) => {
+          const xValue = resource.x;
+          const yValue = resource.y;
+          console.log(
+            `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+          );
+        });
+
+        
+      } else {
+        // Handle errors
+        console.error(
+          "Error fetching filtered resources:",
+          needs.statusText
+        );
+      }
+
+
+
+    } catch (error) {
+      // Handle unexpected errors
+      console.error("Error:", error);
+    }
+  };
+
   const popup = () => {
     selectMap();
     onOpen();
-    []
-  }
+    [];
+  };
 
   return (
     <div className={styles.main}>
@@ -24,7 +207,7 @@ export default function MapFilterMenu({activateClick,isMapSelected,selectMap}) {
           <input
             type="text"
             className={styles.searchTerm}
-            placeholder="Ne arıyorsunuz ?"
+            placeholder={labels.placeholders.search_bar}
           ></input>
           <button type="submit" className={styles.searchButton}>
             <FaSearch />
@@ -32,7 +215,7 @@ export default function MapFilterMenu({activateClick,isMapSelected,selectMap}) {
         </div>
       </div>
       <div className="CheckBox">
-        <div className={styles.header}>Filtreler</div>
+        <div className={styles.header}>{labels.sort_filter.filters}</div>
         <hr
           style={{
             background: "gray",
@@ -41,29 +224,74 @@ export default function MapFilterMenu({activateClick,isMapSelected,selectMap}) {
             alignSelf: "center",
           }}
         />
+        <button
+          onClick={() => {
+            notifyFilter();
+          }}
+          className="bg-yellow-500 hover:bg-yellow-700 text-white 
+                          font-bold py-1 px-2 rounded w-full "
+        >
+          {labels.map.scan_certain_area}
+        </button>
+
         <div>
-          <input type="checkbox" className={styles.checkbox} />
-          Resource
+          {labels.sort_criteria.type}
+          <input className=""/>
+        </div>
+        <div>
+          {labels.sort_criteria.subtype}
+          <input className=""/>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            className={styles.checkbox}
+            checked={aktifChecked}
+            onChange={() => setAktifChecked(!aktifChecked)}
+          />
+          {labels.sort_filter.active_only}
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          Event
+          {labels.activities.resources}
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          Actions
+          {labels.activities.events}
         </div>
         <div>
           <input type="checkbox" className={styles.checkbox} />
-          Needs
+          {labels.activities.actions}
         </div>
-        <button onClick={() => {activateClick(); notify();}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full
-                          absolute bottom-0 right-0.5">
-            İlan Oluştur
+        <div>
+          <input type="checkbox" className={styles.checkbox} />
+          {labels.activities.needs}
+        </div>
+        <div>
+          <input type="checkbox" className={styles.checkbox} />
+          {labels.activities.emergencies}
+        </div>
+        <button
+          onClick={() => {
+            handleFilterClick();
+          }}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full
+                          absolute bottom-10 right-0.5"
+        >
+          {labels.sort_filter.filter}
+        </button>
+        <button
+          onClick={() => {
+            activateClick();
+            notifyAdd();
+          }}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full
+                          absolute bottom-0 right-0.5"
+        >
+          {labels.activities.add_resource}
         </button>
         {isMapSelected ? popup() : <></>}
-        <ToastContainer/>
-        
+        <ToastContainer />
       </div>
     </div>
   );

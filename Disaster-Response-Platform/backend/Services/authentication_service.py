@@ -8,7 +8,7 @@ from Models.user_model import *
 from typing import Annotated
 import config
 import json
-
+from fastapi.security import HTTPBearer
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -18,29 +18,53 @@ SECRET_KEY = config.SECRET_KEY
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-
+auth_scheme = HTTPBearer()
 userDb = MongoDB.get_collection('authenticated_user')
 # Verify JWT token
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(auth_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+  
     try:
+        # if not  token.credentials is None:
+        #     token = token.credentials
+        # payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if not isinstance(token, str) and not  token.credentials is None:
+            token = token.credentials
+         
+
+            # If token is an instance of Token, access its credentials attribute
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
+         
             raise credentials_exception
     except JWTError:
         raise credentials_exception
     user = get_user(username)
     if user is None:
         raise credentials_exception
+
     return user
+
+def get_current_admin_user(current_user: UserProfile = Depends(get_current_user)):
+    if current_user.user_role.value != "ADMIN":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f'Only admins have access to this route')
+    return current_user.user_role
 
 def get_current_username(current_user: LoginUserRequest= Depends(get_current_user)):
     return current_user.username
+
+def get_current_email(current_user: LoginUserRequest= Depends(get_current_user)):
+    if current_user.email:
+        return current_user.email
+    else:
+        raise HTTPException(status_code=404, detail="Email not found for the current user")
 
 def update_user(username: str, updated_user: UpdateUserRequest):
  
@@ -92,7 +116,10 @@ def create_jwt_token(data: dict, expires_delta: timedelta):
     expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+    user= get_current_user(encoded_jwt)
+    if user.proficiency is not None:
+        return LoginResponse(access_token= encoded_jwt, token_type='Bearer', user_role=user.user_role, proficiency= user.proficiency )
+    return LoginResponse(access_token= encoded_jwt, token_type='Bearer', user_role=user.user_role )
 
 def create_user(user: CreateUserRequest):
 
@@ -115,8 +142,11 @@ def create_user(user: CreateUserRequest):
         
     hash= get_password_hash(user.password)
     user.password=hash
+    user.proficiency= {}
+    user.user_role= UserRole.GUEST.value #default signed up user is authenticated
+  
     insert_result = userDb.insert_one(user.dict())
-    
+
     if insert_result.inserted_id:
         success_response = SignUpSuccess(
             user=dict(user),
@@ -142,6 +172,7 @@ def get_user(username_or_email_or_phone: str):
             {"phone_number": username_or_email_or_phone}
         ]
     })
+    print("hey")
     if user_document is not None:
         return UserProfile(**user_document)
 
@@ -178,3 +209,41 @@ def is_valid_password(password):
 
     # if not any(char.islower() for char in password):
     #     return False
+
+
+def verify_user(username: str):
+    user = get_user(username)
+    if not user:
+        raise ValueError(f"No such user with username {username}")
+    
+    update_result = userDb.update_one(
+    {"username": username},
+    {"$set": {"user_role": "CREDIBLE"}}
+    )    
+    return True
+
+def unverify_user(username: str):
+    user = get_user(username)
+    if not user:
+        raise ValueError(f"No such user with username {username}")
+    
+    update_result = userDb.update_one(
+    {"username": username},
+    {"$set": {"user_role": "AUTHENTICATED"}}
+    )    
+    return True
+    
+def unauthorize_user(username: str):
+    user = get_user(username)
+    if not user:
+        raise ValueError(f"No such user with username {username}")
+    
+    update_result = userDb.update_one(
+    {"username": username},
+    {"$set": {"user_role": "GUEST"}}
+    )    
+    return True
+
+def is_admin(username: str):
+    user = get_user(username)
+    return (user.user_role == user.user_role.ADMIN)

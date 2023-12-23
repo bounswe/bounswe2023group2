@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
+import com.example.disasterresponseplatform.data.models.authModels.EmailVerificationVerifyRequestBody
 import com.example.disasterresponseplatform.data.models.authModels.RegisterRequestBody
 import com.example.disasterresponseplatform.data.models.authModels.SignInRequestBody
 import com.example.disasterresponseplatform.data.models.authModels.SignInResponseBody401
@@ -19,6 +20,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -26,6 +28,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class AuthenticationViewModel@Inject constructor() : ViewModel() {
@@ -39,7 +42,6 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
     private val _signUpEmail = MutableLiveData<String>()
     private val _signUpPassword = MutableLiveData<String>()
     private val _signUpConfirmPassword = MutableLiveData<String>()
-
 
     private val networkManager = NetworkManager()
 
@@ -65,6 +67,18 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
     private val _signInSuccessful = MutableLiveData<Boolean>()
     val signInSuccessful: LiveData<Boolean> = _signInSuccessful
+
+    private val _emailVerificationSendSuccess = MutableLiveData<Boolean>()
+    val emailVerificationSendSuccess: LiveData<Boolean> = _emailVerificationSendSuccess
+
+    private val _emailVerificationSendError = MutableLiveData<String?>()
+    val emailVerificationSendError: LiveData<String?> = _emailVerificationSendError
+
+    private val _emailVerificationSuccess = MutableLiveData<Boolean>()
+    val emailVerificationSuccess: LiveData<Boolean> = _emailVerificationSuccess
+
+    private val _emailVerificationError = MutableLiveData<String?>()
+    val emailVerificationError: LiveData<String?> = _emailVerificationError
 
     // Update username and password from the UI
     fun updateSignUpFullName(signUpFullName: String) {
@@ -230,7 +244,8 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
         val email = _signUpEmail.value ?: "defaultEmail@example.com"
         val password = _signUpPassword.value ?: "defaultPassword"
         val fullName = _signUpFullName.value ?: "Default Name"
-        val phoneNumber = "05346710755" ?: "defaultPhoneNumber"
+        val phoneNumber =
+            ("0534671" + Random.nextInt(1000, 10000).toString()) ?: "defaultPhoneNumber"
 
         // Splitting the full name into first name and last name
         val parts = fullName.split(" ", limit = 2)
@@ -304,7 +319,7 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                                         Log.d("Error Message", errorResponse.detail[0].message)
                                         _signUpError.value = errorResponse.detail[0].message
                                     }
-                                    else if (responseCode == 400) {
+                                    else if (responseCode == 401) {
                                         val errorResponse = gson.fromJson(errorBody, SignUpResponseBody400::class.java)
                                         Log.d("Error Message", errorResponse.errorDetail)
                                         _signUpError.value = errorResponse.errorDetail
@@ -325,6 +340,99 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     _signUpError.value = "Unexpected Error Happened"
+                }
+            }
+        )
+    }
+
+    fun sendEmailVerification() {
+
+        val headers = mapOf(
+            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            "Content-Type" to "application/json",
+        )
+
+        val emptyRequestBody = "".toRequestBody("application/json".toMediaTypeOrNull())
+
+        networkManager.makeRequest(
+            endpoint = Endpoint.EMAIL_VERIFICATION_SEND,
+            requestType = RequestType.POST,
+            headers = headers,
+            requestBody = emptyRequestBody,
+            callback = object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        _emailVerificationSendSuccess.value = true
+
+                    } else {
+                        Log.d("Error Message", "Error: ${response.message()}")
+                        _emailVerificationSendError.value = "Error: ${response.message()}"
+
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    // Handle failure to make the API call (update UI with error message)
+                    _emailVerificationSendError.value =
+                        "Failed to send email verification. Please check your connection."
+                    Log.e("ResponseError", "Request failed: ${t.message}")
+                }
+            }
+        )
+    }
+
+    fun verifyEmail(verificationCode: String) {
+
+        val headers = mapOf(
+            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            "Content-Type" to "application/json",
+            )
+
+        val evVerifyRequest = EmailVerificationVerifyRequestBody(
+            token = verificationCode,
+        )
+
+        val gson = Gson()
+        val json = gson.toJson(evVerifyRequest)
+        val requestBody =
+            json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+        println(requestBody)
+
+        val queries = mapOf("token" to verificationCode)
+
+        networkManager.makeRequest(
+            endpoint = Endpoint.EMAIL_VERIFICATION_VERIFY,
+            requestType = RequestType.POST,
+            headers = headers,
+            queries = queries,
+            requestBody = requestBody,
+            callback = object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        _emailVerificationSuccess.value = true
+                    } else {
+                        Log.d("Error Message", "Verification failed. Please try again.")
+                        _emailVerificationError.value = "Verification failed. Please try again."
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    // Handle failure to make the API call (update UI with error message)
+                    _emailVerificationError.value =
+                        "Failed to verify. Please check your connection."
+                    Log.e("ResponseError", "Request failed: ${t.message}")
                 }
             }
         )

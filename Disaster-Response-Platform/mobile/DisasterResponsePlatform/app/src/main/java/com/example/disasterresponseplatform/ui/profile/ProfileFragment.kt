@@ -3,6 +3,7 @@ package com.example.disasterresponseplatform.ui.profile
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -10,36 +11,54 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.data.enums.Endpoint
+import com.example.disasterresponseplatform.data.enums.RequestType
+import com.example.disasterresponseplatform.data.models.authModels.LanguageArray
+import com.example.disasterresponseplatform.data.models.authModels.ProfessionArray
+import com.example.disasterresponseplatform.data.models.authModels.SkillArray
+import com.example.disasterresponseplatform.data.models.authModels.SocialMediaArray
+import com.example.disasterresponseplatform.data.models.authModels.UserRolesResponse
+import com.example.disasterresponseplatform.data.models.authModels.UsersMeOptionalResponse
+import com.example.disasterresponseplatform.data.models.authModels.UsersMeResponse
+import com.example.disasterresponseplatform.data.models.authModels.UsersOptionalArray
 import com.example.disasterresponseplatform.databinding.FragmentProfileBinding
 import com.example.disasterresponseplatform.databinding.ProfileItemBinding
 import com.example.disasterresponseplatform.data.models.usertypes.AuthenticatedUser
-import com.example.disasterresponseplatform.data.models.usertypes.CredibleUser
-import com.example.disasterresponseplatform.data.models.usertypes.RoleBasedUser
-import com.example.disasterresponseplatform.ui.profile.notification.SubscribeNotificationFragment
-import com.example.disasterresponseplatform.ui.profile.pastUserActions.PastUserActionsFragment
+import com.example.disasterresponseplatform.data.models.usertypes.Role
+import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.authentication.LoginFragment
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import java.time.LocalDate
-import kotlin.random.Random
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
-class ProfileFragment : Fragment() {
+class ProfileFragment(var username: String?) : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    private val pastUserActionsFragment = PastUserActionsFragment()
-    private val subscribeNotificationFragment = SubscribeNotificationFragment()
+    private val editProfileFragment = EditProfileFragment()
+    private var profileLevel: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileBinding.inflate(inflater,container,false)
+
+        // Change ActionBar and StatusBar color
+        (activity as AppCompatActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.primary)))
+        (activity as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
+
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -47,61 +66,467 @@ class ProfileFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        clickButtons()
-        lateinit var tempUser: AuthenticatedUser
-        when (Random.nextInt(3)) {
-            0 -> {
-                tempUser = RoleBasedUser("suzanuskudarli", "suzan.uskudarli@boun.edu.tr",
-                    "+90 534 062 38 47", "Suzan", "Üsküdarlı", "Professor")
-                tempUser.profileInfoShared = true
-                tempUser.isEmailVerified = true
-                tempUser.verificationLevel = 2
-                tempUser.profilePhoto = "https://media.licdn.com/dms/image/C4E03AQGOt48wKCVf0Q/profile-displayphoto-shrink_800_800/0/1516273377753?e=1703721600&v=beta&t=dXz_0jzvzbeZcy2XM_0OyT6AJVSdmZtK5i3OkHXAHsc"
-            }
-            1 -> {
-                tempUser = CredibleUser("alperahmetoglu", "alper.ahmetoglu@boun.edu.tr",
-                    "+90 534 062 38 47", "Alper", "Ahmetoğlu", "Marmara Region")
-                tempUser.verifiedBy = "suzanuskudarli"
-                tempUser.profileInfoShared = true
-                tempUser.isPhoneVerified = true
-                tempUser.verificationLevel = 1
-                tempUser.region = "Marmara Region"
-                tempUser.profilePhoto = "https://media.licdn.com/dms/image/C4E03AQH6i9kLm7Ogpg/profile-displayphoto-shrink_800_800/0/1610042947274?e=1703721600&v=beta&t=lfbNSMArUXZH26rZ4kmjHabh1v7TlPnQ5CEWw74HP5Q"
-                tempUser.birth = LocalDate.of(1996, 4, 26)
-                tempUser.nationality = "Turkey"
-                tempUser.idNumber = "26419826416"
-                tempUser.address = "İstanbul, Turkey"
-                tempUser.education = "PhD"
-                tempUser.healthCondition = "Healthy"
-                tempUser.bloodType = "A+"
-                tempUser.socialMedia.add(AuthenticatedUser.SocialMedia("LinkedIn", "https://www.linkedin.com/in/alperahmetoglu/"))
-                tempUser.socialMedia.add(AuthenticatedUser.SocialMedia("X", "https://twitter.com/alperahmetoglu"))
-                tempUser.socialMedia.add(AuthenticatedUser.SocialMedia("GitHub", "https://github.com/alper111"))
-                tempUser.socialMedia.add(AuthenticatedUser.SocialMedia("YouTube", "https://www.youtube.com/@higgsbozonu"))
-                tempUser.skills.add(AuthenticatedUser.Skill("Java", "Expert", "https://notepad.pw/cahidingecicisayfasi"))
-                tempUser.skills.add(AuthenticatedUser.Skill("Kotlin", "Expert", "https://notepad.pw/cahidingecicisayfasi"))
-                tempUser.skills.add(AuthenticatedUser.Skill("Python", "Expert", "https://notepad.pw/cahidingecicisayfasi"))
-                tempUser.skills.add(AuthenticatedUser.Skill("C++", "Expert", "https://notepad.pw/cahidingecicisayfasi"))
-                tempUser.languages.add(AuthenticatedUser.Language("Turkish", "Native"))
-                tempUser.languages.add(AuthenticatedUser.Language("English", "Fluent"))
-                tempUser.languages.add(AuthenticatedUser.Language("German", "Intermediate"))
-                tempUser.professions.add(AuthenticatedUser.Profession("Software Developer", "Expert"))
-                tempUser.professions.add(AuthenticatedUser.Profession("Software Architect", "Expert"))
-                tempUser.professions.add(AuthenticatedUser.Profession("Software Engineer", "Expert"))
+        profileLevel = 0
+        lateinit var user: AuthenticatedUser
+        if (!DiskStorageManager.hasKey("token")) {
+            binding.profileLoginFirstText.visibility = View.VISIBLE
+            binding.profileProgressBar.visibility = View.GONE
+            replaceFragment(LoginFragment())
+        } else {
+            val networkManager = NetworkManager()
+            val headers = mapOf(
+                "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+                "Content-Type" to "application/json"
+            )
+            if (username == null) { // get self profile info
+                binding.profileCallButton.text = getString(R.string.pr_logout)
+                binding.profileCallButton.setOnClickListener {
+                    DiskStorageManager.removeKey("token")
+                    replaceFragment(LoginFragment())
+                }
+                user = AuthenticatedUser("", "", "", "", "")
 
-            }
-            2 -> {
-                tempUser = AuthenticatedUser("cahideneskeles", "cahid.keles@boun.edu.tr",
-                    "+90 534 062 38 47", "Cahid Enes", "Keleş")
+                networkManager.makeRequest(
+                    endpoint = Endpoint.GETUSER,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, UserRolesResponse::class.java)
+                                println("USER ROLE: " + res.user_role)
+                                when (res.user_role) {
+                                    "CREDIBLE" -> {
+                                        user.role = Role.CREDIBLE
+                                    }
+                                    "ROLE_BASED" -> {
+                                        user.role = Role.ROLE_BASED
+                                    }
+                                    "ADMIN" -> {
+                                        user.role = Role.ADMIN
+                                    }
+                                    else -> {}
+                                }
+                                fillInformations(user)
+                            } else {
+                                println("response not successful")
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            println("userrole request failed")
+                        }
+
+                    }
+                )
+
+                networkManager.makeRequest(
+                    endpoint = Endpoint.ME,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            binding.profileLoginFirstText.visibility = View.VISIBLE
+                            binding.profileProgressBar.visibility = View.GONE
+                            binding.profileLoginFirstText.text = getString(R.string.pr_no_connection)
+                        }
+
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, UsersMeResponse::class.java)
+
+                                user.username = res.username
+                                user.email = res.email
+                                user.phone = res.phoneNumber
+                                user.name = res.firstName
+                                user.surname = res.lastName
+                                user.profileInfoShared = res.privateAccount
+                                user.isEmailVerified = res.isEmailVerified
+
+                                clickButtons(user)
+                                fillInformations(user)
+                            } else {
+                                binding.profileLoginFirstText.visibility = View.VISIBLE
+                                binding.profileProgressBar.visibility = View.GONE
+                                replaceFragment(LoginFragment())
+                            }
+                        }
+                    }
+                )
+                networkManager.makeRequest(
+                    endpoint = Endpoint.ME_OPTIONAL,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val resr = gson.fromJson(body, UsersOptionalArray::class.java)
+                                var res: UsersMeOptionalResponse? = null
+                                val myusername = DiskStorageManager.getKeyValue("username")
+                                for (resmi in resr.list) {
+                                    if (resmi.username == myusername) {
+                                        res = resmi
+                                    }
+                                }
+                                if (res != null) {
+                                    if (res.dateOfBirth != null && res.dateOfBirth.isNotBlank()) {
+                                        user.birth = res.dateOfBirth.split(" ")[0]
+                                    }
+                                    user.nationality = res.nationality
+                                    user.idNumber = res.identityNumber
+                                    user.education = res.education
+                                    user.healthCondition = res.healthCondition
+                                    user.bloodType = res.bloodType
+                                    user.address = res.address
+                                } else {
+                                    println("res null")
+                                }
+                                fillInformations(user)
+                            } else {
+                                println("response not successful")
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            println("Unexpected Error occurred")
+                            println(t.message)
+                        }
+
+                    }
+                )
+                networkManager.makeRequest(
+                    endpoint = Endpoint.LANGUAGE_GET,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, LanguageArray::class.java)
+                                if (res.list != null) {
+                                    for (language in res.list) {
+                                        user.languages.add(
+                                            AuthenticatedUser.Language(
+                                                language.second,
+                                                language.third
+                                            )
+                                        )
+                                    }
+                                } else {
+                                    println("Res nasıl null çıkıyo ya")
+                                }
+                                fillInformations(user)
+                            } else {
+                                println("response not successful: " + response.code())
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {}
+
+                    }
+                )
+                networkManager.makeRequest(
+                    endpoint = Endpoint.SOCIAL_MEDIA_GET,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, SocialMediaArray::class.java)
+                                if (res.list != null)
+                                    for (socialMedia in res.list) {
+                                        user.socialMedia.add(
+                                            AuthenticatedUser.SocialMedia(
+                                                socialMedia.second,
+                                                socialMedia.third
+                                            )
+                                        )
+                                    }
+                                fillInformations(user)
+                            } else {
+                                println("response not successful")
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {}
+
+                    }
+                )
+                networkManager.makeRequest(
+                    endpoint = Endpoint.SKILL_GET,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, SkillArray::class.java)
+                                if (res.list != null)
+                                    for (skill in res.list) {
+                                        user.skills.add(
+                                            AuthenticatedUser.Skill(
+                                                skill.second,
+                                                skill.third,
+                                                ""
+                                            )
+                                        )
+                                    }
+                                fillInformations(user)
+                            } else {
+                                println("response not successful")
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {}
+
+                    }
+                )
+                networkManager.makeRequest(
+                    endpoint = Endpoint.PROFESSION_GET,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, ProfessionArray::class.java)
+                                if (res.list != null)
+                                    for (profession in res.list) {
+                                        user.professions.add(
+                                            AuthenticatedUser.Profession(
+                                                profession.second,
+                                                profession.third
+                                            )
+                                        )
+                                        println("profession added: " + profession.second)
+                                    }
+
+                                fillInformations(user)
+                            } else {
+                                println("response not successful")
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {}
+
+                    }
+                )
+            } else {
+                println("username: " + username)
+                profileLevel += 4
+                binding.profileCallButton.setOnClickListener {
+                    if (ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.CALL_PHONE
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // Permission is granted, make the phone call
+                        var callIntent = Intent(Intent.ACTION_CALL)
+                        callIntent.data = Uri.parse(
+                            "tel:" + binding.profilePhoneNumber.text.toString().replace(" ", "")
+                        )
+                        startActivity(callIntent)
+                    } else {
+                        // Permission is not granted, request the permission
+                        ActivityCompat.requestPermissions(
+                            requireActivity(),
+                            arrayOf(Manifest.permission.CALL_PHONE),
+                            1
+                        )
+                    }
+                }
+                user = AuthenticatedUser("", "", "", "", "")
+
+                networkManager.makeRequest(
+                    endpoint = Endpoint.GETUSER,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    id = username,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, UserRolesResponse::class.java)
+                                println("USER ROLE: " + res.user_role)
+                                when (res.user_role) {
+                                    "CREDIBLE" -> {
+                                        user.role = Role.CREDIBLE
+                                    }
+                                    "ROLE_BASED" -> {
+                                        user.role = Role.ROLE_BASED
+                                    }
+                                    "ADMIN" -> {
+                                        user.role = Role.ADMIN
+                                    }
+                                    else -> {}
+                                }
+                                fillInformations(user)
+                            } else {
+                                println("response not successful")
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            println("userrole request failed")
+                        }
+
+                    }
+                )
+
+                networkManager.makeRequest(
+                    endpoint = Endpoint.USERS,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    id = username,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            binding.profileLoginFirstText.visibility = View.VISIBLE
+                            binding.profileProgressBar.visibility = View.GONE
+                            binding.profileLoginFirstText.text = getString(R.string.pr_no_connection)
+                        }
+
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val res = gson.fromJson(body, UsersMeResponse::class.java)
+
+                                user.username = res.username
+                                user.email = res.email
+                                user.phone = res.phoneNumber
+                                user.name = res.firstName
+                                user.surname = res.lastName
+                                user.profileInfoShared = res.privateAccount
+                                user.isEmailVerified = res.isEmailVerified
+
+                                clickButtons(user)
+                                fillInformations(user)
+                            } else {
+                                print(response.message())
+                                println("Hello")
+                                binding.profileLoginFirstText.visibility = View.VISIBLE
+                                binding.profileProgressBar.visibility = View.GONE
+                                binding.profileLoginFirstText.text =
+                                    getString(R.string.pr_hidden_profile)
+//                                replaceFragment(LoginFragment())
+                            }
+                        }
+                    }
+                )
+                networkManager.makeRequest(
+                    endpoint = Endpoint.ME_OPTIONAL,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val body = response.body()?.string()
+                                val gson = Gson()
+                                println(body)
+                                val resr = gson.fromJson(body, UsersOptionalArray::class.java)
+                                var res: UsersMeOptionalResponse? = null
+                                for (resmi in resr.list) {
+                                    if (resmi.username == username) {
+                                        res = resmi
+                                    }
+                                }
+                                if (res != null) {
+                                    if (res!!.dateOfBirth != null && res!!.dateOfBirth.isNotBlank()) {
+                                        user.birth = res!!.dateOfBirth.split(" ")[0]
+                                    }
+                                    user.nationality = res!!.nationality
+                                    user.idNumber = res!!.identityNumber
+                                    user.education = res!!.education
+                                    user.healthCondition = res!!.healthCondition
+                                    user.bloodType = res!!.bloodType
+                                    user.address = res!!.address
+                                } else {
+                                    println("res null")
+                                }
+                                fillInformations(user)
+                            } else {
+                                println("response not successful")
+                                println(response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            println("Unexpected Error occurred")
+                            println(t.message)
+                        }
+
+                    }
+                )
             }
         }
-
-        fillInformations(tempUser)
     }
 
     private fun fillInformations(user: AuthenticatedUser) {
+        profileLevel += 1
+        println("profileLevel: " + profileLevel)
+        if (profileLevel < 7) return
         binding.apply {
             // read image from url and set it to profilePhoto
+            profileProgressBar.visibility = View.GONE
+            profileScrollView.visibility = View.VISIBLE
             if (user.profilePhoto != null) {
                 Picasso.get().load(user.profilePhoto!!.toUri()).into(profileImage)
             }
@@ -109,17 +534,24 @@ class ProfileFragment : Fragment() {
             profileUsername.text = user.username
             profileEmail.text = user.email
             profilePhoneNumber.text = user.phone
-            profileEmailVerifiedIcon.visibility = if (user.isEmailVerified) View.VISIBLE else View.GONE
-            profilePhoneVerifiedIcon.visibility = if (user.isPhoneVerified) View.VISIBLE else View.GONE
-            when (user) {
-                is CredibleUser -> {
+            profileEmailVerifiedIcon.visibility =
+                if (user.isEmailVerified) View.VISIBLE else View.GONE
+            profilePhoneVerifiedIcon.visibility =
+                if (user.isPhoneVerified) View.VISIBLE else View.GONE
+            when (user.role) {
+                Role.CREDIBLE -> {
                     profileRegionLayout.visibility = View.VISIBLE
-                    profileRegion.text = "Credible User in " + user.region
+                    profileRegion.text = "Credible User"
                 }
-                is RoleBasedUser -> {
+                Role.ROLE_BASED -> {
                     profileProficiencyLayout.visibility = View.VISIBLE
-                    profileProficiency.text = "Profficient User: " + user.proficiency
+                    profileProficiency.text = "Profficient User"
                 }
+                Role.ADMIN -> {
+                    profileAdminLayout.visibility = View.VISIBLE
+                    profileAdmin.text = "Admin"
+                }
+                else -> {}
             }
             when (user.verificationLevel) {
                 1 -> {
@@ -127,6 +559,7 @@ class ProfileFragment : Fragment() {
                     profileVerifiedByLayout.visibility = View.VISIBLE
                     profileVerifiedBy.text = "Verified By " + user.verifiedBy
                 }
+
                 2 -> profileAdminIcon.visibility = View.VISIBLE
             }
 
@@ -151,8 +584,11 @@ class ProfileFragment : Fragment() {
             }
 
             if (user.education != null) {
+                val backendLevelArray: Array<String> =
+                    arrayOf("ilk", "orta", "lise", "yuksekokul", "universite")
+                val showArray = resources.getStringArray(R.array.education)
                 profileEducationLayout.visibility = View.VISIBLE
-                profileEducation.text = user.education
+                profileEducation.text = showArray[backendLevelArray.indexOf(user.education)]
             }
 
             if (user.healthCondition != null) {
@@ -167,11 +603,13 @@ class ProfileFragment : Fragment() {
 
             var counter = 0
             for (socialMedia in user.socialMedia) {
-                val profileItemBinding: ProfileItemBinding = ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
+                val profileItemBinding: ProfileItemBinding =
+                    ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
                 profileItemBinding.profileItemText.text = socialMedia.platformName
                 profileItemBinding.profileItemLink.visibility = View.VISIBLE
                 profileItemBinding.profileItemLink.setOnClickListener {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(socialMedia.profileURL))
+                    val browserIntent =
+                        Intent(Intent.ACTION_VIEW, Uri.parse(socialMedia.profileURL))
                     startActivity(browserIntent)
                 }
                 when (socialMedia.platformName.lowercase()) {
@@ -185,7 +623,8 @@ class ProfileFragment : Fragment() {
             }
 
             for (skill in user.skills) {
-                val profileItemBinding: ProfileItemBinding = ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
+                val profileItemBinding: ProfileItemBinding =
+                    ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
                 profileItemBinding.profileItemText.text = skill.definition + ": " + skill.level
                 profileItemBinding.profileItemLink.visibility = View.VISIBLE
                 profileItemBinding.profileItemLink.setOnClickListener {
@@ -197,41 +636,45 @@ class ProfileFragment : Fragment() {
             }
 
             for (language in user.languages) {
-                val profileItemBinding: ProfileItemBinding = ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
+                val profileItemBinding: ProfileItemBinding =
+                    ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
                 profileItemBinding.profileItemText.text = language.language + ": " + language.level
                 profileTopLayout.addView(profileItemBinding.root, 20 + counter)
                 counter++
             }
 
             for (profession in user.professions) {
-                val profileItemBinding: ProfileItemBinding = ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
-                profileItemBinding.profileItemText.text = profession.profession + ": " + profession.level
+                val profileItemBinding: ProfileItemBinding =
+                    ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
+                profileItemBinding.profileItemText.text =
+                    profession.profession + ": " + profession.level
                 profileTopLayout.addView(profileItemBinding.root, 22 + counter)
                 counter++
             }
         }
     }
 
-    private fun clickButtons(){
-        binding.profileCallButton.setOnClickListener {
+    private fun clickButtons(user: AuthenticatedUser) {
 
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED ) {
-                // Permission is granted, make the phone call
-                var callIntent = Intent(Intent.ACTION_CALL)
-                callIntent.data = Uri.parse("tel:"+binding.profilePhoneNumber.text.toString().replace(" ",""))
-                startActivity(callIntent)
-            } else {
-                // Permission is not granted, request the permission
-                ActivityCompat.requestPermissions( requireActivity(), arrayOf(Manifest.permission.CALL_PHONE), 1 )
-            }
+        binding.profileEditButton.setOnClickListener {
+            addFragment(editProfileFragment, user)
         }
     }
 
-    private fun addFragment(fragment: Fragment) {
+    private fun addFragment(fragment: Fragment, user: AuthenticatedUser) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
+        val bundle = Bundle()
+        bundle.putSerializable("user", user)
+        fragment.arguments = bundle
         ft.replace(R.id.container, fragment)
         ft.addToBackStack(null)
         ft.commit()
     }
 
+    private fun replaceFragment(fragment: Fragment) {
+        parentFragmentManager.beginTransaction().apply {
+            replace(R.id.container, fragment) //replacing fragment
+            commit() //call signals to the FragmentManager that all operations have been added to the transaction
+        }
+    }
 }

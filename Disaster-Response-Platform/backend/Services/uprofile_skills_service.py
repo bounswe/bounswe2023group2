@@ -8,10 +8,6 @@ from Services.build_API_returns import *
 
 profile_skills = MongoDB.get_collection('user_skills')
 
-def set_Nones_to_old_values(dict_with_Nones:dict, dict_with_Olds:dict):
-    for key, value in dict_with_Nones.items():
-        if (value is None):
-            dict_with_Nones[key] = dict_with_Olds[key]
 
 def get_user_skill(username:str = None, skill:str = None) -> str:
     projection = {"_id": 0}

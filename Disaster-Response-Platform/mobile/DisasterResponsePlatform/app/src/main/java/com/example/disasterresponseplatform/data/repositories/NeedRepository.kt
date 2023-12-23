@@ -10,10 +10,18 @@ class NeedRepository @Inject constructor(private val needDao: NeedDao) {
         needDao.insertNeed(need)
     }
 
-    fun getLocation(creatorID: String): String?{
-        return needDao.getLocation(creatorID)
+    fun getX(creatorID: String): Double?{
+        return needDao.getX(creatorID)
     }
 
-    fun getAllNeeds(): List<Need?>? = needDao.getAllNeeds()
+    fun getY(creatorID: String): Double?{
+        return needDao.getY(creatorID)
+    }
+
+    fun getAllNeeds(): List<Need>? = needDao.getAllNeeds()
+
+    suspend fun updateNeed(need: Need) {
+        needDao.updateNeed(need)
+    }
 
 }

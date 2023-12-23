@@ -2,16 +2,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import styles from "./MainLayout.module.scss";
-import NavigationBar from "@/components/NavigationBar.js";
-import { withIronSessionSsr } from "iron-session/next";
-import sessionConfig from "@/lib/sessionConfig";
+import NavBar from "@/components/NavBar";
 
-function MainLayout({ children}) {
-
-
+function MainLayout({ children }) {
   return (
     <div className={styles.main}>
-      <NavigationBar />
+      <NavBar labels={children.props?.labels}/>
       <div className={styles.body}>{children}</div>
     </div>
   );

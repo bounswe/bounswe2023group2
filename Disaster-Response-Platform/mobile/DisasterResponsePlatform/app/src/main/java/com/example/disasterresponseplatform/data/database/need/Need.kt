@@ -8,9 +8,9 @@ import com.example.disasterresponseplatform.data.enums.NeedTypes
 
 @Entity(tableName = DatabaseInfo.NEED)
 data class Need(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     @ColumnInfo (name = NeedResourceCols.id)
-    val ID: Int?, // if user does not enter ID, it generates it automatically
+    val ID: String, // if user does not enter ID, it generates it automatically
     @ColumnInfo(name = NeedResourceCols.creatorName)
     val creatorName: String,
     @ColumnInfo(name = NeedResourceCols.type)
@@ -20,9 +20,11 @@ data class Need(
     @ColumnInfo(name = NeedResourceCols.creationTime)
     val creationTime: String?,
     @ColumnInfo(name = NeedResourceCols.quantity)
-    val quantity: Int?,
-    @ColumnInfo(name = NeedResourceCols.location)
-    val location: String?,
+    val quantity: Int,
+    @ColumnInfo(name = NeedResourceCols.coordinateX)
+    val coordinateX: Double,
+    @ColumnInfo(name = NeedResourceCols.coordinateY)
+    val coordinateY: Double,
     @ColumnInfo(name = NeedResourceCols.urgency)
     val urgency: Int?
 )

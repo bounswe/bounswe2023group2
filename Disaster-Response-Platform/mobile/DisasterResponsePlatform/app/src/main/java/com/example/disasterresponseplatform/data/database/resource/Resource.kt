@@ -5,24 +5,28 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.disasterresponseplatform.data.database.DatabaseInfo
 import com.example.disasterresponseplatform.data.database.need.NeedResourceCols
+import com.example.disasterresponseplatform.data.enums.NeedTypes
 
 @Entity(tableName = DatabaseInfo.RESOURCE)
 data class Resource(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     @ColumnInfo(name = NeedResourceCols.id)
-    val ID: Int?, // if user does not enter ID, it generates it automatically
+    val ID: String,
     @ColumnInfo(name = NeedResourceCols.creatorName)
     val creatorName: String,
     @ColumnInfo(name = NeedResourceCols.condition)
-    val condition: Int?,
+    val condition: String,
     @ColumnInfo(name = NeedResourceCols.quantity)
-    val quantity: Int?,
+    val quantity: Int,
     @ColumnInfo(name = NeedResourceCols.type)
-    val type: String,
+    val type: NeedTypes,
     @ColumnInfo(name = NeedResourceCols.details)
     val details: String,
     @ColumnInfo(name = NeedResourceCols.creationTime)
     val creationTime: String?,
-    @ColumnInfo(name = NeedResourceCols.location)
-    val location: String?,
+    @ColumnInfo(name = NeedResourceCols.coordinateX)
+    val coordinateX: Double,
+    @ColumnInfo(name = NeedResourceCols.coordinateY)
+    val coordinateY: Double,
 )
+

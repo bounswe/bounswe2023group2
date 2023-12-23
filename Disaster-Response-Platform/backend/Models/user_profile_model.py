@@ -1,5 +1,6 @@
 import bson
-from pydantic import BaseModel, Field
+import pydantic
+from pydantic import BaseModel, Field, AnyUrl
 from typing import Dict, Any, List
 from enum import Enum
 from datetime import date
@@ -45,7 +46,7 @@ class UserOptionalInfo(BaseModel):
     username: str = Field(default=None)
     date_of_birth: date = Field(default=None)
     nationality: str= Field(default=None)
-    #profile_picture: bson = Field(default=None)
+    profile_picture: AnyUrl = Field(default=None)
     identity_number: str= Field(default=None)
     education: EducationEnum = Field(default=None)
     health_condition: str = Field(default=None)
@@ -61,7 +62,7 @@ class UserSkill(BaseModel):
     username: str = Field(default=None)
     skill_definition: str
     skill_level: SkillLevel = Field(default=None)
-    #skill_document: bson = Field(default=None)
+    skill_document: pydantic.AnyUrl = Field(default=None)
 
 class UserLanguage(BaseModel):
     username: str = Field(default=None)
@@ -87,5 +88,14 @@ class UserSocialMediaLinks(BaseModel):
 
 class UserOptionalInfos(BaseModel):
     user_optional_infos: List[UserOptionalInfo]
+
+class UserProfileComplete(BaseModel):
+    professions: Professions
+    languages: Languages
+    user_skills: UserSkills
+    user_socialmedia_links: UserSocialMediaLinks
+    user_optional_infos: UserOptionalInfos
+
+#test = UserProfileComplete()
 
 

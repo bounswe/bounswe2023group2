@@ -1,50 +1,33 @@
 package com.example.disasterresponseplatform
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.example.disasterresponseplatform.data.database.need.Need
-import com.example.disasterresponseplatform.data.database.userdata.UserData
-import com.example.disasterresponseplatform.data.database.action.Action
-import com.example.disasterresponseplatform.data.database.event.Event
-import com.example.disasterresponseplatform.data.enums.NeedTypes
-import com.example.disasterresponseplatform.data.enums.Urgency
 import com.example.disasterresponseplatform.databinding.ActivityMainBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.ui.HomePageFragment
-import com.example.disasterresponseplatform.ui.activity.ActivityFragment
-import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
-import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
+import com.example.disasterresponseplatform.ui.activity.HomeFragment
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
+import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
+import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewModel
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
 import com.example.disasterresponseplatform.ui.map.MapFragment
-import com.example.disasterresponseplatform.ui.network.NetworkFragment
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
-import com.example.disasterresponseplatform.utils.DateUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var homePageFragment: HomePageFragment
-    private lateinit var networkFragment: NetworkFragment
-
-    private val mapFragment = MapFragment()
-    private lateinit var activityFragment: ActivityFragment
-    private val profileFragment = ProfileFragment()
-    private val loginFragment = LoginFragment()
 
     private lateinit var needViewModel: NeedViewModel
     private lateinit var userDataViewModel: UserDataViewModel
@@ -53,6 +36,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var emergencyViewModel: EmergencyViewModel
     private lateinit var resourceViewModel: ResourceViewModel
 
+    private lateinit var mapFragment: MapFragment
+    private val profileFragment = ProfileFragment(null)
+    private val loginFragment = LoginFragment()
+    private lateinit var homeFragment: HomeFragment
 
     private lateinit var toggle: ActionBarDrawerToggle
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,8 +49,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         createViewModels()
+        mapFragment = MapFragment(needViewModel, resourceViewModel, actionViewModel, eventViewModel, emergencyViewModel)
         navBarListener()
-        toggleListener()
+//        toggleListener()
+        // This clears the shadow of action bar and set background color
+        supportActionBar?.elevation = 0F
+        supportActionBar?.setBackgroundDrawable(getDrawable(R.color.primary))
         arrangeVisibility()
         initializeFragments()
 
@@ -91,10 +82,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeFragments(){
-        homePageFragment = HomePageFragment(this)
-        networkFragment = NetworkFragment(this)
-        activityFragment = ActivityFragment()
-        replaceFragment(homePageFragment)
+        homeFragment = HomeFragment(emergencyViewModel, needViewModel,resourceViewModel,actionViewModel,eventViewModel,this)
+        replaceFragment(homeFragment)
     }
 
     private fun arrangeVisibility(){
@@ -112,65 +101,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun tryNeedViewModel(){
-        val need = Need(null,"Egecan",NeedTypes.Clothes,"T-Shirt",DateUtil.getDate("dd-MM-yy").toString(),50,"İstanbul",Urgency.CRITICAL.type)
-        needViewModel.insertNeed(need)
-        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
-            val location = needViewModel.getLocation("Egecan")
-            Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
-        }, 200)
-    }
-
-    private fun tryUserDataViewModel() {
-        val userData = UserData(null, "cahid", "cahid.keles@boun.edu.tr",
-            "05340623847", "Cahid Enes", "Keleş", false,
-            false, null, 0, false, null,
-            null, null, null, null, null, null,
-            null, null, null, null, null, null)
-        userDataViewModel.insertUserData(userData)
-        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
-            val email = userDataViewModel.getEmail("cahid")
-            Toast.makeText(this,email,Toast.LENGTH_SHORT).show()
-        }, 200)
-
-    }
-
-    private fun tryActionViewModel(){
-        val action = Action(null,"Halil","Search for Survivors",DateUtil.getDate("dd-MM-yy").toString(),50,"Ankara","Erzurum", Urgency.CRITICAL.type)
-        actionViewModel.insertAction(action)
-        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
-            val startLocation = actionViewModel.getStartLocation("Halil")
-            Toast.makeText(this,startLocation,Toast.LENGTH_SHORT).show()
-        }, 200)
-    }
-
-    private fun tryEventViewModel(){
-        val event = Event(null,"Halil","Road Blocked", DateUtil.getDate("dd-MM-yy").toString(),"Rize")
-        eventViewModel.insertEvent(event)
-        android.os.Handler(Looper.getMainLooper()).postDelayed({ // it's a delay block
-            val location = eventViewModel.getLocation("Halil")
-            Toast.makeText(this,location,Toast.LENGTH_SHORT).show()
-        }, 200)
-    }
-
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun toggleListener(){
         toggle = ActionBarDrawerToggle(this, binding.root,R.string.open,R.string.close) //like adapter
         binding.root.addDrawerListener(toggle) // add toggle into layout
         toggle.syncState() // to be ready to use
         // able to close navigation when clicked to back arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         binding.navView.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.miLoggedInAs -> replaceNavFragment(profileFragment)
                 R.id.miLogin -> replaceNavFragment(loginFragment)
                 R.id.miLogout -> logOutActions()
-//                R.id.miRegister -> replaceNavFragment(registrationFragment)
-                R.id.miNetwork -> replaceNavFragment(networkFragment)
-                R.id.miAddNeed -> tryNeedViewModel()
-                R.id.miAddUserData -> tryUserDataViewModel()
-                R.id.miAddAction -> tryActionViewModel()
-                R.id.miAddEvent -> tryEventViewModel()
             }
             binding.root.closeDrawer(GravityCompat.START) //whenever clicked item on drawer, closing it automatically
             true
@@ -195,8 +137,7 @@ class MainActivity : AppCompatActivity() {
     private fun navBarListener(){
         binding.bottomNavigationView.setOnItemSelectedListener {menuItem ->
             when (menuItem.itemId){
-                R.id.miHome -> replaceNavFragment(homePageFragment)
-                R.id.miActivities -> replaceNavFragment(activityFragment)
+                R.id.miHome -> replaceNavFragment(homeFragment)
                 R.id.miMap -> replaceNavFragment(mapFragment)
                 R.id.miProfile -> replaceNavFragment(profileFragment)
             }

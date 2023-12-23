@@ -12,14 +12,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentRegistrationBinding
-import com.example.disasterresponseplatform.ui.activity.ActivityFragment
 
 class RegistrationFragment : Fragment() {
 
     private lateinit var binding: FragmentRegistrationBinding
     private val forgotPasswordFragment = ForgotPasswordFragment()
-    private val activityFragment =  ActivityFragment()
-
+    private val emailVerificationFragment = EmailVerificationFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +57,8 @@ class RegistrationFragment : Fragment() {
         authViewModel.signUpSuccessful.observe(viewLifecycleOwner, Observer { isSuccessful ->
             if (isSuccessful) {
                 Toast.makeText(context, "proceeding", Toast.LENGTH_SHORT ).show()
-                addFragment(activityFragment)
+                parentFragmentManager.popBackStack()
+                addFragment(emailVerificationFragment)
             }
 
         })
@@ -84,5 +83,4 @@ class RegistrationFragment : Fragment() {
         ft.addToBackStack(null)
         ft.commit()
     }
-
 }

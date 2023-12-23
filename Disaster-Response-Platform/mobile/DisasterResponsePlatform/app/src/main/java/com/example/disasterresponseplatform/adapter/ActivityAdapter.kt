@@ -1,5 +1,6 @@
 package com.example.disasterresponseplatform.adapter
 
+import android.graphics.Color
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -54,6 +55,12 @@ class ActivityAdapter(private val activityList: MutableList<DummyActivity>): Rec
         hb.tvDate.text = currentActivity.date
         hb.tvLocation.text = currentActivity.location
         hb.tvReliabilityScale.text = currentActivity.reliabilityScale.toString()
+
+        if (currentActivity.reliabilityScale < 0.3) {
+            hb.tvReliabilityScale.setTextColor(Color.parseColor("#A80C0C"))
+        } else if (currentActivity.reliabilityScale > 0.7) {
+            hb.tvReliabilityScale.setTextColor(Color.parseColor("#067A47"))
+        }
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

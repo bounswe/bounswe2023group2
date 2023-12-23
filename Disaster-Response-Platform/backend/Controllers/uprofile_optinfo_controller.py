@@ -8,7 +8,21 @@ import Services.authentication_service as authentication_service
 
 router = APIRouter()
 
-def general_user_optional_info(response, username:str = None) ->json:
+@router.get("/user-optional-infos", responses={
+    status.HTTP_200_OK: {"model": UserOptionalInfos},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_401_UNAUTHORIZED: {"model": Error}
+} )
+async def get_user_optional_info(response: Response, anyuser: str = None, current_username: str = Depends(authentication_service.get_current_username)):
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
+
     try:
         json_result = user_profile_service.get_user_optional_info(username)
         response.status_code = HTTPStatus.OK
@@ -18,30 +32,23 @@ def general_user_optional_info(response, username:str = None) ->json:
         json_result = create_json_for_error("Get user optional info faild", str(val_error))
         return json.loads(json_result)
 
-@router.get("/get-user-optional-info", responses={
-    status.HTTP_200_OK: {"model": UserOptionalInfos},
-    status.HTTP_404_NOT_FOUND: {"model": Error},
-    status.HTTP_401_UNAUTHORIZED: {"model": Error}
-} )
-async def get_user_optional_info(response: Response, username: str = Depends(authentication_service.get_current_username)):
-    return general_user_optional_info(response, username)
 
-
-@router.get("/all-user-optional-infos", responses={
-    status.HTTP_200_OK: {"model": UserOptionalInfos},
-    status.HTTP_404_NOT_FOUND: {"model": Error},
-    status.HTTP_401_UNAUTHORIZED: {"model": Error}
-})
-async def get_all_user_optional_info(response: Response, username: str = Depends(authentication_service.get_current_username)):
-    return general_user_optional_info(response=response)
-
-
-@router.post("/set-user-optional-info", responses={
+@router.post("/user-optional-infos/add-user-optional-info", responses={
     status.HTTP_200_OK: {"model": UserOptionalInfo},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 })
-async def set_user_optional_info(user_optional_info: UserOptionalInfo, response: Response, username: str = Depends(authentication_service.get_current_username)):
+async def set_user_optional_info(user_optional_info: UserOptionalInfo, response: Response, anyuser: str = None,
+                                 current_username: str = Depends(authentication_service.get_current_username)):
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
+
     try:
         user_optional_info.username  = username
         result = user_profile_service.set_user_optional_info(user_optional_info)
@@ -54,8 +61,17 @@ async def set_user_optional_info(user_optional_info: UserOptionalInfo, response:
         return json.loads(json_result)
 
 
-@router.post("/reset-user-optional-info", )
-async def set_user_optional_info(reset_field: str, response: Response, username: str = Depends(authentication_service.get_current_username)):
+@router.post("/delete-user-optional-info-item", )
+async def set_user_optional_info(reset_field: str, response: Response, anyuser: str = None,
+                                 current_username: str = Depends(authentication_service.get_current_username)):
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
     try:
         user_profile_service.reset_user_optional_info(username, reset_field)
         response.status_code = HTTPStatus.OK
@@ -73,7 +89,16 @@ async def set_user_optional_info(reset_field: str, response: Response, username:
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_401_UNAUTHORIZED: {"model": Error}
 } )
-async def delete_user_optional_info(response: Response, username: str = Depends(authentication_service.get_current_username)):
+async def delete_user_optional_info(response: Response, anyuser: str = None, current_username: str = Depends(authentication_service.get_current_username)):
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
+
     try:
         json_result = user_profile_service.delete_user_optional_info(username)
         response.status_code = HTTPStatus.OK
@@ -85,7 +110,16 @@ async def delete_user_optional_info(response: Response, username: str = Depends(
 
 # Will be written seperately - the model will not include BSON
 @router.post("/upload-user-profile-picture", )
-async def upload_user_profile_picture(response: Response, username: str = Depends(authentication_service.get_current_username)):
+async def upload_user_profile_picture(response: Response, anyuser: str = None, current_username: str = Depends(authentication_service.get_current_username)):
+    if anyuser is None:
+        username = current_username
+    else:
+        if (authentication_service.is_admin(current_username)):
+            username = anyuser
+        else:
+            response.status_code = HTTPStatus.UNAUTHORIZED
+            return create_json_for_error("Action prohibited", "Only users with ADMIN role can do that")
+
     json_result = create_json_for_simple("Not ready API",
                                          "PICTUREID")
     return json.loads(json_result)

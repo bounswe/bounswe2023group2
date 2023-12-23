@@ -13,9 +13,11 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 
 /**
@@ -64,8 +66,10 @@ class NetworkManager {
         endpoint: Endpoint,
         requestType: RequestType,
         headers: Map<String, String>,
+        queries: Map<String, String>? = null,
         requestBody: RequestBody? = null,
-        callback: Callback<ResponseBody>
+        id: String? = null, // If it is not empty, send request endpoint.path + /id -> send id as /<id> for now
+        callback: Callback<ResponseBody>,
     ) {
         when (endpoint) {
             Endpoint.DATA -> {
@@ -88,6 +92,7 @@ class NetworkManager {
                         val call = api.deleteData(endpoint.path, headers)
                         call.enqueue(callback)
                     }
+                    else -> {}
                 }
             }
             Endpoint.USER -> TODO()
@@ -117,9 +122,133 @@ class NetworkManager {
                     else -> {}
                 }
             }
+            Endpoint.RESOURCE -> {
+                when (requestType) {
+                    RequestType.GET -> {
+                        Log.d("RESPONSE", callback.toString())
+                        if (queries.isNullOrEmpty()) {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getData(endpoint.path, headers)
+                            call.enqueue(callback)
+                        } else {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getQueryData(endpoint.path, headers, queries)
+                            call.enqueue(callback)
+                        }
+                    }
+                    RequestType.POST -> {
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.PUT -> {
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.putData(endpoint.path+id, headers, it) } // TODO endpoint.path, resource ID içermeli şimdilik dummy çözüm
+                            ?.enqueue(callback)
+                    }
+                    RequestType.DELETE -> {
+                        val call = api.deleteData(endpoint.path+"/"+id, headers)
+                        call.enqueue(callback)
+                    }
+                    else -> {}
+                }
+
+            }
+            Endpoint.NEED -> {
+                when (requestType) {
+                    RequestType.GET -> {
+                        Log.d("RESPONSE", callback.toString())
+                        if (queries.isNullOrEmpty()) {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getData(endpoint.path, headers)
+                            call.enqueue(callback)
+                        } else {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getQueryData(endpoint.path, headers, queries)
+                            call.enqueue(callback)
+                        }
+                    }
+                    RequestType.POST -> {
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.postData(endpoint.path, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.PUT -> {
+                        Log.d("RESPONSE", callback.toString())
+                        requestBody?.let { api.putData(endpoint.path+id, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.DELETE -> {
+                        val call = api.deleteData(endpoint.path+"/"+id, headers)
+                        call.enqueue(callback)
+                    }
+                    else -> {}
+                }
+            }
+            Endpoint.FORM_FIELDS_TYPE -> {
+                Log.d("RESPONSE", callback.toString())
+                id?.let {
+                    val call = api.getData("${endpoint.path}/$id", headers)
+                    call.enqueue(callback)
+                }
+            }
+            Endpoint.EMAIL_VERIFICATION_VERIFY -> {
+                Log.d("RESPONSE", callback.toString())
+                if (queries.isNullOrEmpty()) {
+                    Log.d("RESPONSE", callback.toString())
+                    requestBody?.let { api.postData(endpoint.path, headers, it) }
+                        ?.enqueue(callback)
+                } else {
+                    Log.d("RESPONSE", callback.toString())
+                    requestBody?.let { api.postQueryData(endpoint.path, headers, it, queries) }
+                        ?.enqueue(callback)
+                }
+            }
+            else -> {
+                when (requestType) {
+                    RequestType.GET -> {
+                        var endpoint = endpoint.path
+                        if (id != null) endpoint += "/$id"
+                        if (queries.isNullOrEmpty()) {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getData(endpoint, headers)
+                            call.enqueue(callback)
+                        } else {
+                            Log.d("RESPONSE", callback.toString())
+                            val call = api.getQueryData(endpoint, headers, queries)
+                            call.enqueue(callback)
+                        }
+                    }
+                    RequestType.POST -> {
+                        Log.d("RESPONSE", callback.toString())
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        requestBody?.let { api.postData(call, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.PUT -> {
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        requestBody?.let { api.putData(call, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                    RequestType.DELETE -> {
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        Log.i("Delete Call:" , call)
+                        val callb = api.deleteData(call, headers)
+                        callb.enqueue(callback)
+                    }
+                    RequestType.PATCH -> {
+                        var call = endpoint.path
+                        if (id != null) call += "/$id"
+                        requestBody?.let { api.patchData(call, headers, it) }
+                            ?.enqueue(callback)
+                    }
+                }
+            }
         }
     }
-
 }
 interface ApiService {
 
@@ -129,11 +258,26 @@ interface ApiService {
         @HeaderMap headers: Map<String, String>,
     ): Call<ResponseBody>
 
+    @GET("{endpoint}")
+    fun getQueryData(
+        @Path("endpoint") endpoint: String,
+        @HeaderMap headers: Map<String, String>,
+        @QueryMap queries: Map<String, String>?
+    ): Call<ResponseBody>
+
     @POST("{endpoint}")
     fun postData(
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
         @Body requestBody: RequestBody,
+    ): Call<ResponseBody>
+
+    @POST("{endpoint}")
+    fun postQueryData(
+        @Path("endpoint") endpoint: String,
+        @HeaderMap headers: Map<String, String>,
+        @Body requestBody: RequestBody,
+        @QueryMap queries: Map<String, String>?
     ): Call<ResponseBody>
 
     @PUT("{endpoint}")
@@ -148,4 +292,12 @@ interface ApiService {
         @Path("endpoint") endpoint: String,
         @HeaderMap headers: Map<String, String>,
     ): Call<ResponseBody>
+
+    @PATCH("{endpoint}")
+    fun patchData(
+        @Path("endpoint") endpoint: String,
+        @HeaderMap headers: Map<String, String>,
+        @Body requestBody: RequestBody
+    ): Call<ResponseBody>
+
 }

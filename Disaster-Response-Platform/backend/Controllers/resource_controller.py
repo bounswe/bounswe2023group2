@@ -1,7 +1,8 @@
 import json
 from http import HTTPStatus
 
-from fastapi import APIRouter, HTTPException, Response, Depends, Body
+from fastapi import Query, APIRouter, HTTPException, Response, Depends, Body
+from typing import List, Optional
 from Models.resource_model import Resource, ConditionEnum, QuantityUpdate, ConditionUpdate
 import Services.resource_service as resource_service
 import Services.authentication_service as authentication_service
@@ -13,10 +14,11 @@ from Services.build_API_returns import create_json_for_error
 
 router = APIRouter()
 
-# Does require all fields except created_by (handled by "Depends").
+# Does require all fields except created_by (handled by "Depends") and date fields.
 #
 # Body = {
 #   "condition" : "new",
+#   "description": "we need this and that there",
 #   "initialQuantity" : 65,
 #   "currentQuantity" : 35,
 #    "type": "Cloth",
@@ -26,8 +28,12 @@ router = APIRouter()
 #        "age": "Adult",
 #        "subtype": "Shirt"
 #   },
+#   "recurrence_rate": "Every 2 days",
+#   "recurrence_deadline": date3,
 #   "x": 48.7634,
-#   "y": 21.3466
+#   "y": 21.3466,
+#   "created_at": date1,
+#   "last_updated_at": date2
 # }
 @router.post("/", status_code=201)
 def create_resource(resource: Resource, response:Response, current_user: str = Depends(authentication_service.get_current_username)):
@@ -47,7 +53,7 @@ def get_resource(resource_id: str, response: Response):
     try:
         resource = resource_service.get_resource_by_id(resource_id)
         response.status_code = HTTPStatus.OK
-        return json.loads(resource)
+        return resource
     except ValueError as err:
         err_json = create_json_for_error("Resource error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
@@ -55,9 +61,38 @@ def get_resource(resource_id: str, response: Response):
 
 # Get all resources.
 @router.get("/")
-def get_all_resources(response: Response):
+def get_all_resources(
+    response: Response,
+    active: Optional[bool] = Query(None, description="Filter by active status"),
+    types: List[str] = Query(None, description="Filter by types of resources"),
+    subtypes: List[str] = Query(None, description="Filter by subtypes of resources"),
+    x: float = Query(None, description="X coordinate for distance calculation"),
+    y: float = Query(None, description="Y coordinate for distance calculation"),
+    distance_max: float = Query(None, description="Maximum distance for filtering"),
+    sort_by: str = Query('created_at', description="Field to sort by"),
+    order: Optional[str] = Query('desc', description="Sort order")
+):
+    if types:
+        types_list = types[0].split(',')
+    else:
+        types_list = []
+
+    if subtypes:
+        subtypes_list = subtypes[0].split(',')
+    else:
+        subtypes_list = []
+
     try:
-        resources = resource_service.get_resources()
+        resources = resource_service.get_resources(
+            active=active,
+            types=types_list,
+            subtypes=subtypes_list,
+            x=x,
+            y=y,
+            distance_max=distance_max,
+            sort_by=sort_by,
+            order=order
+        )
         response.status_code = HTTPStatus.OK
         return json.loads(resources)
     except ValueError as err:

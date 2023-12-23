@@ -7,15 +7,15 @@ export default withIronSessionApiRoute(
  async function RegisterRoute(req, res) {
     try {
 
-      const { data } = await api.post('/api/users/signup',  req.body );
-      req.session.user = {
-        accessToken: data?.payload?.tokens?.accessToken,
-        refreshToken: data?.payload?.tokens?.refreshToken,
-        languages: 'tr'
-      };
-      await req.session.save();
+      let body = req.body
+      if (body.phone_number == '') delete body.phone_number 
+      if(body.email == "") delete body.email
+      const response = await api.post('/api/users/signup',  body );
+      if(response.status == 200 | response.status == 201)
+        res.status(200).json(response.data);
+      else
+        res.status(response.status).json(response)
 
-      res.status(200).json(data);
     } catch (error) {
       res.status(error?.response?.status ?? 400).json({ error });
     }
