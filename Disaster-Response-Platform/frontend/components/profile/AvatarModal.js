@@ -2,6 +2,7 @@ import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { api } from '@/lib/apiUtils';
+import { uploadFile } from '@/lib/files';
 
 export default function AvatarModal({ isOpen, onOpenChange, file, username, accessToken, optional_fields, labels }) {
 
@@ -15,22 +16,8 @@ export default function AvatarModal({ isOpen, onOpenChange, file, username, acce
 
     const extension = file.name.substring(file.name.lastIndexOf(".")+1);
     const filename = `${username}-pic.${extension}`;
-    const renamed_file = new File([file], filename, {type: file.type});
 
-    const body = new FormData();
-    body.set("file", renamed_file);
-
-    const upload_response = await api.post("/api/uploadfile", body, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'multipart/form-data'
-        }
-    });
-
-    if (upload_response.status !== 200) {
-      toast(`${labels.feedback.failure} (picture upload: ${upload_response.statusText})`);
-      return;
-    }
+    const upload_response = await uploadFile(file, filename, accessToken);
 
     const profile_response = await api.post("/api/profiles/user-optional-infos/add-user-optional-info", 
       { ...optional_fields, profile_picture: upload_response?.data?.url},
