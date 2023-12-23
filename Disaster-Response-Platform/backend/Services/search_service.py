@@ -62,7 +62,7 @@ def process_and_fetch_users(query, field_name, list, type):
         name_relevance_pairs = zip(list, relevances)
         filtered_pairs = filter(lambda x: x[1] > 0.15, name_relevance_pairs)
         sorted_pairs = sorted(filtered_pairs, key=lambda x: x[1], reverse=True)
-        print("pairs", sorted_pairs)
+
         relevant_names = [name for name, _ in sorted_pairs]
 
         if type==0:        
@@ -144,15 +144,15 @@ def search_resources(query: str)-> List[dict]:
         resources= list(resources)
         detail_types = [resource.get("details", {}).get("subtype") for resource in resources if resource.get("details", {}).get("subtype") is not None]
         top_resources_list = process_and_fetch_users(query,"details_type", detail_types , 1)
-        print(top_resources_list)
+ 
         if not top_resources_list:
             descriptions = types = [resource["description"] for resource in resources if resource.get("description") is not None]
             top_resources_list = process_and_fetch_users(query,"description", descriptions , 1) 
-            print(top_resources_list) 
+   
             if not top_resources_list:
                 types = [resource["type"] for resource in resources]
                 top_resources_list = process_and_fetch_users(query,"type", types, 1)  
-                print(top_resources_list)
+      
         return SearchList(results=top_resources_list) 
     except requests.RequestException as e:
         raise HTTPException(status_code=400, detail=str(e)) 
@@ -230,7 +230,7 @@ def search_events(query: str)-> List[dict]:
     try:
         events = events_collection.find({}, {"_id": 0, "event_type": 1, "short_description": 1}).limit(100)
         events= list(events)
-        print(events)
+  
         descriptions = [event["short_description"] for event in events if event.get("short_description") is not None]
         top_events_list = process_and_fetch_users(query,"short_description", descriptions , 4)  
         if not top_events_list:
