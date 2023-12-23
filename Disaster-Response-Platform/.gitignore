@@ -13,3 +13,4 @@ config.py
 *.jpeg
 *.pdf
 *.json
+*.html
