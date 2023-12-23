@@ -91,8 +91,6 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         })
         binding.tvLastUpdatedTime.text = resource.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = resource.created_at.substring(0,10)
-        binding.tvUpvoteCount.text = resource.upvote.toString()
-        binding.tvDownVoteCount.text = resource.downvote.toString()
         binding.tvDescription.text = resource.description.toString()
         fillDetails(resource.details)
         fillRecurrence(resource)
@@ -124,7 +122,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     }
 
     /**
-     * This function fills the recurrence if the need is recurrent
+     * This function fills the recurrence if the resource is recurrent
      */
     @SuppressLint("SetTextI18n")
     private fun fillRecurrence(resource: ResourceBody.ResourceItem){
@@ -159,98 +157,138 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     private fun arrangeButtons(){
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (!token.isNullOrEmpty() and (username == resource.created_by)) {
-            binding.btnEdit.setOnClickListener {
-                editResource()
-            }
-            binding.btnDelete.setOnClickListener {
-                deleteResource()
-            }
-        } else{
-            binding.btnDelete.visibility = View.GONE
+
+        if (token.isNullOrEmpty()) {
+            binding.iconReliability.visibility = View.GONE
+            binding.tvReliability.visibility = View.GONE
+            binding.btnUpvote.visibility = View.GONE
+            binding.btnDownvote.visibility = View.GONE
+            binding.btnReport.visibility = View.GONE
             binding.btnEdit.visibility = View.GONE
+            binding.btnDelete.visibility = View.GONE
+        } else {
+            binding.iconReliability.visibility = View.VISIBLE
+            binding.tvReliability.visibility = View.VISIBLE
+            binding.btnUpvote.visibility = View.VISIBLE
+            binding.btnDownvote.visibility = View.VISIBLE
+            binding.btnReport.visibility = View.VISIBLE
+
+            if (username == resource.created_by) {
+                binding.btnEdit.visibility = View.VISIBLE
+                binding.btnEdit.setOnClickListener {
+                    editResource()
+                }
+                binding.btnDelete.visibility = View.VISIBLE
+                binding.btnDelete.setOnClickListener {
+                    deleteResource()
+                }
+            } else {
+                binding.btnEdit.visibility = View.GONE
+                binding.btnDelete.visibility = View.GONE
+            }
         }
+
         binding.btnNavigate.setOnClickListener {
             navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
             addFragment(ProfileFragment(resource.created_by),"ProfileFragment")
         }
+
+        // Arrange vote buttons and set on click listener
+        arrangeVoteButtons(token)
         binding.btnUpvote.setOnClickListener {
-            upvoteResource(token)
+            voteResource(token, "up")
         }
         binding.btnDownvote.setOnClickListener {
-            downvoteResource(token)
+            voteResource(token,"down")
         }
+
         binding.btnReport.setOnClickListener {
             showBottomSheet()
         }
     }
 
-    private var voted = false // if user change his/her some arrangements will happen with this parameter
-    /**
-     * It upvotes the resource, increment upvote count, make upvote button not clickable and shows toast upvote successfully message
-     * If user already upvotes that resource it shows toast you already upvoted message
-     */
-    @SuppressLint("SetTextI18n")
-    private fun upvoteResource(token: String?){
-        if (!token.isNullOrEmpty()){
-            val votePostRequest = VoteBody.VoteRequestBody("resources",resource._id)
-            voteViewModel.upvote(votePostRequest)
-            voteViewModel.getLiveDataMessage().observe(requireActivity!!){
-                if (it == "-1"){
-                    if (isAdded)
-                        Toast.makeText(requireContext(),"You Already Upvote it!",Toast.LENGTH_SHORT).show()
-                }
-                else if (it == "upvote"){
-                    // if users vote for downvote before (if vote for upvote he can't click again because its not clickable)
-                    if (voted){
-                        binding.btnDownvote.isClickable = true
-                        binding.tvDownVoteCount.text = resource.downvote.toString()
+    private fun arrangeVoteButtons(token: String?) {
+
+        val btnUpvote = binding.btnUpvote
+        val btnDownvote = binding.btnDownvote
+
+        if (!token.isNullOrEmpty()) {
+            voteViewModel.checkvote("resources", resource._id)
+            voteViewModel.getLiveDataMessage().observe(requireActivity!!) {
+                when (it) {
+                    "upvote" -> {
+                        btnUpvote.isChecked = true
+                        btnDownvote.isChecked = false
                     }
-                    voted = true
-                    binding.btnUpvote.isClickable = false
-                    binding.tvUpvoteCount.text = (resource.upvote + 1).toString()
+
+                    "downvote" -> {
+                        btnUpvote.isChecked = false
+                        btnDownvote.isChecked = true
+                    }
+
+                    "none" -> {
+                        btnUpvote.isChecked = false
+                        btnDownvote.isChecked = false
+                    }
                 }
             }
-        } else{
-            if (isAdded)
-                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
+        } else {
+            btnUpvote.isChecked = false
+            btnDownvote.isChecked = false
         }
     }
 
     /**
-     * It downvotes the resource, increase downvote count, make downvote button not clickable and shows toast downvote successfully message
-     * If user already downvote that resource it shows toast you already downvote message
+     * It upvotes/downvotes/unvotes the resource, arranges the buttons and shows toast accordingly
      */
     @SuppressLint("SetTextI18n")
-    private fun downvoteResource(token: String?){
-        if (!token.isNullOrEmpty()){
-            val votePostRequest = VoteBody.VoteRequestBody("resources",resource._id)
-            voteViewModel.downvote(votePostRequest)
-            voteViewModel.getLiveDataMessage().observe(requireActivity!!){
-                if (it == "-1"){
-                    if (isAdded)
-                        Toast.makeText(requireContext(),"You Already Downvote it!",Toast.LENGTH_SHORT).show()
+    private fun voteResource(token: String?, type: String) {
+
+        val btnUpvote = binding.btnUpvote
+        val btnDownvote = binding.btnDownvote
+        val resourceID = resource._id
+
+        if (isAdded) {
+            when {
+                token.isNullOrEmpty() -> {
+                    showToast(getString(R.string.pr_login_required))
+                    binding.btnUpvote.isChecked = false
+                    binding.btnDownvote.isChecked = false
                 }
-                else if (it == "downvote"){
-                    if (voted){
-                        binding.btnUpvote.isClickable = true
-                        binding.tvUpvoteCount.text = resource.upvote.toString()
-                    }
-                    voted = true
-                    binding.btnDownvote.isClickable = false
-                    binding.tvDownVoteCount.text = (resource.downvote + 1).toString()
+                // if already upvoted, UNvote and arrange button
+                type == "up" && btnUpvote.isChecked -> {
+                    showToast("Your upvote has been withdrawn.")
+                    voteViewModel.unvote(VoteBody.VoteRequestBody("resources", resourceID))
+                    btnUpvote.isChecked = false
+                }
+                // if already downvoted, UNvote and arrange button
+                type == "down" && btnDownvote.isChecked -> {
+                    showToast("Your downvote has been withdrawn.")
+                    voteViewModel.unvote(VoteBody.VoteRequestBody("resources", resourceID))
+                    btnDownvote.isChecked = false
+                }
+                // if not upvoted, upvote and arrange buttons
+                type == "up" -> {
+                    showToast("Your upvote has been saved.")
+                    voteViewModel.upvote(VoteBody.VoteRequestBody("resources", resourceID))
+                    btnUpvote.isChecked = true
+                    btnDownvote.isChecked = false
+                }
+                // if not downvoted, downvote and arrange buttons
+                type == "down" -> {
+                    showToast("Your downvote has been saved.")
+                    voteViewModel.downvote(VoteBody.VoteRequestBody("resources", resourceID))
+                    btnUpvote.isChecked = false
+                    btnDownvote.isChecked = true
                 }
             }
-        } else{
-            if (isAdded)
-                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
         }
     }
 
     /** This function is called whenever resource is created or edited
-     * If it is created resource should be null, else need should be the clicked item
+     * If it is created resource should be null, else resource should be the clicked item
      */
     private fun editResource(){
         val addResourceFragment = AddResourceFragment(resourceViewModel,resource)
@@ -298,6 +336,12 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             .get()
             .build()
         client.newCall(request).enqueue(callback)
+    }
+
+    private fun showToast(message: String) {
+        if (isAdded) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        }
     }
 
 }
