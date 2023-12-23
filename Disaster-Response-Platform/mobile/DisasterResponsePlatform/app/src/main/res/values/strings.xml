@@ -212,6 +212,13 @@
     <string name="additional_notes">Additional Notes</string>
     <string name="edit_event">Edit Event</string>
 
+    <!-- Toast Messages -->
+    <string name="check_your_connection">You need to connect to the internet</string>
+    <string name="local_posted">Your Local Objects are Posted into Backend Successfully</string>
+    <string name="saved_local">It is saved in Local, It will be uploaded when you connect to the internet</string>
+
+
+
     <!-- ACTIVITY LISTS -->
     <string name="cloth">Cloth</string>
     <string name="food">Food</string>

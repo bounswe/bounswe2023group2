@@ -4,7 +4,7 @@ import java.io.Serializable
 import java.time.LocalDate
 import java.util.UUID
 
-open class AuthenticatedUser(var username: String, var email: String, var phone: String,
+open class AuthenticatedUser(var username: String, var email: String?, var phone: String?,
                              var name: String, var surname: String ) : Serializable {
     var id: UUID = UUID.randomUUID()
     var isEmailVerified: Boolean = false

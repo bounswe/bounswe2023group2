@@ -120,7 +120,7 @@ class AddNoInternetFormFragment(private val viewModel: ViewModel) : Fragment() {
                 else -> {}
             }
             if (isAdded) { // to ensure it attached a context
-                Toast.makeText(requireContext(), "It is saved in Local, It will be uploaded when you connect to the internet", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), getString(R.string.saved_local), Toast.LENGTH_LONG).show()
             }
             parentFragmentManager.popBackStack()
         }

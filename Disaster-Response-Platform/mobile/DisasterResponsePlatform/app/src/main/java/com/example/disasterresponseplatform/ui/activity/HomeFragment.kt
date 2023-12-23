@@ -178,7 +178,8 @@ class HomeFragment(
                 if (isPosted){
                     timer.cancel() // cancel it to not return false
                     if (isAdded) // check whether it is attached a require context
-                        Toast.makeText(requireContext(),"Your Local Objects are Posted into Backend Successfully",Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(),getString(R.string.local_posted),Toast.LENGTH_LONG).show()
+                    GeneralUtil.isPosted.postValue(false) // to prevent multiple toasts
                 }
             }
         }else{

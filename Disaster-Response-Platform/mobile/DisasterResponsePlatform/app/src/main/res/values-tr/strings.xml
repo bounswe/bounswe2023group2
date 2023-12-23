@@ -211,6 +211,12 @@
     <string name="additional_notes">Ek Notlar</string>
     <string name="edit_event">Olayı Düzenle</string>
 
+    <!-- Toast Messages -->
+    <string name="check_your_connection">İnternete bağlanmanız gerekli!</string>
+    <string name="local_posted">İnternetiniz yokken kaydettiğiniz objeler başarıyla paylaşıldı</string>
+    <string name="saved_local">Yarattığınız obje yerel dosyalara kaydedildi, internet bağlantınız sağlandığında bu obje sunucuyla paylaşılacak</string>
+
+
     <!-- ACTIVITY LISTS -->
     <string name="cloth">Giyecek</string>
     <string name="food">Yiyecek</string>

@@ -54,7 +54,7 @@ class GeneralUtil {
         }
 
 
-        private val isPosted = MutableLiveData<Boolean>()
+        val isPosted = MutableLiveData<Boolean>(false)
         // this is for updating LiveData, it can be observed from where it is called
         // in this way toast should shown in home fragment by observing it
         fun getIsPosted(): LiveData<Boolean> = isPosted

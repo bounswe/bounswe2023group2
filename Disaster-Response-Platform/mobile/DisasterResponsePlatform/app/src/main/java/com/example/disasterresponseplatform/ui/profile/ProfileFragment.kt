@@ -655,10 +655,15 @@ class ProfileFragment(var username: String?) : Fragment() {
     }
 
     private fun clickButtons(user: AuthenticatedUser) {
-
-        binding.profileEditButton.setOnClickListener {
-            addFragment(editProfileFragment, user)
+        // if user is the same as owner of profile
+        if (username == DiskStorageManager.getKeyValue("username")){
+            binding.profileEditButton.setOnClickListener {
+                addFragment(editProfileFragment, user)
+            }
+        } else{
+            binding.profileEditButton.visibility = View.GONE
         }
+
     }
 
     private fun addFragment(fragment: Fragment, user: AuthenticatedUser) {
