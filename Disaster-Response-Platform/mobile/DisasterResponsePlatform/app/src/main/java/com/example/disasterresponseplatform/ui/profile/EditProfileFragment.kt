@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -25,33 +24,24 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.authModels.Language
-import com.example.disasterresponseplatform.data.models.authModels.LanguageArray
 import com.example.disasterresponseplatform.data.models.authModels.Profession
-import com.example.disasterresponseplatform.data.models.authModels.ProfessionArray
+import com.example.disasterresponseplatform.data.models.authModels.ProfficiencyRequest
 import com.example.disasterresponseplatform.data.models.authModels.ProfileBody
 import com.example.disasterresponseplatform.data.models.authModels.ProfileOptionalBody
 import com.example.disasterresponseplatform.data.models.authModels.Skill
-import com.example.disasterresponseplatform.data.models.authModels.SkillArray
-import com.example.disasterresponseplatform.data.models.authModels.SocialMediaArray
 import com.example.disasterresponseplatform.data.models.authModels.SocialMediaLink
-import com.example.disasterresponseplatform.data.models.authModels.UsersMeResponse
 import com.example.disasterresponseplatform.data.models.usertypes.AuthenticatedUser
-import com.example.disasterresponseplatform.data.models.usertypes.CredibleUser
-import com.example.disasterresponseplatform.data.models.usertypes.RoleBasedUser
 import com.example.disasterresponseplatform.databinding.FragmentProfileEditBinding
 import com.example.disasterresponseplatform.databinding.ProfileEditItemBinding
 import com.example.disasterresponseplatform.databinding.ProfileEditSkillBinding
 import com.example.disasterresponseplatform.databinding.ProfileEditSocialMediaBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
-import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
-import java.time.LocalDate
 
 class EditProfileFragment : Fragment() {
 
@@ -134,15 +124,26 @@ class EditProfileFragment : Fragment() {
             profilePhoneNumber.setText(user.phone)
             profileEmailVerifiedIcon.visibility = if (user.isEmailVerified) View.VISIBLE else View.GONE
             profilePhoneVerifiedIcon.visibility = if (user.isPhoneVerified) View.VISIBLE else View.GONE
-            when (user) {
-                is CredibleUser -> {
-                    profileRegionLayout.visibility = View.VISIBLE
-                    profileRegion.setText(user.region)
-                }
-                is RoleBasedUser -> {
-                    profileProficiencyLayout.visibility = View.VISIBLE
-                    profileProficiency.setText(user.proficiency)
-                }
+
+//            if (user.credibleRegion != null) {
+//                profileRegionLayout.visibility = View.VISIBLE
+//                profileRegion.setText(user.credibleRegion)
+//            } else if (user.roleBasedProficiency != null) {
+//                profileProficiencyLayout.visibility = View.VISIBLE
+//                profileProficiency.setText(user.roleBasedProficiency)
+//            }
+            val profArray: Array<String> = arrayOf("bilingual", "doctor", "pharmacist", "rescue_member", "infrastructure_engineer", "it_specialist", "other")
+            val profAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                profArray
+            )
+            profileProficiency.setAdapter(profAdapter)
+            profileProficiency.setOnItemClickListener{_, _, position, _ ->
+                user.roleBasedProficiency = profArray[position]
+            }
+            if (user.education != null) {
+                profileProficiency.setText(user.roleBasedProficiency)
             }
 
             if (user.birth != null) {
@@ -522,6 +523,37 @@ class EditProfileFragment : Fragment() {
                     }
                 }
             )
+            if (user.roleBasedProficiency != "") {
+                val profBody = ProfficiencyRequest(user.roleBasedProficiency, "details")
+                val profJson = gson.toJson(profBody)
+                val profRequestBody =
+                    profJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                networkManager.makeRequest(
+                    endpoint = Endpoint.PROFICIENCY_REQUEST,
+                    requestType = RequestType.POST,
+                    headers = headers,
+                    requestBody = profRequestBody,
+                    callback = object : retrofit2.Callback<ResponseBody> {
+                        override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Network error: ${t.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            println("prof fail")
+                            saveEnded()
+                        }
+
+                        override fun onResponse(
+                            call: retrofit2.Call<ResponseBody>,
+                            response: retrofit2.Response<ResponseBody>
+                        ) {
+                            println("prof response")
+                            saveEnded()
+                        }
+                    }
+                )
+            } else saveEndCount++
 
             val backendLevelArray: Array<String> = arrayOf("ilk", "orta", "lise", "yuksekokul", "universite")
             val obody = ProfileOptionalBody(
@@ -818,7 +850,7 @@ class EditProfileFragment : Fragment() {
 
     private fun saveEnded() {
         saveEndCount++
-        if (saveEndCount == 2 + socialMediaCount + skillCount + languageCount + professionCount) {
+        if (saveEndCount == 3 + socialMediaCount + skillCount + languageCount + professionCount) {
             Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
         }

@@ -21,7 +21,7 @@ async def reset_password_page(request: Request, email: str = Query(None, descrip
 
     # change based on the server url.
     base_url_backend = "http://3.218.226.215:8000"
-    base_url_frontend = "http://3.218.226.215:8000"
+    base_url_frontend = "http://3.218.226.215:3000"
      
     template = f"""
     <!DOCTYPE html>
@@ -138,9 +138,14 @@ async def reset_password_page(request: Request, email: str = Query(None, descrip
                     return;
                 }}
 
-                const response = await fetch(`/api/forgot_password/reset?email=`+ encodeURIcomponent(email) + `&token=` + encodeURIcomponent(token) + `&new_password=` + encodeURIcomponent(newPassword), {{
+                const data = {{ new_password: newPassword }};
+
+                const response = await fetch(`/api/forgot_password/reset?email=${{encodeURIComponent(email)}}&token=${{encodeURIComponent(token)}}`, {{
                     method: "POST",
-                    body: JSON.stringify({{}})
+                    body: JSON.stringify(data),
+                    headers: {{
+                        'Content-Type': 'application/json'
+                    }}
                 }});
 
                 if (response.status === 200) {{
@@ -162,11 +167,14 @@ async def reset_password_page(request: Request, email: str = Query(None, descrip
     return HTMLResponse(content=template)
 
 @router.post("/reset", status_code=200)
-async def reset_user_password(email: str = Query(None, description="Email associated with the user"),
-                            token: str = Query(None, description="Verification token obtained from email"), 
-                            new_password: str = Query(None, description="New password")):
-                            
+async def reset_user_password(email: str = Query(..., description="Email associated with the user"),
+                             token: str = Query(..., description="Verification token obtained from email"),
+                             new_password_data: dict = Body(..., description="New password data")):
+    
+    new_password = new_password_data.get('new_password')
+
     if reset_password(email, token, new_password):
         return {"message": "Password reset successful."}
     else:
         raise HTTPException(status_code=400, detail="Invalid token or token expired")
+

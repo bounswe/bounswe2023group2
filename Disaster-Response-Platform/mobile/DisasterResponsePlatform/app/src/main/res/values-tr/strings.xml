@@ -140,6 +140,8 @@
     <string name="enter_verification_code">Doğrulama Kodunu Gir</string>
     <string name="send_verification_code">DOĞRULAMA KODU GÖNDER</string>
     <string name="resend_code">KODU TEKRAR GÖNDER</string>
+    <string name="email_verification_title">E-posta Doğrulama</string>
+    <string name="email_verification_description">E-posta adresinizi doğrulamak için size e-posta olarak gönderilen doğrulama kodunu giriniz.</string>
     <string name="full_name">İsim Soyisim</string>
 
     <!-- MAP -->
@@ -187,6 +189,7 @@
 
     <!-- NOTIFICATION -->
     <string name="add_notification">Bildirim Ekle</string>
+    <string name="proficiency">Yetkinlik</string>
 
     <!-- EVENT -->
     <string name="short_note">Kısa Açıklama</string>
@@ -218,6 +221,27 @@
         <item>Yardım Noktası</item>
     </string-array>
 
-    <!-- PROFILE LISTS -->
+    <!-- Reports -->
+    <string name="inappropriate_content">Uygunsuz İçerik</string>
+    <string name="report">Raporla</string>
+
+    <!-- Report Options for non-users type -->
+    <string-array name="report_options_non_users">
+        <item>Uygunsuz İçerik</item>
+        <item>Spam</item>
+        <item>Taciz</item>
+        <item>Yanıltıcı Haber</item>
+        <item>Nefret Söylemi</item>
+    </string-array>
+
+    <!-- Report Options for users type -->
+    <string-array name="report_options_users">
+        <item>Sahte Kullanıcı</item>
+        <item>Yanıltıcı Karakterler</item>
+        <item>Taciz</item>
+        <item>Yanıltıcı Haber</item>
+        <item>Nefret Söylemi</item>
+    </string-array>
+
 
 </resources>
