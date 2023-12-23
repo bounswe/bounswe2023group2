@@ -33,6 +33,9 @@ class Need(BaseModel):
     downvote: int = Field(default=0)
     created_at: datetime.datetime = Field(default_factory=current_time_gmt3)
     last_updated_at: datetime.datetime = Field(default_factory=current_time_gmt3)
+
+    verified_voter_username: str = Field(default = None)
+    verified_vote_type: str = Field(default = None)
     action_list: List[str] = Field(default=[])
     status: statusEnum = Field(default='created')
     recurrence: str = Field(default = None)
