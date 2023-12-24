@@ -26,7 +26,7 @@ def set_user_optional_info(user_optional_info: UserOptionalInfo) -> str:
 
     if not any([user_optional_info.Address,
                user_optional_info.education,
-               user_optional_info.blood_type,
+               user_optional_info.blood_type, user_optional_info.profile_picture,
                user_optional_info.date_of_birth, user_optional_info.health_condition, user_optional_info.identity_number,
                user_optional_info.nationality]):
         raise ValueError("No data supplied for optional info")

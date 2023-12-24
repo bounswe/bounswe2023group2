@@ -5,8 +5,11 @@ class EventCols {
     companion object{
         const val id: String = "id"
         const val type: String = "type"
-        const val creationTime: String = "creationTime"
-        const val creatorID: String = "creatorID"
-        const val location: String = "location"
+        const val shortDescription: String = "shortDescription"
+        const val creatorName: String = "creatorName"
+        const val additionalNotes: String = "additionalNotes"
+        const val address: String = "address"
+        const val x: String = "x"
+        const val y: String = "y"
     }
 }

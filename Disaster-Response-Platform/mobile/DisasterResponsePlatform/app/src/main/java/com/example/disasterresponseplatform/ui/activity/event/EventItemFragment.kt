@@ -85,8 +85,8 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
             val userRole = if (it == "null") "AUTHENTICATED" else it
             binding.tvUserRole.text = userRole
         }
-        binding.tvAddress.text = "%.3f %.3f".format(event.center_location_x, event.center_location_y)
-        coordinateToAddress(event.center_location_x, event.center_location_y, object : okhttp3.Callback {
+        binding.tvAddress.text = "%.3f %.3f".format(event.x, event.y)
+        coordinateToAddress(event.x, event.y, object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
                 Log.e("Network", "Error: ${e.message}")
             }
@@ -115,7 +115,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
 
-        if (token.isNullOrEmpty()) {
+        if (!DiskStorageManager.checkToken()) {
             binding.iconReliability.visibility = View.GONE
             binding.tvReliability.visibility = View.GONE
             binding.btnUpvote.visibility = View.GONE
@@ -153,7 +153,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         }
 
         // Arrange vote buttons and set on click listener
-        arrangeVoteButtons(token)
+        arrangeVoteButtons()
         binding.btnUpvote.setOnClickListener {
             voteEvent(token, "up")
         }
@@ -166,12 +166,12 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         }
     }
 
-    private fun arrangeVoteButtons(token: String?) {
+    private fun arrangeVoteButtons() {
 
         val btnUpvote = binding.btnUpvote
         val btnDownvote = binding.btnDownvote
 
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             voteViewModel.checkvote("events", event._id)
             voteViewModel.getLiveDataMessage().observe(requireActivity!!) {
                 when (it) {

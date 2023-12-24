@@ -14,6 +14,8 @@ class Feedback(BaseModel):
     entityID: str = Field(default=None)
     username: str = Field(default=None)
     vote: str = Field(default=None)
+    verified_username : str = Field(default=None)
+    verified_type: str = Field(default=None)
     
     
     

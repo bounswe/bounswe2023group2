@@ -5,6 +5,16 @@ import datetime
 
 from bson.objectid import ObjectId
 
+class UnitEnum(str, Enum):
+    kg = "kg"
+    piece = "piece"
+    portion = "portion"
+    daily = "daily"
+    lt = "lt"
+    gram = "gram"
+    box = "box"
+    pack = "pack"
+
 # Function to get current time in GMT+3
 def current_time_gmt3():
     return datetime.datetime.now() + datetime.timedelta(hours=3)
@@ -20,6 +30,7 @@ class Need(BaseModel):
     created_by: str = Field(default=None)
     description: str = Field(default=None)
     initialQuantity: int = Field(default=None)
+    quantityUnit: UnitEnum = Field(default=UnitEnum.piece)
     urgency: int = Field(default=None)
     unsuppliedQuantity: int = Field(default=None)
     type: str = Field(default=None)
@@ -33,6 +44,9 @@ class Need(BaseModel):
     downvote: int = Field(default=0)
     created_at: datetime.datetime = Field(default_factory=current_time_gmt3)
     last_updated_at: datetime.datetime = Field(default_factory=current_time_gmt3)
+
+    verified_voter_username: str = Field(default = None)
+    verified_vote_type: str = Field(default = None)
     action_list: List[str] = Field(default=[])
     status: statusEnum = Field(default='created')
     recurrence: str = Field(default = None)

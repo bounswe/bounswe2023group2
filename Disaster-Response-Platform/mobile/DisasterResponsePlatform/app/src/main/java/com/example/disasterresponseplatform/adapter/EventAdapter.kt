@@ -38,7 +38,7 @@ class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?): Re
 
         hb.tvType.text = currentEvent?.event_type.toString()
         hb.tvDate.text = currentEvent?.created_time?.substring(0,19)
-        hb.tvLocation.text = "x: ${String.format("%.2f", currentEvent?.center_location_x).replace(',', '.')}, y: ${String.format("%.2f", currentEvent?.center_location_y).replace(',', '.')}"
+        hb.tvLocation.text = "x: ${String.format("%.2f", currentEvent?.x).replace(',', '.')}, y: ${String.format("%.2f", currentEvent?.y).replace(',', '.')}"
         val shortDescription = currentEvent?.short_description.toString()
         hb.tvShortNode.text = shortDescription.substring(0, minOf(25,shortDescription.length))
         hb.tvCreator.text = currentEvent?.created_by_user

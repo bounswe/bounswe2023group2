@@ -11,8 +11,8 @@ class EventBody {
         val event_time: String,
         val end_time: String?,
         val is_active: Boolean = true,
-        val center_location_x: Double,
-        val center_location_y: Double,
+        val x: Double,
+        val y: Double,
         val max_distance_x: Double?, // the radius to the center (coverage area)
         val max_distance_y: Double?,
         val created_time: String,
@@ -30,8 +30,8 @@ class EventBody {
         val event_type: String,
         val event_time: String?,
         val is_active: Boolean = true,
-        val center_location_x: Double,
-        val center_location_y: Double,
+        val x: Double,
+        val y: Double,
         val max_distance_x: Double?, // the radius to the center (coverage area)
         val max_distance_y: Double?,
         val created_time: String?,

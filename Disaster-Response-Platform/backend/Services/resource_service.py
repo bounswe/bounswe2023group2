@@ -104,6 +104,7 @@ def get_resources(
                   "condition": 1,
                   "initialQuantity": 1,
                   "currentQuantity": 1,
+                  "quantityUnit": 1,
                   "type": 1,
                   "details":1,
                   "recurrence_id": 1,
@@ -116,7 +117,8 @@ def get_resources(
                   "created_at":1,
                   "last_updated_at":1,
                   "upvote":1,
-                  "downvote":1
+                  "downvote":1 ,
+                  "open_address":1
                   }
     
     sort_order = ASCENDING if order == 'asc' else DESCENDING

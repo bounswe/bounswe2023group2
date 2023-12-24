@@ -5,7 +5,7 @@ import ActivityTable from '@/components/ActivityTable'
 import { ToastContainer } from 'react-toastify'
 import { toast } from 'react-toastify'
 import { useEffect, useState } from 'react'
-import { Button, Tabs, Tab, Card, CardBody, Divider } from '@nextui-org/react'
+import { Button, Divider } from '@nextui-org/react'
 import { FaFilter } from "react-icons/fa";
 import { FaSort } from "react-icons/fa";
 import Filter from '@/components/Filter';
