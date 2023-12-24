@@ -52,7 +52,9 @@ class ForgotPasswordFragment : Fragment() {
                 .build()
             client.newCall(request).enqueue(object : okhttp3.Callback {
                 override fun onFailure(call: okhttp3.Call, e: IOException) {
-                    Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
+                    requireActivity().runOnUiThread {
+                        Toast.makeText( requireContext(), "No internet connection", Toast.LENGTH_SHORT ).show()
+                    }
                 }
 
                 override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
@@ -64,7 +66,9 @@ class ForgotPasswordFragment : Fragment() {
                         val changePasswordFragment = ChangePasswordFragment(email)
                         addFragment(changePasswordFragment)
                     } else {
-                        Toast.makeText(requireContext(), "Email could not sent", Toast.LENGTH_SHORT).show()
+                        requireActivity().runOnUiThread {
+                            Toast.makeText( requireContext(), "Email could not sent", Toast.LENGTH_SHORT ).show()
+                        }
                     }
                 }
             })
