@@ -494,7 +494,7 @@ class EditProfileFragment : Fragment() {
         }
     }
 
-    private fun updateOptional() {
+    private fun updateOptional(user: AuthenticatedUser) {
         binding.apply {
             val backendLevelArray: Array<String> =
                 arrayOf("ilk", "orta", "lise", "yuksekokul", "universite")
@@ -510,7 +510,7 @@ class EditProfileFragment : Fragment() {
                 profilePicture = user.profilePhoto
             )
             val json2 = gson.toJson(obody)
-            println("gonderiyorum")
+            println("optional gonderiyorum")
             println(json2)
             val requestBody2 =
                 json2.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
@@ -552,7 +552,7 @@ class EditProfileFragment : Fragment() {
                                         Toast.LENGTH_SHORT
                                     ).show()
 
-                                    println("delete fail")
+                                    println("optional set fail")
                                     saveEnded()
                                 }
 
@@ -560,7 +560,9 @@ class EditProfileFragment : Fragment() {
                                     call: retrofit2.Call<ResponseBody>,
                                     response: retrofit2.Response<ResponseBody>
                                 ) {
-                                    println("delete response")
+                                    println("optional set successful")
+                                    println(response.code())
+                                    println(response.body())
                                     saveEnded()
                                 }
                             }
@@ -573,18 +575,7 @@ class EditProfileFragment : Fragment() {
 
     private fun saveChanges(user: AuthenticatedUser) {
         binding.apply {
-            //                when (user) {
-//                    is CredibleUser -> user.region = profileRegion.text.toString()
-//                    is RoleBasedUser -> user.proficiency = profileProficiency.text.toString()
-//                }
 
-            val body = ProfileBody(
-                email = profileEmail.text.toString(),
-                firstName = profileName.text.toString(),
-                lastName = profileSurname.text.toString(),
-                phoneNumber = profilePhoneNumber.text.toString(),
-                privateAccount = !profileInfoVisible.isChecked
-            )
             // send image data as multipart
             println("uploading image")
             if (imageChanged)
@@ -595,17 +586,25 @@ class EditProfileFragment : Fragment() {
                         url = url.substring(0, url.indexOf("\""))
                         url = url.replace("\\/", "/")
                         user.profilePhoto = url
-                        updateOptional()
+                        updateOptional(user)
                     }
 
                     override fun onImageUploadFailure(errorMessage: String) {
                         println("Image upload error: $errorMessage")
                         Toast.makeText(requireContext(), "Profile picture could not be updated", Toast.LENGTH_LONG).show()
-                        updateOptional()
+                        updateOptional(user)
                     }
                 }).execute()
-            else updateOptional()
+            else updateOptional(user)
 
+
+            val body = ProfileBody(
+                email = profileEmail.text.toString(),
+                firstName = profileName.text.toString(),
+                lastName = profileSurname.text.toString(),
+                phoneNumber = profilePhoneNumber.text.toString(),
+                privateAccount = !profileInfoVisible.isChecked
+            )
             val json = gson.toJson(body)
             val requestBody =
                 json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
