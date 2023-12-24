@@ -144,8 +144,11 @@
     <string name="username_or_email">Username or E-mail</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="reset_password">Reset Password</string>
+    <string name="change_password">Change Password</string>
     <string name="verify">VERIFY</string>
     <string name="verification_code">Verification Code</string>
     <string name="enter_verification_code">Enter Verification Code</string>
