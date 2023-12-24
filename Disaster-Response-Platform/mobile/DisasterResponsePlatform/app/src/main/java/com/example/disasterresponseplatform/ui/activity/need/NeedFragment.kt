@@ -1,15 +1,9 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -20,7 +14,6 @@ import android.view.Window
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.core.text.set
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
@@ -47,6 +40,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
+import kotlin.collections.set
 
 class NeedFragment(
     private val needViewModel: NeedViewModel
@@ -215,8 +209,15 @@ class NeedFragment(
             }
             // when text is changed on button
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Handle changes in the search query (e.g., filter a list)
-                //filterList(newText)
+                if (newText != null) {
+                    if( newText == ""){
+                        sendRequest()
+                    } else {
+                        needViewModel.sendGetSearchResult(newText)
+                    }
+                } else {
+                    sendRequest()
+                }
                 return true
             }
         })

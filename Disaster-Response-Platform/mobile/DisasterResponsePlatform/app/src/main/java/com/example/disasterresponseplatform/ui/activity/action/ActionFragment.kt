@@ -21,24 +21,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ActionAdapter
-import com.example.disasterresponseplatform.data.enums.Endpoint
-import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.ActionBody
 import com.example.disasterresponseplatform.databinding.FragmentActionBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.gson.Gson
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.io.IOException
 
 class ActionFragment(
     private val actionViewModel: ActionViewModel
@@ -182,8 +173,15 @@ class ActionFragment(
             }
             // when text is changed on button
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Handle changes in the search query (e.g., filter a list)
-                //filterList(newText)
+                if (newText != null) {
+                    if( newText == ""){
+                        sendRequest()
+                    } else {
+                        actionViewModel.sendGetSearchResult(newText)
+                    }
+                } else {
+                    sendRequest()
+                }
                 return true
             }
         })

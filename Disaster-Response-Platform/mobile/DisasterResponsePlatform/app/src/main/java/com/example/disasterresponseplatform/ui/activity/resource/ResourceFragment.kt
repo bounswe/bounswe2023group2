@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -15,6 +14,7 @@ import android.view.Window
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -184,8 +184,15 @@ class ResourceFragment(
             }
             // when text is changed on button
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Handle changes in the search query (e.g., filter a list)
-                //filterList(newText)
+                if (newText != null) {
+                    if( newText == ""){
+                        sendRequest()
+                    } else {
+                        resourceViewModel.sendGetSearchResult(newText)
+                    }
+                } else {
+                    sendRequest()
+                }
                 return true
             }
         })

@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import android.view.Window
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +25,6 @@ import com.example.disasterresponseplatform.databinding.FragmentEventBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
-import com.example.disasterresponseplatform.ui.activity.resource.AddResourceFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.GeneralUtil
@@ -115,8 +114,15 @@ class EventFragment(
             }
             // when text is changed on button
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Handle changes in the search query (e.g., filter a list)
-                //filterList(newText)
+                if (newText != null) {
+                    if( newText == ""){
+                        sendRequest()
+                    } else {
+                        eventViewModel.sendGetSearchResult(newText)
+                    }
+                } else {
+                    sendRequest()
+                }
                 return true
             }
         })
