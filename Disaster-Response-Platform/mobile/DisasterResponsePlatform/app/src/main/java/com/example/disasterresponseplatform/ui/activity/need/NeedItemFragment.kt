@@ -92,8 +92,6 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         })
         binding.tvLastUpdatedTime.text = need.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = need.created_at.substring(0,10)
-        binding.tvUpvoteCount.text = need.upvote.toString()
-        binding.tvDownVoteCount.text = need.downvote.toString()
         binding.tvDescription.text = need.description.toString()
         //binding.e.text = need.details["subtype"]
         fillDetails(need.details)
@@ -161,96 +159,134 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
     private fun arrangeButtons(){
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (!token.isNullOrEmpty() and (username == need.created_by)) {
-            binding.btnEdit.setOnClickListener {
-                editNeed()
-            }
-            binding.btnDelete.setOnClickListener {
-                deleteNeed()
-            }
-        } else{
-            binding.btnDelete.visibility = View.GONE
+
+        if (token.isNullOrEmpty()) {
+            binding.iconReliability.visibility = View.GONE
+            binding.tvReliability.visibility = View.GONE
+            binding.btnUpvote.visibility = View.GONE
+            binding.btnDownvote.visibility = View.GONE
+            binding.btnReport.visibility = View.GONE
             binding.btnEdit.visibility = View.GONE
+            binding.btnDelete.visibility = View.GONE
+        } else {
+            binding.iconReliability.visibility = View.VISIBLE
+            binding.tvReliability.visibility = View.VISIBLE
+            binding.btnUpvote.visibility = View.VISIBLE
+            binding.btnDownvote.visibility = View.VISIBLE
+            binding.btnReport.visibility = View.VISIBLE
+
+            if (username == need.created_by) {
+                binding.btnEdit.visibility = View.VISIBLE
+                binding.btnEdit.setOnClickListener {
+                    editNeed()
+                }
+                binding.btnDelete.visibility = View.VISIBLE
+                binding.btnDelete.setOnClickListener {
+                    deleteNeed()
+                }
+            } else {
+                binding.btnEdit.visibility = View.GONE
+                binding.btnDelete.visibility = View.GONE
+            }
         }
+
         binding.btnNavigate.setOnClickListener {
             navigateToMapFragment()
         }
         binding.btnSeeProfile.setOnClickListener {
             addFragment(ProfileFragment(need.created_by),"ProfileFragment")
         }
+
+        // Arrange vote buttons and set on click listener
+        arrangeVoteButtons(token)
         binding.btnUpvote.setOnClickListener {
-            upvoteNeed(token)
+            voteNeed(token, "up")
         }
         binding.btnDownvote.setOnClickListener {
-            downvoteNeed(token)
+            voteNeed(token,"down")
         }
+
         binding.btnReport.setOnClickListener {
             showBottomSheet()
         }
     }
 
-    private var voted = false // if user change his/her some arrangements will happen with this parameter
-    /**
-     * It upvotes the need, increment upvote count, make upvote button not clickable and shows toast upvote successfully message
-     * If user already upvotes that need it shows toast you already upvoted message
-     */
-    @SuppressLint("SetTextI18n")
-    private fun upvoteNeed(token: String?){
-        if (!token.isNullOrEmpty()){
-            val votePostRequest = VoteBody.VoteRequestBody("needs",need._id)
-            voteViewModel.upvote(votePostRequest)
-            voteViewModel.getLiveDataMessage().observe(requireActivity!!){
-                if (it == "-1"){
-                    if (isAdded)
-                        Toast.makeText(requireContext(),"You Already Upvote it!",Toast.LENGTH_SHORT).show()
-                }
-                else if (it == "upvote"){
-                    // if users vote for downvote before (if vote for upvote he can't click again because its not clickable)
-                    if (voted){
-                        binding.btnDownvote.isClickable = true
-                        binding.tvDownVoteCount.text = need.downvote.toString()
-                    }
-                    voted = true
-                    binding.btnUpvote.isClickable = false
-                    binding.tvUpvoteCount.text = (need.upvote + 1).toString()
+    private fun arrangeVoteButtons(token: String?) {
 
+        val btnUpvote = binding.btnUpvote
+        val btnDownvote = binding.btnDownvote
+
+        if (!token.isNullOrEmpty()) {
+            voteViewModel.checkvote("needs", need._id)
+            voteViewModel.getLiveDataMessage().observe(requireActivity!!) {
+                when (it) {
+                    "upvote" -> {
+                        btnUpvote.isChecked = true
+                        btnDownvote.isChecked = false
+                    }
+
+                    "downvote" -> {
+                        btnUpvote.isChecked = false
+                        btnDownvote.isChecked = true
+                    }
+
+                    "none" -> {
+                        btnUpvote.isChecked = false
+                        btnDownvote.isChecked = false
+                    }
                 }
             }
-        } else{
-            if (isAdded)
-                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
+        } else {
+            btnUpvote.isChecked = false
+            btnDownvote.isChecked = false
         }
     }
 
     /**
-     * It downvotes the need, increase downvote count, make downvote button not clickable and shows toast downvote successfully message
-     * If user already downvote that need it shows toast you already downvote message
+     * It upvotes/downvotes/unvotes the need, arranges the buttons and shows toast accordingly
      */
     @SuppressLint("SetTextI18n")
-    private fun downvoteNeed(token: String?){
-        if (!token.isNullOrEmpty()){
-            val votePostRequest = VoteBody.VoteRequestBody("needs",need._id)
-            voteViewModel.downvote(votePostRequest)
-            voteViewModel.getLiveDataMessage().observe(requireActivity!!){
-                if (it == "-1"){
-                    if (isAdded)
-                        Toast.makeText(requireContext(),"You Already Downvote it!",Toast.LENGTH_SHORT).show()
-                }
-                else if (it == "downvote"){
-                    if (voted){
-                        binding.btnUpvote.isClickable = true
-                        binding.tvUpvoteCount.text = need.upvote.toString()
-                    }
-                    binding.btnDownvote.isClickable = false
-                    binding.tvDownVoteCount.text = (need.downvote + 1).toString()
-                    voted = true
-                }
+    private fun voteNeed(token: String?, type: String) {
+
+        val btnUpvote = binding.btnUpvote
+        val btnDownvote = binding.btnDownvote
+
+        if ((!token.isNullOrEmpty()) && (isAdded)){
+
+            // if already upvoted, UNvote and arrange button
+            if ((type == "up") && (btnUpvote.isChecked)) {
+                showToast("Your upvote has been withdrawn.")
+                voteViewModel.unvote(VoteBody.VoteRequestBody("needs", need._id))
+                btnUpvote.isChecked = false
             }
-        } else{
-            if (isAdded)
-                Toast.makeText(requireContext(),getString(R.string.pr_login_required),Toast.LENGTH_SHORT).show()
+            // if already downvoted, UNvote and arrange button
+            else if ((type == "down") && (btnDownvote.isChecked)) {
+                showToast("Your downvote has been withdrawn.")
+                voteViewModel.unvote(VoteBody.VoteRequestBody("needs", need._id))
+                btnDownvote.isChecked = false
+            }
+            // if not upvoted, upvote and arrange buttons
+            else if ((type == "up") && !(btnUpvote.isChecked)) {
+                showToast("Your upvote has been saved.")
+                voteViewModel.upvote(VoteBody.VoteRequestBody("needs",need._id))
+                btnUpvote.isChecked = true
+                btnDownvote.isChecked = false
+            }
+            // if not downvoted, downvote and arrange buttons
+            else if ((type == "down") && !(btnDownvote.isChecked)) {
+                showToast("Your downvote has been saved.")
+                voteViewModel.downvote(VoteBody.VoteRequestBody("needs",need._id))
+                btnUpvote.isChecked = false
+                btnDownvote.isChecked = true
+            }
+
+        } else if ((token.isNullOrEmpty()) && (isAdded)) {
+            showToast(getString(R.string.pr_login_required))
+            btnUpvote.isChecked = false
+            btnDownvote.isChecked = false
         }
     }
+
 
     /** This function is called when user wants to edit need
      * If the creator of need and users match, user can edit need
@@ -307,6 +343,12 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
             .get()
             .build()
         client.newCall(request).enqueue(callback)
+    }
+
+    private fun showToast(message: String) {
+        if (isAdded) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

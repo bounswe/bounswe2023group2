@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer, util
 from typing import List
+import requests
 
 # Initialize the model
 model = SentenceTransformer('multi-qa-mpnet-base-cos-v1')

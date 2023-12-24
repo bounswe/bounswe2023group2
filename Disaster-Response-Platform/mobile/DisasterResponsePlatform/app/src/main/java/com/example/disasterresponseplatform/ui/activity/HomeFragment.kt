@@ -16,6 +16,7 @@ import com.example.disasterresponseplatform.databinding.FragmentHomeBinding
 import com.example.disasterresponseplatform.ui.activity.action.ActionFragment
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyFragment
+import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
 import com.example.disasterresponseplatform.ui.activity.event.EventFragment
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
 import com.example.disasterresponseplatform.ui.activity.need.NeedFragment
@@ -26,6 +27,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment(
+    private val emergencyViewModel: EmergencyViewModel,
     private val needViewModel: NeedViewModel,
     private val resourceViewModel: ResourceViewModel,
     private val actionViewModel: ActionViewModel,
@@ -45,7 +47,7 @@ class HomeFragment(
         val viewPager = binding.viewPager
 
         val fragments: ArrayList<Fragment> = arrayListOf(
-            EmergencyFragment(),
+            EmergencyFragment(emergencyViewModel),
             NeedFragment(needViewModel),
             ResourceFragment(resourceViewModel),
             EventFragment(eventViewModel),
