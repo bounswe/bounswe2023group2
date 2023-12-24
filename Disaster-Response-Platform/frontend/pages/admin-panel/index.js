@@ -29,7 +29,7 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
       headers: {
         "Content-Type": "application/json",
       },
-      body: {_id}
+      body: JSON.stringify({_id})
     });
     if (!response.ok) {
       toast(labels.feedback.failure);
@@ -40,12 +40,12 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
   }
 
   async function accept(_id, report_type, report_type_id) {
-    await fetch('/api/reports/accept', {
+    const response = await fetch('/api/reports/accept', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
       },
-      body: {_id, report_type, report_type_id}
+      body: JSON.stringify({_id, report_type, report_type_id})
     });
     if (!response.ok) {
       toast(labels.feedback.failure);
@@ -56,9 +56,24 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
   }
 
   async function toggleCredible(isSelected, index, username) {
+    const response = await fetch('/api/set-credibility', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({username, newValue: isSelected})
+    });
+    if (!response.ok) {
+      toast(labels.feedback.failure);
+      return;
+    }
+    toast(labels.admin.credibility_set);
+
     const newAllUsers = [...allUsers];
     newAllUsers[index].user_role = isSelected ? "CREDIBLE" : "AUTHENTICATED";
     setAllUsers(newAllUsers);
+
+
   }
 
   const rejectButton = (...args) => <Button onPress={() => reject(...args)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject} </Button>;
@@ -93,7 +108,7 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
       ) => {
         const credible = user_role === "CREDIBLE";
         return {
-          key: username + (credible ? "+" : "-"),
+          key: username + user_role,
           username: <Link href={`user/${username}`} className="text-blue-600">{username}</Link>,
           name: `${first_name} ${last_name}`,
           user_role: labels.user_roles[user_role],

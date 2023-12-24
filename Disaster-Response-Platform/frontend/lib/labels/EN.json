@@ -189,7 +189,8 @@
 		"report_rejected": "Report rejected.",
 		"ban_user": "Ban user",
 		"remove_activity": "Remove activity",
-		"is_credible": "Credible"
+		"is_credible": "Credible",
+		"credibility_set": "Credibility set."
 	},
 	"navbar": {
 		"help_feedback": "Help & Feedback",
