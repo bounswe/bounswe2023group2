@@ -17,44 +17,36 @@ import getLabels from '@/lib/getLabels';
 const Map = dynamic(() => import('../components/Map/Map'), {
   ssr: false,
 })
+const colors = ['primary', 'success', 'warning', 'error', 'dark', 'secondary', 'info', 'light'];
 export default function home({ labels }) {
- 
-  const [chosenActivityType, setChosenActivityType] = useState("resources");
-  
-  
+
+  const [chosenActivityType, setChosenActivityType] = useState("resource");
   return (
     <>
-      <Map />
       <ToastContainer position="bottom-center" />
       <Divider className="my-6" />
       <Tabs
-          selectedKey={chosenActivityType}
-          onSelectionChange={setChosenActivityType}
-          size="lg"
-          color="primary"
-          variant="underlined"
-          classNames={{tab: "py-8"}}
-      >
-        <Tab key="needs" titleValue={labels.activities.needs} title={(
-          <div className="bg-need dark:bg-need-dark px-2 py-1.5 rounded-xl text-black">
-            {labels.activities.needs}
-          </div>
-        )}/>
-        <Tab key="resources" titleValue={labels.activities.resources} title={(
-          <div className="bg-resource dark:bg-resource-dark px-2 py-1.5 rounded-xl text-black">
-            {labels.activities.resources}
-          </div>
-        )}/>
-        <Tab key="events" titleValue={labels.activities.events} title={(
-          <div className="bg-event dark:bg-event-dark px-2 py-1.5 rounded-xl text-black">
-            {labels.activities.events}
-          </div>
-        )}/>
-      </Tabs>
-      <ActivityTable chosenActivityType={chosenActivityType} labels={labels}/>
+        selectedKey={chosenActivityType}
+        radius="full"
+        onSelectionChange={setChosenActivityType}
+        classNames={{
+          cursor: `bg-${chosenActivityType}`,
+        }}
+        size="lg"
 
-      <div className={styles.buttonContainer}>
-      </div>
+      >
+        <Tab key="need" titleValue={labels.activities.needs} title={
+          labels.activities.needs
+        } />
+        <Tab key="resource" titleValue={labels.activities.resources} title={
+          labels.activities.resources
+        } />
+        <Tab key="event" titleValue={labels.activities.events} title={  
+         labels.activities.events
+     }/>
+      </Tabs>
+      <ActivityTable chosenActivityType={chosenActivityType} labels={labels} />
+    
     </>
   )
 }

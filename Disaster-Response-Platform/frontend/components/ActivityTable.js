@@ -60,7 +60,7 @@ export default function ActivityTable({ chosenActivityType, labels }) {
 
     const filterActivities = async () => {
         let response
-        if (chosenActivityType === "needs") {
+        if (chosenActivityType === "need") {
             let my_filter = new URLSearchParams(filters).toString()
 
             response = await api.get(`/api/needs/?${my_filter}`, { headers: { "Content-Type": "application/json" } });
@@ -70,7 +70,7 @@ export default function ActivityTable({ chosenActivityType, labels }) {
             } else {
                 toast.error(labels.feedback.failure);
             }
-        } else if (chosenActivityType === "resources") {
+        } else if (chosenActivityType === "resource") {
             let my_filter = new URLSearchParams(filters).toString()
 
             response = await api.get(`/api/resources/?${my_filter}`, { headers: { "Content-Type": "application/json" } });
@@ -88,17 +88,17 @@ export default function ActivityTable({ chosenActivityType, labels }) {
 
     function getRows() {
         switch (chosenActivityType) {
-            case "resources": return resources;
-            case "needs": return needs;
-            case "events": return events;
+            case "resource": return resources;
+            case "need": return needs;
+            case "event": return events;
             default: return [];
         }
     }
 
     const columns = {
-        "resources": ["type", "location", "created_by", "created_at", "description"],
-        "needs": ["type", "location", "created_by", "created_at", "occur_at", "description", "recurrence_rate", "take_action"],
-        "events": ["event_type", "location", "created_by_user", "event_time", "short_description", "is_active"]
+        "resource": ["type", "location", "created_by", "created_at", "description"],
+        "need": ["type", "location", "created_by", "created_at", "occur_at", "description", "recurrence_rate", "take_action"],
+        "event": ["event_type", "location", "created_by_user", "event_time", "short_description", "is_active"]
     }
 
     function getColumns() {
@@ -123,7 +123,7 @@ export default function ActivityTable({ chosenActivityType, labels }) {
                 isHeaderSticky
                 selectionMode="single"
                 aria-label="activity table"
-                className='flex w-full overflow-x-auto shadow-md sm:rounded max-h-[300px]'
+                className='flex w-full overflow-x-auto shadow-md sm:rounded max-h-[500px]'
             >
                 <TableHeader columns={getColumns()} emptyContent={labels.activity_table.no_content}>
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
