@@ -1,7 +1,7 @@
 import MainLayout from '@/layouts/MainLayout';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
-import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Tab, Tabs } from "@nextui-org/react";
+import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Tab, Tabs, Switch } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/apiUtils';
@@ -9,7 +9,8 @@ import getLabels from '@/lib/getLabels';
 import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';
 
-export default function AdminPanel({ unauthorized, allReports, userList, bannedList, labels }) {
+export default function AdminPanel({ unauthorized, allReports, allUsersInit, labels }) {
+  const [allUsers, setAllUsers] = useState(allUsersInit);
   const [chosenReportType, setChosenReportType] = useState("users");
   const router = useRouter();
   if (unauthorized) {
@@ -54,6 +55,12 @@ export default function AdminPanel({ unauthorized, allReports, userList, bannedL
     setReports[report_type](list => list.filter(elem => elem._id !== _id));
   }
 
+  async function toggleCredible(isSelected, index, username) {
+    const newAllUsers = [...allUsers];
+    newAllUsers[index].user_role = isSelected ? "CREDIBLE" : "AUTHENTICATED";
+    setAllUsers(newAllUsers);
+  }
+
   const rejectButton = (...args) => <Button onPress={() => reject(...args)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject} </Button>;
   const acceptButton = (...args) => <Button onPress={() => accept(...args)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.accept} </Button>;
   const report_types = ["users", "needs", "resources", "actions", "events"];
@@ -78,6 +85,29 @@ export default function AdminPanel({ unauthorized, allReports, userList, bannedL
             )
     );
   }
+
+  const users = allUsers.filter(elem=>true)
+    .map(
+      (
+        {username, first_name, last_name, user_role, initialCredible}, index
+      ) => {
+        const credible = user_role === "CREDIBLE";
+        return {
+          key: username + (credible ? "+" : "-"),
+          username: <Link href={`user/${username}`} className="text-blue-600">{username}</Link>,
+          name: `${first_name} ${last_name}`,
+          user_role: labels.user_roles[user_role],
+          credible: user_role === "ADMIN" ? null : (
+                      <>
+                        <Switch defaultSelected={credible} onValueChange={isSelected => toggleCredible(isSelected, index, username)} />
+                        <span className={`align-top text-xs text-red-700 ${credible === initialCredible ? "text-opacity-0" : ""}`}>
+                          {labels.UI.changed}
+                        </span>
+                      </>
+          )
+        }
+      }
+  );
 
   return (
     <main>
@@ -136,13 +166,15 @@ export default function AdminPanel({ unauthorized, allReports, userList, bannedL
         </Table>
       </div>
       <div class="my-10">
-        <h3 class="object-top text-center text-xl mb-3"> {labels.admin.banned_users} </h3>
-        <Table aria-label="Engellenmiş Kullanıcı Listesi">
+        <h3 class="object-top text-center text-xl mb-3"> {labels.admin.users} </h3>
+        <Table aria-label="Kullanıcı Listesi">
           <TableHeader>
             <TableColumn key="username">{labels.profile.username}</TableColumn>
-            <TableColumn key="actions">{labels.admin.actions}</TableColumn>
+            <TableColumn key="name">{labels.profile.full_name}</TableColumn>
+            <TableColumn key="user_role">{labels.user_roles.user_role}</TableColumn>
+            <TableColumn key="credible">{labels.admin.is_credible}</TableColumn>
           </TableHeader>
-          <TableBody items={bannedList}>
+          <TableBody items={users}>
             {(item) => (
               <TableRow key={item.key}>
                 {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
@@ -191,12 +223,19 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels}};
     }
 
-    const userList = {};
-    const bannedList = [{"key": 0, ...["a", "b"]}];
+    const { data: allUsers } = await api.get('/api/users/', {
+      headers: {
+        'Authorization': `Bearer ${user.accessToken}` 
+      }
+    });
+
+    allUsersInit = allUsersInit.map(user => ({...user, initialCredible: user.user_role === "CREDIBLE"}));
+
+    allUsersInit.sort((u1, u2) => u1.username.localeCompare(u2.username))
+
     return {"props": {
       allReports,
-      userList,
-      bannedList,
+      allUsersInit,
       labels
     }};
   },

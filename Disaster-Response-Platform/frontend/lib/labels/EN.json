@@ -6,6 +6,7 @@
 		"username": "Username",
 		"first_name": "First Name",
 		"last_name": "Last Name",
+		"full_name": "Full Name",
 		"password": "Password",
 		"phone_number": "Phone Number",
 		"email": "Email",
@@ -114,7 +115,8 @@
 		"close": "Close",
 		"loading": "Loading",
 		"forgot": "Forgot password",
-		"details": "Details"
+		"details": "Details",
+		"changed": "Changed"
 	},
 	"sort_filter": {
 		"sort": "Sort",
@@ -186,7 +188,8 @@
 		"report_accepted": "Report accepted.",
 		"report_rejected": "Report rejected.",
 		"ban_user": "Ban user",
-		"remove_activity": "Remove activity"
+		"remove_activity": "Remove activity",
+		"is_credible": "Credible"
 	},
 	"navbar": {
 		"help_feedback": "Help & Feedback",
@@ -225,6 +228,7 @@
 		"ROLE_BASED": "Specialist",
 		"CREDIBLE": "Credible User",
 		"ADMIN": "Administrator",
+		"user_role": "Role",
 		"area_of_expertise": "Area of Expertise"
 	},
 	"proficiency": {
