@@ -1,13 +1,15 @@
 import MainLayout from '@/layouts/MainLayout';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
-import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue } from "@nextui-org/react";
+import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Tab, Tabs } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/apiUtils';
 import getLabels from '@/lib/getLabels';
+import Link from 'next/link';
 
 export default function AdminPanel({ unauthorized, allReports, userList, bannedList, labels }) {
+  const [chosenReportType, setChosenReportType] = useState("users");
   const router = useRouter();
   if (unauthorized) {
     useEffect(() => {setTimeout(() => {router.push("/")}, 2000)});
@@ -40,7 +42,13 @@ export default function AdminPanel({ unauthorized, allReports, userList, bannedL
               (
                 {created_by: reporter, description, _id, report_type_id: reported}
               ) => (
-                {"key": _id, "reporter": <Link href={`user/${reporter}`}>{reporter}</Link>, description, "reported": <Link href={`user/${reported}`}>{reported}</Link>, "actions": <div class="flex">{rejectButton(_id)}{acceptButton(_id)}</div>}
+                {
+                  "key": _id,
+                  "reporter": <Link href={`user/${reporter}`} className="text-blue-600">{reporter}</Link>,
+                  description,
+                  "reported": report_type === "users" ? <Link href={`user/${reported}`} className="text-blue-600">{reported}</Link> : reported,
+                  "actions": <div class="flex">{rejectButton(_id)}{acceptButton(_id)}</div>
+                }
               )
             )
     );
@@ -49,7 +57,43 @@ export default function AdminPanel({ unauthorized, allReports, userList, bannedL
   return (
     <main>
       <div class="my-10">
-        <h3 class="object-top text-center text-xl mb-3"> {labels.admin.user_reports} </h3>
+        <h3 class="object-top text-center text-xl mb-3"> {labels.admin.reports} </h3>
+        <div className="text-center">
+          <Tabs
+              selectedKey={chosenReportType}
+              onSelectionChange={setChosenReportType}
+              size="lg"
+              color="primary"
+              variant="underlined"
+              classNames={{tab: "py-8"}}
+          >
+            <Tab key="users" titleValue={labels.admin.users} title={(
+              <div className="bg-red-400 dark:bg-red-500 px-2 py-1.5 rounded-xl text-black">
+                {labels.admin.users}
+              </div>
+            )}/>
+            <Tab key="needs" titleValue={labels.activities.needs} title={(
+              <div className="bg-need dark:bg-need-dark px-2 py-1.5 rounded-xl text-black">
+                {labels.activities.needs}
+              </div>
+            )}/>
+            <Tab key="resources" titleValue={labels.activities.resources} title={(
+              <div className="bg-resource dark:bg-resource-dark px-2 py-1.5 rounded-xl text-black">
+                {labels.activities.resources}
+              </div>
+            )}/>
+            <Tab key="events" titleValue={labels.activities.events} title={(
+              <div className="bg-event dark:bg-event-dark px-2 py-1.5 rounded-xl text-black">
+                {labels.activities.events}
+              </div>
+            )}/>
+            <Tab key="actions" titleValue={labels.activities.actions} title={(
+              <div className="bg-action dark:bg-action-dark px-2 py-1.5 rounded-xl text-white">
+                {labels.activities.actions}
+              </div>
+            )}/>
+          </Tabs>
+        </div>
         <Table aria-label="Reports">
           <TableHeader>
             <TableColumn key="reporter">{labels.admin.reporter}</TableColumn>
@@ -57,7 +101,7 @@ export default function AdminPanel({ unauthorized, allReports, userList, bannedL
             <TableColumn key="description">{labels.admin.description}</TableColumn>
             <TableColumn key="actions">{labels.admin.actions}</TableColumn>
           </TableHeader>
-          <TableBody items={reports["users"]}>
+          <TableBody items={reports[chosenReportType]}>
             {(item) => (
               <TableRow key={item.key}>
                 {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
