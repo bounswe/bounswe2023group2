@@ -25,7 +25,7 @@ class ReportViewModel@Inject constructor() {
 
     fun sendReport(id: String, type: String, description: String) {
         val token = DiskStorageManager.getKeyValue("token")
-        if (token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             return
         }
         val headers = mapOf(
@@ -34,7 +34,7 @@ class ReportViewModel@Inject constructor() {
         )
         val simpleMap= mutableMapOf<String,Any>()
         simpleMap["abc"] = 2015
-        val reportRequestBody = ReportBody.ReportRequestBody(createdBy = token, description = description, reportType = type,id,simpleMap)
+        val reportRequestBody = ReportBody.ReportRequestBody(createdBy = token!!, description = description, reportType = type,id,simpleMap)
         val gson = Gson()
         val json = gson.toJson(reportRequestBody)
         val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())

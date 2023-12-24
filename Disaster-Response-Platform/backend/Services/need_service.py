@@ -102,6 +102,7 @@ def get_needs(
             "urgency": 1,
             "initialQuantity": 1,
             "unsuppliedQuantity": 1,
+            "quantityUnit": 1,
             "type": 1,
             "details": 1,
             "recurrence_id": 1,
@@ -114,7 +115,8 @@ def get_needs(
             "created_at": 1,
             "last_updated_at": 1,
             "upvote": 1,
-            "downvote": 1
+            "downvote": 1,
+            "open_address":1
             # Add other fields if necessary
         }
     

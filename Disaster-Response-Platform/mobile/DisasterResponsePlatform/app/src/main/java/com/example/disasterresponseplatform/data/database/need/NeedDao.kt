@@ -5,21 +5,16 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.disasterresponseplatform.data.database.DatabaseInfo
+import com.example.disasterresponseplatform.data.database.event.EventCols
 
 @Dao
 interface NeedDao {
     @Insert
     suspend fun insertNeed(need: Need)
 
-    @Query("SELECT ${NeedResourceCols.coordinateX} FROM ${DatabaseInfo.NEED}  WHERE ${NeedResourceCols.creatorName} = :creatorID")
-    fun getX(creatorID: String): Double?
-
-    @Query("SELECT ${NeedResourceCols.coordinateY} FROM ${DatabaseInfo.NEED}  WHERE ${NeedResourceCols.creatorName} = :creatorID")
-    fun getY(creatorID: String): Double?
-
     @Query("SELECT * FROM ${DatabaseInfo.NEED}")
     fun getAllNeeds(): List<Need>?
 
-    @Update
-    suspend fun updateNeed(need: Need)
+    @Query("DELETE FROM ${DatabaseInfo.NEED} WHERE ${NeedResourceCols.id} = :id")
+    fun deleteNeed(id: Int)
 }

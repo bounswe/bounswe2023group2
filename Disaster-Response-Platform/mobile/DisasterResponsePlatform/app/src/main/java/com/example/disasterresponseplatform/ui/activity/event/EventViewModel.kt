@@ -1,17 +1,23 @@
 package com.example.disasterresponseplatform.ui.activity.event
 
 import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.event.Event
+import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.EventBody
+import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.repositories.EventRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -94,8 +100,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
      */
     fun postEvent(postRequest: EventBody.EventPostBody, id: String? = null){
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val headers = mapOf(
                 "Authorization" to "bearer $token",
                 "Content-Type" to "application/json"
@@ -157,7 +162,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
                                 liveDataEventID.postValue("-1")
                                 Log.d(
                                     "ResponseSuccess",
-                                    "Body: $errorBody Response Code: $responseCode"
+                                    "Error Body: $errorBody Response Code: $responseCode"
                                 )
                             }
                         }
@@ -223,7 +228,36 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
         }
     }
 
-    fun getLocation(creatorID: String): String{
-        return eventRepository.getLocation(creatorID)
+    fun getAllEvents(): List<Event>?{
+        return eventRepository.getAllEvents()
     }
+
+    fun deleteEvent(id: Int){
+        viewModelScope.launch(Dispatchers.IO){
+            eventRepository.deleteEvent(id)
+        }
+    }
+
+    /**
+     * This functions get the local object and prepare it as to send to the backend
+     */
+    fun prepareBodyFromLocal(event: Event, activity: FragmentActivity): EventBody.EventPostBody {
+        val type =
+            when (event.type){
+                "Enkaz" -> "Debris"
+                "Altyapı" -> "Infrastructure"
+                "Afet" -> "Disaster"
+                "Yardım Noktası" -> "Help-Arrived"
+                else -> event.type
+            }
+        val address = if (event.address.contains(activity.getString(R.string.selected_from_map))) "" else " address: " + event.address
+        val additionalNotes = "No Internet Connection "+ event.additionalNotes + address
+        val shortDescription = event.shortDescription
+        val createdTime = "${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}"
+        val x = event.x
+        val y = event.y
+        return EventBody.EventPostBody(type,null,true,x,y,null,null,
+            createdTime,shortDescription,additionalNotes)
+    }
+
 }

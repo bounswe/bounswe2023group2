@@ -20,4 +20,8 @@ data class Emergency(
     val contactNumber: String?,
     @ColumnInfo(name = EmergencyCols.location)
     val location: String?,
+    @ColumnInfo(name = EmergencyCols.x)
+    val x: Double,
+    @ColumnInfo(name = EmergencyCols.y)
+    val y: Double,
 )

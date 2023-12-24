@@ -131,6 +131,7 @@
     <string name="debris_button">Enkaz Altında Olan Var</string>
     <string name="fire_button">Yangına Acil Müdahale Gerekli</string>
     <string name="medical_button">Acilen Sağlık Ekibine İhtiyaç Var</string>
+    <string name="select_1_5">Aciliyet: Düşük Öncelikliden(1) Acile(5) Doğru</string>
 
     <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
     <string name="sign_up">ÜYE OL</string>
@@ -212,6 +213,14 @@
     <string name="coverage_y_km">Kapsama Alanı Y(km)</string>
     <string name="additional_notes">Ek Notlar</string>
     <string name="edit_event">Olayı Düzenle</string>
+
+    <!-- Toast Messages -->
+    <string name="check_your_connection">İnternete bağlanmanız gerekli!</string>
+    <string name="local_posted">İnternetiniz yokken kaydettiğiniz objeler başarıyla paylaşıldı</string>
+    <string name="saved_local">Yarattığınız obje yerel dosyalara kaydedildi, internet bağlantınız sağlandığında bu obje sunucuyla paylaşılacak</string>
+
+    <!-- No Internet Form -->
+    <string name="selected_from_map">Konum başarıyla seçildi</string>
 
     <!-- ACTIVITY LISTS -->
     <string name="cloth">Giyecek</string>

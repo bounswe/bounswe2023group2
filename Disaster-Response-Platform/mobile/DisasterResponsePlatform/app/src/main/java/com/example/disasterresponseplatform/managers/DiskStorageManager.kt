@@ -2,6 +2,7 @@ package com.example.disasterresponseplatform.managers
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import java.io.Serializable
 
 object DiskStorageManager {
@@ -25,6 +26,23 @@ object DiskStorageManager {
 
     fun removeKey(key: String) {
         sharedPreferences.edit().remove(key).apply()
+    }
+
+    /**
+     * Checks whether it has a not null token (user logs in)
+     */
+    fun checkToken(): Boolean{
+        val token = getKeyValue("token")
+        Log.i("token", "Token $token")
+        return (hasKey("token") and !token.isNullOrEmpty())
+    }
+
+    /**
+     * Checks whether current user's username is the same as requested
+     */
+    fun checkUsername(username: String): Boolean{
+        val currentUsername = getKeyValue("username").toString()
+        return (currentUsername == username)
     }
 
     fun clearAll() {

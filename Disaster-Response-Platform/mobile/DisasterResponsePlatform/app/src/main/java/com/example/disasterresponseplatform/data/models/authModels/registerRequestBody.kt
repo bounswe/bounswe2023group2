@@ -49,13 +49,13 @@ data class UsersMeResponse(
     @SerializedName("username")
     val username: String,
     @SerializedName("email")
-    val email: String,
+    val email: String?,
     @SerializedName("first_name")
     val firstName: String,
     @SerializedName("last_name")
     val lastName: String,
     @SerializedName("phone_number")
-    val phoneNumber: String,
+    val phoneNumber: String?,
     @SerializedName("is_email_verified")
     val isEmailVerified: Boolean,
     @SerializedName("private_account")
@@ -84,6 +84,8 @@ data class UsersMeOptionalResponse(
     val bloodType: String,
     @SerializedName("Address")
     val address: String,
+    @SerializedName("profile_picture")
+    val profilePicture: String,
 )
 
 data class UsersOptionalArray(
@@ -108,6 +110,7 @@ data class ProfileOptionalBody(
     @SerializedName("health_condition") val healthCondition: String?,
     @SerializedName("blood_type") val bloodType: String?,
     @SerializedName("Address") val address: String?,
+    @SerializedName("profile_picture") val profilePicture: String?,
 )
 
 data class ProfficiencyRequest(

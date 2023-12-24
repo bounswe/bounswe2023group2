@@ -11,10 +11,10 @@ export default withIronSessionApiRoute(loginRoute, sessionConfig);
       const response = await api.post('/api/users/login', req.body);
       if(response.status == 200) {
         req.session.user = {
-          accessToken: res.data?.access_token,
-          refreshToken: res.data?.refresh_token,
-          user_role: res.data?.user_role ?? "AUTHENTICATED",
-          proficiency: res.data?.profenciency ?? [],
+          accessToken: response.data?.access_token,
+          refreshToken: response.data?.refresh_token,
+          user_role: response.data?.user_role ?? "AUTHENTICATED",
+          proficiency: response.data?.profenciency ?? [],
           languages: 'tr'
         };
         await req.session.save();

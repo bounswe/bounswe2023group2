@@ -131,6 +131,7 @@
     <string name="debris_button">There Is Someone Under Debris</string>
     <string name="fire_button">Immediate Response to Fire Required</string>
     <string name="medical_button">Medical Team Urgently Needed</string>
+    <string name="select_1_5">Urgency: Low-Priority(1) to Critical(5) </string>
 
 
     <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
@@ -214,6 +215,14 @@
     <string name="additional_notes">Additional Notes</string>
     <string name="edit_event">Edit Event</string>
 
+    <!-- Toast Messages -->
+    <string name="check_your_connection">You need to connect to the internet</string>
+    <string name="local_posted">Your Local Objects are Posted into Backend Successfully</string>
+    <string name="saved_local">It is saved in Local, It will be uploaded when you connect to the internet</string>
+
+    <!-- No Internet Form -->
+    <string name="selected_from_map">Location is selected successfully</string>
+
     <!-- ACTIVITY LISTS -->
     <string name="cloth">Cloth</string>
     <string name="food">Food</string>
@@ -260,7 +269,6 @@
         <item>Disaster</item>
         <item>Help-Arrived</item>
     </string-array>
-
 
 
     <!-- PROFILE LISTS -->
