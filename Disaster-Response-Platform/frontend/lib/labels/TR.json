@@ -178,7 +178,8 @@
 		"details": "Detaylar",
 		"actions": "Aksiyonlar",
 		"report": "Raporla",
-		"reject_report": "Raporu reddet",
+		"reject": "Reddet",
+		"accept": "Onayla",
 		"ban_user": "Kullanıcıyı engelle",
 		"remove_activity": "Aktiviteyi kaldır"
 	},

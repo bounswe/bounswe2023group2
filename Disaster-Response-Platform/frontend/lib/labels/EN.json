@@ -179,7 +179,8 @@
 		"details": "Details",
 		"actions": "Actions",
 		"report": "Report",
-		"reject_report": "Reject report",
+		"reject": "Reject",
+		"accept": "Accept",
 		"ban_user": "Ban user",
 		"remove_activity": "Remove activity"
 	},

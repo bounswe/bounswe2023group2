@@ -2,12 +2,12 @@ import MainLayout from '@/layouts/MainLayout';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
 import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue } from "@nextui-org/react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/apiUtils';
 import getLabels from '@/lib/getLabels';
 
-export default function AdminPanel({ unauthorized, reports, userList, bannedList, labels }) {
+export default function AdminPanel({ unauthorized, allReports, userList, bannedList, labels }) {
   const router = useRouter();
   if (unauthorized) {
     useEffect(() => {setTimeout(() => {router.push("/")}, 2000)});
@@ -19,70 +19,45 @@ export default function AdminPanel({ unauthorized, reports, userList, bannedList
     );
   }
 
-  function dismiss(report_id) {
-
-  }
-  function ban(report_id, username) {
-
-  }
-  function remove(report_id, activity_id) {
+  function reject(report_id) {
 
   }
 
-  const dismissButton = report_id => <Button onPress={() => dismiss(report_id)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject_report} </Button>;
-  const banButton = (report_id, username) => <Button onPress={() => ban(report_id, username)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.ban_user} </Button>;
-  const removeButton = (report_id, activity_id) => <Button onPress={() => remove(report_id, activity_id)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.remove_activity} </Button>;
+  function accept(report_id) {
 
-  const userReports = (reports.filter(elem => (elem.type === "users" && elem.status === "undefined"))
-                              .map(
-                                (
-                                  {created_by: reporter, description, type, _id, "details": {reported_user_id: reported}}
-                                ) => (
-                                  {"key": _id, "reporter": <Link href={`user/${reporter}`}>reporter</Link>, description, "reported": <Link href={`user/${reported}`}>reported</Link>, "actions": <div class="flex">{banButton(_id, reported)}{dismissButton(_id)}</div>}
-                                )
-                              )
-  );
+  }
 
-  const activityReports = (reports.filter(elem => (elem.type !== "users" && elem.status === "undefined"))
-                                  .map(
-                                    (
-                                      {created_by: reporter, description, type, _id, "details": {reported_activity_id: reported}}
-                                    ) => (
-                                      {"key": _id, "reporter": <Link href={`user/${reporter}`}>reporter</Link>, description, reported, "actions": <div class="flex">{removeButton(_id, reported)}{dismissButton(_id)}</div>}
-                                    )
-                                  )
-  );
+  const rejectButton = report_id => <Button onPress={() => reject(report_id)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject} </Button>;
+  const acceptButton = report_id => <Button onPress={() => accept(report_id)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.accept} </Button>;
+  const report_types = ["users", "needs", "resources", "actions", "events"];
+
+  let reports = {};
+  let setReports = {};
+  for (const report_type of report_types) {
+    [reports[report_type], setReports[report_type]] = useState(
+          allReports.filter(elem => (elem.report_type === report_type && elem.status === "undefined"))
+            .map(
+              (
+                {created_by: reporter, description, _id, report_type_id: reported}
+              ) => (
+                {"key": _id, "reporter": <Link href={`user/${reporter}`}>{reporter}</Link>, description, "reported": <Link href={`user/${reported}`}>{reported}</Link>, "actions": <div class="flex">{rejectButton(_id)}{acceptButton(_id)}</div>}
+              )
+            )
+    );
+  }
 
   return (
     <main>
       <div class="my-10">
         <h3 class="object-top text-center text-xl mb-3"> {labels.admin.user_reports} </h3>
-        <Table aria-label="Kullanıcı Raporları">
+        <Table aria-label="Reports">
           <TableHeader>
             <TableColumn key="reporter">{labels.admin.reporter}</TableColumn>
             <TableColumn key="reported">{labels.admin.reported}</TableColumn>
             <TableColumn key="description">{labels.admin.description}</TableColumn>
             <TableColumn key="actions">{labels.admin.actions}</TableColumn>
           </TableHeader>
-          <TableBody items={userReports}>
-            {(item) => (
-              <TableRow key={item.key}>
-                {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div class="my-10">
-        <h3 class="object-top text-center text-xl mb-3"> {labels.admin.activity_reports} </h3>
-        <Table aria-label="Aktivite Raporları">
-          <TableHeader>
-            <TableColumn key="reporter">{labels.admin.reporter}</TableColumn>
-            <TableColumn key="reported">{labels.admin.reported}</TableColumn>
-            <TableColumn key="description">{labels.admin.description}</TableColumn>
-            <TableColumn key="actions">{labels.admin.actions}</TableColumn>
-          </TableHeader>
-          <TableBody items={activityReports}>
+          <TableBody items={reports["users"]}>
             {(item) => (
               <TableRow key={item.key}>
                 {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
@@ -132,10 +107,10 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels}};
     }
 
-    let reports;
+    let allReports;
 
     try {
-      ({ data: { reports: reports } } = await api.get('/api/reports/', {
+      ({ data: { reports: allReports } } = await api.get('/api/reports/', {
         headers: {
           'Authorization': `Bearer ${user.accessToken}` 
         }
@@ -149,7 +124,7 @@ export const getServerSideProps = withIronSessionSsr(
     const userList = {};
     const bannedList = [{"key": 0, ...["a", "b"]}];
     return {"props": {
-      reports,
+      allReports,
       userList,
       bannedList,
       labels
