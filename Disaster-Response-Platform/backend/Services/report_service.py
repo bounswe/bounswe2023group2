@@ -34,8 +34,10 @@ def get_reports(report_id:str = None) -> list[dict]:
             "_id": {"$toString": "$_id"},
             "created_by": 1,
             "description": 1,
-            "type": 1,
-            "details": 1
+            "report_type": 1,
+            "report_type_id": 1,
+            "details": 1,
+            "status": 1
         }
     
     if (report_id is None):
