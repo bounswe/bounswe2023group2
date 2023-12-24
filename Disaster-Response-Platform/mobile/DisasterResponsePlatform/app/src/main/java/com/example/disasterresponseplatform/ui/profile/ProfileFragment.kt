@@ -655,8 +655,8 @@ class ProfileFragment(var username: String?) : Fragment() {
     }
 
     private fun clickButtons(user: AuthenticatedUser) {
-        // if user is the same as owner of profile
-        if (username == DiskStorageManager.getKeyValue("username")){
+        // if user (on see user profile) is the same as owner of profile, or user tries to see his/her own profile
+        if (username == DiskStorageManager.getKeyValue("username") || username == null){
             binding.profileEditButton.setOnClickListener {
                 val editProfileFragment = EditProfileFragment(user)
                 addFragment(editProfileFragment,"EditProfileFragment")
