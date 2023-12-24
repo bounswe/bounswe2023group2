@@ -125,7 +125,6 @@ def create_and_upload_file(
           )
       needs= json.loads(needs)
       html_data = json_to_html(needs, activity_type)   
-      print("buraya giriyon dimi")
       filename = "filtered_needs.html"     
         
       # Replace with your desired file name
