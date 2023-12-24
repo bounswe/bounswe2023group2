@@ -14,7 +14,7 @@ export default function ReportModal({ isOpen, onOpenChange, reported, reported_t
       description: formData.description
     };
 
-    const response = await fetch('/api/reports', {
+    const response = await fetch('/api/reports/create', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",

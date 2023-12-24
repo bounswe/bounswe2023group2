@@ -35,7 +35,7 @@ async function reportRoute(req, res) {
         }
       });
     } catch (error) {
-      console.log('Error in reports.js: ', error);
+      console.log('Error in reports/create.js: ', error);
       res.status(error?.response?.status ?? 403).json(error.response);
     }
     res.status(200).json({});
