@@ -52,10 +52,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 
-class EditProfileFragment : Fragment() {
+class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
 
     private lateinit var binding: FragmentProfileEditBinding
-    private lateinit var user: AuthenticatedUser
     private lateinit var globalProfileImage: ImageView
     private var socialMediaCount = 0
     private var skillCount = 0
@@ -104,9 +103,6 @@ class EditProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // get user from intent
-        user = (arguments?.getSerializable("user") as AuthenticatedUser?)!!
 
         socialMediaCount = 0
         skillCount = 0
@@ -828,34 +824,6 @@ class EditProfileFragment : Fragment() {
         Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
     }
 
-    private fun removeViews() {
-        binding.apply {
-
-            // social media
-            for (i in 0 until socialMediaCount) {
-                val socialMedia = binding.profileTopLayout.getChildAt(16)
-                binding.profileTopLayout.removeView(socialMedia)
-            }
-
-            // skills
-            for (i in 0 until skillCount) {
-                val skill = binding.profileTopLayout.getChildAt(18)
-                binding.profileTopLayout.removeView(skill)
-            }
-
-            // languages
-            for (i in 0 until languageCount) {
-                val language = binding.profileTopLayout.getChildAt(20)
-                binding.profileTopLayout.removeView(language)
-            }
-            // profession
-            for (i in 0 until professionCount) {
-                val profession = binding.profileTopLayout.getChildAt(22)
-                binding.profileTopLayout.removeView(profession)
-            }
-        }
-    }
-
     private fun setOnClicks(user: AuthenticatedUser) {
         binding.apply {
             profileImage.setOnClickListener {
@@ -893,11 +861,6 @@ class EditProfileFragment : Fragment() {
 //            Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack("EditProfileFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
-    }
-
-    override fun onPause() {
-        removeViews()
-        super.onPause()
     }
 
 }

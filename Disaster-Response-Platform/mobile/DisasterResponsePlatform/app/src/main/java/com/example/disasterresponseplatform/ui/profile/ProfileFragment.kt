@@ -657,16 +657,13 @@ class ProfileFragment(var username: String?) : Fragment() {
     private fun clickButtons(user: AuthenticatedUser) {
 
         binding.profileEditButton.setOnClickListener {
-            val editProfileFragment = EditProfileFragment()
-            addFragment(editProfileFragment, user)
+            val editProfileFragment = EditProfileFragment(user)
+            addFragment(editProfileFragment)
         }
     }
 
-    private fun addFragment(fragment: Fragment, user: AuthenticatedUser) {
+    private fun addFragment(fragment: Fragment) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
-        val bundle = Bundle()
-        bundle.putSerializable("user", user)
-        fragment.arguments = bundle
         ft.replace(R.id.container, fragment)
         ft.addToBackStack("EditProfileFragment")
         ft.commit()
