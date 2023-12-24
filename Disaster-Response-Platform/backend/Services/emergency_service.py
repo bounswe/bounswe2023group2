@@ -109,7 +109,7 @@ def get_emergencies(
     #     else:
     #         raise ValueError(f"Emergency {emergency_id} does not exist")
 
-    result_list = create_json_for_successful_data_fetch(emergencies_data, "emergencies")
+    result_list = create_json_for_successful_data_fetch(formatted_emergencies_data, "emergencies")
     return result_list
     
 def update_emergency(emergency_id: str, emergency:Emergency) -> list[dict]:
