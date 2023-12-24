@@ -54,9 +54,33 @@ def get_emergency(emergency_id: str, response: Response):
     status.HTTP_200_OK: {"model": Emergencies},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_403_FORBIDDEN: {"model": Error}})
-def get_all_emergencies(response: Response):
+def get_all_emergencies(
+    response: Response,
+    emergency_types: List[str] = Query(None, description="Filter by types of emergencies"),
+    is_active: Optional[bool] = Query(None, description="Filter by active status"),
+    is_verified: Optional[bool] = Query(None, description="Filter by verification status"),
+    x: float = Query(None, description="X coordinate for distance calculation"),
+    y: float = Query(None, description="Y coordinate for distance calculation"),
+    distance_max: float = Query(None, description="Maximum distance for filtering"),
+    sort_by: str = Query('created_at', description="Field to sort by"),
+    order: Optional[str] = Query('desc', description="Sort order")
+):
+    if emergency_types:
+        types_list = emergency_types[0].split(',')
+    else:
+        types_list = []
+
     try:
-        emergencies = emergency_service.get_emergencies()
+        emergencies = emergency_service.get_emergencies(
+            emergency_types=types_list,
+            is_active=is_active,
+            is_verified=is_verified,
+            x=x,
+            y=y,
+            distance_max=distance_max,
+            sort_by=sort_by,
+            order=order            
+        )
         response.status_code = HTTPStatus.OK
         return json.loads(emergencies)
     except ValueError as err:

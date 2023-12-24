@@ -6,7 +6,11 @@ from Models.emergency_model import Emergency
 from Database.mongo import MongoDB
 from bson.objectid import ObjectId
 
+from pymongo import ASCENDING, DESCENDING
 from Services.build_API_returns import *
+
+from typing import Optional
+from datetime import datetime, timedelta
 
 
 # Get the emergencies collection using the MongoDB class
@@ -34,7 +38,17 @@ def create_emergency(emergency: Emergency) -> str:
 def get_emergency_by_id(emergency_id: str) -> list[dict]:
     return get_emergencies(emergency_id)
 
-def get_emergencies(emergency_id:str = None) -> list[dict]:
+def get_emergencies(
+    emergency_id:str = None,
+    is_active: Optional[bool] = None,
+    is_verified: Optional[bool] = None,
+    emergency_types: list = None, 
+    x: float = None,
+    y: float = None,
+    distance_max: float = None,
+    sort_by: str = 'created_at',
+    order: Optional[str] = 'desc'
+    ) -> list[dict]:
     projection = {"_id": {"$toString": "$_id"},
                   "created_by_user": 1,
                   "contact_name": 1,
@@ -54,21 +68,46 @@ def get_emergencies(emergency_id:str = None) -> list[dict]:
                   "verification_note": 1
     }
 
-    if (emergency_id is None):
-        query = {}
+    sort_order = ASCENDING if order == 'asc' else DESCENDING
+    query = {}
+    
+    if emergency_id:
+        if ObjectId.is_valid(emergency_id):
+            query['_id'] = ObjectId(emergency_id)
+        else:
+            raise ValueError(f"Emergency id {emergency_id} is invalid")   
     else:
-        if (ObjectId.is_valid(emergency_id)):
-            query = {"_id": ObjectId(emergency_id)}
-        else:
-            raise ValueError(f"emergency id {emergency_id} is invalid")
+        # Apply general filters only when no specific emergency ID is provided
+        if is_active is not None:
+            query['is_active'] = is_active   
+        if is_verified is not None:
+            query['is_verified'] = is_verified   
+         
+        if emergency_types:
+            query['emergency_type'] = {'$in': emergency_types}
+        # if subtypes:
+        #     query['details.subtype'] = {'$in': subtypes} 
+    
+    # Apply the query and sort order to the database call
+    emergencies_cursor = emergencies_collection.find(query, projection).sort(sort_by, sort_order)
+    emergencies_data = list(emergencies_cursor)  # Convert cursor to list
 
-    emergencies_data = emergencies_collection.find(query, projection)
+    # Filter by distance if necessary
+    if x is not None and y is not None and distance_max is not None:
+        emergencies_data = [res for res in emergencies_data if ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
 
-    if (emergencies_data.explain()["executionStats"]["nReturned"] == 0):
-        if emergency_id is None:
-            raise ValueError(f"No emergency exists")
-        else:
-            raise ValueError(f"Emergency {emergency_id} does not exist")
+        # Format the emergency data
+    formatted_emergencies_data = []
+    for emergency in emergencies_data:
+        if 'created_at' in emergency:
+            emergency['created_at'] = emergency['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+        formatted_emergencies_data.append(emergency)
+  
+    # if (emergencies_data.explain()["executionStats"]["nReturned"] == 0):
+    #     if emergency_id is None:
+    #         raise ValueError(f"No emergency exists")
+    #     else:
+    #         raise ValueError(f"Emergency {emergency_id} does not exist")
 
     result_list = create_json_for_successful_data_fetch(emergencies_data, "emergencies")
     return result_list
