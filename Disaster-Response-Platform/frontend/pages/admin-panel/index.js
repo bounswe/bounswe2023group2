@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/apiUtils';
 import getLabels from '@/lib/getLabels';
 import Link from 'next/link';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function AdminPanel({ unauthorized, allReports, userList, bannedList, labels }) {
   const [chosenReportType, setChosenReportType] = useState("users");
@@ -21,16 +22,40 @@ export default function AdminPanel({ unauthorized, allReports, userList, bannedL
     );
   }
 
-  function reject(report_id) {
-
+  async function reject(_id, report_type) {
+    const response = await fetch('/api/reports/reject', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {_id}
+    });
+    if (!response.ok) {
+      toast(labels.feedback.failure);
+      return;
+    }
+    toast(labels.admin.report_rejected);
+    setReports[report_type](list => list.filter(elem => elem._id !== _id));
   }
 
-  function accept(report_id) {
-
+  async function accept(_id, report_type, report_type_id) {
+    await fetch('/api/reports/accept', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {_id, report_type, report_type_id}
+    });
+    if (!response.ok) {
+      toast(labels.feedback.failure);
+      return;
+    }
+    toast(labels.admin.report_accepted);
+    setReports[report_type](list => list.filter(elem => elem._id !== _id));
   }
 
-  const rejectButton = report_id => <Button onPress={() => reject(report_id)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject} </Button>;
-  const acceptButton = report_id => <Button onPress={() => accept(report_id)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.accept} </Button>;
+  const rejectButton = (...args) => <Button onPress={() => reject(...args)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject} </Button>;
+  const acceptButton = (...args) => <Button onPress={() => accept(...args)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.accept} </Button>;
   const report_types = ["users", "needs", "resources", "actions", "events"];
 
   let reports = {};
@@ -47,7 +72,7 @@ export default function AdminPanel({ unauthorized, allReports, userList, bannedL
                   "reporter": <Link href={`user/${reporter}`} className="text-blue-600">{reporter}</Link>,
                   description,
                   "reported": report_type === "users" ? <Link href={`user/${reported}`} className="text-blue-600">{reported}</Link> : reported,
-                  "actions": <div class="flex">{rejectButton(_id)}{acceptButton(_id)}</div>
+                  "actions": <div class="flex">{rejectButton(_id, report_type)}{acceptButton(_id, report_type, reported)}</div>
                 }
               )
             )
@@ -126,6 +151,7 @@ export default function AdminPanel({ unauthorized, allReports, userList, bannedL
           </TableBody>
         </Table>
       </div>
+      <ToastContainer />
     </main>
   );
 }

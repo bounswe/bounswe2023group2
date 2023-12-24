@@ -181,6 +181,8 @@
 		"report": "Raporla",
 		"reject": "Reddet",
 		"accept": "Onayla",
+		"report_accepted": "Rapor kabul edildi.",
+		"report_rejected": "Rapor reddedildi.",
 		"ban_user": "Kullanıcıyı engelle",
 		"remove_activity": "Aktiviteyi kaldır"
 	},

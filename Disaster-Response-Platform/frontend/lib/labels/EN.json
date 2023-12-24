@@ -183,6 +183,8 @@
 		"report": "Report",
 		"reject": "Reject",
 		"accept": "Accept",
+		"report_accepted": "Report accepted.",
+		"report_rejected": "Report rejected.",
 		"ban_user": "Ban user",
 		"remove_activity": "Remove activity"
 	},
