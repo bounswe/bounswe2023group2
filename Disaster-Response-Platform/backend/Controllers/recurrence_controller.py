@@ -26,7 +26,7 @@ def attach(attach: AttachActivity, response:Response, current_user: str = Depend
     try:
         attached = recurrence_service.attach_activity(attach, current_user)
         response.status_code = HTTPStatus.OK
-        return json.loads(attached)
+        return attached
     except ValueError as err:
         err_json = create_json_for_error("RECURRENCE_CREATE_ERROR", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
@@ -46,9 +46,9 @@ def get(_id: str, response:Response):
 @router.get('/start/{_id}')
 def start(_id:str, response:Response):
     try:
-        recurrences = recurrence_service.start_recurrence(_id)
+        result = recurrence_service.start_recurrence(_id)
         response.status_code = HTTPStatus.OK
-        return json.loads(recurrences)
+        return result
     except ValueError as err:
         err_json = create_json_for_error("Need error", str(err))
         response.status_id = HTTPStatus.NOT_FOUND
@@ -69,7 +69,6 @@ def get_all_needs(response:Response):
 def update_need(_id: str, response:Response):
     try:
         updated_need = recurrence_service.cancel(_id, 'a')
-    
         if updated_need:
             response.status_code = HTTPStatus.OK
             return {"needs": [updated_need]}
@@ -85,8 +84,7 @@ def delete_need(_id: str, response:Response):
     try:
         res = recurrence_service.delete(_id)
         response.status_code=HTTPStatus.OK
-        return json.loads(res)
-        
+        return res  
     except ValueError as err:
         err_json = create_json_for_error("Need delete error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
@@ -97,8 +95,7 @@ def resume(_id: str, response:Response):
     try:
         res = recurrence_service.resume(_id, 'a')
         response.status_code=HTTPStatus.OK
-        return json.loads(res)
-        
+        return res       
     except ValueError as err:
         err_json = create_json_for_error("Reccurence resume error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
