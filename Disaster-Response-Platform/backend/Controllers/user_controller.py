@@ -181,3 +181,14 @@ def unauthorize_user(response:Response,user: UserUsername, current_user: UserPro
         err_json = create_json_for_error("Unauthorization error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)
+
+@router.delete("/")
+def delete_user(response:Response, current_user: UserProfile = Depends(authentication_service.get_current_user)):
+    try:
+        unverified = authentication_service.delete_user(current_user.username)
+        response.status_code = HTTPStatus.OK
+        return {f'{current_user.username} is deleted'}   
+    except ValueError as err:
+        err_json = create_json_for_error("Account-deletion error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)

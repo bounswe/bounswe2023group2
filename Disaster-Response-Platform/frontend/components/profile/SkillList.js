@@ -3,13 +3,29 @@ import GrayBox from '../GrayBox';
 import { useState } from 'react';
 import { Button } from "@nextui-org/react";
 import { toast } from 'react-toastify';
+import { api } from '@/lib/apiUtils';
+import { uploadFile } from '@/lib/files';
 
-export default function SkillList({ list, topic, username, onOpen, setModalState, noedit, wide, labels }) {
+export default function SkillList({ list, topic, username, onOpen, setModalState, noedit, wide, accessToken, labels }) {
   let [ skills, setSkills ] = useState(list);
+
   async function addSkill(event) {
     event.preventDefault();
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
+
+    if (topic.certificate) {
+      const file = document.getElementById("certificate")?.files?.[0];
+      if (file) {
+        const extension = file.name.substring(file.name.lastIndexOf(".")+1);
+        const filename = `${topic.api_url}-${username}-${formData[topic.primary]}-certificate.${extension}`;
+        const upload_response = await uploadFile(file, filename, accessToken);
+        formData[topic.certificate] = upload_response?.data?.url;
+      }
+    }
+
+    delete formData.certificate;
+    
     const newSkill = {
       ...formData,
       username: username
@@ -19,7 +35,7 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
       method: 'POST',
       headers: {
       "Content-Type": "application/json",
-      }, body: JSON.stringify({skill: newSkill, url: `${topic.api_url}${topic.post}`})
+      }, body: JSON.stringify({skill: newSkill, url: `${topic.post}`})
     });
 
     if (!response.ok) {
@@ -41,11 +57,21 @@ export default function SkillList({ list, topic, username, onOpen, setModalState
   async function deleteSkill(event, skill) {
     event.preventDefault();
 
+    if (topic.certificate && skill[topic.certificate]) {
+      const filename = skill[topic.certificate].substring(skill[topic.certificate].lastIndexOf('/')+1);
+      const upload_response = await fetch(`/api/delete-file/${filename}`, { method: 'DELETE' } );
+
+      if (upload_response.status !== 200) {
+        toast(labels.feedback.failure);
+        return;
+      }
+    }
+
     const response = await fetch('/api/delete-skill', {
       method: 'POST',
       headers: {
       "Content-Type": "application/json",
-      }, body: JSON.stringify({skill: skill, url: `${topic.api_url}${topic.delete}`})
+      }, body: JSON.stringify({skill: skill, url: `${topic.delete}`})
     });
 
     if (!response.ok) {

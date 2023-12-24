@@ -41,4 +41,5 @@ enum class Endpoint(val path: String) {
     REPORTS("reports"),
     EMAIL_VERIFICATION_SEND("email_verification/send"),
     EMAIL_VERIFICATION_VERIFY("email_verification/verify"),
+    UPLOADFILE("uploadfile"),
 }

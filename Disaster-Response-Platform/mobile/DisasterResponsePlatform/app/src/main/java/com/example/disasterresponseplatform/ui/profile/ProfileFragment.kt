@@ -46,7 +46,6 @@ import retrofit2.Response
 class ProfileFragment(var username: String?) : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    private val editProfileFragment = EditProfileFragment()
     private var profileLevel: Int = 0
 
     override fun onCreateView(
@@ -197,6 +196,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                     user.healthCondition = res.healthCondition
                                     user.bloodType = res.bloodType
                                     user.address = res.address
+                                    user.profilePhoto = res.profilePicture
                                 } else {
                                     println("res null")
                                 }
@@ -657,22 +657,19 @@ class ProfileFragment(var username: String?) : Fragment() {
     private fun clickButtons(user: AuthenticatedUser) {
         // if user is the same as owner of profile
         if (username == DiskStorageManager.getKeyValue("username")){
-            binding.profileEditButton.setOnClickListener {
-                addFragment(editProfileFragment, user)
-            }
-        } else{
+          binding.profileEditButton.setOnClickListener {
+            val editProfileFragment = EditProfileFragment(user)
+            addFragment(editProfileFragment)
+          } else{
             binding.profileEditButton.visibility = View.GONE
         }
 
     }
 
-    private fun addFragment(fragment: Fragment, user: AuthenticatedUser) {
+    private fun addFragment(fragment: Fragment) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
-        val bundle = Bundle()
-        bundle.putSerializable("user", user)
-        fragment.arguments = bundle
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack("EditProfileFragment")
         ft.commit()
     }
 
