@@ -1,10 +1,12 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
@@ -48,20 +50,22 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
     /**
      * This functions get the local object and prepare it as to send to the backend
      */
-    fun prepareBodyFromLocal(need: Need): NeedBody.NeedRequestBody {
+    fun prepareBodyFromLocal(need: Need,activity: FragmentActivity): NeedBody.NeedRequestBody {
         val quantity = need.quantity
         val type = need.type
         val additionalNotes = need.additionalNotes
         val address = need.address
         val shortDescription = need.shortDescription
+        val x = need.x
+        val y = need.y
         //details
         val detailsMap = mutableMapOf<String, String>()
-        detailsMap["address"] = address
+        if (!address.contains(activity.getString(R.string.selected_from_map))) detailsMap["address"] = address
         detailsMap["additionalNotes"] = additionalNotes
         detailsMap["subtype"] = "No Internet Connection"
         return NeedBody.NeedRequestBody(
             shortDescription, quantity, 1, quantity, type, detailsMap,
-            0.0, 0.0, null, null, null, true, 0, 0
+            x, y, null, null, null, true, 0, 0
         )
     }
 

@@ -95,7 +95,7 @@ class GeneralUtil {
                         for (need in needListCopy){
                             //if current username matches with creator
                             if (DiskStorageManager.checkUsername(need.creatorName)){
-                                val needBody = needViewModel.prepareBodyFromLocal(need)
+                                val needBody = needViewModel.prepareBodyFromLocal(need,activity)
                                 Log.i("ResponseInfo", "Local need is sending")
                                 needViewModel.postNeedRequest(needBody)
                                 needViewModel.getLiveDataNeedID().observe(activity){postedID ->
@@ -131,7 +131,7 @@ class GeneralUtil {
                         for (resource in resourceListCopy){
                             //if current username matches with creator
                             if (DiskStorageManager.checkUsername(resource.creatorName)){
-                                val resourceBody = resourceViewModel.prepareBodyFromLocal(resource)
+                                val resourceBody = resourceViewModel.prepareBodyFromLocal(resource,activity)
                                 Log.i("ResponseInfo", "Local resource is sending")
                                 resourceViewModel.postResourceRequest(resourceBody)
                                 resourceViewModel.getLiveDataResourceID().observe(activity){postedID ->
@@ -167,7 +167,7 @@ class GeneralUtil {
                         for (event in eventListCopy){
                             //if current username matches with creator
                             if (DiskStorageManager.checkUsername(event.creatorName)){
-                                val eventBody = eventViewModel.prepareBodyFromLocal(event)
+                                val eventBody = eventViewModel.prepareBodyFromLocal(event,activity)
                                 Log.i("ResponseInfo", "Local event is sending")
                                 eventViewModel.postEvent(eventBody)
                                 eventViewModel.getLiveDataEventID().observe(activity){postedID ->

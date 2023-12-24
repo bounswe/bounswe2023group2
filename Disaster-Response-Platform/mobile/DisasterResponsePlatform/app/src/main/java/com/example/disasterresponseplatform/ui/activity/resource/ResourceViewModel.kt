@@ -1,10 +1,12 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
@@ -45,18 +47,21 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
     /**
      * This functions get the local object and prepare it as to send to the backend
      */
-    fun prepareBodyFromLocal(resource: Resource): ResourceBody.ResourceRequestBody {
+    fun prepareBodyFromLocal(resource: Resource,activity: FragmentActivity): ResourceBody.ResourceRequestBody {
         val quantity = resource.quantity
         val type = resource.type
         val additionalNotes = resource.additionalNotes
         val address = resource.address
         val shortDescription = resource.shortDescription
+        val x = resource.x
+        val y = resource.y
         //details
         val detailsMap = mutableMapOf<String, String>()
-        detailsMap["address"] = address
+        // if address is given by hand
+        if (!address.contains(activity.getString(R.string.selected_from_map))) detailsMap["address"] = address
         detailsMap["additionalNotes"] = additionalNotes
         detailsMap["subtype"] = "No Internet Connection"
-        return ResourceBody.ResourceRequestBody(shortDescription,quantity,quantity,type,detailsMap,0.0,0.0,
+        return ResourceBody.ResourceRequestBody(shortDescription,quantity,quantity,type,detailsMap,x,y,
             null,null,null,true,0,0)
     }
 

@@ -20,5 +20,9 @@ data class Event(
     @ColumnInfo(name = EventCols.additionalNotes)
     val additionalNotes: String,
     @ColumnInfo(name = EventCols.address)
-    val address: String
+    val address: String,
+    @ColumnInfo(name = EventCols.x)
+    val x: Double,
+    @ColumnInfo(name = EventCols.y)
+    val y: Double,
 )

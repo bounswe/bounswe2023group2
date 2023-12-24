@@ -9,5 +9,7 @@ class EmergencyCols {
         const val creatorName: String = "creatorName"
         const val contactNumber: String = "contactNumber"
         const val location: String = "location"
+        const val x: String = "x"
+        const val y: String = "y"
     }
 }

@@ -23,6 +23,10 @@ data class Resource(
     @ColumnInfo(name = NeedResourceCols.quantity)
     val quantity: Int = 1,
     @ColumnInfo(name = NeedResourceCols.address)
-    val address: String
+    val address: String,
+    @ColumnInfo(name = NeedResourceCols.x)
+    val x: Double,
+    @ColumnInfo(name = NeedResourceCols.y)
+    val y: Double,
 )
 

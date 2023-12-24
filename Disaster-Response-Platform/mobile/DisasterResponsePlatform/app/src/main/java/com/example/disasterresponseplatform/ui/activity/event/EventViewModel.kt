@@ -1,10 +1,13 @@
 package com.example.disasterresponseplatform.ui.activity.event
 
 import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.event.Event
 import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.Endpoint
@@ -238,7 +241,7 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
     /**
      * This functions get the local object and prepare it as to send to the backend
      */
-    fun prepareBodyFromLocal(event: Event): EventBody.EventPostBody {
+    fun prepareBodyFromLocal(event: Event, activity: FragmentActivity): EventBody.EventPostBody {
         val type =
             when (event.type){
                 "Enkaz" -> "Debris"
@@ -247,10 +250,13 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
                 "Yardım Noktası" -> "Help-Arrived"
                 else -> event.type
             }
-        val additionalNotes = "No Internet Connection "+ event.additionalNotes + " address: " + event.address
+        val address = if (event.address.contains(activity.getString(R.string.selected_from_map))) "" else " address: " + event.address
+        val additionalNotes = "No Internet Connection "+ event.additionalNotes + address
         val shortDescription = event.shortDescription
         val createdTime = "${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}"
-        return EventBody.EventPostBody(type,null,true,0.0,0.0,null,null,
+        val x = event.x
+        val y = event.y
+        return EventBody.EventPostBody(type,null,true,x,y,null,null,
             createdTime,shortDescription,additionalNotes)
     }
 

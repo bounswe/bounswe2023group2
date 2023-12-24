@@ -1,6 +1,8 @@
 package com.example.disasterresponseplatform.ui.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +21,9 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
+import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
+import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import kotlin.properties.Delegates
 
 /**
  * This class is opened when device has no internet connection, therefore its form fields
@@ -27,7 +32,8 @@ import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewMod
  * i.e if this form will open for Add Need without connection viewModel should be ViewModel
  * The specific things for Need will be applied with respect to that viewModel type
  */
-class AddNoInternetFormFragment(private val viewModel: ViewModel) : Fragment() {
+class AddNoInternetFormFragment(private val viewModel: ViewModel) : Fragment(),
+    OnCoordinatesSelectedListener {
 
     private lateinit var binding: FragmentAddNoInternetFormBinding
     private var requireActivity: FragmentActivity? = null
@@ -36,10 +42,15 @@ class AddNoInternetFormFragment(private val viewModel: ViewModel) : Fragment() {
         binding = FragmentAddNoInternetFormBinding.inflate(inflater, container, false)
         if (requireActivity == null){ requireActivity = requireActivity()}
         arrangeUI()
+        arrangeButtons()
+        return binding.root
+    }
+
+    private fun arrangeButtons(){
         binding.btnSubmit.setOnClickListener {
             saveInLocal()
         }
-        return binding.root
+        mapListener()
     }
 
     /**
@@ -100,21 +111,21 @@ class AddNoInternetFormFragment(private val viewModel: ViewModel) : Fragment() {
             val type = binding.spType.text!!.toString().trim()
             when (viewModel){
                 is EventViewModel -> {
-                    val savedEvent = Event(null,username,type,shortDescription,additionalNotes,address)
+                    val savedEvent = Event(null,username,type,shortDescription,additionalNotes,address,selectedLocationX,selectedLocationY)
                     viewModel.insertEvent(savedEvent)
                 }
                 is NeedViewModel -> {
                     val quantity =
                         if (binding.etQuantity.text.isNullOrEmpty()) 1
                         else binding.etQuantity.text!!.toString().trim().toInt()
-                    val savedNeed = Need(null,username,type,shortDescription,additionalNotes,quantity,address)
+                    val savedNeed = Need(null,username,type,shortDescription,additionalNotes,quantity,address,selectedLocationX,selectedLocationY)
                     viewModel.insertNeed(savedNeed)
                 }
                 is ResourceViewModel -> {
                     val quantity =
                         if (binding.etQuantity.text.isNullOrEmpty()) 1
                         else binding.etQuantity.text!!.toString().trim().toInt()
-                    val savedResource = Resource(null,username,type,shortDescription,additionalNotes,quantity,address)
+                    val savedResource = Resource(null,username,type,shortDescription,additionalNotes,quantity,address,selectedLocationX,selectedLocationY)
                     viewModel.insertResource(savedResource)
                 }
                 else -> {}
@@ -150,8 +161,34 @@ class AddNoInternetFormFragment(private val viewModel: ViewModel) : Fragment() {
         return returnVal
     }
 
+    var selectedLocationX = 0.0
+    var selectedLocationY = 0.0
 
+    @SuppressLint("SetTextI18n")
+    private fun mapListener(){
+        binding.tvAddress.setStartIconOnClickListener {
+            navigateToMapFragment()
+        }
+        parentFragmentManager.setFragmentResultListener(
+            "coordinatesKey",
+            viewLifecycleOwner
+        ) { _, bundle ->
+            selectedLocationX = bundle.getDouble("x_coord")
+            selectedLocationY = bundle.getDouble("y_coord")
+            binding.tvAddress.editText?.setText(getString(R.string.selected_from_map))
+        }
+    }
 
+    private fun navigateToMapFragment() {
+        val mapFragment = ActivityMap()
+        mapFragment.coordinatesSelectedListener = this@AddNoInternetFormFragment
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, mapFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    override fun onCoordinatesSelected(x: Double, y: Double) {}
 
 
 }

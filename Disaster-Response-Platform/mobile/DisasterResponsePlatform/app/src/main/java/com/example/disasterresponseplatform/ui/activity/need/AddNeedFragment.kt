@@ -130,7 +130,7 @@ class AddNeedFragment(
 
                 })
         }
-        binding.etCoordinate.setEndIconOnClickListener {
+        binding.etCoordinate.setStartIconOnClickListener {
             navigateToMapFragment()
         }
     }

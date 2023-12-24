@@ -66,7 +66,7 @@ class AddResourceFragment(
             requireActivity = requireActivity()
         }
         trackUserPickLocation()
-        binding.etCoordinate.setEndIconOnClickListener {
+        binding.etCoordinate.setStartIconOnClickListener {
             navigateToMapFragment()
         }
         fillParameters(resource)

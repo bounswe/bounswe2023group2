@@ -217,7 +217,8 @@
     <string name="local_posted">Your Local Objects are Posted into Backend Successfully</string>
     <string name="saved_local">It is saved in Local, It will be uploaded when you connect to the internet</string>
 
-
+    <!-- No Internet Form -->
+    <string name="selected_from_map">Location is selected successfully</string>
 
     <!-- ACTIVITY LISTS -->
     <string name="cloth">Cloth</string>

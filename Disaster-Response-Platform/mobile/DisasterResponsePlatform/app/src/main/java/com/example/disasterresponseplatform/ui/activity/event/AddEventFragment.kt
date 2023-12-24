@@ -342,7 +342,7 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
 
                 })
         }
-        binding.etCoordinate.setEndIconOnClickListener {
+        binding.etCoordinate.setStartIconOnClickListener {
             navigateToMapFragment()
         }
     }

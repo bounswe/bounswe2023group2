@@ -216,6 +216,8 @@
     <string name="local_posted">İnternetiniz yokken kaydettiğiniz objeler başarıyla paylaşıldı</string>
     <string name="saved_local">Yarattığınız obje yerel dosyalara kaydedildi, internet bağlantınız sağlandığında bu obje sunucuyla paylaşılacak</string>
 
+    <!-- No Internet Form -->
+    <string name="selected_from_map">Konum başarıyla seçildi</string>
 
     <!-- ACTIVITY LISTS -->
     <string name="cloth">Giyecek</string>
