@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/field_location"
-                app:endIconDrawable="@android:drawable/ic_dialog_map"
+                app:startIconDrawable="@android:drawable/ic_dialog_map"
                 app:endIconTint="@color/primary"
                 app:endIconMode="custom">
 

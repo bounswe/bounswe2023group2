@@ -87,15 +87,16 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/act_address"
-                app:endIconMode="clear_text">
+                android:hint="@string/field_location"
+                app:startIconDrawable="@android:drawable/ic_dialog_map"
+                app:endIconTint="@color/primary"
+                app:endIconMode="custom">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"/>
-
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
