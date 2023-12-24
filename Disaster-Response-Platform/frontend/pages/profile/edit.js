@@ -5,20 +5,27 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/apiUtils';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import getLabels from '@/lib/getLabels';
+import { useDisclosure, Input } from "@nextui-org/react";
+import ProficiencyModal from '@/components/profile/ProficiencyModal';
+import AvatarModal from '@/components/profile/AvatarModal';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function Edit({ guest, expired, current_main_fields, current_optional_fields, accessToken, labels }) {
 
   const router = useRouter();
-  const [checked, setChecked] = useState(current_main_fields.private_account);
+  const [checked, setChecked] = useState(current_main_fields?.private_account);
+  const [pictureFile, setPictureFile] = useState(undefined);
+  const { isOpen: isOpenProficiency, onOpen: onOpenProficiency, onOpenChange: onOpenChangeProficiency } = useDisclosure();
+  const { isOpen: isOpenAvatar, onOpen: onOpenAvatar, onOpenChange: onOpenChangeAvatar } = useDisclosure();
 
   async function onSubmit(event) {
     event.preventDefault();
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
     if (formData["email"] === "" && formData["phone_number"] === "") {
-      alert("You must have a phone number or email!");
+      toast("You must have a phone number or email!");
       return false;
     }
     let mainData = {}, optionalData = {};
@@ -51,6 +58,13 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
     router.push('/profile');
   }
 
+  function onPictureUpload(event) {
+    if (event.target.files.length > 0) {
+      setPictureFile(event.target.files[0]);
+      onOpenAvatar();
+    }
+  }
+
   if (guest || expired) {
     useEffect(() => router.push("/login"));
     return (
@@ -69,7 +83,10 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
 
   return (
     <main>
-      <form onSubmit={onSubmit}>
+      <form key="profile_pic" id="profile_pic">
+        <Input type="file" name="picture" id="picture" accept="image/png, image/jpeg" className="hidden" onChange={onPictureUpload}/>
+      </form>
+      <form key="info" id="info" onSubmit={onSubmit}>
         <div class="flex justify-around space-x-8">
           <GrayBox className="w-96">
             <h3 class="object-top text-center text-xl"> {labels.profile_pages.main_info} </h3>
@@ -83,6 +100,16 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
               <input name='private_account' id='private_account' type='checkbox' defaultChecked={checked} onChange={() => setChecked((state) => !state)} />
               <label htmlFor='private_account' class="ml-2">{labels.profile_pages.private_account}</label>
             </div>
+              <div class="my-2 w-full text-center">
+                <button type="button" onClick={() => {document.getElementById("picture").click()}} class="my-2 mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-4 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  {labels.profile_pages.upload_avatar}
+                </button>
+                {current_main_fields.is_email_verified ? (
+                  <button type="button" onClick={onOpenProficiency} class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    {labels.proficiency.add_proficiency}
+                  </button>
+                ) : null}
+              </div>
           </GrayBox>
           <GrayBox className="w-96">
             <h3 class="object-top text-center text-xl"> {labels.profile_pages.optional_info} </h3>
@@ -98,6 +125,13 @@ export default function Edit({ guest, expired, current_main_fields, current_opti
           <button type="submit" class="mx-auto w-1/2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{labels.UI.update}</button>
         </div>
       </form>
+      {current_main_fields.is_email_verified ? (
+        <>
+          <ProficiencyModal isOpen={isOpenProficiency} onOpenChange={onOpenChangeProficiency} labels={labels} />
+        </>
+      ) : null}
+      <AvatarModal isOpen={isOpenAvatar} onOpenChange={onOpenChangeAvatar} file={pictureFile} username={current_main_fields.username} accessToken={accessToken} optional_fields={current_optional_fields} labels={labels}/>
+      <ToastContainer />
     </main>
   )
 }
@@ -120,7 +154,7 @@ export const getServerSideProps = withIronSessionSsr(
 
     if (!user?.accessToken) {
       console.log("A guest is trying to edit");
-      return { props: {guest: true} };
+      return { props: {guest: true, labels } };
     }
 
     let current_main_fields;
@@ -132,7 +166,7 @@ export const getServerSideProps = withIronSessionSsr(
       }));
     } catch (AxiosError) {
       console.log("A token expired");
-      return { props: { expired: true } };
+      return { props: { expired: true, labels } };
     }
 
     const { data: { user_optional_infos: current_optional_fields_list } } = await api.get('/api/profiles/user-optional-infos', {
