@@ -9,7 +9,8 @@
             {"name": "y", "label": "Y Coordinate", "type": "number"},
             {"name": "occur_at", "label": "Occur At", "type": "date"},
             {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": [1,7]},
-            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
+            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"},
+            {"name": "open_address", "label": "Open Address", "type": "text"}
         ]
     },
     "need": {
@@ -23,7 +24,8 @@
             {"name": "y", "label": "Y Coordinate", "type": "number"},
             {"name": "occur_at", "label": "Occur At", "type": "date"},
             {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": [1,7]},
-            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
+            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"},
+            {"name": "open_address", "label": "Open Address", "type": "text"}
         ]
     },
     "action": {
