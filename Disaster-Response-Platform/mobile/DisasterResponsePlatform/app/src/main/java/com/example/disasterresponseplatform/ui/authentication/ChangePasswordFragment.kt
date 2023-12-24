@@ -16,8 +16,11 @@ import com.example.disasterresponseplatform.databinding.FragmentForgotPasswordBi
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
+import okio.IOException
 import retrofit2.Call
 import retrofit2.Response
 
@@ -73,7 +76,32 @@ class ChangePasswordFragment(var email: String) : Fragment(R.layout.fragment_cha
             }
 
             resend.setOnClickListener {
-                Toast.makeText(context, "Code sent!", Toast.LENGTH_SHORT).show()
+                val url = "http://3.218.226.215:8000/api/forgot_password/send?email=$email"
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url(url)
+                    .post("".toRequestBody("application/json".toMediaTypeOrNull()))
+                    .build()
+                client.newCall(request).enqueue(object : okhttp3.Callback {
+                    override fun onFailure(call: okhttp3.Call, e: IOException) {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText( requireContext(), "No internet connection", Toast.LENGTH_SHORT ).show()
+                        }
+                    }
+
+                    override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                        if (response.isSuccessful) {
+                            requireActivity().runOnUiThread {
+                                Toast.makeText( requireContext(), "Code sent!", Toast.LENGTH_SHORT ).show()
+                            }
+                        } else {
+                            requireActivity().runOnUiThread {
+                                Toast.makeText( requireContext(), "Email could not sent", Toast.LENGTH_SHORT ).show()
+                            }
+                        }
+                    }
+                })
+
             }
         }
         return binding.root
