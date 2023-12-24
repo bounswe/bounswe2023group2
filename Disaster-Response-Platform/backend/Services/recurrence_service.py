@@ -50,14 +50,17 @@ def attach_activity(attach, user):
         #     raise ValueError("Activity cannot be attached")
         items.append(str(activity['_id']))
         recurrences_collection.update_one({'_id':ObjectId(attach.recurrence_id)},{'$set':{'recurring_items':items}})
-        return SuccessResponse(_id= str(insert._id), message='ATTACH_RECURRENCE_SUCCESS')
+        return SuccessResponse(recurrence_id= str(insert._id), message='ATTACH_RECURRENCE_SUCCESS')
     except:
         raise ValueError("RECURRENCE_ATTACH_ERROR")
+
 def start_recurrence(_id):
     recurrence = recurrences_collection.find_one({'_id':ObjectId(_id)})
+
     if(len(recurrence['recurring_items'])<=0):
         raise ValueError('item not found')
     schedule.add_job(recurrence)
+    return SuccessResponse(recurrence_id= str(_id), message='START_RECURRENCE_SUCCESS')
 
 def find_one(_id):
     try:
