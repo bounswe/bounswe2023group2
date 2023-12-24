@@ -76,3 +76,14 @@ class updateResponse(BaseModel):
 class doActionResponse(BaseModel):
     met_needs: List[int]
 
+class Match(BaseModel):
+    need_id: str
+    resource_id: str
+    amount: int
+
+class MatchList(BaseModel):
+    matches: List[Match]    
+
+class matchObject(BaseModel):
+    resource: List[Resource]
+    need: List[Need]
