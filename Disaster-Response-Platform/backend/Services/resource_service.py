@@ -104,6 +104,7 @@ def get_resources(
                   "condition": 1,
                   "initialQuantity": 1,
                   "currentQuantity": 1,
+                  "quantityUnit": 1,
                   "type": 1,
                   "details":1,
                   "recurrence_id": 1,
