@@ -18,13 +18,13 @@ router = APIRouter()
     status.HTTP_200_OK: {"model": Emergencies},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_403_FORBIDDEN: {"model": Error}})
-def create_emergency(emergency: Emergency, response:Response, user: UserProfile = Depends(authentication_service.get_current_user)):
+def create_emergency(emergency: Emergency, response:Response):
     try:
         if user.user_role.value == "GUEST":
             emergency.created_by_user = "GUEST"
         else:
              emergency.created_by_user = user.username
-        
+        # emergency.created_by_user = authentication_service.get_user_info()
         emergency_result = emergency_service.create_emergency(emergency)
         response.status_code = HTTPStatus.OK
         return json.loads(emergency_result)
