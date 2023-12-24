@@ -167,6 +167,8 @@
 	},
 	"admin": {
 		"no_access": "Admin paneline erişiminiz yok.",
+		"already_reported_user": "Bu kullanıcıyı zaten raporladınız.",
+		"already_reported_activity": "Bu aktiviteyi zaten raporladınız.",
 		"user_reports": "Kullanıcı Raporları",
 		"activity_reports": "Aktivite Raporları",
 		"banned_users": "Engellenmiş Kullanıcılar",

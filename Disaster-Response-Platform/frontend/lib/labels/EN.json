@@ -168,6 +168,8 @@
 	},
 	"admin": {
 		"no_access": "You do not have access to the admin panel.",
+		"already_reported_user": "You have already reported this user.",
+		"already_reported_activity": "You have already reported this activity.",
 		"user_reports": "User Reports",
 		"activity_reports": "Activity Reports",
 		"banned_users": "Banned Users",
