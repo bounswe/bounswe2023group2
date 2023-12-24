@@ -30,8 +30,9 @@ class FileUploadTask(private val uri: Uri, private val username: String, private
     fun execute() {
         val byteArrayOutputStream = ByteArrayOutputStream()
         val inputStream = contentResolver.openInputStream(uri)
-        println("Gonderiyorum: $uri")
-        val filename = "${username}_${Random.nextInt(0, 1000000)}"
+        println("Gonderiyorum: ${contentResolver.getType(uri)}")
+        val extension = contentResolver.getType(uri).toString().substringAfter("/")
+        val filename = "${username}_${Random.nextInt(0, 1000000)}.${extension}"
         inputStream?.copyTo(byteArrayOutputStream)
         inputStream?.close()
         val byteArray = byteArrayOutputStream.toByteArray()
