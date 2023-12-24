@@ -67,7 +67,7 @@ class ProfileFragment(var username: String?) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         profileLevel = 0
         lateinit var user: AuthenticatedUser
-        if (!DiskStorageManager.hasKey("token")) {
+        if (!DiskStorageManager.checkToken()) {
             binding.profileLoginFirstText.visibility = View.VISIBLE
             binding.profileProgressBar.visibility = View.GONE
             replaceFragment(LoginFragment())
@@ -655,11 +655,15 @@ class ProfileFragment(var username: String?) : Fragment() {
     }
 
     private fun clickButtons(user: AuthenticatedUser) {
-
-        binding.profileEditButton.setOnClickListener {
+        // if user is the same as owner of profile
+        if (username == DiskStorageManager.getKeyValue("username")){
+          binding.profileEditButton.setOnClickListener {
             val editProfileFragment = EditProfileFragment(user)
             addFragment(editProfileFragment)
+          } else{
+            binding.profileEditButton.visibility = View.GONE
         }
+
     }
 
     private fun addFragment(fragment: Fragment) {

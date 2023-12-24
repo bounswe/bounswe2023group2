@@ -30,6 +30,7 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.gson.Gson
@@ -113,10 +114,14 @@ class ActionFragment(
      * It opens add Action fragment if user is authenticated, else warns the user
      */
     private fun addAction(){
-        val token = DiskStorageManager.getKeyValue("token")
-        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
-            val addActionFragment = AddActionFragment(actionViewModel,null)
-            addFragment(addActionFragment,"AddActionFragment")
+        if (DiskStorageManager.checkToken()) {
+            if (GeneralUtil.isInternetAvailable(requireContext())){
+                val addActionFragment = AddActionFragment(actionViewModel,null)
+                addFragment(addActionFragment,"AddActionFragment")
+            } else{
+                if (isAdded)
+                    Toast.makeText(requireContext(),getString(R.string.check_your_connection),Toast.LENGTH_SHORT).show()
+            }
         }
         else{
             Toast.makeText(context, getString(R.string.pr_login_required), Toast.LENGTH_LONG).show()

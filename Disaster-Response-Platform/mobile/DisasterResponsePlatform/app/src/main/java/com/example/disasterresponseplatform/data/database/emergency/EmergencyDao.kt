@@ -16,4 +16,7 @@ interface EmergencyDao {
 
     @Query("DELETE FROM ${DatabaseInfo.EMERGENCY}")
     suspend fun deleteAllEmergencies()
+
+    @Query("DELETE FROM ${DatabaseInfo.EMERGENCY} WHERE ${EmergencyCols.id} = :id")
+    fun deleteEmergency(id: Int)
 }

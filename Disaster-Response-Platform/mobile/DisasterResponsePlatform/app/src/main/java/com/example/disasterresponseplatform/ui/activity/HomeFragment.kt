@@ -2,17 +2,22 @@ package com.example.disasterresponseplatform.ui.activity
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.disasterresponseplatform.MainActivity
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.adapter.ViewPagerAdapter
 import com.example.disasterresponseplatform.databinding.FragmentHomeBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.action.ActionFragment
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyFragment
@@ -23,6 +28,7 @@ import com.example.disasterresponseplatform.ui.activity.need.NeedFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceFragment
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
+import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -36,6 +42,7 @@ class HomeFragment(
 ) : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
+    private var requireActivity: FragmentActivity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -114,7 +121,7 @@ class HomeFragment(
     }
 
     // Change status bar color based on tab position
-    public fun changeStatusBarColor(position: Int) {
+    fun changeStatusBarColor(position: Int) {
         val window: Window = requireActivity().window
         val color = when (position) {
             0 -> R.color.colorEmergency
@@ -147,34 +154,40 @@ class HomeFragment(
         changeActionBarColor(0)
         changeStatusBarColor(0)
         changeTabColor(0)
+        checkInternetConnection()
     }
 
     /**
-     * This method adds a fragment to parentFragmentManager which is our FragmentManager on MainActivity.
-     * It can do that by adding a backStack
+     * This function is called when the home page is shown at first or navigating that page
+     * from other pages (map, profile)
+     * It will check the internet connection
+     * If it is connected, it checks whether it has some objects in local database that is created without a connection
+     * If it is created in local, then it will post these objects to the backend and delete them from local database.
+     * else nothing has changed
+     * If it posts some objects into backend it shows a toast
+     * If it has no connection, just logs no connection and continue to its life
      */
-    private fun addFragment(fragment: Fragment) {
-        val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
-        ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
-        ft.commit()
-    }
-
-    /**
-     * This method can be used for back buttons. It pop one fragment from backStack
-     */
-    fun popFragment() {
-        parentFragmentManager.popBackStack()
-    }
-
-    /**
-     * This method only replace a fragment, because it doesn't add anything on backStack
-     */
-    fun replaceFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction().apply {
-            replace(R.id.container, fragment) //replacing fragment
-            commit() //call signals to the FragmentManager that all operations have been added to the transaction
+    private fun checkInternetConnection(){
+        if (requireActivity == null) requireActivity = requireActivity()
+        if (GeneralUtil.isInternetAvailable(requireContext())){
+            Log.i("InternetConnection","OK")
+            GeneralUtil.checkLocalChanges(needViewModel,resourceViewModel,eventViewModel,requireActivity!!)
+            val timer = GeneralUtil.getIsPostedTimer()
+            timer.start() // start timer
+            GeneralUtil.getIsPosted().observe(requireActivity!!){isPosted ->
+                if (isPosted){
+                    timer.cancel() // cancel it to not return false
+                    if (isAdded) // check whether it is attached a require context
+                        Toast.makeText(requireContext(),getString(R.string.local_posted),Toast.LENGTH_LONG).show()
+                    GeneralUtil.isPosted.postValue(false) // to prevent multiple toasts
+                }
+            }
+        }else{
+            Log.i("InternetConnection","NOT OK")
         }
     }
+
+
+
 }
 

@@ -112,8 +112,7 @@ class ActionViewModel@Inject constructor(private val actionRepository: ActionRep
      */
     fun postActionRequest(postRequest: ActionBody.ActionRequestBody, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val headers = mapOf(
                 "Authorization" to "bearer $token",
                 "Content-Type" to "application/json"

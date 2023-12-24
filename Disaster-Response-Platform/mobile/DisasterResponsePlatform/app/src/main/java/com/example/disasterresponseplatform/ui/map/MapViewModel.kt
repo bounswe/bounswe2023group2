@@ -71,7 +71,7 @@ class MapViewModel@Inject constructor() : ViewModel() {
                                     rawJson,
                                     ActionBody.ActionResponse::class.java
                                 )
-                                if (actionResponse != null) { // TODO check null
+                                if (actionResponse != null) {
                                     Log.d(
                                         "ResponseSuccess",
                                         "actionResponse: $actionResponse"
@@ -129,7 +129,7 @@ class MapViewModel@Inject constructor() : ViewModel() {
                                     rawJson,
                                     ResourceBody.ResourceResponse::class.java
                                 )
-                                if (resourceResponse != null) { // TODO check null
+                                if (resourceResponse != null) {
                                     Log.d(
                                         "ResponseSuccess",
                                         "resourceResponse: $resourceResponse"
@@ -188,7 +188,7 @@ class MapViewModel@Inject constructor() : ViewModel() {
                                     rawJson,
                                     NeedBody.NeedResponse::class.java
                                 )
-                                if (needResponse != null) { // TODO check null
+                                if (needResponse != null) {
                                     Log.d(
                                         "ResponseSuccess",
                                         "needResponse: $needResponse"

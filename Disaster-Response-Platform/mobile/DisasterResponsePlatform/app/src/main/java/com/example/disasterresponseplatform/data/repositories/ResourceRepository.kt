@@ -10,12 +10,8 @@ class ResourceRepository @Inject constructor(private val resourceDao: ResourceDa
         resourceDao.insertResource(resource)
     }
 
-    fun getX(creatorID: String): Double?{
-        return resourceDao.getX(creatorID)
-    }
-
-    fun getY(creatorID: String): Double?{
-        return resourceDao.getY(creatorID)
+    suspend fun deleteResource(id: Int){
+        resourceDao.deleteResource(id)
     }
 
     fun getAllResources(): List<Resource>? = resourceDao.getAllResources()
