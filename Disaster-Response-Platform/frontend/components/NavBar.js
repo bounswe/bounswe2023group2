@@ -15,6 +15,7 @@ import AddNeedForm from "./AddNeed";
 import AddEventForm from "./AddEvent";
 import AddActionFromId from "./AddActionFromId";
 import AddEmergencyForm from "./AddEmergency";
+import AddRecurrenceForm from "./AddRecurrence";
 
 
 export default function NavBar({ labels }) {
@@ -41,6 +42,13 @@ export default function NavBar({ labels }) {
     isOpen: isEmergencyModalOpen,
     onOpen: onOpenEmergencyModal,
     onOpenChange: onOpenChangeEmergencyModal,
+
+  } = useDisclosure();
+  const {
+    isOpen: isRecurrenceModalOpen,
+    onOpen: onOpenRecurrenceModal,
+    onOpenChange: onOpenChangeRecurrenceModal,
+  
   } = useDisclosure();
 
 
@@ -103,6 +111,9 @@ export default function NavBar({ labels }) {
                   {labels.activities.report_event}
                 </DropdownItem>
                 <DropdownItem key="aksiyon" onClick={onOpenActionModal}>
+                  {labels.activities.add_action}
+                </DropdownItem>
+                <DropdownItem key="recurrence" onClick={onOpenRecurrenceModal}>
                   {labels.activities.add_action}
                 </DropdownItem>
               </DropdownMenu>
@@ -196,6 +207,7 @@ export default function NavBar({ labels }) {
       <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} labels={labels} />
       <AddActionFromId onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} />
       <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} />
+      <AddRecurrenceForm onOpenChange={onOpenChangeRecurrenceModal} isOpen={isRecurrenceModalOpen} />
     </Navbar>
   );
 }
