@@ -60,6 +60,8 @@ def add_resource(resource):
     print(result)
 
 def add_job(job):
+    if(len(job['recurring_items']) == 0):
+        return
     if job['end_at'] <= datetime.datetime.now(): 
         recurrences_collection.find_one_and_update({'_id': ObjectId(job['_id'])}, {'$set':{'status': statusEnum.done}})
         delete_job(str(job['_id']))
