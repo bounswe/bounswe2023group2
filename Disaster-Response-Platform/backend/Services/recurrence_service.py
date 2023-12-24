@@ -46,36 +46,37 @@ def attach_activity(attach, user):
             activity = resources_collection.find_one({'_id':ObjectId(attach.activity_id)})
         if(attach.activity_type=='event'):
             activity = events_collection.find_one({'_id':ObjectId(attach.activity_id)})
+        if(activity is None):
+            raise ValueError("Activity not found")
+        print(activity)
         # if(activity['occur_at'] < insert['start_at']):
         #     raise ValueError("Activity cannot be attached")
         items.append(str(activity['_id']))
+
         recurrences_collection.update_one({'_id':ObjectId(attach.recurrence_id)},{'$set':{'recurring_items':items}})
-        return SuccessResponse(recurrence_id= str(insert._id), message='ATTACH_RECURRENCE_SUCCESS')
+        return SuccessResponse(recurrence_id= str(attach.recurrence_id), message='ATTACH_RECURRENCE_SUCCESS')
     except:
-        raise ValueError("RECURRENCE_ATTACH_ERROR")
+        raise ValueError("recurrence could not be attached")
 
 def start_recurrence(_id):
-    recurrence = recurrences_collection.find_one({'_id':ObjectId(_id)})
+    try:
+        recurrence = recurrences_collection.find_one({'_id':ObjectId(_id)})
+        if(len(recurrence['recurring_items'])<=0):
+            raise ValueError('item not found')
+        schedule.add_job(recurrence)
+        return SuccessResponse(recurrence_id= str(_id), message='START_RECURRENCE_SUCCESS')
+    except:
+        raise ValueError('RECURRENCE_START_ERROR')
 
-    if(len(recurrence['recurring_items'])<=0):
-        raise ValueError('item not found')
-    schedule.add_job(recurrence)
-    return SuccessResponse(recurrence_id= str(_id), message='START_RECURRENCE_SUCCESS')
 
 def find_one(_id):
     try:
-        payload = recurrences_collection.aggregate([
-            {'$match':{'_id':ObjectId(_id)}},
-            { "$lookup": {
-                "from": "$books",
-                "foreignField": "_id",
-                "localField": "books",
-                "as": "books"
-            }}
-        ])
-        return FindOneResponse(payload,  message='ATTACH_RECURRENCE_SUCCESS')
+        payload = recurrences_collection.find_one({'_id':ObjectId(_id)})
+        # mongo objectid is not json serializable
+        payload['_id'] = str(payload['_id'])
+        return FindOneResponse(payload=payload, message='RECURRENCE_FIND_ONE_SUCCESS')
     except:
-        raise ValueError("RECURRENCE_ATTACH_ERROR")
+        raise ValueError("RECURRENCE_FIND_ERROR")
 
 def find_many():
     try:
@@ -104,9 +105,9 @@ def delete(_id, current_user):
 def resume(_id, current_user):
     try:
         recurrence = recurrences_collection.find_one({'_id':ObjectId(_id)})
-        if recurrence['end_date'] < datetime.datetime.now(): 
+        if recurrence['end_at'] < datetime.datetime.now(): 
             raise ValueError('RECURRENCE_FINISHED_BEFORE')
-        updated = recurrences_collection.find_one_and_update({'_id':ObjectId(_id)}, {'$set': {'status':statusEnum.inprogress}})
+        updated = recurrences_collection.find_one_and_update({'_id':ObjectId(_id)}, {'$set': {'status':statusEnum.continuing}})
         schedule.resume_job(_id)
         return SuccessResponse(recurrence_id=_id, message='Success')
     except:

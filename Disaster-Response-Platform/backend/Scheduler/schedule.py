@@ -57,39 +57,43 @@ def add_resource(resource):
     occur = datetime.datetime.today().strftime('%Y-%m-%d') 
     resource['occur_at'] = occur
     result = resource_service.create_resource(resource)
-    print(result)
+   
 
 def add_job(job):
-    if(len(job['recurring_items']) == 0):
-        return
-    if job['end_at'] <= datetime.datetime.now(): 
-        recurrences_collection.find_one_and_update({'_id': ObjectId(job['_id'])}, {'$set':{'status': statusEnum.done}})
-        delete_job(str(job['_id']))
-        return 
-    if(job['activity'] == RecurringItem.need):
-        first_need_id = job['recurring_items'][0]
-        need = needs_collection.find_one({'_id':ObjectId(first_need_id)})
-        exclude_fields = ['_id', 'occur_at', 'active', 'occur_at', 'upvote', 'downvote', 'created_at', 'last_updated_at','action_list', 'status']
-        need_new = {key: value for key, value in need.items() if key not in exclude_fields}
-        need_new['recurrence']= str (job['_id'])
-        occurrance = {job['occurance_unit']+ 's': 1/job['occurance_rate']}
-        occurrance['id'] = str(job['_id'])
-        scheduler.add_job(add_need, 'interval',args =[need_new], **occurrance)
-    if(job['activity'] == RecurringItem.resource):
-        first_resource_id = job['recurring_items'][0]
-        resource = resources_collection.find_one({'_id':ObjectId(first_resource_id)})
-        exclude_fields = ['_id', 'occur_at','currrenQuantity', 'active', 'occur_at', 'upvote', 'downvote', 'created_at', 'last_updated_at','action_list', 'status', 'actions_used']
-        resource_new = {key: value for key, value in resource.items() if key not in exclude_fields}
-        resource_new['recurrence']= str (job['_id'])
-        occurrance = {job['occurance_unit']+ 's': 1/job['occurance_rate']}
-        occurrance['id'] = str(job['_id'])
-        scheduler.add_job(add_resource, 'interval',args =[resource_new], **occurrance)
+    try:
+        if(len(job['recurring_items']) == 0):
+            return
+        if job['end_at'] <= datetime.datetime.now(): 
+            recurrences_collection.find_one_and_update({'_id': ObjectId(job['_id'])}, {'$set':{'status': statusEnum.done}})
+            delete_job(str(job['_id']))
+            return 
+        if(job['activity'] == RecurringItem.need):
+            first_need_id = job['recurring_items'][0]
+            need = needs_collection.find_one({'_id':ObjectId(first_need_id)})
+            exclude_fields = ['_id', 'occur_at', 'active', 'occur_at', 'upvote', 'downvote', 'created_at', 'last_updated_at','action_list', 'status']
+            need_new = {key: value for key, value in need.items() if key not in exclude_fields}
+            need_new['recurrence']= str (job['_id'])
+            occurrance = {job['occurance_unit']+ 's': 1/job['occurance_rate']}
+            occurrance['id'] = str(job['_id'])
+            scheduler.add_job(add_need, 'interval',args =[need_new], **occurrance)
+        if(job['activity'] == RecurringItem.resource):
+            first_resource_id = job['recurring_items'][0]
+            resource = resources_collection.find_one({'_id':ObjectId(first_resource_id)})
+            exclude_fields = ['_id', 'occur_at','currrenQuantity', 'active', 'occur_at', 'upvote', 'downvote', 'created_at', 'last_updated_at','action_list', 'status', 'actions_used']
+            resource_new = {key: value for key, value in resource.items() if key not in exclude_fields}
+            resource_new['recurrence']= str (job['_id'])
+            occurrance = {job['occurance_unit']+ 's': 1/job['occurance_rate']}
+            occurrance['id'] = str(job['_id'])
+            scheduler.add_job(add_resource, 'interval',args =[resource_new], **occurrance)
+    except:
+        raise ValueError("Recurrence could not be scheduled")
     
 def cancel_job(_id):
     try:
         scheduler.pause_job(job_id = str(_id))
     except:
         print(f'ERROR_CANCEL_JOB {str(_id)}')
+        raise ValueError('ERROR_CANCEL_JOB')
 
 def resume_job(_id):
     try:
@@ -99,5 +103,9 @@ def resume_job(_id):
         raise ValueError()
 
 def delete_job(_id):
-    deleted = scheduler.remove_job(job_id = str(_id))
-    print(deleted)
+    try:
+        deleted = scheduler.remove_job(job_id = str(_id))
+        print(deleted)
+    except:
+        print(f'ERROR_DELETE_JOB {str(_id)}')
+        raise ValueError()
