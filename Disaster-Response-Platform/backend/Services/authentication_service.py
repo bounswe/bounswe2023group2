@@ -172,7 +172,6 @@ def get_user(username_or_email_or_phone: str):
             {"phone_number": username_or_email_or_phone}
         ]
     })
-    print("hey")
     if user_document is not None:
         return UserProfile(**user_document)
 
