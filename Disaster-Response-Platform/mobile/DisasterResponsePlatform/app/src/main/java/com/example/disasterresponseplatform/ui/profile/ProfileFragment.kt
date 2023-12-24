@@ -655,21 +655,21 @@ class ProfileFragment(var username: String?) : Fragment() {
     }
 
     private fun clickButtons(user: AuthenticatedUser) {
-        // if user is the same as owner of profile
-        if (username == DiskStorageManager.getKeyValue("username")){
-          binding.profileEditButton.setOnClickListener {
-            val editProfileFragment = EditProfileFragment(user)
-            addFragment(editProfileFragment)
-          } else{
+        // if user (on see user profile) is the same as owner of profile, or user tries to see his/her own profile
+        if (username == DiskStorageManager.getKeyValue("username") || username == null){
+            binding.profileEditButton.setOnClickListener {
+                val editProfileFragment = EditProfileFragment(user)
+                addFragment(editProfileFragment,"EditProfileFragment")
+            }
+        } else{
             binding.profileEditButton.visibility = View.GONE
         }
-
     }
 
-    private fun addFragment(fragment: Fragment) {
+    private fun addFragment(fragment: Fragment,fragmentName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack("EditProfileFragment")
+        ft.addToBackStack(fragmentName)
         ft.commit()
     }
 
