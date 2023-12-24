@@ -223,7 +223,9 @@ class NetworkManager {
                         Log.d("RESPONSE", callback.toString())
                         var call = endpoint.path
                         if (id != null) call += "/$id"
-                        requestBody?.let { api.postData(call, headers, it) }
+                        if (queries.isNullOrEmpty())
+                            requestBody?.let { api.postData(call, headers, it) }?.enqueue(callback)
+                        else requestBody?.let { api.postQueryData(call, headers, it, queries) }
                             ?.enqueue(callback)
                     }
                     RequestType.PUT -> {

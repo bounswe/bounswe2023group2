@@ -142,8 +142,11 @@
     <string name="username_or_email">Kullanıcı Adı veya E-posta</string>
     <string name="password">Parola</string>
     <string name="confirm_password">Parolayı Onayla</string>
+    <string name="new_password">Yeni Parola</string>
+    <string name="confirm_new_password">Yeni Parolayı Onayla</string>
     <string name="forgot_password">Parolamı Unuttum</string>
     <string name="reset_password">Parolayı Sıfırla</string>
+    <string name="change_password">Parolayı Değiştir</string>
     <string name="verify">DOĞRULA</string>
     <string name="verification_code">Doğrulama Kodu</string>
     <string name="enter_verification_code">Doğrulama Kodunu Gir</string>
