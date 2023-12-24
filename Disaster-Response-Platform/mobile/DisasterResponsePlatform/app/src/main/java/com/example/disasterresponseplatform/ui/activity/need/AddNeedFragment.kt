@@ -130,7 +130,7 @@ class AddNeedFragment(
 
                 })
         }
-        binding.etCoordinate.setEndIconOnClickListener {
+        binding.etCoordinate.setStartIconOnClickListener {
             navigateToMapFragment()
         }
     }
@@ -537,7 +537,11 @@ class AddNeedFragment(
                                                         null,
                                                         R.attr.customDropDownStyle
                                                     )
-                                                    textInputLayout.hint = label
+                                                    var hint = label
+                                                    if (label == "Urgency"){
+                                                        hint = getString(R.string.select_1_5)
+                                                    }
+                                                    textInputLayout.hint = hint
                                                     textInputLayout.isEndIconVisible = true
                                                     textInputLayout.endIconMode =
                                                         TextInputLayout.END_ICON_DROPDOWN_MENU

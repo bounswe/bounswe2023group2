@@ -95,16 +95,28 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
     private fun arrangeButtons(){
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (!token.isNullOrEmpty() and (username == action.created_by)) {
+        if (DiskStorageManager.checkToken() and (username == action.created_by)) {
             binding.btnEdit.setOnClickListener {
                 editAction()
             }
             binding.btnDelete.setOnClickListener {
                 deleteAction()
             }
+            binding.btnUpvote.setOnClickListener {
+                upvoteAction(token)
+            }
+            binding.btnDownvote.setOnClickListener {
+                downvoteAction(token)
+            }
+            binding.btnReport.setOnClickListener {
+                showBottomSheet()
+            }
         } else{
             binding.btnDelete.visibility = View.GONE
             binding.btnEdit.visibility = View.GONE
+            binding.btnUpvote.visibility = View.GONE
+            binding.btnDownvote.visibility = View.GONE
+            binding.btnReport.visibility = View.GONE
         }
         binding.btnNavigate.setOnClickListener {
             navigateToMapFragment()
@@ -112,15 +124,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
         binding.btnSeeProfile.setOnClickListener {
             Toast.makeText(context, "Soon", Toast.LENGTH_SHORT).show()
         }
-        binding.btnUpvote.setOnClickListener {
-            upvoteAction(token)
-        }
-        binding.btnDownvote.setOnClickListener {
-            downvoteAction(token)
-        }
-        binding.btnReport.setOnClickListener {
-            showBottomSheet()
-        }
+
     }
 
     private var voted = false // if user change his/her some arrangements will happen with this parameter

@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun arrangeVisibility(){
         // Set logged in state
-        if (DiskStorageManager.hasKey("token")) {
+        if (DiskStorageManager.checkToken()) {
             binding.navView.menu.findItem(R.id.miLogin).isVisible = false
             binding.navView.menu.findItem(R.id.miLoggedInAs).isVisible = true
             binding.navView.menu.findItem(R.id.miLogout).isVisible = true

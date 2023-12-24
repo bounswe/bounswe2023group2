@@ -31,8 +31,7 @@ class VoteViewModel {
      */
     fun upvote(postRequest: VoteBody.VoteRequestBody) {
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val headers = mapOf(
                 "Authorization" to "bearer $token",
                 "Content-Type" to "application/json"
@@ -102,8 +101,7 @@ class VoteViewModel {
      */
     fun downvote(postRequest: VoteBody.VoteRequestBody) {
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val headers = mapOf(
                 "Authorization" to "bearer $token",
                 "Content-Type" to "application/json"
@@ -173,8 +171,7 @@ class VoteViewModel {
      */
     fun unvote(postRequest: VoteBody.VoteRequestBody) {
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val headers = mapOf(
                 "Authorization" to "bearer $token",
                 "Content-Type" to "application/json"
@@ -248,9 +245,8 @@ class VoteViewModel {
         queries["entityID"] = entityID
 
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
 
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val headers = mapOf(
                 "Authorization" to "bearer $token",
                 "Content-Type" to "application/json"

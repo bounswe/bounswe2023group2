@@ -24,8 +24,11 @@ import com.example.disasterresponseplatform.data.models.EventBody
 import com.example.disasterresponseplatform.databinding.FragmentEventBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
+import com.example.disasterresponseplatform.ui.activity.resource.AddResourceFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
@@ -160,10 +163,14 @@ class EventFragment(
     }
 
     private fun addEvent(){
-        val token = DiskStorageManager.getKeyValue("token")
-        if ( DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
-            val addEventFragment = AddEventFragment(eventViewModel,null)
-            addFragment(addEventFragment,"AddEventFragment")
+        if ( DiskStorageManager.checkToken()) {
+            if (GeneralUtil.isInternetAvailable(requireContext())){
+                val addEventFragment = AddEventFragment(eventViewModel,null)
+                addFragment(addEventFragment,"AddEventFragment")
+            } else { // if there is no Connection
+                val addNoInternetFormFragment = AddNoInternetFormFragment(eventViewModel)
+                addFragment(addNoInternetFormFragment,"AddNoInternetFormFragment")
+            }
         }
         else{
             Toast.makeText(context, getString(R.string.pr_login_required), Toast.LENGTH_LONG).show()

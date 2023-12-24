@@ -284,7 +284,9 @@ class EmergencyFragment(
                 description = emergencyItem.description,
                 creatorName = emergencyItem.creator_name,
                 contactNumber = emergencyItem.phone_number,
-                location = emergencyItem.location
+                location = emergencyItem.location,
+                x = emergencyItem.x,
+                y = emergencyItem.y
             )
         }
 

@@ -28,8 +28,10 @@ import com.example.disasterresponseplatform.databinding.FragmentResourceBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.gson.Gson
@@ -111,10 +113,14 @@ class ResourceFragment(
      * If it is created resource should be null, else resource should be the clicked item
      */
     private fun addResource(){
-        val token = DiskStorageManager.getKeyValue("token")
-        if (DiskStorageManager.hasKey("token") && !token.isNullOrEmpty()) {
-            val addResourceFragment = AddResourceFragment(resourceViewModel,null)
-            addFragment(addResourceFragment,"AddResourceFragment")
+        if (DiskStorageManager.checkToken()) {
+            if (GeneralUtil.isInternetAvailable(requireContext())){
+                val addResourceFragment = AddResourceFragment(resourceViewModel,null)
+                addFragment(addResourceFragment,"AddResourceFragment")
+            } else { // if there is no Connection
+                val addNoInternetFormFragment = AddNoInternetFormFragment(resourceViewModel)
+                addFragment(addNoInternetFormFragment,"AddNoInternetFormFragment")
+            }
         }
         else{
             Toast.makeText(context, getString(R.string.pr_login_required), Toast.LENGTH_LONG).show()
@@ -363,7 +369,7 @@ class ResourceFragment(
         // Find type-specific fields and subType list
         val networkManager = NetworkManager()
         val headers = mapOf(
-            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+            //"Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"), //TODO
             "Content-Type" to "application/json"
         )
 

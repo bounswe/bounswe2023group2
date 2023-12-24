@@ -121,18 +121,18 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
     private fun arrangeButtons(){
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (!token.isNullOrEmpty() and (username == emergency.created_by)) {
+        if (DiskStorageManager.checkToken() and (username == emergency.created_by)) {
             binding.btnEdit.setOnClickListener {
                 editEmergency()
             }
             binding.btnDelete.setOnClickListener {
                 deleteEmergency()
             }
-            binding.btnSeeProfile.setOnClickListener {
-                addFragment(ProfileFragment(emergency.created_by),"ProfileFragment")
+            binding.btnUpvote.setOnClickListener {
+                upvoteEmergency(token)
             }
-            binding.btnNavigate.setOnClickListener {
-                navigateToMapFragment()
+            binding.btnDownvote.setOnClickListener {
+                downvoteEmergency(token)
             }
         } else {
             binding.btnDelete.visibility = View.GONE
@@ -140,14 +140,12 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
             binding.btnSeeProfile.visibility = View.GONE
             binding.btnNavigate.visibility = View.GONE
         }
-
-        binding.btnUpvote.setOnClickListener {
-            upvoteEmergency(token)
+        binding.btnSeeProfile.setOnClickListener {
+            addFragment(ProfileFragment(emergency.created_by),"ProfileFragment")
         }
-        binding.btnDownvote.setOnClickListener {
-            downvoteEmergency(token)
+        binding.btnNavigate.setOnClickListener {
+            navigateToMapFragment()
         }
-
     }
 
 

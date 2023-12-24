@@ -47,7 +47,7 @@ class UserViewModel {
                                 Log.d("ResponseSuccess", "Body: $rawJson")
                                 val gson = Gson()
                                 val userResponse = gson.fromJson(rawJson,UserBody.responseBody::class.java)
-                                if (userResponse != null) { // TODO check null
+                                if (userResponse != null) {
                                     Log.d("ResponseSuccess", "needResponse: $userResponse")
                                     liveDataUserRole.postValue(userResponse.user_role)
                                 }
