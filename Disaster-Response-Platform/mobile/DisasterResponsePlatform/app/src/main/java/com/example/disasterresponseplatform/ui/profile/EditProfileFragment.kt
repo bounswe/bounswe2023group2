@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -44,6 +45,7 @@ import com.example.disasterresponseplatform.databinding.ProfileEditSkillBinding
 import com.example.disasterresponseplatform.databinding.ProfileEditSocialMediaBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.utils.FileUploadTask
 import com.example.disasterresponseplatform.utils.ImageUploadTask
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
@@ -72,6 +74,7 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
     )
     private val gson = Gson()
     private var imageChanged = false
+    private val skillMap = HashMap<Int, Any?>()
 
     private var changeImage: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result -> onResult(result) }
 
@@ -278,7 +281,11 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                     profileItemBinding.spinner.hint = backendLevelArray[position]
                     map[profileItemBinding.profileItemText1.text.toString()] = backendLevelArray[position]
                 }
-                profileItemBinding.profileItemHint3.hint = "Document Link"
+                profileItemBinding.uploadFile.setOnClickListener {
+                    val intent = Intent().setType("*/*").setAction(Intent.ACTION_GET_CONTENT)
+                    startActivityForResult(Intent.createChooser(intent, "Select a file"),
+                        profileItemBinding.uploadFile.hashCode())
+                }
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
                     profileTopLayout.removeView(profileItemBinding.root)
                     skillCount--
@@ -289,8 +296,8 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
             for (skill in user.skills) {
                 map[skill.definition] = skill.level
                 val profileItemBinding: ProfileEditSkillBinding = ProfileEditSkillBinding.inflate(LayoutInflater.from(requireContext()))
+                skillMap[profileItemBinding.uploadFile.hashCode()] = skill.document
                 profileItemBinding.profileItemText1.setText(skill.definition)
-                profileItemBinding.profileItemText3.setText(skill.document)
                 profileItemBinding.profileItemHint1.hint = "Definition"
                 val backendLevelArray: Array<String> = arrayOf("beginner", "basic", "intermediate", "skilled", "expert")
                 val levelArray = resources.getStringArray(R.array.skill_level_types)
@@ -306,13 +313,17 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                 }
                 profileItemBinding.spinner.hint = skill.level
                 map[skill.definition] = skill.level
-                profileItemBinding.profileItemHint3.hint = "Document Link"
+                profileItemBinding.uploadFile.setOnClickListener {
+                    val intent = Intent().setType("*/*").setAction(Intent.ACTION_GET_CONTENT)
+                    startActivityForResult(Intent.createChooser(intent, "Select a file"),
+                        profileItemBinding.uploadFile.hashCode())
+                }
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
                     networkManager.makeRequest(
                         endpoint=Endpoint.SKILL_DELETE,
                         requestType=RequestType.POST,
                         headers=headers,
-                        requestBody=gson.toJson(Skill(user.username, profileItemBinding.profileItemText1.text.toString(), map[profileItemBinding.profileItemText1.text.toString()]!!)).toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+                        requestBody=gson.toJson(Skill(user.username, profileItemBinding.profileItemText1.text.toString(), map[profileItemBinding.profileItemText1.text.toString()]!!, null)).toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
                         callback=object : retrofit2.Callback<ResponseBody> {
                             override fun onFailure(
                                 call: retrofit2.Call<ResponseBody>,
@@ -707,37 +718,149 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                 val skillDefinition =
                     skill.findViewById<AppCompatEditText>(R.id.profile_item_text1).text.toString()
                 val skillLevel = map[skillDefinition]!!
-                val skillDocument =
-                    skill.findViewById<AppCompatEditText>(R.id.profile_item_text3).text.toString()
-                val skill_body = Skill(user.username, skillDefinition, skillLevel)
-                val jsonSkill = gson.toJson(skill_body)
-                val requestBodySkill =
-                    jsonSkill.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-                networkManager.makeRequest(
-                    endpoint = Endpoint.SKILL_SET,
-                    requestType = RequestType.POST,
-                    headers = headers,
-                    requestBody = requestBodySkill,
-                    callback = object : retrofit2.Callback<ResponseBody> {
-                        override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Network error: ${t.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            println("skill fail")
-                            saveEnded()
-                        }
+                val document = skillMap[skill.findViewById<ImageButton>(R.id.upload_file).hashCode()]
+                if (document is String) {
+                    val skillBody = Skill(user.username, skillDefinition, skillLevel, document)
+                    val jsonSkill = gson.toJson(skillBody)
+                    println("Skill post request body: $jsonSkill")
+                    val requestBodySkill =
+                        jsonSkill.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                    networkManager.makeRequest(
+                        endpoint = Endpoint.SKILL_SET,
+                        requestType = RequestType.POST,
+                        headers = headers,
+                        requestBody = requestBodySkill,
+                        callback = object : retrofit2.Callback<ResponseBody> {
+                            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Network error: ${t.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                println("skill fail")
+                                saveEnded()
+                            }
 
-                        override fun onResponse(
-                            call: retrofit2.Call<ResponseBody>,
-                            response: retrofit2.Response<ResponseBody>
-                        ) {
-                            println("skill response")
-                            saveEnded()
+                            override fun onResponse(
+                                call: retrofit2.Call<ResponseBody>,
+                                response: retrofit2.Response<ResponseBody>
+                            ) {
+                                println("skill response")
+                                println(response.code())
+                                println(response.body())
+                                println(response.errorBody())
+                                saveEnded()
+                            }
                         }
+                    )
+
+                } else if (document is Uri)
+                FileUploadTask(document, user.username,  requireContext().contentResolver, object : FileUploadTask.OnFileUploadListener {
+                    override fun onFileUploadSuccess(response: String) {
+                        println("File upload successful: $response")
+                        val fileUrl = response.substring(8, response.length - 2)
+                        println("File url: $fileUrl")
+                        val skillBody = Skill(user.username, skillDefinition, skillLevel, fileUrl)
+                        val jsonSkill = gson.toJson(skillBody)
+                        println("Skill post request body: $jsonSkill")
+                        val requestBodySkill =
+                            jsonSkill.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                        networkManager.makeRequest(
+                            endpoint = Endpoint.SKILL_SET,
+                            requestType = RequestType.POST,
+                            headers = headers,
+                            requestBody = requestBodySkill,
+                            callback = object : retrofit2.Callback<ResponseBody> {
+                                override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Network error: ${t.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    println("skill fail")
+                                    saveEnded()
+                                }
+
+                                override fun onResponse(
+                                    call: retrofit2.Call<ResponseBody>,
+                                    response: retrofit2.Response<ResponseBody>
+                                ) {
+                                    println("skill response")
+                                    println(response.code())
+                                    println(response.body())
+                                    println(response.errorBody())
+                                    saveEnded()
+                                }
+                            }
+                        )
                     }
-                )
+
+                    override fun onFileUploadFailure(errorMessage: String) {
+                        println("File upload error: $errorMessage")
+                        Toast.makeText(requireContext(), "File could not be uploaded: $errorMessage", Toast.LENGTH_LONG).show()
+
+                        val skill_body = Skill(user.username, skillDefinition, skillLevel, null)
+                        val jsonSkill = gson.toJson(skill_body)
+                        val requestBodySkill =
+                            jsonSkill.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                        networkManager.makeRequest(
+                            endpoint = Endpoint.SKILL_SET,
+                            requestType = RequestType.POST,
+                            headers = headers,
+                            requestBody = requestBodySkill,
+                            callback = object : retrofit2.Callback<ResponseBody> {
+                                override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Network error: ${t.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    println("skill fail")
+                                    saveEnded()
+                                }
+
+                                override fun onResponse(
+                                    call: retrofit2.Call<ResponseBody>,
+                                    response: retrofit2.Response<ResponseBody>
+                                ) {
+                                    println("skill response")
+                                    saveEnded()
+                                }
+                            }
+                        )
+                    }
+                }).execute()
+                else {
+                    val skillBody = Skill(user.username, skillDefinition, skillLevel, null)
+                    val jsonSkill = gson.toJson(skillBody)
+                    val requestBodySkill =
+                        jsonSkill.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+                    networkManager.makeRequest(
+                        endpoint = Endpoint.SKILL_SET,
+                        requestType = RequestType.POST,
+                        headers = headers,
+                        requestBody = requestBodySkill,
+                        callback = object : retrofit2.Callback<ResponseBody> {
+                            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Network error: ${t.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                println("skill fail")
+                                saveEnded()
+                            }
+
+                            override fun onResponse(
+                                call: retrofit2.Call<ResponseBody>,
+                                response: retrofit2.Response<ResponseBody>
+                            ) {
+                                println("skill response")
+                                saveEnded()
+                            }
+                        }
+                    )
+                }
             }
 
             // languages
@@ -851,6 +974,24 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                 }, year, month, day)
                 datePickerDialog.show()
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            println("$requestCode File selected")
+            val selectedFile: Uri? = data?.data
+            if (selectedFile == null) {
+                println("Selected file is null")
+                Toast.makeText(requireContext(), "File could not be selected", Toast.LENGTH_SHORT).show()
+                return
+            }
+            println("Selected file successful")
+            skillMap[requestCode] = selectedFile
+        } else {
+            println("$requestCode File could not be selected")
         }
     }
 

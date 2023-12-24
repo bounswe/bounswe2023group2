@@ -305,7 +305,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                             AuthenticatedUser.Skill(
                                                 skill.second,
                                                 skill.third,
-                                                ""
+                                                skill.skillDocument
                                             )
                                         )
                                     }
@@ -614,7 +614,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                 }
                 when (socialMedia.platformName.lowercase()) {
                     "linkedin" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.linkedin_icon)
-                    "x" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.x_icon)
+                    "x", "twitter" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.x_icon)
                     "github" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.github_icon)
                     "youtube" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.youtube_icon)
                 }
@@ -627,10 +627,12 @@ class ProfileFragment(var username: String?) : Fragment() {
                     ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
                 profileItemBinding.profileItemText.text = skill.definition + ": " + skill.level
                 profileItemBinding.profileItemLink.visibility = View.VISIBLE
+                if (skill.document != null)
                 profileItemBinding.profileItemLink.setOnClickListener {
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(skill.document))
                     startActivity(browserIntent)
                 }
+                else profileItemBinding.profileItemLink.visibility = View.GONE
                 profileTopLayout.addView(profileItemBinding.root, 18 + counter)
                 counter++
             }
