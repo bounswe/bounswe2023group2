@@ -11,6 +11,16 @@ class ConditionEnum(str, Enum):
     new = "new"
     used = "used"
 
+class UnitEnum(str, Enum):
+    kg = "kg"
+    piece = "piece"
+    portion = "portion"
+    daily = "daily"
+    lt = "lt"
+    gram = "gram"
+    box = "box"
+    pack = "pack"
+
 class Recurrence(Enum):
     Daily= 1
     Weekly= 7
@@ -19,19 +29,18 @@ class ActionHistory(BaseModel):
     quantity: int = Field(default=0)
     action_id: str= Field(None)
 
+
 class Resource(BaseModel):
     _id: str = Field(default=None)
     created_by: str = Field(default=None)
     description: str = Field(default=None)
     initialQuantity: int = Field(default=None)
     currentQuantity: int = Field(default=None)
+    quantityUnit: UnitEnum = Field(default=UnitEnum.piece)
     type: str = Field(default=None)
     details: Dict[str, Any] = Field(default=None)
     x: float = Field(default=None)
     y: float = Field(default=None)
-    recurrence_id: str = Field(default=None)
-    recurrence_rate: Recurrence = Field(default=None)
-    recurrence_deadline: datetime.datetime = Field(default=None)
     active: bool = Field(default=True)
     occur_at: datetime.datetime = Field(default=None)
     created_at: datetime.datetime = Field(default_factory=current_time_gmt3)
@@ -39,8 +48,14 @@ class Resource(BaseModel):
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
     actions_used: List[ActionHistory]= Field(default=None)
+    
+    verified_upvote: str = Field(default = None)
+    verified_downvote: str = Field(default = None)
+    action_list: List[str]= Field(default=[])
+    recurrence: str= Field(default = None)
+    open_address :str =Field(default = None)
 
-    @validator('recurrence_deadline', 'occur_at', pre=True)
+    @validator('occur_at', pre=True)
     def convert_str_to_datetime(cls, value):
         if isinstance(value, str):
             try:

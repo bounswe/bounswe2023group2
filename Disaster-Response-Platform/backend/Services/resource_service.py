@@ -29,20 +29,18 @@ def create_resource(resource: Resource) -> str:
     validate_quantities(resource.initialQuantity, resource.currentQuantity)
         
     
-    if(resource.recurrence_rate!= None):
-        if not all([resource.recurrence_deadline, resource.occur_at]):
-            raise ValueError("Recurrence fields need to be entered")
-        resource.recurrence_id=r_id
-        resource.recurrence_rate = resource.recurrence_rate.value
-        insert_result = resources_collection.insert_one(resource.dict())
+    # if(resource.recurrence_rate!= None):
+    #     if not all([resource.recurrence_deadline, resource.occur_at]):
+    #         raise ValueError("Recurrence fields need to be entered")
+    #     resource.recurrence_id=r_id
+    #     resource.recurrence_rate = resource.recurrence_rate.value
+    #     insert_result = resources_collection.insert_one(resource.dict())
  
-        insert_ids=create_recurrent_resources(resource)
+    #     insert_ids=create_recurrent_resources(resource)
 
-        r_id+=1
-    else:
-        insert_result = resources_collection.insert_one(resource.dict())
+    #     r_id+=1
+    insert_result = resources_collection.insert_one(resource.dict())
  
-
     #check the result to change from
     if insert_result.inserted_id:
         return "{\"resources\":[{\"_id\":" + f"\"{insert_result.inserted_id}\"" + "}]}"
@@ -106,6 +104,7 @@ def get_resources(
                   "condition": 1,
                   "initialQuantity": 1,
                   "currentQuantity": 1,
+                  "quantityUnit": 1,
                   "type": 1,
                   "details":1,
                   "recurrence_id": 1,
@@ -118,7 +117,8 @@ def get_resources(
                   "created_at":1,
                   "last_updated_at":1,
                   "upvote":1,
-                  "downvote":1
+                  "downvote":1 ,
+                  "open_address":1
                   }
     
     sort_order = ASCENDING if order == 'asc' else DESCENDING

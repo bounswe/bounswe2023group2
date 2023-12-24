@@ -84,6 +84,8 @@ data class UsersMeOptionalResponse(
     val bloodType: String,
     @SerializedName("Address")
     val address: String,
+    @SerializedName("profile_picture")
+    val profilePicture: String,
 )
 
 data class UsersOptionalArray(
@@ -108,6 +110,7 @@ data class ProfileOptionalBody(
     @SerializedName("health_condition") val healthCondition: String?,
     @SerializedName("blood_type") val bloodType: String?,
     @SerializedName("Address") val address: String?,
+    @SerializedName("profile_picture") val profilePicture: String?,
 )
 
 data class ProfficiencyRequest(
