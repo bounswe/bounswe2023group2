@@ -19,7 +19,7 @@ def create_action(action: Action) -> str:
                 action.type]):
         raise ValueError("All fields are mandatory for creation.")
     if (action.type== ActionType.need_resource):
-        if action.resources == [] or action.needs == []:
+        if action.resources == [] or action.needs == []: #TODO len check
             raise ValueError("At least one need and resource is needed")
         insert_result = actions_collection.insert_one(action.dict())
 
@@ -86,6 +86,35 @@ def update(action_id: str, current_user, body):
     res = actions_collection.find_one({"_id": ObjectId(action_id)})
     return  res
 
+
+def get_match_list(action_id:str, current_user:str):
+    action = actions_collection.find_one({"_id": ObjectId(action_id)})
+    if not action:
+        raise ValueError("There is no action with this id")
+    match_list = []
+    for need_id in action['needs']:
+        need = needs_collection.find_one({"_id": ObjectId(need_id)})
+        if not need:
+            continue
+        if need['status'] == statusEnum.done:
+            continue
+        match_list.append(need)
+    for resource_id in action['resources']:
+        resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
+        if not resource:
+            continue
+        if resource['status'] == statusEnum.done:
+            continue
+        match_list.append(resource)
+    for payload in match_list:
+        print(payload)
+        payload['_id'] = str(payload['_id']) 
+        if len(payload['action_list']) != 0 :
+            payload['action_list'] = [str(action) for action in payload['action_list']]
+    return match_list
+
+
+
 # bir resource needleri karsiliyor
 def do_action(action_id:str, current_user:str, match_list):
     action = actions_collection.find_one({"_id": ObjectId(action_id)})
@@ -95,7 +124,7 @@ def do_action(action_id:str, current_user:str, match_list):
     if(action['created_by']!= current_user ):
         raise ValueError("Only user created the action can do it")
     
-    for match in match_list: #[{need_id: sdasds, resource_id:asdasd, amount:  }]
+    for match in match_list:
         need = needs_collection.find_one({"_id": ObjectId(match.need_id)})
         remain = need.unsuppliedQuantity - match.amount
         if(remain<=0):
@@ -103,7 +132,7 @@ def do_action(action_id:str, current_user:str, match_list):
         else:
             need.unsuppliedQuantity = remain
             need.status = 'active'
-        need.save()
+        needs_collection.update_one({"_id": ObjectId(match.need_id)}, {"$set":need})
         resource = resources_collection.find_one({"_id": ObjectId(match.resource_id)})
         remain = resource.currentQuantity - match.amount
         if(remain<=0):
@@ -111,9 +140,10 @@ def do_action(action_id:str, current_user:str, match_list):
         else:
             resource.currentQuantity = remain
             resource.status = 'active'
-        resource.save()
+        resources_collection.update_one({"_id": ObjectId(match.resource_id)}, {"$set":resource})
     action.status = "done"
-    action.save()
+    # update action
+    actions_collection.update_one({"_id": ObjectId(action_id)}, {"$set":action})
 
 def get_action(action_id:str) :
     if (ObjectId.is_valid(action_id)):
@@ -172,7 +202,8 @@ def get_action(action_id:str) :
 def cancel_action(action_id: str, current_user: str):
     
     action = actions_collection.find_one({"_id": ObjectId(action_id)})
-    if(action.start_at < current_time_gmt3):
+    #TODO i am checking if the action is already started, but i am not sure if this is the correct way
+    if(action.start_at < datetime.datetime.now()):
         raise ValueError('Action already started: {action_id}')
     if action:
         action= Action(**action) 
@@ -230,4 +261,6 @@ def restore_resources(resource_id, action_id):
     if update_result.modified_count <= 0:
         raise ValueError(f"No ActionHistory found with action_id '{action_id}'.")
     return
+
+
                 
