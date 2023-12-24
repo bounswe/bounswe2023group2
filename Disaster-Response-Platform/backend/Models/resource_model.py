@@ -11,6 +11,16 @@ class ConditionEnum(str, Enum):
     new = "new"
     used = "used"
 
+class UnitEnum(str, Enum):
+    kg = "kg"
+    piece = "piece"
+    portion = "portion"
+    daily = "daily"
+    lt = "lt"
+    gram = "gram"
+    box = "box"
+    pack = "pack"
+
 class Recurrence(Enum):
     Daily= 1
     Weekly= 7
@@ -25,6 +35,7 @@ class Resource(BaseModel):
     description: str = Field(default=None)
     initialQuantity: int = Field(default=None)
     currentQuantity: int = Field(default=None)
+    quantityUnit: UnitEnum = Field(default=UnitEnum.piece)
     type: str = Field(default=None)
     details: Dict[str, Any] = Field(default=None)
     x: float = Field(default=None)
