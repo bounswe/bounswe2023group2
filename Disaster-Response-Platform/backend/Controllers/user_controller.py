@@ -81,6 +81,21 @@ async def refresh_access_token(current_user: str  = Depends(authentication_servi
     )
     return login_response
 
+@router.get("/",responses={
+    status.HTTP_200_OK: {"model": UserList},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
+def get_all_users(response: Response):
+    try:
+        users = authentication_service.get_all_users()
+        response.status_code = HTTPStatus.OK
+        return users
+    except ValueError as err:
+        error= Error(ErrorMessage="Get all users error", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error
+    
 # Protected route
 @router.get("/protected")
 async def protected_route(current_user: str = Depends(authentication_service.get_current_user)):

@@ -22,14 +22,6 @@ class User(BaseModel):
     disabled: bool | None = None
     password:str
     #user_role: UserRole = Field(default=None)
-
-
-class LoginUserRequest(BaseModel):
-    username_or_email_or_phone: str
-    password:str
-class Error(BaseModel):
-    ErrorMessage: str
-    ErrorDetail: str
 class ProficiencyEnum(str, Enum):
     doctor = "doctor"
     driver= "driver"
@@ -43,6 +35,30 @@ class ProficiencyEnum(str, Enum):
 class ProfRequest(BaseModel):
     proficiency: Optional[ProficiencyEnum] = None
     details: str=None
+class UserInfo(BaseModel):
+    username: str 
+    email: EmailStr | None = None
+    first_name: str
+    last_name: str
+    phone_number: str | None= None
+    is_email_verified: bool | None= None
+    private_account: bool = False
+    user_role: UserRole = Field(default=None)
+    proficiency: Optional[ProfRequest] = None
+
+
+
+class UserList(BaseModel):
+    user_list: List[Optional[UserInfo]]
+
+class LoginUserRequest(BaseModel):
+    username_or_email_or_phone: str
+    password:str
+class Error(BaseModel):
+    ErrorMessage: str
+    ErrorDetail: str
+
+
 
 class CreateUserRequest(BaseModel):
     username: str
@@ -77,17 +93,6 @@ class UserProfile(User):
     proficiency: Optional[ProfRequest] = None
 
 
-
-class UserInfo(BaseModel):
-    username: str 
-    email: EmailStr | None = None
-    first_name: str
-    last_name: str
-    phone_number: str | None= None
-    is_email_verified: bool | None= None
-    private_account: bool = False
-    user_role: UserRole = Field(default=None)
-    proficiency: Optional[ProfRequest] = None
 
 
 
