@@ -12,7 +12,7 @@ export default function AddEmergency({ isOpen, onOpenChange, labels }) {
   // position is lat, lng
   const [ position, setPosition ] = useState([41.08714, 29.043474]);
 
-  async function addEmergency(event) {
+  async function addEmergency(event, onClose) {
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
 
@@ -23,18 +23,19 @@ export default function AddEmergency({ isOpen, onOpenChange, labels }) {
       location: formData.location || `${Math.abs(position[0])}${position[0] >= 0 ? "N" : "S"} ${Math.abs(position[1])}${position[1] >= 0 ? "E" : "W"}`
     };
 
-    const response = await fetch('/api/add-emergency.js', {
+    const response = await fetch('/api/add-emergency', {
       method: 'POST',
       headers: {
       "Content-Type": "application/json",
       }, body: JSON.stringify(sentData)
     });
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       toast(labels.feedback.failure);
       return;
     }
     toast(labels.feedback.add_success);
+    onClose();
 
   }
 
@@ -44,7 +45,7 @@ export default function AddEmergency({ isOpen, onOpenChange, labels }) {
     <Modal isOpen={isOpen} size="3xl" onOpenChange={onOpenChange} className='text-black' scrollBehavior="inside">
       <ModalContent>
         {(onClose) => (
-          <form onSubmit={(event) => {event.preventDefault(); addEmergency(event); onClose()}} >
+          <form onSubmit={(event) => {event.preventDefault(); addEmergency(event, onClose)}} >
             <ModalHeader className="flex flex-col gap-1">{labels.activities.report_emergency}</ModalHeader>
             <ModalBody>
               <div className="flex flex-row items-center gap-x-4">
