@@ -115,7 +115,7 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
   const users = allUsers.filter(user => queryMatchesUser(query, user))
     .map(
       (
-        {username, first_name, last_name, user_role, initialCredible, proficiency}, index
+        {username, first_name, last_name, user_role, initialCredible, proficiency, index}
       ) => {
         const credible = user_role === "CREDIBLE";
         return {
@@ -258,7 +258,7 @@ export const getServerSideProps = withIronSessionSsr(
       }
     });
 
-    allUsersInit = allUsersInit.map(user => ({...user, initialCredible: user.user_role === "CREDIBLE"}));
+    allUsersInit = allUsersInit.map((user, index) => ({...user, initialCredible: user.user_role === "CREDIBLE", index: index}));
 
     allUsersInit.sort((u1, u2) => u1.username.localeCompare(u2.username))
 
