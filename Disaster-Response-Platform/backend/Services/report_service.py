@@ -90,7 +90,7 @@ def reject_report(report_id: str):
     result = reports_collection.update_one({"_id": ObjectId(report_id)}, {"$set": {"status": "rejected"}})
     if result.matched_count == 0:
         raise ValueError(f"Report id {report_id} not found")
-    # return True
+    return True
 
 def accept_report(report_id: str, report_type:str, report_type_id: str) :
     result = reports_collection.update_one({"_id": ObjectId(report_id)}, {"$set": {"status": "accepted"}})
@@ -103,5 +103,6 @@ def accept_report(report_id: str, report_type:str, report_type_id: str) :
         if d.deleted_count == 0:
             raise ValueError(f"{report_type} {report_type_id} cannot be deleted")
     except:
-        raise ValueError(f"{report_type} {report_type_id} cannot be deleted")  
+        raise ValueError(f"{report_type} {report_type_id} cannot be deleted")
+    return True
 
