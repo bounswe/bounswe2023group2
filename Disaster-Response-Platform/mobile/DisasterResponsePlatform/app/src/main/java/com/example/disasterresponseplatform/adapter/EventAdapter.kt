@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +13,7 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.EventBody
 import com.example.disasterresponseplatform.databinding.EventItemBinding
 
-class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?): RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
+class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?, val userRoleMap: MutableMap<String, String>): RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     inner class EventViewHolder(val binding: EventItemBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -44,6 +45,13 @@ class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?): Re
         hb.tvCreator.text = currentEvent?.created_by_user
         hb.tvDownvoteCount.text = currentEvent?.downvote.toString()
         hb.tvUpvoteCount.text = currentEvent?.upvote.toString()
+        // user role
+        val creator = currentEvent?.created_by_user
+        if (creator in userRoleMap.keys && userRoleMap[creator] == "CREDIBLE") {
+            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
+        } else {
+            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+        }
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->
