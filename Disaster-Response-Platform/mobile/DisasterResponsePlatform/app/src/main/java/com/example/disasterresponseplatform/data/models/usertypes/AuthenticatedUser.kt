@@ -32,7 +32,7 @@ open class AuthenticatedUser(var username: String, var email: String, var phone:
     var roleBasedProficiency: String = ""
 
     class SocialMedia(var platformName: String, var profileURL: String)
-    class Skill(var definition: String, var level: String, var document: String)
+    class Skill(var definition: String, var level: String, var document: String?)
     class Language(var language: String, var level: String)
     class Profession(var profession: String, var level: String)
 
