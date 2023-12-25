@@ -420,7 +420,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <!-- Health Contition -->
+            <!-- Health Condition -->
             <LinearLayout
                 android:id="@+id/profile_health_condition_layout"
                 android:layout_width="match_parent"
@@ -624,6 +624,8 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/primaryDark"
         android:clickable="true"
-        android:src="@drawable/check" />
+        android:src="@drawable/check"
+        android:focusable="true"
+        android:contentDescription="@string/apply" />
 
 </FrameLayout>
