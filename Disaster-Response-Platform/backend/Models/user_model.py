@@ -132,3 +132,7 @@ class LoginResponse(BaseModel):
     token_type: str
     user_role: UserRole
     proficiency: Optional[ProfRequest] = None
+
+class UserProfileResponse(BaseModel):
+    user_role: UserRole = Field(default=None)
+    proficiency: Optional[ProfRequest] = None
