@@ -28,6 +28,7 @@ import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheet
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -37,6 +38,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private val annotation = Annotation()
 
 
     override fun onCreateView(
@@ -91,7 +93,11 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         })
         binding.tvLastUpdatedTime.text = resource.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = resource.created_at.substring(0,10)
-        binding.tvDescription.text = resource.description.toString()
+        if (resource.details["subtype"] != null)
+            annotation.getAnnotations(resource.created_by + "-resource-" + resource.details["subtype"]) {
+                binding.tvDescription.text = it
+            }
+        else binding.tvDescription.text = resource.description.toString()
         fillDetails(resource.details)
         fillRecurrence(resource)
         userViewModel.getUserRole(creatorName)

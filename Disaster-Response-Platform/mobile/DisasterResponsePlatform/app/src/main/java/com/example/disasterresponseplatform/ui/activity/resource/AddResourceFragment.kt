@@ -28,6 +28,7 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.Annotation
 import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
@@ -54,6 +55,7 @@ class AddResourceFragment(
     private var selectedLocationX by Delegates.notNull<Double>()
     private var selectedLocationY by Delegates.notNull<Double>()
     private val mapFragment = ActivityMap()
+    private var annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -282,6 +284,10 @@ class AddResourceFragment(
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
                 val coordinateX = selectedLocationX
                 val coordinateY = selectedLocationY
+
+                if (description != null) {
+                    annotation.publishAnnotation(DiskStorageManager.getKeyValue("username")!! + "-resource-" + subType, description)
+                }
 
                 //val newResource = Resource(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
                 //resourceViewModel.insertResource(resource) insert local db
