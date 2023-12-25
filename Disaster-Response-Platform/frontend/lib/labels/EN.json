@@ -116,7 +116,8 @@
 		"loading": "Loading",
 		"forgot": "Forgot password",
 		"details": "Details",
-		"changed": "Changed"
+		"changed": "Changed",
+		"search": "Search"
 	},
 	"sort_filter": {
 		"sort": "Sort",
@@ -214,6 +215,7 @@
 		"password": "Password must contain an uppercase letter and a number",
 		"email": "example@address.com",
 		"search_bar": "Enter your search",
+		"search_users": "Search in users",
 		"resource_type": "Food",
 		"resource_subtype": "Canned food"
 	},

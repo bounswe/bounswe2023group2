@@ -115,7 +115,8 @@
 		"loading": "Yükleniyor",
 		"forgot": "Şifremi Unuttum",
 		"details": "Detaylar",
-		"changed": "Düzenlendi"
+		"changed": "Düzenlendi",
+		"search": "Ara"
 	},
 	"sort_filter": {
 		"sort": "Sırala",
@@ -212,6 +213,7 @@
 		"password": "Şifre en az bir büyük harf ve bir rakam içermelidir",
 		"email": "örnek@adres.com",
 		"search_bar": "Ne arıyorsunuz?",
+		"search_users": "Kullanıcılarda ara",
 		"resource_type": "Gıda",
 		"resource_subtype": "Konserve gıda"
 	},

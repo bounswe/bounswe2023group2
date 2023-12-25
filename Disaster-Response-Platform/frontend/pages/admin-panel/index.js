@@ -1,7 +1,7 @@
 import MainLayout from '@/layouts/MainLayout';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
-import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Tab, Tabs, Switch } from "@nextui-org/react";
+import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Tab, Tabs, Switch, Input } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/apiUtils';
@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 export default function AdminPanel({ unauthorized, allReports, allUsersInit, labels }) {
   const [allUsers, setAllUsers] = useState(allUsersInit);
   const [chosenReportType, setChosenReportType] = useState("users");
+  const [query, setQuery] = useState("");
   const router = useRouter();
   if (unauthorized) {
     useEffect(() => {setTimeout(() => {router.push("/")}, 2000)});
@@ -72,8 +73,18 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
     const newAllUsers = [...allUsers];
     newAllUsers[index].user_role = isSelected ? "CREDIBLE" : "AUTHENTICATED";
     setAllUsers(newAllUsers);
+  }
 
-
+  function queryMatchesUser(query, user) {
+    const {username, first_name, last_name, user_role, proficiency: {proficiency}} = user;
+    const words = query.toLowerCase().split(" ").filter(word => (word != ""));
+    return words.every(word => (
+         username.toLowerCase().includes(word)
+      || first_name.toLowerCase().includes(word)
+      || last_name.toLowerCase().includes(word)
+      || labels.user_roles[user_role].toLowerCase().includes(word)
+      || (proficiency && labels.proficiency[proficiency].toLowerCase().includes(word))
+    ));
   }
 
   const rejectButton = (...args) => <Button onPress={() => reject(...args)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject} </Button>;
@@ -101,10 +112,10 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
     );
   }
 
-  const users = allUsers.filter(elem=>true)
+  const users = allUsers.filter(user => queryMatchesUser(query, user))
     .map(
       (
-        {username, first_name, last_name, user_role, initialCredible}, index
+        {username, first_name, last_name, user_role, initialCredible, proficiency}, index
       ) => {
         const credible = user_role === "CREDIBLE";
         return {
@@ -112,6 +123,7 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
           username: <Link href={`user/${username}`} className="text-blue-600">{username}</Link>,
           name: `${first_name} ${last_name}`,
           user_role: labels.user_roles[user_role],
+          proficiency: proficiency.proficiency ? labels.proficiency[proficiency.proficiency] : null,
           credible: user_role === "ADMIN" ? null : (
                       <>
                         <Switch defaultSelected={credible} onValueChange={isSelected => toggleCredible(isSelected, index, username)} />
@@ -181,12 +193,14 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
         </Table>
       </div>
       <div class="my-10">
-        <h3 class="object-top text-center text-xl mb-3"> {labels.admin.users} </h3>
+        <h3 class="object-top text-center text-xl"> {labels.admin.users} </h3>
+        <Input id="query-input" onValueChange={setQuery} placeholder={labels.placeholders.search_users} variant="bordered" className="w-1/3 mb-4"/>
         <Table aria-label="Kullanıcı Listesi">
           <TableHeader>
             <TableColumn key="username">{labels.profile.username}</TableColumn>
             <TableColumn key="name">{labels.profile.full_name}</TableColumn>
             <TableColumn key="user_role">{labels.user_roles.user_role}</TableColumn>
+            <TableColumn key="proficiency">{labels.user_roles.area_of_expertise}</TableColumn>
             <TableColumn key="credible">{labels.admin.is_credible}</TableColumn>
           </TableHeader>
           <TableBody items={users}>
@@ -238,7 +252,7 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels}};
     }
 
-    const { data: allUsers } = await api.get('/api/users/', {
+    const { data: {user_list: allUsers} } = await api.get('/api/users/', {
       headers: {
         'Authorization': `Bearer ${user.accessToken}` 
       }
