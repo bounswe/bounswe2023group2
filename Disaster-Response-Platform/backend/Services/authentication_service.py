@@ -21,12 +21,17 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 auth_scheme = HTTPBearer()
 userDb = MongoDB.get_collection('authenticated_user')
 # Verify JWT token
-# def get_user_info(token: str = Depends(auth_scheme)):
+# def get_user_info():
 #     try:
-#         if not token:
-#             raise JWTError("Token is empty")
-#         if not isinstance(token, str) and token.credentials:
-#             token = token.credentials
+        
+#         try:
+#             token = auth_scheme
+#             if not isinstance(token, str) and token.credentials:
+                
+#                 token = token.credentials
+#         except:
+#             return "GUEST"
+
 #             # If token is an instance of Token, access its credentials attribute
 #         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 #         username: str = payload.get("sub")

@@ -12,14 +12,19 @@ from Services.build_API_returns import *
 # Get the emergencies collection using the MongoDB class
 emergencies_collection = MongoDB.get_collection('emergencies')
 
+# def is_valid_phone_number(phone_number):
+#     return phone_number.startswith("05")
+
 def create_emergency(emergency: Emergency) -> str:
     if not all([emergency.created_by_user, emergency.created_at,
                 emergency.emergency_type, emergency.description, emergency.x, emergency.y,  emergency.location]):
         raise ValueError("Some mandatory fields missing : created_by_user, created_at, emergency_type, description, x, y,  location,")
     
-    if emergency.created_by_user == "GUEST" and (not emergency.contact_name or not emergency.contact_number):
-        raise ValueError("Contact name and number are required for guest users.")
+    # if emergency.created_by_user == "GUEST" and (not emergency.contact_name or not emergency.contact_number):
+    #     raise ValueError("Contact name and number are required for guest users.")
     
+    # if (not is_valid_phone_number(emergency.contact_number)): #if phone number is not valid
+    #     raise ValueError("Phone number must be 11 digits and start with '05'")
     
     Services.utilities.validate_coordinates(emergency.x, emergency.y)
     emergency_dict = Services.utilities.correctDates(emergency)
