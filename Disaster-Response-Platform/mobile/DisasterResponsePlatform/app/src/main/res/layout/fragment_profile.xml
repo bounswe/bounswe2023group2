@@ -506,6 +506,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:clickable="true"
-        android:src="@android:drawable/ic_menu_edit" />
+        android:src="@android:drawable/ic_menu_edit"
+        android:focusable="true" />
 
 </FrameLayout>
