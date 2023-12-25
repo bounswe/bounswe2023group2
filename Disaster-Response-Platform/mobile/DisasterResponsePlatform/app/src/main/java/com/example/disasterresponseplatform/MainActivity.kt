@@ -82,13 +82,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeFragments(){
-        homeFragment = HomeFragment(needViewModel,resourceViewModel,actionViewModel,eventViewModel,this)
+        homeFragment = HomeFragment(emergencyViewModel, needViewModel,resourceViewModel,actionViewModel,eventViewModel,this)
         replaceFragment(homeFragment)
     }
 
     private fun arrangeVisibility(){
         // Set logged in state
-        if (DiskStorageManager.hasKey("token")) {
+        if (DiskStorageManager.checkToken()) {
             binding.navView.menu.findItem(R.id.miLogin).isVisible = false
             binding.navView.menu.findItem(R.id.miLoggedInAs).isVisible = true
             binding.navView.menu.findItem(R.id.miLogout).isVisible = true

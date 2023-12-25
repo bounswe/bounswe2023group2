@@ -13,6 +13,9 @@ def create_report(report: Report) -> str:
     if not all([report.created_by, report.description, 
                 report.report_type, report.report_type_id, report.details]):
         raise ValueError("All fields are mandatory for creation.")
+    existing_report = reports_collection.find_one({"created_by": report.created_by, "report_type": report.report_type, "report_type_id": report.report_type_id}) 
+    if existing_report:
+        raise ValueError("Report already exists")
     insert_result = reports_collection.insert_one(report.dict())
     if insert_result.inserted_id:
         result = "{\"reports\":[{\"_id\":" + f"\"{insert_result.inserted_id}\""+"}]}"
@@ -31,8 +34,10 @@ def get_reports(report_id:str = None) -> list[dict]:
             "_id": {"$toString": "$_id"},
             "created_by": 1,
             "description": 1,
-            "type": 1,
-            "details": 1
+            "report_type": 1,
+            "report_type_id": 1,
+            "details": 1,
+            "status": 1
         }
     
     if (report_id is None):

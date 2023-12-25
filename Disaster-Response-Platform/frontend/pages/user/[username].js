@@ -14,7 +14,7 @@ import { Button } from "@nextui-org/react";
 import { ToastContainer } from 'react-toastify';
 import getLabels from '@/lib/getLabels';
 
-export default function OtherProfile({ unauthorized, admin, main_info, optional_info, list_info, labels }) {
+export default function OtherProfile({ unauthorized, self_role, main_info, optional_info, list_info, labels }) {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -34,7 +34,7 @@ export default function OtherProfile({ unauthorized, admin, main_info, optional_
     ADMIN: 2
   }
 
-  let visibility = (admin
+  let visibility = (self_role === "ADMIN"
                     ? visibilityEnum.ADMIN
                     : main_info.private_account
                       ? visibilityEnum.PRIVATE
@@ -43,18 +43,20 @@ export default function OtherProfile({ unauthorized, admin, main_info, optional_
 
   const username = router.query.username;
   const {professions, languages, "socialmedia-links": social, skills} = list_info;
-  const optional_info_tr = Object.entries(optional_info).map(([key, val]) => [labels.profile[key], val]);
-  optional_info_tr.sort();
+  const optional_info_labels = Object.entries(optional_info)
+                                     .filter(([key, val]) => key !== "profile_picture")
+                                     .map(([key, val]) => [labels.profile[key], val]);
+  optional_info_labels.sort();
   return (
   <>
     <main>
       <div class="flex justify-around space-x-8">
-        <MainInfo className={visibility >= visibilityEnum.ADMIN ? "w-60" : "w-64"} info={main_info} onOpen={onOpen} contact={visibility >= visibilityEnum.DEFAULT} labels={labels} report/>
+        <MainInfo className={visibility >= visibilityEnum.ADMIN ? "w-60" : "w-64"} info={main_info} img={optional_info.profile_picture} onOpen={onOpen} contact={visibility >= visibilityEnum.DEFAULT} labels={labels} report/>
         {visibility >= visibilityEnum.ADMIN
-          ? <OptionalInfo className="w-80" fields={optional_info_tr} labels={labels} />
+          ? <OptionalInfo className="w-80" fields={optional_info_labels} labels={labels} />
           : null
         }
-        {visibility >= visibilityEnum.ADMIN //temporary, change with visibilityEnum.DEFAULT when backend is properly updated
+        {visibility >= visibilityEnum.DEFAULT
           ? (
             <div>
               <SkillList list={social.list} topic={social.topic} username={username} wide={visibility < visibilityEnum.ADMIN} labels={labels} noedit/>
@@ -66,7 +68,7 @@ export default function OtherProfile({ unauthorized, admin, main_info, optional_
           : null
         }
       </div>
-      <ActivityTable labels={labels} />
+      <ActivityTable labels={labels} userFilter={username} />
       <ReportModal isOpen={isOpen} onOpenChange={onOpenChange} reported={username} labels={labels}/>
       <ToastContainer />
     </main>
@@ -95,9 +97,9 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels } };
     }
 
-    let main_info;
+    let self_role;
     try {
-    ({ data: main_info } = await api.get(`/api/users/${params.username}`, {
+    ({ data: { user_role: self_role }} = await api.get(`/api/userroles/role`, {
       headers: {
         'Authorization': `Bearer ${self.accessToken}` 
       }
@@ -107,14 +109,23 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels } };
     }
 
-    const { data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/user-optional-infos', {
-      params: {
-        'anyuser': params.username
-      },
+    const { data: main_info } = await api.get(`/api/users/${params.username}`, {
       headers: {
-        'Authorization': `Bearer ${self.accessToken}`
+        'Authorization': `Bearer ${self.accessToken}` 
       }
     });
+
+    let optional_info_list = [];
+    if (self_role === "ADMIN") {
+      ({ data: { user_optional_infos: optional_info_list } } = await api.get('/api/profiles/user-optional-infos', {
+        params: {
+          'anyuser': params.username
+        },
+        headers: {
+          'Authorization': `Bearer ${self.accessToken}`
+        }
+      }));
+    }
     const optional_info = optional_info_list.length > 0 ? optional_info_list[0] : {};
     delete optional_info.username;
 
@@ -123,18 +134,18 @@ export const getServerSideProps = withIronSessionSsr(
     const topics = [
       {"api_url": "professions", "key": "user_professions",
         "title": "Meslekler", "primary": "profession", "secondary": "profession_level", "is_link": false,
-        "post": "/add-profession", "delete": "",
+        "post": "professions/add-profession", "delete": "delete-professions",
         "options": ["amateur", "pro", "certified pro"]},
       {"api_url": "languages", "key": "user_languages",
         "title": "Diller", "primary": "language", "secondary": "language_level", "is_link": false,
-        "post": "/add-language", "delete": "/delete-language",
+        "post": "languages/add-language", "delete": "languages/delete-language",
         "options": ["beginner", "intermediate", "advanced", "native"]},
       {"api_url": "socialmedia-links", "key": "user_socialmedia_links",
         "title": "Sosyal Medya", "primary": "platform_name", "secondary": "profile_URL", "is_link": true,
-        "post": "/add-socialmedia-link", "delete": ""},
+        "post": "socialmedia-links/add-socialmedia-link", "delete": "delete-socialmedia-links"},
       {"api_url": "skills", "key": "user_skills",
-        "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", "is_link": false,
-        "post": "/add-skill", "delete": "",
+        "title": "Yetenekler", "primary": "skill_definition", "secondary": "skill_level", certificate: "skill_document", "is_link": false,
+        "post": "skills/add-skill", "delete": "delete-skill",
         "options": ["beginner", "basic", "intermediate", "skilled", "expert"]},
     ]
 
@@ -150,14 +161,12 @@ export const getServerSideProps = withIronSessionSsr(
       list_info[topic.api_url] = {"list": fields ? fields : [], "topic": topic};
     }
 
-    const admin = false;
-
     return {
       props: {
         main_info,
         optional_info,
         list_info,
-        admin,
+        self_role,
         labels
       },
     };

@@ -11,6 +11,12 @@ interface EmergencyDao {
     @Insert
     suspend fun insertEmergency(emergency: Emergency)
 
-    @Query("SELECT ${EmergencyCols.notes} FROM ${DatabaseInfo.EMERGENCY} WHERE ${EmergencyCols.creatorName} = :creatorName")
-    fun getNotes(creatorName: String): String
+    @Query("SELECT * FROM ${DatabaseInfo.EMERGENCY}")
+    fun getAllEmergencies(): List<Emergency>?
+
+    @Query("DELETE FROM ${DatabaseInfo.EMERGENCY}")
+    suspend fun deleteAllEmergencies()
+
+    @Query("DELETE FROM ${DatabaseInfo.EMERGENCY} WHERE ${EmergencyCols.id} = :id")
+    fun deleteEmergency(id: Int)
 }

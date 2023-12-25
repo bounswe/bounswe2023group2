@@ -81,6 +81,21 @@ async def refresh_access_token(current_user: str  = Depends(authentication_servi
     )
     return login_response
 
+@router.get("/",responses={
+    status.HTTP_200_OK: {"model": UserList},
+    status.HTTP_400_BAD_REQUEST: {"model": Error}
+})
+def get_all_users(response: Response):
+    try:
+        users = authentication_service.get_all_users()
+        response.status_code = HTTPStatus.OK
+        return users
+    except ValueError as err:
+        error= Error(ErrorMessage="Get all users error", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error
+    
 # Protected route
 @router.get("/protected")
 async def protected_route(current_user: str = Depends(authentication_service.get_current_user)):
@@ -179,5 +194,16 @@ def unauthorize_user(response:Response,user: UserUsername, current_user: UserPro
         return {f'{user.username} is unauthorized'}   
     except ValueError as err:
         err_json = create_json_for_error("Unauthorization error", str(err))
+        response.status_code = HTTPStatus.NOT_FOUND
+        return json.loads(err_json)
+
+@router.delete("/")
+def delete_user(response:Response, current_user: UserProfile = Depends(authentication_service.get_current_user)):
+    try:
+        unverified = authentication_service.delete_user(current_user.username)
+        response.status_code = HTTPStatus.OK
+        return {f'{current_user.username} is deleted'}   
+    except ValueError as err:
+        err_json = create_json_for_error("Account-deletion error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
         return json.loads(err_json)

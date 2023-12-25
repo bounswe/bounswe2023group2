@@ -20,6 +20,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 auth_scheme = HTTPBearer()
 userDb = MongoDB.get_collection('authenticated_user')
+deleted_users= MongoDB.get_collection('deleted_users')
+resources_collection = MongoDB.get_collection('resources')
+needs_collection = MongoDB.get_collection('needs')
 # Verify JWT token
 # def get_user_info():
 #     try:
@@ -197,7 +200,6 @@ def get_user(username_or_email_or_phone: str):
             {"phone_number": username_or_email_or_phone}
         ]
     })
-    print("hey")
     if user_document is not None:
         return UserProfile(**user_document)
 
@@ -272,3 +274,32 @@ def unauthorize_user(username: str):
 def is_admin(username: str):
     user = get_user(username)
     return (user.user_role == user.user_role.ADMIN)
+
+def delete_user(username: str):
+
+    user_from_db= userDb.find_one({"username": username})
+
+    deleted_users.insert_one(user_from_db)
+    userDb.delete_one({"username": user_from_db.get("username")})
+
+    update_result = resources_collection.update_many(
+    {"created_by": user_from_db.get("username")},
+    {"$set": {"active": False}}
+    )
+    update_result = needs_collection.update_many(
+    {"created_by": user_from_db.get("username")},
+    {"$set": {"active": False}}
+    )
+
+    return True
+
+def get_all_users():
+    users_cursor = userDb.find({})  # No filter to get all users
+    user_infos = []
+
+    for user_document in users_cursor:
+        # Exclude the password field
+        user_document.pop("password", None)  # Remove password if it exists, do nothing otherwise
+        user_infos.append(UserInfo(**user_document))
+
+    return user_infos

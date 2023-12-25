@@ -6,3 +6,10 @@ from typing import Optional, List
 
 class SearchResults(BaseModel):
     results: List[Dict[str, Any]]
+
+class RelevanceBody(BaseModel):
+    search_text: str
+    search_list: List[str]
+
+class SearchList(BaseModel):
+    results: List[Dict]

@@ -57,10 +57,15 @@
     <string name="act_urgency">Urgency:</string>
     <string name="act_address">Address:</string>
     <string name="act_details">Details:</string>
+    <string name="act_short_note">Short Description:</string>
+    <string name="act_phone_number">Phone Number:</string>
     <string name="act_edit">Edit</string>
     <string name="act_delete">Delete</string>
     <string name="act_navigate">Navigate</string>
     <string name="act_show_on_map">Show On Map</string>
+    <string name="act_reliability">Give Feedback About Reliability:</string>
+    <string name="act_upvote">Reliable</string>
+    <string name="act_downvote">Not Reliable</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sort &amp; Filter</string>
@@ -117,11 +122,17 @@
     <string name="field_quantity">Quantity</string>
     <string name="field_coordinate_x">X Coordinate</string>
     <string name="field_coordinate_y">Y Coordinate</string>
+    <string name="field_description">Description</string>
     <string name="submit">Submit</string>
     <string name="edit_need">Edit Need</string>
     <string name="edit_resource">Edit Resource</string>
     <string name="edit_action">Edit Action</string>
     <string name="save_changes">Save Changes</string>
+    <string name="debris_button">There Is Someone Under Debris</string>
+    <string name="fire_button">Immediate Response to Fire Required</string>
+    <string name="medical_button">Medical Team Urgently Needed</string>
+    <string name="select_1_5">Urgency: Low-Priority(1) to Critical(5) </string>
+
 
     <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
     <string name="sign_up">SIGN UP</string>
@@ -133,8 +144,11 @@
     <string name="username_or_email">Username or E-mail</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="reset_password">Reset Password</string>
+    <string name="change_password">Change Password</string>
     <string name="verify">VERIFY</string>
     <string name="verification_code">Verification Code</string>
     <string name="enter_verification_code">Enter Verification Code</string>
@@ -201,6 +215,14 @@
     <string name="additional_notes">Additional Notes</string>
     <string name="edit_event">Edit Event</string>
 
+    <!-- Toast Messages -->
+    <string name="check_your_connection">You need to connect to the internet</string>
+    <string name="local_posted">Your Local Objects are Posted into Backend Successfully</string>
+    <string name="saved_local">It is saved in Local, It will be uploaded when you connect to the internet</string>
+
+    <!-- No Internet Form -->
+    <string name="selected_from_map">Location is selected successfully</string>
+
     <!-- ACTIVITY LISTS -->
     <string name="cloth">Cloth</string>
     <string name="food">Food</string>
@@ -247,7 +269,6 @@
         <item>Disaster</item>
         <item>Help-Arrived</item>
     </string-array>
-
 
 
     <!-- PROFILE LISTS -->

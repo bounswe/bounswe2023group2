@@ -1,10 +1,12 @@
 package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
@@ -32,18 +34,36 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
         viewModelScope.launch(Dispatchers.IO) {
             resourceRepository.insertResource(resource)
         }
-
     }
 
-    fun getX(creatorID: String): Double?{
-        return resourceRepository.getX(creatorID)
-    }
-
-    fun getY(creatorID: String): Double?{
-        return resourceRepository.getY(creatorID)
+    fun deleteResource(id: Int){
+        viewModelScope.launch(Dispatchers.IO) {
+            resourceRepository.deleteResource(id)
+        }
     }
 
     fun getAllResources(): List<Resource>? = resourceRepository.getAllResources()
+
+    /**
+     * This functions get the local object and prepare it as to send to the backend
+     */
+    fun prepareBodyFromLocal(resource: Resource,activity: FragmentActivity): ResourceBody.ResourceRequestBody {
+        val quantity = resource.quantity
+        val type = resource.type
+        val additionalNotes = resource.additionalNotes
+        val address = resource.address
+        val shortDescription = resource.shortDescription
+        val x = resource.x
+        val y = resource.y
+        //details
+        val detailsMap = mutableMapOf<String, String>()
+        // if address is given by hand
+        if (!address.contains(activity.getString(R.string.selected_from_map))) detailsMap["address"] = address
+        detailsMap["additionalNotes"] = additionalNotes
+        detailsMap["subtype"] = "No Internet Connection"
+        return ResourceBody.ResourceRequestBody(shortDescription,quantity,quantity,type,detailsMap,x,y,
+            null,null,null,true,0,0)
+    }
 
     private val networkManager = NetworkManager()
 
@@ -93,7 +113,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                         val errorBody = response.errorBody()?.string()
                         if (errorBody != null) {
                             var responseCode = response.code()
-                            Log.d("ResponseSuccess", "Body: $errorBody")
+                            Log.d("ResponseSuccess", "Error Body: $errorBody Response Code: $responseCode")
                         }
                     }
                 }
@@ -114,8 +134,7 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
      */
     fun postResourceRequest(postRequest: ResourceBody.ResourceRequestBody, id: String? = null) {
         val token = DiskStorageManager.getKeyValue("token")
-        Log.i("token", "Token $token")
-        if (!token.isNullOrEmpty()) {
+        if (DiskStorageManager.checkToken()) {
             val headers = mapOf(
                 "Authorization" to "bearer $token",
                 "Content-Type" to "application/json"

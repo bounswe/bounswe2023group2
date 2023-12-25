@@ -108,10 +108,12 @@
 		"add": "Ekle",
 		"update": "Güncelle",
 		"remove": "Kaldır",
+		"delete": "Sil",
 		"cancel": "Vazgeç",
 		"close": "Kapat",
 		"loading": "Yükleniyor",
-		"forgot": "Şifremi Unuttum"
+		"forgot": "Şifremi Unuttum",
+		"details": "Detaylar"
 	},
 	"sort_filter": {
 		"sort": "Sırala",
@@ -144,14 +146,24 @@
 		"add_success": "Başarıyla eklendi",
 		"remove_success": "Başarıyla kaldırıldı",
 		"failure": "Son işlem sırasında bir hata oluştu, lütfen tekrar deneyin",
-		"report_success": "Raporunuz alındı. Bildiriminiz için teşekkürler"
+		"report_success": "Raporunuz alındı. Bildiriminiz için teşekkürler",
+		"account_deleted": "Hesabınız silindi."
 	},
 	"profile_pages": {
 	    "main_info": "Ana Bilgiler",
 	    "info": "Bilgiler",
 	    "optional_info": "Diğer Bilgiler",
 		"no_phone_mail": "Telefon ya da e-posta adresi sağlamalısınız",
-	    "private_account": "Kişisel bilgilerim gizlensin"
+	    "private_account": "Kişisel bilgilerim gizlensin",
+	    "contact_info": "İletişim Bilgileri",
+	    "contact_hidden": "Bu kullanıcı iletişim bilgilerini görünür kılmamış.",
+	    "upload_avatar": "Profil resmi yükleyin",
+	    "upload_avatar_confirm": "Bu resim mi kullanılsın?",
+	    "upload_certificate": "Sertifika yükleyin (opsiyonel)",
+	    "certificate_uploaded": "Yüklenmiş sertifika: ",
+	    "none": "Yok",
+	    "delete_account": "Hesabımı Sil",
+	    "are_you_sure_delete": "Hesabınızı silmek istediğinizden emin misiniz?"
 	},
 	"admin": {
 		"no_access": "Admin paneline erişiminiz yok.",
@@ -198,5 +210,24 @@
 		"choose_location": "Haritada yerinizi işaretleyin",
 		"scan_certain_area": "Belirli bir alanı tara",
 		"you_are_here": "You are here"
+	},
+	"user_roles": {
+		"GUEST": "Doğrulanmamış Kullanıcı",
+		"AUTHENTICATED": "Doğrulanmış Kullanıcı",
+		"ROLE_BASED": "Uzman",
+		"CREDIBLE": "Güvenilir Kullanıcı",
+		"ADMIN": "Site Yöneticisi",
+		"area_of_expertise": "Uzmanlık Alanı"
+	},
+	"proficiency": {
+		"doctor": "Doktor",
+		"driver": "Şoför",
+		"pharmacist": "Eczacı",
+		"rescue_member": "Arama Kurtarma Personeli",
+		"infrastructure_engineer": "Altyapı Mühendisi",
+		"it_specialist": "Bilişim Uzmanı",
+		"other": "Diğer",
+		"field": "Alan",
+		"add_proficiency": "Uzmanlık Alanı Ekle"
 	}
 }

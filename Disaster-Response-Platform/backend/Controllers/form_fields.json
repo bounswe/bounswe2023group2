@@ -3,25 +3,29 @@
         "fields": [
             {"name": "description", "label": "Description", "type": "text"},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
+            {"name": "quantityUnit", "label": "Unit", "type": "select", "options": ["kg", "piece", "portion", "daily", "lt", "gram", "box", "pack"]},
             {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "drink", "shelter", "medication", "transportation", "tool", "human", "other"]},
             {"name": "x", "label": "X Coordinate", "type": "number"},
             {"name": "y", "label": "Y Coordinate", "type": "number"},
             {"name": "occur_at", "label": "Occur At", "type": "date"},
             {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": [1,7]},
-            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
+            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"},
+            {"name": "open_address", "label": "Open Address", "type": "text"}
         ]
     },
     "need": {
         "fields": [
             {"name": "description", "label": "Description", "type": "text"},
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
+            {"name": "quantityUnit", "label": "Unit", "type": "select", "options": ["kg", "piece", "portion", "daily", "lt", "gram", "box", "pack"]},
             {"name": "urgency", "label": "Urgency", "type": "select", "options": [1, 2, 3, 4, 5]},
             {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "drink", "shelter", "medication", "transportation", "tool", "human", "other"]},
             {"name": "x", "label": "X Coordinate", "type": "number"},
             {"name": "y", "label": "Y Coordinate", "type": "number"},
             {"name": "occur_at", "label": "Occur At", "type": "date"},
             {"name": "recurrence_rate", "label": "Recurrence Rate", "type": "select", "options": [1,7]},
-            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"}
+            {"name": "recurrence_deadline", "label": "Recurrence Deadline", "type": "date"},
+            {"name": "open_address", "label": "Open Address", "type": "text"}
         ]
     },
     "action": {

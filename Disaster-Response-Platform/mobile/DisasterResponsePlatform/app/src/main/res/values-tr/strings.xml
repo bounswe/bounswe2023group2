@@ -57,10 +57,15 @@
     <string name="act_urgency">Aciliyet:</string>
     <string name="act_address">Adres:</string>
     <string name="act_details">Detaylar:</string>
+    <string name="act_phone_number">Telefon Numarası:</string>
+    <string name="act_short_note">Kısa Açıklama:</string>
     <string name="act_edit">Düzenle</string>
     <string name="act_delete">Sil</string>
     <string name="act_navigate">Yol Tarifi</string>
     <string name="act_show_on_map">Haritada Göster</string>
+    <string name="act_reliability">Güvenilirlik Hakkında Geri Bildirim Ver:</string>
+    <string name="act_upvote">Güvenilir</string>
+    <string name="act_downvote">Güvenilmez</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sırala &amp; Filtrele</string>
@@ -117,11 +122,16 @@
     <string name="field_quantity">Miktar</string>
     <string name="field_coordinate_x">X Koordinatı</string>
     <string name="field_coordinate_y">Y Koordinatı</string>
+    <string name="field_description">Açıklama</string>
     <string name="submit">Gönder</string>
     <string name="edit_need">İhtiyacı Düzenle</string>
     <string name="edit_resource">Kaynağı Düzenle</string>
     <string name="edit_action">Aksiyonu Düzenle</string>
     <string name="save_changes">Değişiklikleri Kaydet</string>
+    <string name="debris_button">Enkaz Altında Olan Var</string>
+    <string name="fire_button">Yangına Acil Müdahale Gerekli</string>
+    <string name="medical_button">Acilen Sağlık Ekibine İhtiyaç Var</string>
+    <string name="select_1_5">Aciliyet: Düşük Öncelikliden(1) Acile(5) Doğru</string>
 
     <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
     <string name="sign_up">ÜYE OL</string>
@@ -133,8 +143,11 @@
     <string name="username_or_email">Kullanıcı Adı veya E-posta</string>
     <string name="password">Parola</string>
     <string name="confirm_password">Parolayı Onayla</string>
+    <string name="new_password">Yeni Parola</string>
+    <string name="confirm_new_password">Yeni Parolayı Onayla</string>
     <string name="forgot_password">Parolamı Unuttum</string>
     <string name="reset_password">Parolayı Sıfırla</string>
+    <string name="change_password">Parolayı Değiştir</string>
     <string name="verify">DOĞRULA</string>
     <string name="verification_code">Doğrulama Kodu</string>
     <string name="enter_verification_code">Doğrulama Kodunu Gir</string>
@@ -200,6 +213,14 @@
     <string name="coverage_y_km">Kapsama Alanı Y(km)</string>
     <string name="additional_notes">Ek Notlar</string>
     <string name="edit_event">Olayı Düzenle</string>
+
+    <!-- Toast Messages -->
+    <string name="check_your_connection">İnternete bağlanmanız gerekli!</string>
+    <string name="local_posted">İnternetiniz yokken kaydettiğiniz objeler başarıyla paylaşıldı</string>
+    <string name="saved_local">Yarattığınız obje yerel dosyalara kaydedildi, internet bağlantınız sağlandığında bu obje sunucuyla paylaşılacak</string>
+
+    <!-- No Internet Form -->
+    <string name="selected_from_map">Konum başarıyla seçildi</string>
 
     <!-- ACTIVITY LISTS -->
     <string name="cloth">Giyecek</string>
