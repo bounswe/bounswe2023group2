@@ -2,6 +2,7 @@ package com.example.disasterresponseplatform.ui.activity.resource
 
 import android.app.Dialog
 import android.graphics.Color
+import com.example.disasterresponseplatform.data.models.UserBody
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -51,6 +52,7 @@ class ResourceFragment(
     private lateinit var searchView: SearchView
     private var requireActivity: FragmentActivity? = null
     private val mapFragment = ActivityMap()
+    private val networkManager = NetworkManager()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -160,7 +162,59 @@ class ResourceFragment(
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
         // val list = resourceViewModel.getAllResources() // this is for local DB
-        val adapter = ResourceAdapter(resourceList)
+        val userRoleMap: MutableMap<String, String> = mutableMapOf()
+        for (resource in resourceList) {
+            if (!userRoleMap.containsKey(resource.created_by)) {
+                val headers = mapOf(
+                    "Content-Type" to "application/json"
+                )
+                networkManager.makeRequest(
+                    endpoint = Endpoint.GETUSER,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    id = resource.created_by,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                            Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                            if (response.isSuccessful) {
+                                val rawJson = response.body()?.string()
+                                if (rawJson != null) {
+                                    try {
+                                        Log.d("ResponseSuccess", "Body: $rawJson")
+                                        val gson = Gson()
+                                        val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
+                                        if (userResponse != null) {
+                                            Log.d("ResponseSuccess", "needResponse: $userResponse")
+                                            userRoleMap[resource.created_by] = userResponse.user_role
+                                        }
+                                    } catch (e: IOException) {
+                                        // Handle IOException if reading the response body fails
+                                        Log.e("ResponseError", "Error reading response body: ${e.message}")
+                                    }
+                                } else {
+                                    Log.d("ResponseSuccess", "Body is null")
+                                }
+                            } else {
+                                val errorBody = response.errorBody()?.string()
+                                if (errorBody != null) {
+                                    var responseCode = response.code()
+                                    Log.d("ResponseSuccess", "Body: $errorBody")
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("onFailure", "Happens")
+                        }
+                    }
+                )
+            }
+        }
+        val adapter = ResourceAdapter(resourceList, userRoleMap)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function

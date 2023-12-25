@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +14,7 @@ import com.example.disasterresponseplatform.data.models.EmergencyBody
 import com.example.disasterresponseplatform.databinding.EmergencyItemBinding
 
 
-class EmergencyAdapter(private val emergencyList: List<EmergencyBody.EmergencyItem>?): RecyclerView.Adapter<EmergencyAdapter.EmergencyViewHolder>() {
+class EmergencyAdapter(private val emergencyList: List<EmergencyBody.EmergencyItem>?, val userRoleMap: MutableMap<String, String>): RecyclerView.Adapter<EmergencyAdapter.EmergencyViewHolder>() {
 
     inner class EmergencyViewHolder(val binding: EmergencyItemBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -40,6 +41,13 @@ class EmergencyAdapter(private val emergencyList: List<EmergencyBody.EmergencyIt
         hb.tvDate.text = currentEmergency?.created_at.toString()
      //   hb.tvLocation.text = "x: ${String.format("%.2f", currentEmergency?.x).replace(',', '.')}, y: ${String.format("%.2f", currentEmergency?.y).replace(',', '.')}"
         hb.tvLocation.text = currentEmergency?.location.toString()
+        // user role
+        val creator = currentEmergency?.created_by
+        if (creator in userRoleMap.keys && userRoleMap[creator] == "CREDIBLE") {
+            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
+        } else {
+            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+        }
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

@@ -156,6 +156,7 @@
     <string name="email_verification_title">E-posta Doğrulama</string>
     <string name="email_verification_description">E-posta adresinizi doğrulamak için size e-posta olarak gönderilen doğrulama kodunu giriniz.</string>
     <string name="full_name">İsim Soyisim</string>
+    <string name="delete_account">Hesabı Sil</string>
 
     <!-- MAP -->
     <string name="more">Daha</string>
