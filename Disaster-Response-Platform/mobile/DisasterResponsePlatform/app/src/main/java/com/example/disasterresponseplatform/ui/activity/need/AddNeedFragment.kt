@@ -161,55 +161,69 @@ class AddNeedFragment(
                     description, quantity, urgency, quantity, type2, detailsMap, openAddress,
                     coordinateX, coordinateY, occurAt, recurrenceRate, recurrenceDeadline
                 )
-
-                if (isAdd) {
-                    needViewModel.postNeedRequest(needPost)
-                } else {
-                    val needID = "/" + need!!._id // comes from older need
-                    needViewModel.postNeedRequest(needPost, needID)
+                editOrPostNeed(needPost,isAdd)
+                if (binding.swRecurrenceFilter.isChecked){
+                    createRecurrence()
                 }
-                needViewModel.getLiveDataNeedID().observe(requireActivity!!) {
-                    if (it != "-1") { // in error cases it returns this
-                        if (isAdded) { // to ensure it attached a context
-                            if (isAdd)
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Created Need ID: $it",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            else
-                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT)
-                                    .show()
-                        }
 
-                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                            if (isAdded) // to ensure it attached a parentFragmentManager
-                                parentFragmentManager.popBackStack(
-                                    "AddNeedFragment",
-                                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                                )
-                            if (!isAdd)
-                                parentFragmentManager.popBackStack(
-                                    "NeedItemFragment",
-                                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                                )
-                            // Re-enable the button after the background operation completes
-                            binding.btnSubmit.isEnabled = true
-                        }, 200)
-                    } else {
-                        if (isAdded)
-                            Toast.makeText(
-                                requireContext(),
-                                "Error Check Logs",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
-                        binding.btnSubmit.isEnabled = true
-                    }
-                }
             } else {
                 if (isAdded)
                     Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
+                binding.btnSubmit.isEnabled = true
+            }
+        }
+    }
+
+    private fun createRecurrence(){
+
+    }
+
+    /**
+     * This is for post need into backend
+     */
+    private fun editOrPostNeed(needPost: NeedBody.NeedRequestBody, isAdd: Boolean ){
+        if (isAdd) {
+            needViewModel.postNeedRequest(needPost)
+        } else {
+            val needID = "/" + need!!._id // comes from older need
+            needViewModel.postNeedRequest(needPost, needID)
+        }
+        needViewModel.getLiveDataNeedID().observe(requireActivity!!) {
+            if (it != "-1") { // in error cases it returns this
+                if (isAdded) { // to ensure it attached a context
+                    if (isAdd)
+                        Toast.makeText(
+                            requireContext(),
+                            "Created Need ID: $it",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    else
+                        Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT)
+                            .show()
+                }
+
+                Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                    if (isAdded) // to ensure it attached a parentFragmentManager
+                        parentFragmentManager.popBackStack(
+                            "AddNeedFragment",
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE
+                        )
+                    if (!isAdd)
+                        parentFragmentManager.popBackStack(
+                            "NeedItemFragment",
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE
+                        )
+                    // Re-enable the button after the background operation completes
+                    binding.btnSubmit.isEnabled = true
+                }, 200)
+            } else {
+                if (isAdded)
+                    Toast.makeText(
+                        requireContext(),
+                        "Error Check Logs",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 binding.btnSubmit.isEnabled = true
             }
         }
