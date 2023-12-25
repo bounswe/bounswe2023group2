@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 emergencies_collection = MongoDB.get_collection('emergencies')
 
 def create_emergency(emergency: Emergency) -> str:
-    if not all([emergency.emergency_type, emergency.description, emergency.x, emergency.y,  emergency.location]):
+    if not all([emergency.emergency_type, emergency.description, emergency.x is not None, emergency.y is not None,  emergency.location]):
         raise ValueError("Some mandatory fields missing : emergency_type, description, x, y,  location,")
 
     
@@ -25,7 +25,7 @@ def create_emergency(emergency: Emergency) -> str:
         raise ValueError("Contact name and number are required for anonymous users.")
 
     if emergency.created_at is None:
-        emergency.created_at =
+        emergency.created_at = datetime.datetime.now()
     
     Services.utilities.validate_coordinates(emergency.x, emergency.y)
     emergency_dict = Services.utilities.correctDates(emergency)
@@ -50,7 +50,8 @@ def get_emergencies(
     distance_max: float = None,
     sort_by: str = 'created_at',
     order: Optional[str] = 'desc',
-    contact_names: list = None
+    contact_names: list = None,
+    created_by_users: list = None
     ) -> list[dict]:
     projection = {"_id": {"$toString": "$_id"},
                   "created_by_user": 1,
@@ -92,7 +93,9 @@ def get_emergencies(
         #     query['details.subtype'] = {'$in': subtypes}
         if contact_names:
             query['contact_name'] = {'$in': contact_names}
-    
+        if created_by_users:
+            query['created_by_user'] = {'$in': created_by_users}
+
     # Apply the query and sort order to the database call
     emergencies_cursor = emergencies_collection.find(query, projection).sort(sort_by, sort_order)
     emergencies_data = list(emergencies_cursor)  # Convert cursor to list
