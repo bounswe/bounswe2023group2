@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 emergencies_collection = MongoDB.get_collection('emergencies')
 
 def create_emergency(emergency: Emergency) -> str:
-    if not all([emergency.emergency_type, emergency.description, emergency.x is not None, emergency.y is not None,  emergency.location]):
+    if not all([emergency.emergency_type, emergency.description, emergency.location]):
         raise ValueError("Some mandatory fields missing : emergency_type, description, x, y,  location,")
 
     
@@ -25,7 +25,7 @@ def create_emergency(emergency: Emergency) -> str:
         raise ValueError("Contact name and number are required for anonymous users.")
 
     if emergency.created_at is None:
-        emergency.created_at = datetime.datetime.now()
+        emergency.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     Services.utilities.validate_coordinates(emergency.x, emergency.y)
     emergency_dict = Services.utilities.correctDates(emergency)

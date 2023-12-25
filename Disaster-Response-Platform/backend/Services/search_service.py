@@ -67,32 +67,37 @@ def process_and_fetch_users(query, field_name, list, type):
 
         if type==0:        
             relevant_users = userDb.find({field_name: {"$in": relevant_names}})
-            return [UserInfo(**convert_objectid(user)) for user in relevant_users]
+            results= [{**user, "_id": str(user["_id"])} for user in relevant_users]
+            return results
         elif type==1 :
             if field_name=="details_type":
                 relevant_resources = resource_collection.find({"details.subtype": {"$in": relevant_names}})
             else:
                 relevant_resources= resource_collection.find({field_name: {"$in": relevant_names}})
                 relevant_resources = sorted(relevant_resources, key=lambda x: relevant_names.index(x[field_name]))
-
-            return [Resource(**resource) for resource in relevant_resources]
+            results= [{**resource, "_id": str(resource["_id"])} for resource in relevant_resources]
+            return results
         elif type==2:
             if field_name=="details_type":
                 relevant_needs = need_collection.find({"details.subtype": {"$in": relevant_names}})
             else:
                 relevant_needs= need_collection.find({field_name: {"$in": relevant_names}})
                 relevant_needs = sorted(relevant_needs, key=lambda x: relevant_names.index(x[field_name]))
-            return [Need(**need) for need in relevant_needs]   
+            results= [{**need, "_id": str(need["_id"])} for need in relevant_needs]
+            return results            
+          
         elif type==3:
             
             relevant_actions= action_collection.find({field_name: {"$in": relevant_names}})
             relevant_actions = sorted(relevant_actions, key=lambda x: relevant_names.index(x[field_name]))
-            return [Action(**action) for action in relevant_actions] 
+            results= [{**action, "_id": str(action["_id"])} for action in relevant_actions]
+            return results
         elif type==4:
             relevant_events= events_collection.find({field_name: {"$in": relevant_names}})
             relevant_events = sorted(relevant_events, key=lambda x: relevant_names.index(x[field_name]))
-            return [Event(**event) for event in relevant_events] 
-
+            results= [{**event, "_id": str(event["_id"])} for event in relevant_events]
+            return results
+      
 
 def search_users(query: str)-> List[dict]:
     #if username is given
@@ -104,8 +109,10 @@ def search_users(query: str)-> List[dict]:
         ]
     })
     
-    
-    results = [UserInfo(**document) for document in cursor]
+    results= [{**document, "_id": str(document["_id"])} for document in cursor]
+ 
+ 
+    #results = [UserInfo(**document) for document in cursor]
     if results:
         return SearchList(results=results)
     try:
@@ -134,7 +141,8 @@ def search_resources(query: str)-> List[dict]:
             {"details.subtype": {"$regex": query, "$options": "i"}}
         ]
     })
-    results = [Resource(**document) for document in cursor]
+    results= [{**document, "_id": str(document["_id"])} for document in cursor]
+ 
     if results:
         return SearchList(results=results)
     try:
@@ -169,8 +177,12 @@ def search_needs(query: str)-> List[dict]:
             {"details.subtype": {"$regex": query, "$options": "i"}}
         ]
     })
-    results = [Need(**document) for document in cursor]
+   
+    results= [{**document, "_id": str(document["_id"])} for document in cursor]
+ 
+ 
     if results:
+        
         return SearchList(results=results)
     try:
         #query= translate(query)
@@ -199,7 +211,8 @@ def search_actions(query: str)-> List[dict]:
     })
     
     
-    results = [Action(**document) for document in cursor]
+    results= [{**document, "_id": str(document["_id"])} for document in cursor]
+ 
     if results:
         return SearchList(results=results)
     try:
@@ -224,7 +237,7 @@ def search_events(query: str)-> List[dict]:
         ]
     })
     
-    results = [Event(**document) for document in cursor]
+    results= [{**document, "_id": str(document["_id"])} for document in cursor]
     if results:
         return SearchList(results=results)
     try:

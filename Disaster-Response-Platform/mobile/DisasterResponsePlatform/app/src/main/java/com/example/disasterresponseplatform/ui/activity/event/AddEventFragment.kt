@@ -356,10 +356,8 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
     private fun navigateToMapFragment() {
         val mapFragment = ActivityMap()
         mapFragment.coordinatesSelectedListener = this@AddEventFragment
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, mapFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        mapFragment.isDialog = true // arrange that as a dialog instead of fragment
+        mapFragment.show(parentFragmentManager, "mapDialog")
     }
 
     private fun coordinateToAddress(){

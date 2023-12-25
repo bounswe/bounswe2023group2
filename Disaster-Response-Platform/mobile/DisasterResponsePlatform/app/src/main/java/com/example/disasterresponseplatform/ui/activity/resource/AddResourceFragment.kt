@@ -150,7 +150,6 @@ class AddResourceFragment(
     }
 
     private fun navigateToMapFragment() {
-
         mapFragment.isDialog = true // arrange that as a dialog instead of fragment
         mapFragment.coordinatesSelectedListener = this@AddResourceFragment
         mapFragment.show(parentFragmentManager, "mapDialog")

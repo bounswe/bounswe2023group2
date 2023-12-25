@@ -23,7 +23,7 @@ import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.VoteBody
 import com.example.disasterresponseplatform.databinding.FragmentNeedItemBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
-import com.example.disasterresponseplatform.ui.activity.VoteViewModel
+import com.example.disasterresponseplatform.ui.activity.generalViewModels.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheetFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
@@ -72,26 +72,29 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         binding.tvInitialQuantity.text = need.initialQuantity.toString()
         binding.tvUnsuppliedQuantity.text = need.unsuppliedQuantity.toString()
         binding.tvUrgency.text = need.urgency.toString()
-        binding.tvAddress.text = "%.3f %.3f".format(need.x, need.y)
-        coordinateToAddress(need.x, need.y, object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
-                Log.e("Network", "Error: ${e.message}")
-            }
-            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                val responseBody = response.body?.string()
-                Log.i("Network", "Response: $responseBody")
-                if (responseBody != null) {
-                    var address = responseBody.subSequence(
-                        responseBody.indexOf("display_name") + 15,
-                        responseBody.length
-                    )
-                    address = address.subSequence(0, address.indexOf("\""))
-                    requireActivity?.runOnUiThread {
-                        binding.tvAddress.text = address
+        binding.tvAddress.text = need.open_address
+        // if location of need is selected instead of entering open address
+        if (need.x != 0.0 && need.y != 0.0){
+            coordinateToAddress(need.x, need.y, object : okhttp3.Callback {
+                override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                    Log.e("Network", "Error: ${e.message}")
+                }
+                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                    val responseBody = response.body?.string()
+                    Log.i("Network", "Response: $responseBody")
+                    if (responseBody != null) {
+                        var address = responseBody.subSequence(
+                            responseBody.indexOf("display_name") + 15,
+                            responseBody.length
+                        )
+                        address = address.subSequence(0, address.indexOf("\""))
+                        requireActivity?.runOnUiThread {
+                            binding.tvAddress.text = address
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
         binding.tvLastUpdatedTime.text = need.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = need.created_at.substring(0,10)
         if (need.details["subtype"] != null)

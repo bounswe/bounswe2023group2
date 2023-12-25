@@ -132,6 +132,15 @@
     <string name="fire_button">Yangına Acil Müdahale Gerekli</string>
     <string name="medical_button">Acilen Sağlık Ekibine İhtiyaç Var</string>
     <string name="select_1_5">Aciliyet: Düşük Öncelikliden(1) Acile(5) Doğru</string>
+    <string name="want_recurrence">Tekrarlı</string>
+    <string name="start_date">Başlangıç Tarihi</string>
+    <string name="recurrence_unit">Tekrar Etme Birimi</string>
+    <string name="end_date">Bitiş Tarihi</string>
+    <string name="select_unit">Tekrarlama Birimini Seçiniz</string>
+    <string name="duration">Devam Süresi</string>
+    <string name="select_recurrence_rate">Tekrarlama Sıklığını Seçiniz (Seçilen Birim içerisinde)</string>
+    <string name="open_address">Açık Adres</string>
+
 
     <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
     <string name="sign_up">ÜYE OL</string>
@@ -159,7 +168,7 @@
     <string name="delete_account">Hesabı Sil</string>
 
     <!-- MAP -->
-    <string name="more">Daha</string>
+    <string name="more">İncele</string>
 
     <!-- PROFILE -->
     <string name="pr_login_required">Üye girişi yapmanız gerekiyor.</string>
@@ -188,6 +197,31 @@
     <string name="pr_edit_blood">Kan Grubu</string>
     <string name="pr_hidden_profile">Gizli Profil</string>
     <string name="pr_no_connection">Bağlantı Yok</string>
+    <string name="dot_representation">%1$s: %2$s</string>
+    <string name="verified_by">%1$s Tarafından Onaylandı</string>
+    <string name="profficient_user_in">%1$s alanında yetkili kişi</string>
+    <string name="credible_user">Nüfuzlu Kullanıcı</string>
+    <string name="concat">%1$s %2$s</string>
+    <string name="admin">Yönetici</string>
+    <string name="birthday">Doğum günü</string>
+    <string name="level">Seviye</string>
+    <string name="apply">Uygula</string>
+    <string name="platform_name">Platform Adı</string>
+    <string name="profile_url">Profil Linki</string>
+    <string name="definition">Açıklama</string>
+    <string name="select_a_file">Bir Dosya Seç</string>
+    <string name="language">Lisan</string>
+    <string name="profession">Meslek</string>
+    <string name="network_error">Ağ Hatası: %1$s</string>
+    <string name="profile_picture_could_not_be_updated">Profil fotoğrafı güncellenemedi</string>
+    <string name="file_could_not_be_uploaded">Dosya yüklenemedi: %1$s</string>
+    <string name="profile_successfully_updated">Profil başarıyla güncellendi</string>
+    <string name="warning">Uyarı</string>
+    <string name="delete_warning_message">Hesabınızı silmek istediğinizden emin misiniz?</string>
+    <string name="yes">Evet</string>
+    <string name="account_successfully_deleted">Hesap başarıyla silindi</string>
+    <string name="no">Hayır</string>
+    <string name="file_could_not_be_selected">Dosya seçilemedi</string>
 
     <!-- PLACEHOLDERS -->
     <string name="placeholder_general">Örnek Metin</string>
@@ -236,12 +270,60 @@
     <string name="need_resource">İhtiyaç - Kaynak</string>
 
 
+    <!-- PROFILE LISTS -->
+    <string-array name="language_level_types">
+        <item>Başlangıç</item>
+        <item>Orta</item>
+        <item>İleri düzey</item>
+        <item>Anadil</item>
+    </string-array>
+
+    <string-array name="profession_level_types">
+        <item>Amatör</item>
+        <item>Profesyonel</item>
+        <item>Sertifikalı</item>
+    </string-array>
+
+    <string-array name="skill_level_types">
+        <item>Başlangıç</item>
+        <item>Temel</item>
+        <item>Orta</item>
+        <item>Yetenekli</item>
+        <item>Uzman</item>
+    </string-array>
+
+    <string-array name="blood_types">
+        <item>A Rh+</item>
+        <item>B Rh+</item>
+        <item>AB Rh+</item>
+        <item>0 Rh+</item>
+        <item>A Rh-</item>
+        <item>B Rh-</item>
+        <item>AB Rh-</item>
+        <item>0 Rh-</item>
+    </string-array>
+
+    <string-array name="education">
+        <item>İlkokul</item>
+        <item>Ortaokul</item>
+        <item>Lise</item>
+        <item>Önlisans</item>
+        <item>Lisans</item>
+    </string-array>
+
     <string-array name="event_types">
         <item>Enkaz</item>
         <item>Altyapı</item>
         <item>Afet</item>
         <item>Yardım Noktası</item>
     </string-array>
+
+    <string-array name="recurrence_unit">
+        <item name="day">günlük</item>
+        <item name="week">haftalık</item>
+        <item name="month">aylık</item>
+    </string-array>
+
 
     <!-- Reports -->
     <string name="inappropriate_content">Uygunsuz İçerik</string>

@@ -13,8 +13,8 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { withIronSessionSsr } from "iron-session/next";
 import sessionConfig from "@/lib/sessionConfig";
-import { ToastContainer } from "react-toastify";
-export default function AddRecurrenceForm({ isOpen, onOpenChange, lang, ...props }) {
+
+export default function AddRecurrenceForm({lang, activity_id, activityType}) {
   const [form, setForm] = useState([]);
   const { reset, handleSubmit, control, formState: { isSubmitting }, setValue } = useForm();
   const [types, setTypes] = useState({});
@@ -39,6 +39,9 @@ export default function AddRecurrenceForm({ isOpen, onOpenChange, lang, ...props
         prepared[key] = data[key]
       }
     })
+    prepared['recurring_items'] = [activity_id]
+    prepared['activity'] = activityType
+    prepared['duration'] = 10 //delete this
     const response = await fetch('/api/recurrence/add', {
       method: 'POST',
       body: JSON.stringify(prepared)
@@ -55,17 +58,11 @@ export default function AddRecurrenceForm({ isOpen, onOpenChange, lang, ...props
       toast.error("An unexpected error occurred while saving, please try again")
     }
   }
-  return <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='text-black' scrollBehavior="inside">
-    <ModalContent>
-      {(onClose) => (
-        <>
-          <ModalHeader className="flex flex-col gap-1">Add Need</ModalHeader>
-          <ModalBody>
-            <form onSubmit={handleSubmit(can)} action="#"
+  return <>
+          
+        <form onSubmit={handleSubmit(can)} action="#"
               method="POST" className='flex w-full flex-col  mb-6 md:mb-0 gap-4'  >
               {form !== [] && form.map((res) => {
-
-
                 if (res.type === 'select') return <Controller
                   name={res.name}
                   control={control}
@@ -125,10 +122,6 @@ export default function AddRecurrenceForm({ isOpen, onOpenChange, lang, ...props
                 {isSubmitting ? 'Loading' : "Submit"}
               </Button>
             </form>
-          </ModalBody>
         </>
-      )}
-    </ModalContent>
-    <ToastContainer />
-  </Modal>
+
 }
