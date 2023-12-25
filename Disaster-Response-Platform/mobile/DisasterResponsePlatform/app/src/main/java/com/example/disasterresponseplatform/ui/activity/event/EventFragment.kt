@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import android.view.Window
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +30,6 @@ import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
-import com.example.disasterresponseplatform.ui.activity.resource.AddResourceFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.GeneralUtil
@@ -54,6 +53,8 @@ class EventFragment(
     private var requireActivity: FragmentActivity? = null
     private val mapFragment = ActivityMap()
     private val networkManager = NetworkManager()
+
+    val userRoleMap: MutableMap<String, String> = mutableMapOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -99,64 +100,73 @@ class EventFragment(
             recyclerView.layoutManager = layoutManager
         }
 
-        val userRoleMap: MutableMap<String, String> = mutableMapOf()
-        for (event in eventList) {
-            if (!userRoleMap.containsKey(event.created_by_user)) {
-                val headers = mapOf(
-                    "Content-Type" to "application/json"
-                )
-                networkManager.makeRequest(
-                    endpoint = Endpoint.GETUSER,
-                    requestType = RequestType.GET,
-                    headers = headers,
-                    id = event.created_by_user,
-                    callback = object : Callback<ResponseBody> {
-                        override fun onResponse(
-                            call: Call<ResponseBody>,
-                            response: Response<ResponseBody>
-                        ) {
-                            Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                            Log.d("ResponseInfo", "Headers: ${response.headers()}")
-                            if (response.isSuccessful) {
-                                val rawJson = response.body()?.string()
-                                if (rawJson != null) {
-                                    try {
-                                        Log.d("ResponseSuccess", "Body: $rawJson")
-                                        val gson = Gson()
-                                        val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
-                                        if (userResponse != null) {
-                                            Log.d("ResponseSuccess", "needResponse: $userResponse")
-                                            userRoleMap[event.created_by_user] = userResponse.user_role
-                                        }
-                                    } catch (e: IOException) {
-                                        // Handle IOException if reading the response body fails
-                                        Log.e("ResponseError", "Error reading response body: ${e.message}")
-                                    }
-                                } else {
-                                    Log.d("ResponseSuccess", "Body is null")
-                                }
-                            } else {
-                                val errorBody = response.errorBody()?.string()
-                                if (errorBody != null) {
-                                    var responseCode = response.code()
-                                    Log.d("ResponseSuccess", "Body: $errorBody")
-                                }
-                            }
-                        }
-
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            Log.d("onFailure", "Happens")
-                        }
-                    }
-                )
-            }
-        }
+        //checkAdmins(eventList)
         val adapter = EventAdapter(eventList, userRoleMap)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
             openEventItemFragment(it)
+        }
+    }
+
+    /**
+     * It checks the admin if it is authenticated user
+     */
+    private fun checkAdmins(eventList : List<EventBody.EventRequestBody>){
+        if (DiskStorageManager.checkToken()){
+            for (event in eventList) {
+                if (!userRoleMap.containsKey(event.created_by_user)) {
+                    val headers = mapOf(
+                        "Authorization" to "bearer ${DiskStorageManager.getKeyValue("token")}",
+                        "Content-Type" to "application/json"
+                    )
+                    networkManager.makeRequest(
+                        endpoint = Endpoint.GETUSER,
+                        requestType = RequestType.GET,
+                        headers = headers,
+                        id = event.created_by_user,
+                        callback = object : Callback<ResponseBody> {
+                            override fun onResponse(
+                                call: Call<ResponseBody>,
+                                response: Response<ResponseBody>
+                            ) {
+                                Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                                Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                                if (response.isSuccessful) {
+                                    val rawJson = response.body()?.string()
+                                    if (rawJson != null) {
+                                        try {
+                                            Log.d("ResponseSuccess", "Body: $rawJson")
+                                            val gson = Gson()
+                                            val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
+                                            if (userResponse != null) {
+                                                Log.d("ResponseSuccess", "needResponse: $userResponse")
+                                                userRoleMap[event.created_by_user] = userResponse.user_role
+                                            }
+                                        } catch (e: IOException) {
+                                            // Handle IOException if reading the response body fails
+                                            Log.e("ResponseError", "Error reading response body: ${e.message}")
+                                        }
+                                    } else {
+                                        Log.d("ResponseSuccess", "Body is null")
+                                    }
+                                } else {
+                                    val errorBody = response.errorBody()?.string()
+                                    if (errorBody != null) {
+                                        var responseCode = response.code()
+                                        Log.d("ResponseSuccess", "Body: $errorBody")
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                Log.d("onFailure", "Happens")
+                            }
+                        }
+                    )
+                }
+            }
         }
     }
 
@@ -180,8 +190,15 @@ class EventFragment(
             }
             // when text is changed on button
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Handle changes in the search query (e.g., filter a list)
-                //filterList(newText)
+                if (newText != null) {
+                    if( newText == ""){
+                        sendRequest()
+                    } else {
+                        eventViewModel.sendGetSearchResult(newText)
+                    }
+                } else {
+                    sendRequest()
+                }
                 return true
             }
         })

@@ -25,6 +25,7 @@ import com.example.disasterresponseplatform.data.models.EmergencyBody
 import com.example.disasterresponseplatform.data.models.UserBody
 import com.example.disasterresponseplatform.databinding.FragmentEmergencyBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
@@ -48,6 +49,7 @@ class EmergencyFragment(
     private val mapFragment = ActivityMap()
     private lateinit var emergencyList: List<EmergencyBody.EmergencyItem>
     private val networkManager = NetworkManager()
+    private val userRoleMap: MutableMap<String, String> = mutableMapOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -152,59 +154,8 @@ class EmergencyFragment(
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.layoutManager = layoutManager
         }
+        //checkAdmin()
 
-        val userRoleMap: MutableMap<String, String> = mutableMapOf()
-        for (emergency in emergencyList) {
-            if (!userRoleMap.containsKey(emergency.created_by)) {
-                val headers = mapOf(
-                    "Content-Type" to "application/json"
-                )
-                networkManager.makeRequest(
-                    endpoint = Endpoint.GETUSER,
-                    requestType = RequestType.GET,
-                    headers = headers,
-                    id = emergency.created_by,
-                    callback = object : Callback<ResponseBody> {
-                        override fun onResponse(
-                            call: Call<ResponseBody>,
-                            response: Response<ResponseBody>
-                        ) {
-                            Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                            Log.d("ResponseInfo", "Headers: ${response.headers()}")
-                            if (response.isSuccessful) {
-                                val rawJson = response.body()?.string()
-                                if (rawJson != null) {
-                                    try {
-                                        Log.d("ResponseSuccess", "Body: $rawJson")
-                                        val gson = Gson()
-                                        val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
-                                        if (userResponse != null) {
-                                            Log.d("ResponseSuccess", "needResponse: $userResponse")
-                                            userRoleMap[emergency.created_by!!] = userResponse.user_role
-                                        }
-                                    } catch (e: IOException) {
-                                        // Handle IOException if reading the response body fails
-                                        Log.e("ResponseError", "Error reading response body: ${e.message}")
-                                    }
-                                } else {
-                                    Log.d("ResponseSuccess", "Body is null")
-                                }
-                            } else {
-                                val errorBody = response.errorBody()?.string()
-                                if (errorBody != null) {
-                                    var responseCode = response.code()
-                                    Log.d("ResponseSuccess", "Body: $errorBody")
-                                }
-                            }
-                        }
-
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            Log.d("onFailure", "Happens")
-                        }
-                    }
-                )
-            }
-        }
         val adapter = EmergencyAdapter(emergencyList, userRoleMap)
         binding.adapter = adapter
 
@@ -213,6 +164,63 @@ class EmergencyFragment(
             openEmergencyItemFragment(it)
         }
 
+    }
+
+    private fun checkAdmin(){
+        if (DiskStorageManager.checkToken()){
+            for (emergency in emergencyList) {
+                if (!userRoleMap.containsKey(emergency.created_by)) {
+                    val headers = mapOf(
+                        "Authorization" to "bearer ${DiskStorageManager.getKeyValue("token")}",
+                        "Content-Type" to "application/json"
+                    )
+                    networkManager.makeRequest(
+                        endpoint = Endpoint.GETUSER,
+                        requestType = RequestType.GET,
+                        headers = headers,
+                        id = emergency.created_by,
+                        callback = object : Callback<ResponseBody> {
+                            override fun onResponse(
+                                call: Call<ResponseBody>,
+                                response: Response<ResponseBody>
+                            ) {
+                                Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                                Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                                if (response.isSuccessful) {
+                                    val rawJson = response.body()?.string()
+                                    if (rawJson != null) {
+                                        try {
+                                            Log.d("ResponseSuccess", "Body: $rawJson")
+                                            val gson = Gson()
+                                            val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
+                                            if (userResponse != null) {
+                                                Log.d("ResponseSuccess", "needResponse: $userResponse")
+                                                userRoleMap[emergency.created_by!!] = userResponse.user_role
+                                            }
+                                        } catch (e: IOException) {
+                                            // Handle IOException if reading the response body fails
+                                            Log.e("ResponseError", "Error reading response body: ${e.message}")
+                                        }
+                                    } else {
+                                        Log.d("ResponseSuccess", "Body is null")
+                                    }
+                                } else {
+                                    val errorBody = response.errorBody()?.string()
+                                    if (errorBody != null) {
+                                        var responseCode = response.code()
+                                        Log.d("ResponseSuccess", "Body: $errorBody")
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                Log.d("onFailure", "Happens")
+                            }
+                        }
+                    )
+                }
+            }
+        }
     }
 
 

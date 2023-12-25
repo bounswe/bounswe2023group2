@@ -1,15 +1,9 @@
 package com.example.disasterresponseplatform.ui.activity.need
 
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -21,7 +15,6 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
-import androidx.core.text.set
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
@@ -49,6 +42,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
+import kotlin.collections.set
 
 class NeedFragment(
     private val needViewModel: NeedViewModel
@@ -61,6 +55,8 @@ class NeedFragment(
     private var requireActivity: FragmentActivity? = null
     private val mapFragment = ActivityMap()
     private val networkManager = NetworkManager()
+
+    private val userRoleMap: MutableMap<String, String> = mutableMapOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -193,65 +189,76 @@ class NeedFragment(
             val layoutManager = LinearLayoutManager(requireContext())
             recyclerView.layoutManager = layoutManager
         }
-        // val list = needViewModel.getAllNeeds() // this is for local DB
-        val userRoleMap: MutableMap<String, String> = mutableMapOf()
-        for (need in needList) {
-            if (!userRoleMap.containsKey(need.created_by)) {
-                val headers = mapOf(
-                    "Content-Type" to "application/json"
-                )
-                networkManager.makeRequest(
-                    endpoint = Endpoint.GETUSER,
-                    requestType = RequestType.GET,
-                    headers = headers,
-                    id = need.created_by,
-                    callback = object : Callback<ResponseBody> {
-                        override fun onResponse(
-                            call: Call<ResponseBody>,
-                            response: Response<ResponseBody>
-                        ) {
-                            Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                            Log.d("ResponseInfo", "Headers: ${response.headers()}")
-                            if (response.isSuccessful) {
-                                val rawJson = response.body()?.string()
-                                if (rawJson != null) {
-                                    try {
-                                        Log.d("ResponseSuccess", "Body: $rawJson")
-                                        val gson = Gson()
-                                        val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
-                                        if (userResponse != null) {
-                                            Log.d("ResponseSuccess", "needResponse: $userResponse")
-                                            userRoleMap[need.created_by] = userResponse.user_role
-                                        }
-                                    } catch (e: IOException) {
-                                        // Handle IOException if reading the response body fails
-                                        Log.e("ResponseError", "Error reading response body: ${e.message}")
-                                    }
-                                } else {
-                                    Log.d("ResponseSuccess", "Body is null")
-                                }
-                            } else {
-                                val errorBody = response.errorBody()?.string()
-                                if (errorBody != null) {
-                                    var responseCode = response.code()
-                                    Log.d("ResponseSuccess", "Body: $errorBody")
-                                }
-                            }
-                        }
-
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            Log.d("onFailure", "Happens")
-                        }
-                    }
-                )
-            }
-        }
+        //checkAdmin(needList)
         val adapter = NeedAdapter(needList, userRoleMap)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
             openNeedItemFragment(it)
+        }
+    }
+
+    private fun checkAdmin(needList : List<NeedBody.NeedItem>){
+        if (DiskStorageManager.checkToken()){
+            for (i in  0 ..  needList.size) {
+                val need = needList[i]
+                if (!userRoleMap.containsKey(need.created_by)) {
+                    Log.i("AAAAAAAAAAAXXXXX","MapSize: ${userRoleMap.size}")
+                    for (key in userRoleMap.keys) {
+                        Log.i("AAAAAAAAAAAXXXXX","User: $key, Role: ${userRoleMap[key]}")
+                    }
+                    val headers = mapOf(
+                        "Authorization" to "bearer ${DiskStorageManager.getKeyValue("token")}",
+                        "Content-Type" to "application/json"
+                    )
+                    networkManager.makeRequest(
+                        endpoint = Endpoint.GETUSER,
+                        requestType = RequestType.GET,
+                        headers = headers,
+                        id = need.created_by,
+                        callback = object : Callback<ResponseBody> {
+                            override fun onResponse(
+                                call: Call<ResponseBody>,
+                                response: Response<ResponseBody>
+                            ) {
+                                Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                                Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                                if (response.isSuccessful) {
+                                    val rawJson = response.body()?.string()
+                                    if (rawJson != null) {
+                                        try {
+                                            Log.d("ResponseSuccess", "Body: $rawJson")
+                                            val gson = Gson()
+                                            val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
+                                            if (userResponse != null) {
+                                                //Log.d("ResponseSuccess", "needResponse: $userResponse")
+                                                Log.d("ResponseSuccess","needResponse: MapSize ${userRoleMap.size}")
+                                                userRoleMap[need.created_by] = userResponse.user_role
+                                            }
+                                        } catch (e: IOException) {
+                                            // Handle IOException if reading the response body fails
+                                            Log.e("ResponseError", "Error reading response body: ${e.message}")
+                                        }
+                                    } else {
+                                        Log.d("ResponseSuccess", "Body is null")
+                                    }
+                                } else {
+                                    val errorBody = response.errorBody()?.string()
+                                    if (errorBody != null) {
+                                        var responseCode = response.code()
+                                        Log.d("ResponseSuccess", "Body: $errorBody")
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                Log.d("onFailure", "Happens")
+                            }
+                        }
+                    )
+                }
+            }
         }
     }
 
@@ -270,8 +277,15 @@ class NeedFragment(
             }
             // when text is changed on button
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Handle changes in the search query (e.g., filter a list)
-                //filterList(newText)
+                if (newText != null) {
+                    if( newText == ""){
+                        sendRequest()
+                    } else {
+                        needViewModel.sendGetSearchResult(newText)
+                    }
+                } else {
+                    sendRequest()
+                }
                 return true
             }
         })

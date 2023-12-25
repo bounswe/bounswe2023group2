@@ -130,6 +130,58 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         )
     }
 
+    fun sendGetSearchResult(query: String) {
+        val token = DiskStorageManager.getKeyValue("token")
+        val headers = mapOf(
+            "Authorization" to "bearer $token",
+            "Content-Type" to "application/json"
+        )
+        networkManager.makeRequest(
+            endpoint = Endpoint.SEARCH_NEED,
+            requestType = RequestType.GET,
+            headers = headers,
+            id = query,
+            callback = object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                    if (response.isSuccessful) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
+                            try {
+                                Log.d("ResponseSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val needResponse = gson.fromJson(rawJson, NeedBody.NeedSearchResponse::class.java)
+                                if (needResponse != null) { // TODO check null
+                                    Log.d("ResponseSuccess", "needResponse: $needResponse")
+                                    liveDataResponse.postValue(NeedBody.NeedResponse(needResponse.results))
+                                }
+                            } catch (e: IOException) {
+                                // Handle IOException if reading the response body fails
+                                Log.e("ResponseError", "Error reading response body: ${e.message}")
+                            }
+                        } else {
+                            Log.d("ResponseSuccess", "Body is null")
+                        }
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            val responseCode = response.code()
+                            Log.d("ResponseSuccess", "Error Body: $errorBody Response Code: $responseCode")
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("onFailure", "Happens")
+                }
+            }
+        )
+    }
+
     private val liveDataNeedID = MutableLiveData<String>()
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataNeedID(): LiveData<String> = liveDataNeedID

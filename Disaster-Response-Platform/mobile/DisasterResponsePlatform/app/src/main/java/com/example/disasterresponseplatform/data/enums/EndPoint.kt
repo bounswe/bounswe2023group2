@@ -45,10 +45,13 @@ enum class Endpoint(val path: String) {
     PASSWORD_RESET_SEND("forgot_password/send"),
     PASSWORD_RESET_VERIFY("forgot_password/reset"),
     UPLOADFILE("uploadfile"),
+    SEARCH_NEED("search/needs"),
+    SEARCH_RESOURCE("search/resources"),
+    SEARCH_EVENT("search/events"),
+    SEARCH_ACTION("search/actions"),
     RECURRENCE("recurrence/"), //TODO arrange id w.r.t this
     RECURRENCE_ATTACH_ACTIVITY("recurrence/attach_activity"),
     RECURRENCE_START("recurrence/start"),
     RECURRENCE_CANCEL("recurrence/cancel"),
     RECURRENCE_RESUME("recurrence/resume"),
-
 }

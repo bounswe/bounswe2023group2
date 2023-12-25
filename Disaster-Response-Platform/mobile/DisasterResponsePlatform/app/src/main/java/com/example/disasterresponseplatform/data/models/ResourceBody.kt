@@ -1,7 +1,5 @@
 package com.example.disasterresponseplatform.data.models
 
-import com.example.disasterresponseplatform.data.database.resource.Resource
-import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.google.gson.annotations.SerializedName
 
 class ResourceBody {
@@ -85,6 +83,6 @@ class ResourceBody {
         @SerializedName("downvote") val downvote: Int,
         @SerializedName("_id") val _id: String
     )
-
+    data class ResourceSearchResponse(val results: List<ResourceItem>)
 
 }
