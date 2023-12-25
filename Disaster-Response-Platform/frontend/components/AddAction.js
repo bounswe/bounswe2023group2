@@ -102,20 +102,10 @@ export default function AddActionForm({ isOpen, onOpenChange, type= 'need', labe
             <form onSubmit={handleSubmit(can)} action="#"
               method="POST" className='grid grid-cols-2  mb-6 md:mb-0 gap-4'items-center  >
               { form.map((res) => {
-                if (res.name === 'type') return <Select
-                  id="type" name="type"
-                  items={res.options}
-                  label="İhtiyaç Türü"
-                  placeholder="İhtiyacınızı seçiniz"
-                  // className="max-xs"
-                  variant={'bordered'}
-                  onChange={(e) => { setChosen(e.target.value); console.log(e) }}
-                >
-                  {(type) => <SelectItem value={type.value} className='text-black'>{type.label}</SelectItem>}
-                </Select>
+               
 
 
-                else if (res.type === 'select') return <Controller
+                if (res.type === 'select') return <Controller
                   name={res.name}
                   control={control}
                   defaultValue=""
