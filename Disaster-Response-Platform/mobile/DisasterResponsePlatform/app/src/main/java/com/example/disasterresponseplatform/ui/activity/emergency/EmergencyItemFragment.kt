@@ -24,6 +24,7 @@ import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -33,6 +34,7 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private val annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,7 +85,10 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
         }
         binding.tvPhoneNumber.text = emergency.phone_number
         binding.tvType.text = emergency.type
-        binding.tvDescription.text = emergency.description
+        annotation.getAnnotations(emergency.created_by + "-emergency-" + emergency.type) {
+            binding.tvDescription.text = it
+        }
+//        binding.tvDescription.text = emergency.description
         binding.tvCreationTime.text = emergency.created_at
         binding.tvLastUpdatedTime.text = emergency.last_updated_at
         binding.tvAddress.text = emergency.location
