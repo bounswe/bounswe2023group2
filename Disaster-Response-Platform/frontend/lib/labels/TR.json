@@ -6,6 +6,7 @@
 		"username": "Kullanıcı Adı",
 		"first_name": "İsim",
 		"last_name": "Soyisim",
+		"full_name": "Ad Soyad",
 		"password": "Şifre",
 		"phone_number": "Telefon Numarası",
 		"email": "E-posta",
@@ -114,7 +115,9 @@
 		"close": "Kapat",
 		"loading": "Yükleniyor",
 		"forgot": "Şifremi Unuttum",
-		"details": "Detaylar"
+		"details": "Detaylar",
+		"changed": "Düzenlendi",
+		"search": "Ara"
 	},
 	"sort_filter": {
 		"sort": "Sırala",
@@ -168,8 +171,11 @@
 	},
 	"admin": {
 		"no_access": "Admin paneline erişiminiz yok.",
+		"already_reported_user": "Bu kullanıcıyı zaten raporladınız.",
+		"already_reported_activity": "Bu aktiviteyi zaten raporladınız.",
+		"reports": "Raporlar",
 		"user_reports": "Kullanıcı Raporları",
-		"activity_reports": "Aktivite Raporları",
+		"users": "Kullanıcılar",
 		"banned_users": "Engellenmiş Kullanıcılar",
 		"reporter": "Raporlayan",
 		"reported": "Raporlanan",
@@ -177,9 +183,17 @@
 		"details": "Detaylar",
 		"actions": "Aksiyonlar",
 		"report": "Raporla",
-		"reject_report": "Raporu reddet",
+		"reject": "Reddet",
+		"accept": "Onayla",
+		"report_accepted": "Rapor kabul edildi.",
+		"report_rejected": "Rapor reddedildi.",
 		"ban_user": "Kullanıcıyı engelle",
-		"remove_activity": "Aktiviteyi kaldır"
+		"unauthenticate": "Ziyaretçiliğe düşür",
+		"unauthenticated": "Kullanıcı Ziyaretçiye çevrildi",
+		"auth_status": "Doğrulama statüsü",
+		"remove_activity": "Aktiviteyi kaldır",
+		"is_credible": "Güvenilir",
+		"credibility_set": "Güvenilirlik değiştirildi."
 	},
 	"navbar": {
 		"help_feedback": "Yardım ve Geri Bildirim",
@@ -203,6 +217,7 @@
 		"password": "Şifre en az bir büyük harf ve bir rakam içermelidir",
 		"email": "örnek@adres.com",
 		"search_bar": "Ne arıyorsunuz?",
+		"search_users": "Kullanıcılarda ara",
 		"resource_type": "Gıda",
 		"resource_subtype": "Konserve gıda"
 	},
@@ -218,6 +233,7 @@
 		"ROLE_BASED": "Uzman",
 		"CREDIBLE": "Güvenilir Kullanıcı",
 		"ADMIN": "Site Yöneticisi",
+		"user_role": "Rol",
 		"area_of_expertise": "Uzmanlık Alanı"
 	},
 	"proficiency": {
