@@ -132,6 +132,14 @@
     <string name="fire_button">Immediate Response to Fire Required</string>
     <string name="medical_button">Medical Team Urgently Needed</string>
     <string name="select_1_5">Urgency: Low-Priority(1) to Critical(5) </string>
+    <string name="want_recurrence">Recurrence</string>
+    <string name="start_date">Start Date</string>
+    <string name="recurrence_unit">Recurrence Unit</string>
+    <string name="end_date">End Date</string>
+    <string name="select_unit">Select Recurrence Unit</string>
+    <string name="duration">Duration</string>
+    <string name="select_recurrence_rate">Select Recurrence Rate (in selected Unit)</string>
+    <string name="open_address">Open Address</string>
 
 
     <!-- SIGN UP / LOGIN / LOGOUT RELATED -->
@@ -296,6 +304,12 @@
         <item>Help-Arrived</item>
     </string-array>
 
+    <string-array name="recurrence_unit">
+        <item name="day">day</item>
+        <item name="week">week</item>
+        <item name="month">month</item>
+    </string-array>
+
 
     <!-- PROFILE LISTS -->
     <string-array name="language_level_types">
@@ -357,6 +371,15 @@
         <item>Bullying</item>
         <item>Fake News</item>
         <item>Hate Speech</item>
+    </string-array>
+
+    <!-- Recurrence Activities (with Capital Letter -->
+    <string-array name="recurrence_activities">
+        <item>Action</item>
+        <item>Emergency</item>
+        <item>Event</item>
+        <item>Need</item>
+        <item>Resource</item>
     </string-array>
 
 </resources>
