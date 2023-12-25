@@ -9,15 +9,15 @@ export default function Filter({ filters, setFilters, filterActivities, labels})
   
   return (
 
-    <Popover placement="bottom" showArrow offset={10}>  
+    <Popover placement="bottom" showArrow offset={10} >  
       <PopoverTrigger>
-        <Button color="primary">
+        <Button color="primary" className= 'mx-3' >
           <FaFilter/>{labels.sort_filter.filter}
           </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px]">
 
-        <div className="px-1 py-2 w-full">
+        <div className="px-3 py-2 w-full">
           <p className="text-small font-bold text-foreground" >
             {labels.sort_filter.filter}
           </p>
