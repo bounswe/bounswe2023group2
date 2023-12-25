@@ -26,6 +26,7 @@ import com.example.disasterresponseplatform.databinding.FragmentAddActionBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.Annotation
 import com.example.disasterresponseplatform.utils.DateUtil.Companion.dateForBackend
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
@@ -46,6 +47,7 @@ class AddActionFragment(
 
     private lateinit var binding: FragmentAddActionBinding
     private var requireActivity: FragmentActivity? = null
+    private var annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,6 +106,7 @@ class AddActionFragment(
                     relatedResources = listOf(related_resource)
                 )
 
+                annotation.publishAnnotation(DiskStorageManager.getKeyValue("username")!! + "-action-" + type2, description)
                 val actionPost = ActionBody.ActionRequestBody(
                     description, type2, occurAt, endAt, listOf(relatedGroup1)
                 )

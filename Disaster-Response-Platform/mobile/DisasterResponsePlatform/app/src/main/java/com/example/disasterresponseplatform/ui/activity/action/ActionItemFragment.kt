@@ -26,6 +26,7 @@ import com.example.disasterresponseplatform.ui.activity.VoteViewModel
 import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheetFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -36,6 +37,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private var annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,6 +70,9 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
         binding.tvCreationTime.text = action.created_at.substring(0,10)
         binding.tvUpvoteCount.text = action.upvote.toString()
         binding.tvDownVoteCount.text = action.downvote.toString()
+        annotation.getAnnotations(action.created_by + "-action-" + action.type) {
+            binding.tvDescription.text = it
+        }
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it
