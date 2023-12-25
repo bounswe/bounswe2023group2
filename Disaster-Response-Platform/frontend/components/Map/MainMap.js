@@ -63,6 +63,7 @@ export default function Map({
   eventApiData,
   labels,
   setBounds,
+  chosenActivityType
 }) {
   function MapBounds() {
     const map = useMapEvents({
@@ -203,22 +204,24 @@ export default function Map({
           ></Marker>
         )}
         <MapBounds />
-        {resourceApiData.map((resource, index) => (
-          <Marker
-            key={index}
-            position={[resource.x, resource.y]}
-            icon={greenIcon}
-            eventHandlers={{
-              click: () => {
-                resource.nre = "Resource";
-                resource.feedback = 0;
-                setSelectedMarker(resource);
-              },
-            }}
-          ></Marker>
-        ))}
+        {(chosenActivityType === "resource"||chosenActivityType==="all") && resourceApiData.map((resource, index) => (
+          
+            <Marker
+              key={index}
+              position={[resource.x, resource.y]}
+              icon={greenIcon}
+              eventHandlers={{
+                click: () => {
+                  resource.nre = "Resource";
+                  resource.feedback = 0;
+                  setSelectedMarker(resource);
+                },
+              }}
+            ></Marker>
+          ))}
+        
 
-        {needApiData.map((need, index) => (
+        {(chosenActivityType === "need"||chosenActivityType==="all") &&needApiData.map((need, index) => (
           <Marker
             key={index}
             position={[need.x, need.y]}
@@ -233,7 +236,7 @@ export default function Map({
           ></Marker>
         ))}
 
-        {eventApiData.map((event, index) => {
+        {(chosenActivityType === "event"||chosenActivityType==="all") &&eventApiData.map((event, index) => {
           // Check if both x and y values are defined
           if (typeof event.x === 'number' && typeof event.y === 'number') {
             return (

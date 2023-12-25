@@ -18,6 +18,7 @@ export default function mapPage({ labels }) {
   const [needApiData, setNeedApiData] = useState([]);
   const [eventApiData, setEventApiData] = useState([]);
   const [bounds,setBounds] = useState(null);
+  const [chosenActivityType, setChosenActivityType] = useState("all");
   const activateClick = () => {
     setIsClickActivated(!isClickActivated);
   };
@@ -32,6 +33,7 @@ export default function mapPage({ labels }) {
         eventApiData={eventApiData}
         labels={labels}
         setBounds={setBounds}
+        chosenActivityType={chosenActivityType}
       />
       <MapFilterMenu
         activateClick={activateClick}
@@ -40,6 +42,8 @@ export default function mapPage({ labels }) {
         setEventApiData={setEventApiData}
         labels={labels}
         bounds={bounds}
+        setChosenActivityType={setChosenActivityType}
+        chosenActivityType={chosenActivityType}
       />
     </>
   );

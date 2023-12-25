@@ -63,6 +63,7 @@
 		}
 	},
 	"activities": {
+		"all": "All",
 		"resource": "Resource",
 		"need": "Need",
 		"action": "Action",

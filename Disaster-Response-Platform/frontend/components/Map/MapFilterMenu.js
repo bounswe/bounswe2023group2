@@ -3,7 +3,11 @@ import { FaSearch } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Search from "../Search";
+import { Input } from "@nextui-org/react";
+
 import { api } from "@/lib/apiUtils";
+import { Tab, Tabs } from "@nextui-org/react";
 
 export default function MapFilterMenu({
   activateClick,
@@ -14,12 +18,17 @@ export default function MapFilterMenu({
   selectMap,
   labels,
   bounds,
+  chosenActivityType,
+  setChosenActivityType
 }) {
   const [resourceChecked, setResourceChecked] = useState(false);
   const [aktifChecked, setAktifChecked] = useState(false);
   const [eventChecked, setEventChecked] = useState(false);
   const [actionsChecked, setActionsChecked] = useState(false);
   const [needsChecked, setNeedsChecked] = useState(false);
+  
+  const [search, setSearch] = useState("");
+  const [activities, setActivities] = useState([]); // [{_id: "loading"}
 
   useEffect(() => {
     fetchResources();
@@ -108,16 +117,13 @@ export default function MapFilterMenu({
     }
   };
   const fetchEvents = async () => {
-    const eventResponse = await api.get(
-      `/api/events/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // Additional headers or credentials if needed
-      }
-    );
+    const eventResponse = await api.get(`/api/events/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Additional headers or credentials if needed
+    });
     console.log("consolelog:", eventResponse.status);
     if (eventResponse.status == 200) {
       const events = await eventResponse.data;
@@ -127,9 +133,7 @@ export default function MapFilterMenu({
       events.events.forEach((event) => {
         const xValue = event.x;
         const yValue = event.y;
-        console.log(
-          `Event ID: ${event._id}, x: ${xValue}, y: ${yValue}`
-        );
+        console.log(`Event ID: ${event._id}, x: ${xValue}, y: ${yValue}`);
       });
     } else {
       // Handle errors
@@ -145,7 +149,6 @@ export default function MapFilterMenu({
     try {
       // Make API call to filter resources based on the search term
       //const searchTerm = /* Get the search term from your input field */;
-
 
       const eventResponse = await api.get(
         `/api/resources/?sort_by=created_at&order=asc`,
@@ -166,9 +169,7 @@ export default function MapFilterMenu({
         events.events.forEach((event) => {
           const xValue = event.x;
           const yValue = event.y;
-          console.log(
-            `Resource ID: ${event._id}, X: ${xValue}, Y: ${yValue}`
-          );
+          console.log(`Resource ID: ${event._id}, X: ${xValue}, Y: ${yValue}`);
         });
       } else {
         // Handle errors
@@ -177,10 +178,6 @@ export default function MapFilterMenu({
           eventResponse.statusText
         );
       }
-
-
-
-
 
       const resourceResponse = await api.get(
         `/api/resources/?sort_by=created_at&order=asc`,
@@ -246,6 +243,42 @@ export default function MapFilterMenu({
     }
   };
 
+  const getCursorColor = (type) => {
+    switch (type) {
+      case "need":
+        return "bg-blue-500"; // Replace with your desired blue color
+      case "resource":
+        return "bg-green-500"; // Replace with your desired green color
+      case "event":
+        return "bg-red-500"; // Replace with your desired red color
+      default:
+        return "bg-yellow-400"; // Default color
+    }
+  };
+
+  const handleSubmit = async (text) => {
+    text.preventDefault();
+    console.log(search);
+    if (chosenActivityType === undefined) {
+      toast.error("Please choose an activity type");
+      return;
+    }
+    const response = await fetch(`/api/search`, {
+      method: "POST",
+      body: JSON.stringify({ query: search, activityType: chosenActivityType }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let payload = await response.json();
+    if (response.status !== 200) {
+      toast.error(payload?.message);
+      return;
+    }
+    const results = payload.results;
+    setActivities(results);
+  };
+
   const popup = () => {
     selectMap();
     onOpen();
@@ -256,11 +289,20 @@ export default function MapFilterMenu({
     <div className={styles.main}>
       <div className={styles.searchBox}>
         <div className={styles.search}>
-          <input
+          {/* <input
             type="text"
             className={styles.searchTerm}
             placeholder={labels.placeholders.search_bar}
-          ></input>
+          ></input> */}
+          <Input
+            className={styles.searchTerm}
+            id="search"
+            placeholder="Type to search..."
+            size="sm"
+            onChange={(text) => setSearch(text.target.value)}
+            // startContent={<FaSearch className={styles.searchTerm} />}
+            type="search"
+          />
           <button type="submit" className={styles.searchButton}>
             <FaSearch />
           </button>
@@ -285,6 +327,52 @@ export default function MapFilterMenu({
         >
           {labels.map.scan_certain_area}
         </button>
+
+        <Tabs
+          selectedKey={chosenActivityType}
+          onSelectionChange={setChosenActivityType}
+          size="lg"
+          radius="full"
+          classNames={{
+            cursor: getCursorColor(chosenActivityType),
+            tab: `flex`,
+          }}
+        >
+          <Tab
+            key="need"
+            className={`${
+              chosenActivityType === "need" ? "bg-blue-400 z-10" : "bg-gray-200"
+            } text-slate-50 flex justify-center items-center px-2 py-1 text-xs max-w-[25%]`}
+            titleValue={labels.activities.needs}
+            title={labels.activities.needs}
+          />
+          <Tab
+            key="resource"
+            className={`${
+              chosenActivityType === "resource"
+                ? "bg-green-400 z-10"
+                : "bg-gray-200"
+            } text-slate-50 flex justify-center items-center px-2 py-1 text-xs max-w-[25%]`}
+            titleValue={labels.activities.resources}
+            title={labels.activities.resources}
+          />
+          <Tab
+            key="event"
+            className={`${
+              chosenActivityType === "event" ? "bg-red-400 z-10" : "bg-gray-200"
+            } text-slate-50 flex justify-center items-center px-2 py-1 text-xs max-w-[25%] `}
+            titleValue={labels.activities.events}
+            title={labels.activities.events}
+          />
+          <Tab
+            key="all"
+            className={`${
+              chosenActivityType === "all" ? "bg-yellow-400 z-10" : "bg-gray-200"
+            } text-slate-50 flex justify-center items-center px-2 py-1 text-xs max-w-[25%]`}
+            titleValue={labels.activities.all}
+            title={labels.activities.all}
+          />
+        </Tabs>
         <div>
           <form action="#">
             <label for="types">{labels.sort_criteria.type}</label>

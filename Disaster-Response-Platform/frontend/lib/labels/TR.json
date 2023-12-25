@@ -62,6 +62,7 @@
 		}
 	},
 	"activities": {
+		"all": "Hepsi",
 		"resource": "Kaynak",
 		"need": "İhtiyaç",
 		"action": "Aksiyon",
