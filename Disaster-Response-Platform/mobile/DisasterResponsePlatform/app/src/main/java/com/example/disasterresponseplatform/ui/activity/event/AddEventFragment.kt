@@ -20,8 +20,10 @@ import androidx.fragment.app.FragmentManager
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.EventBody
 import com.example.disasterresponseplatform.databinding.FragmentAddEventBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.Annotation
 import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.android.material.textfield.TextInputLayout
 import okhttp3.Call
@@ -43,6 +45,7 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
     private var requireActivity: FragmentActivity? = null
     private var selectedLocationX by Delegates.notNull<Double>()
     private var selectedLocationY by Delegates.notNull<Double>()
+    private var annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -152,6 +155,9 @@ class AddEventFragment(private val eventViewModel: EventViewModel, private val e
                 val maxDistanceX = if (!binding.etCoverageX.text.isNullOrEmpty()) binding.etCoverageX.text.toString().trim().toDouble() else null
                 val maxDistanceY = if (!binding.etCoverageY.text.isNullOrEmpty()) binding.etCoverageY.text.toString().trim().toDouble() else null
                 val createdTime = "${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}"
+
+                annotation.publishAnnotation(DiskStorageManager.getKeyValue("username")!! + "-event-" + eventType, additionalNote)
+
                 val postedEvent = EventBody.EventPostBody(
                     event_type = eventType,
                     event_time =  creationEventDate,

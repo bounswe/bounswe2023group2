@@ -27,6 +27,7 @@ import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheet
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -36,6 +37,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private val annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,13 +75,23 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         } else {
             binding.tvLastUpdatedTime.text = event.last_confirmed_time
         }
-        if (event.note == null){
-            binding.iconDetails.isVisible = false
-            binding.tvNote.isVisible = false
-            binding.tvDetailsTitle.isVisible = false
-        } else{
-            binding.tvNote.text = event.note
+
+        binding.iconDetails.isVisible = false
+        binding.tvNote.isVisible = false
+        binding.tvDetailsTitle.isVisible = false
+        annotation.getAnnotations(event.created_by_user + "-event-" + event.event_type) {
+            binding.iconDetails.isVisible = true
+            binding.tvNote.isVisible = true
+            binding.tvDetailsTitle.isVisible = true
+            binding.tvNote.text = it
         }
+//        if (event.note == null){
+//            binding.iconDetails.isVisible = false
+//            binding.tvNote.isVisible = false
+//            binding.tvDetailsTitle.isVisible = false
+//        } else{
+//            binding.tvNote.text = event.note
+//        }
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it
