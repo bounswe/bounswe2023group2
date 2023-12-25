@@ -7,7 +7,7 @@ class RecurrenceModel {
     data class PostRecurrenceBody(
         val title: String, // unit + start + end day
         val description: String, // description of activity
-        val activity: String,
+        val activity: String, // Need, Resource, Event, Emergency, Action
         val occurance_rate: Int, // 1,2,3 ?
         val occurance_unit: String, // day, week, month
         val duration: Int? = 1, // end - start day
@@ -43,6 +43,11 @@ class RecurrenceModel {
         val recurrence_id: String,
         val activity_id: String,
         val activity_type: String // need,resource,action,event (with lower case letter)
+    )
+
+    data class AttachResponseBody(
+        val message: String,
+        val recurrence_id: String,
     )
 
     data class GetRecurrenceWithIDResponseBody(
