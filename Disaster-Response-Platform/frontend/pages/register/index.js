@@ -58,7 +58,7 @@ export default function register({ labels }) {
                       placeholder={labels.placeholders[field.name] ? labels.placeholders[field.name] : " "}
                   />
                   <div className="error" >{errors[field.name]?.message}</div>
-                  {field.name == 'password' && <span  className='mt-3 text-slate-400' > Please write at least one of the fields: <br/> email or phone number</span> }
+                  {field.name == 'password' && <span  className='mt-3 text-slate-400' > {labels.auth.at_least_one} </span> }
               </>
           })}
           <Button disabled={isSubmitting} color='primary' type='submit' className='m-3 self-end mr-0 w-10'>

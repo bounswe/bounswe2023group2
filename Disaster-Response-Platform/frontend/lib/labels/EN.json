@@ -101,7 +101,8 @@
 		"login": "Log in",
 		"logout": "Log out",
 		"redirect_to_login": "Redirecting to login page...",
-		"phone_email_username": "Phone number, email, or username"
+		"phone_email_username": "Phone number, email, or username",
+		"at_least_one": "Please fill at least one of the fields below."
 	},
 	"UI": {
 		"edit": "Edit",
