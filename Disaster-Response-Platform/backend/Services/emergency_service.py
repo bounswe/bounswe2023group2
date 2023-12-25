@@ -17,13 +17,15 @@ from datetime import datetime, timedelta
 emergencies_collection = MongoDB.get_collection('emergencies')
 
 def create_emergency(emergency: Emergency) -> str:
-    if not all([emergency.created_by_user, emergency.created_at,
-                emergency.emergency_type, emergency.description, emergency.x, emergency.y,  emergency.location]):
-        raise ValueError("Some mandatory fields missing : created_by_user, created_at, emergency_type, description, x, y,  location,")
+    if not all([emergency.emergency_type, emergency.description, emergency.x, emergency.y,  emergency.location]):
+        raise ValueError("Some mandatory fields missing : emergency_type, description, x, y,  location,")
+
     
-    if emergency.created_by_user == "GUEST" and (not emergency.contact_name or not emergency.contact_number):
-        raise ValueError("Contact name and number are required for guest users.")
-    
+    if emergency.created_by_user == "ANONYMOUS" and (not emergency.contact_name or not emergency.contact_number):
+        raise ValueError("Contact name and number are required for anonymous users.")
+
+    if emergency.created_at is None:
+        emergency.created_at =
     
     Services.utilities.validate_coordinates(emergency.x, emergency.y)
     emergency_dict = Services.utilities.correctDates(emergency)
@@ -47,7 +49,8 @@ def get_emergencies(
     y: float = None,
     distance_max: float = None,
     sort_by: str = 'created_at',
-    order: Optional[str] = 'desc'
+    order: Optional[str] = 'desc',
+    contact_names: list = None
     ) -> list[dict]:
     projection = {"_id": {"$toString": "$_id"},
                   "created_by_user": 1,
@@ -86,7 +89,9 @@ def get_emergencies(
         if emergency_types:
             query['emergency_type'] = {'$in': emergency_types}
         # if subtypes:
-        #     query['details.subtype'] = {'$in': subtypes} 
+        #     query['details.subtype'] = {'$in': subtypes}
+        if contact_names:
+            query['contact_name'] = {'$in': contact_names}
     
     # Apply the query and sort order to the database call
     emergencies_cursor = emergencies_collection.find(query, projection).sort(sort_by, sort_order)

@@ -18,12 +18,12 @@ router = APIRouter()
     status.HTTP_200_OK: {"model": Emergencies},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_403_FORBIDDEN: {"model": Error}})
-def create_emergency(emergency: Emergency, response:Response, user: UserProfile = Depends(authentication_service.get_current_user)):
+def create_emergency(emergency: Emergency, response:Response, user: UserProfile = authentication_service.get_current_user):
     try:
-        if user.user_role.value == "GUEST":
-            emergency.created_by_user = "GUEST"
+        if user is None:
+            emergency.created_by_user = "ANONYMOUS"
         else:
-             emergency.created_by_user = user.username
+            emergency.created_by_user = user.username
         
         emergency_result = emergency_service.create_emergency(emergency)
         response.status_code = HTTPStatus.OK
@@ -57,6 +57,7 @@ def get_emergency(emergency_id: str, response: Response):
 def get_all_emergencies(
     response: Response,
     emergency_types: List[str] = Query(None, description="Filter by types of emergencies"),
+    contact_names: List[str] = Query(None, description="Filter by Contact Names"),
     is_active: Optional[bool] = Query(None, description="Filter by active status"),
     is_verified: Optional[bool] = Query(None, description="Filter by verification status"),
     x: float = Query(None, description="X coordinate for distance calculation"),
@@ -79,7 +80,8 @@ def get_all_emergencies(
             y=y,
             distance_max=distance_max,
             sort_by=sort_by,
-            order=order            
+            order=order,
+            contact_names=contact_names
         )
         response.status_code = HTTPStatus.OK
         return json.loads(emergencies)
