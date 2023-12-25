@@ -1,11 +1,10 @@
-package com.example.disasterresponseplatform.ui.activity
+package com.example.disasterresponseplatform.ui.activity.generalViewModels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
-import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.RecurrenceModel
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
