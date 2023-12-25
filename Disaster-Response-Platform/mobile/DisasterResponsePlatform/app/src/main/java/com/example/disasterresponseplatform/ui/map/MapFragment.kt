@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.NeedBody
@@ -44,6 +45,8 @@ class MapFragment(
     private lateinit var mapViewModel: MapViewModel
     private lateinit var needClusterer: RadiusMarkerClusterer
     private lateinit var allClusters: RadiusMarkerClusterer
+
+    private var requireActivity: FragmentActivity? = null
 
     private lateinit var resourceClusterer: RadiusMarkerClusterer
     override fun onCreateView(
@@ -96,24 +99,16 @@ class MapFragment(
                 lat >= -90.0 && lat <= 90.0 &&
                 lon >= -180.0 && lon <= 180.0
     }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        needClusterer = RadiusMarkerClusterer(context)
-        resourceClusterer = RadiusMarkerClusterer(context)
-        allClusters = RadiusMarkerClusterer(context)
-        needClusterer.items.clear()
+
+    private fun showNeedsOnMap(){
         mapViewModel.sendGetAllNeedRequest()
-        mapViewModel.sendGetAllResourceRequest()
-        mapViewModel.sendGetAllActionsRequest()
-        mapViewModel.getLiveDataNeedResponse().observe(viewLifecycleOwner) { needItems ->
-            needItems.needs.forEach { needItem ->
-                val currentDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+        mapViewModel.getLiveDataNeedResponse().observe(requireActivity!!) { needItems ->
+            needItems?.needs?.forEach { needItem ->
                 if (!needClusterer.items.any { marker -> marker.id == needItem._id }
                 // UnComment them if you only want to see today's needs
-                    //&& needItem.occur_at?.startsWith(currentDate) != false
-                    //&& needItem.active
-                    )
-                {
+                //&& needItem.occur_at?.startsWith(currentDate) != false
+                //&& needItem.active
+                ) {
                     addNeedMarker(needItem)
                     mapView.postInvalidate()
                 }
@@ -129,14 +124,17 @@ class MapFragment(
             mapView.invalidate()
             mapView.postInvalidate()
         }
-        mapViewModel.getLiveDataResourceResponse().observe(viewLifecycleOwner) { resourceItems ->
-            resourceItems.resources.forEach {resourceItem ->
-                val currentDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+    }
+
+    private fun showResourcesOnMap(){
+        mapViewModel.sendGetAllResourceRequest()
+        mapViewModel.getLiveDataResourceResponse().observe(requireActivity!!) { resourceItems ->
+            resourceItems?.resources?.forEach {resourceItem ->
                 if (!needClusterer.items.any { marker -> marker.id == resourceItem._id }
-                    // UnComment them if you only want to see today's resources
-                    //&& resourceItem.occur_at?.startsWith(currentDate) != false
-                    //&& resourceItem.active
-                    )
+                // UnComment them if you only want to see today's resources
+                //&& resourceItem.occur_at?.startsWith(currentDate) != false
+                //&& resourceItem.active
+                )
                 {
                     addResourceMarker(resourceItem)
                     mapView.postInvalidate()
@@ -154,9 +152,12 @@ class MapFragment(
             mapView.invalidate()
             mapView.postInvalidate()
         }
+    }
 
-        mapViewModel.getLiveDataActionsResponse().observe(viewLifecycleOwner) { actions ->
-            actions.actions.forEach { actionItem ->
+    private fun showActionsOnMap(){
+        mapViewModel.sendGetAllActionsRequest()
+        mapViewModel.getLiveDataActionsResponse().observe(requireActivity!!) { actions ->
+            actions?.actions?.forEach { actionItem ->
                 actionItem.relatedGroups.forEach { group ->
                     group.relatedNeeds.forEach { needId ->
                         group.relatedResources.forEach { resourceId ->
@@ -170,6 +171,20 @@ class MapFragment(
             mapView.postInvalidate()
             mapView.invalidate()
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (requireActivity == null){
+            requireActivity = requireActivity()
+        }
+        needClusterer = RadiusMarkerClusterer(context)
+        resourceClusterer = RadiusMarkerClusterer(context)
+        allClusters = RadiusMarkerClusterer(context)
+        needClusterer.items.clear()
+        showNeedsOnMap()
+        showResourcesOnMap()
+        //showActionsOnMap()
     }
 
     private fun drawLineBetweenMarkers(markerId1: String, markerId2: String) {
@@ -263,4 +278,8 @@ class MapFragment(
         ft.addToBackStack(fragmentName)
         ft.commit()
     }
+
+
+
+
 }
