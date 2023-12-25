@@ -5,6 +5,7 @@ from Services.build_API_returns import *
 from pymongo import ASCENDING, DESCENDING
 from typing import Optional
 from datetime import datetime, timedelta
+import math
 
 # Get the needs collection using the MongoDB class
 needs_collection = MongoDB.get_collection('needs')
@@ -96,29 +97,29 @@ def get_needs(
     order: Optional[str] = 'desc'
 ) -> list[dict]:
     projection = {
-            "_id": {"$toString": "$_id"},
-            "created_by": 1,
-            "description": 1,
-            "urgency": 1,
-            "initialQuantity": 1,
-            "unsuppliedQuantity": 1,
-            "quantityUnit": 1,
-            "type": 1,
-            "details": 1,
-            "recurrence_id": 1,
-            "recurrence_rate": 1,
-            "recurrence_deadline": 1,
-            "x": 1,
-            "y": 1,
-            "active": 1,
-            "occur_at": 1,
-            "created_at": 1,
-            "last_updated_at": 1,
-            "upvote": 1,
-            "downvote": 1,
-            "open_address":1
-            # Add other fields if necessary
-        }
+        "_id": {"$toString": "$_id"},
+        "created_by": 1,
+        "description": 1,
+        "urgency": 1,
+        "initialQuantity": 1,
+        "unsuppliedQuantity": 1,
+        "quantityUnit": 1,
+        "type": 1,
+        "details": 1,
+        "recurrence_id": 1,
+        "recurrence_rate": 1,
+        "recurrence_deadline": 1,
+        "x": 1,
+        "y": 1,
+        "active": 1,
+        "occur_at": 1,
+        "created_at": 1,
+        "last_updated_at": 1,
+        "upvote": 1,
+        "downvote": 1,
+        "open_address": 1
+        # Add other fields if necessary
+    }
     
     sort_order = ASCENDING if order == 'asc' else DESCENDING
     query = {}
@@ -139,9 +140,25 @@ def get_needs(
     needs_cursor = needs_collection.find(query, projection).sort(sort_by, sort_order)
     needs_data = list(needs_cursor)
 
-      # Filter by distance if necessary
+    # Filter by distance if necessary
     if x is not None and y is not None and distance_max is not None:
         needs_data = [need for need in needs_data if ((need['x'] - x) ** 2 + (need['y'] - y) ** 2) ** 0.5 <= distance_max]
+
+    for need in needs_data:
+        upvotes = need.get('upvote', 0)
+        downvotes = need.get('downvote', 0)
+        total_votes = upvotes + downvotes
+
+        if total_votes > 0:
+            z = 1.96  # 95% confidence interval
+            phat = upvotes / total_votes
+            need['reliability'] = (phat + z**2 / (2 * total_votes) - z * math.sqrt((phat * (1 - phat) + z**2 / (4 * total_votes)) / total_votes)) / (1 + z**2 / total_votes)
+        else:
+            need['reliability'] = 0.5  # Default score for no votes
+
+    # Calculate and sort by reliability score if requested
+    if sort_by == 'reliability':
+        needs_data.sort(key=lambda x: x['reliability'], reverse=(order == 'desc'))
 
     # Formatting datetime fields
     formatted_needs_data = []
