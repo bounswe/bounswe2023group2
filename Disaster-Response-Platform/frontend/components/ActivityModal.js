@@ -52,7 +52,7 @@ return (
                 }
                 )}
 
-                {Object.keys(activity.details).map((key) => {
+                {activity.details && Object.keys(activity.details).map((key) => {
                   return <p>
                     {key}: {activity.details[key] ?? " belirtilmemis"}
                   </p>
