@@ -190,6 +190,7 @@
 		"report_rejected": "Report rejected.",
 		"ban_user": "Ban user",
 		"unauthenticate": "Demote to Guest",
+		"unauthenticated": "User has been demoted to Guest",
 		"auth_status": "Auth Status",
 		"remove_activity": "Remove activity",
 		"is_credible": "Credible",

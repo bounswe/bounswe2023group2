@@ -87,8 +87,23 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
     ));
   }
 
-  function unauthenticate() {
+  async function unauthenticate(index, username) {
+    const response = await fetch('/api/unauthorize', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({username})
+    });
+    if (!response.ok) {
+      toast(labels.feedback.failure);
+      return;
+    }
+    toast(labels.admin.unauthenticated);
 
+    const newAllUsers = [...allUsers];
+    newAllUsers[index].user_role = "GUEST";
+    setAllUsers(newAllUsers);
   }
 
   const rejectButton = (...args) => <Button onPress={() => reject(...args)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject} </Button>;
