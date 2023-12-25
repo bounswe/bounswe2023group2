@@ -42,7 +42,7 @@ class Recurrence(BaseModel):
     def convert_str_to_datetime(cls, value):
         if isinstance(value, str):
             try:
-                return datetime.datetime.strptime(value, '%Y-%m-%d')
+                return datetime.datetime.strptime(value, '%Y-%m-%d %H:%M')
             except ValueError:
                 raise ValueError("Incorrect date format, should be YYYY-MM-DD")
         return value

@@ -68,10 +68,10 @@ const actionService = {
       return Promise.reject(error);
     }
   },
-  doAction: async (action_id, accessToken) => {
+  perform: async (action_id,match, accessToken) => {
     try {
       
-      const data = await api.put(`api/actions/do/${action_id}`, {"action_id": action_id}, {
+      const data = await api.post(`/api/actions/perform_action/${action_id}`, match,{
          headers: { 
           Authorization: `Bearer ${accessToken}`,
          'Content-Type': 'application/json' 
@@ -85,6 +85,16 @@ const actionService = {
       return { status:400 , message: 'Error' };
     }
   },
+  getMatchlist: async (action_id, accessToken) => {
+    try {
+      const data = await api.get(`/api/actions/perform_action/${action_id}`, { headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": 'application/json' } });
+      console.log(data)
+      return { status:200, payload: {data: data?.data , message: 'Success'} };
+    } catch (error) {
+      console.log(error)
+      return { status:400 , message: 'Error' };
+    }
+  }
 };
 
 export default actionService;

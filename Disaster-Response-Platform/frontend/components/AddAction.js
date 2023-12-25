@@ -6,13 +6,12 @@ import {
   ModalBody,
 
 } from "@nextui-org/modal";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Select, SelectItem, select } from "@nextui-org/react";
+import { Button,  Input, Select, SelectItem} from "@nextui-org/react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { api } from "@/lib/apiUtils";
+
 import { useRouter } from "next/router";
 import actionForm from "./actionForm.json"
-import ListItem from "./ListItem";
 import actionService from "@/services/actionService";
 import ActivitySimple from "./ActivitySimple";
 export default function AddActionForm({ isOpen, onOpenChange, type= 'need', labels, selected}) {
@@ -169,7 +168,7 @@ export default function AddActionForm({ isOpen, onOpenChange, type= 'need', labe
                 />
                
                 
-                 
+              
               <Button type='submit'className="bg-action">
                 {isSubmitting ? 'Loading' : "Submit"}
               </Button>
