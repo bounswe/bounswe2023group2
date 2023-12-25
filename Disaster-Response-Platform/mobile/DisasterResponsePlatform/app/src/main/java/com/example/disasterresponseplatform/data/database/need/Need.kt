@@ -4,27 +4,28 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.disasterresponseplatform.data.database.DatabaseInfo
+import com.example.disasterresponseplatform.data.database.event.EventCols
 import com.example.disasterresponseplatform.data.enums.NeedTypes
 
 @Entity(tableName = DatabaseInfo.NEED)
 data class Need(
-    @PrimaryKey()
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo (name = NeedResourceCols.id)
-    val ID: String, // if user does not enter ID, it generates it automatically
+    val ID: Int?, // if user does not enter ID, it generates it automatically
     @ColumnInfo(name = NeedResourceCols.creatorName)
-    val creatorName: String,
+    val creatorName: String, // this is for controlling who creates this. If 2 different user create when no internet connection
     @ColumnInfo(name = NeedResourceCols.type)
-    val type: NeedTypes,
-    @ColumnInfo(name = NeedResourceCols.details)
-    val details: String,
-    @ColumnInfo(name = NeedResourceCols.creationTime)
-    val creationTime: String?,
+    val type: String,
+    @ColumnInfo(name = NeedResourceCols.shortDescription)
+    val shortDescription: String,
+    @ColumnInfo(name = NeedResourceCols.additionalNotes)
+    val additionalNotes: String,
     @ColumnInfo(name = NeedResourceCols.quantity)
-    val quantity: Int,
-    @ColumnInfo(name = NeedResourceCols.coordinateX)
-    val coordinateX: Double,
-    @ColumnInfo(name = NeedResourceCols.coordinateY)
-    val coordinateY: Double,
-    @ColumnInfo(name = NeedResourceCols.urgency)
-    val urgency: Int?
+    val quantity: Int = 1,
+    @ColumnInfo(name = NeedResourceCols.address)
+    val address: String,
+    @ColumnInfo(name = NeedResourceCols.x)
+    val x: Double,
+    @ColumnInfo(name = NeedResourceCols.y)
+    val y: Double,
 )

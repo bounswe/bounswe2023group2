@@ -16,7 +16,6 @@ import com.example.disasterresponseplatform.databinding.FragmentRegistrationBind
 class RegistrationFragment : Fragment() {
 
     private lateinit var binding: FragmentRegistrationBinding
-    private val forgotPasswordFragment = ForgotPasswordFragment()
     private val emailVerificationFragment = EmailVerificationFragment()
 
     override fun onCreateView(

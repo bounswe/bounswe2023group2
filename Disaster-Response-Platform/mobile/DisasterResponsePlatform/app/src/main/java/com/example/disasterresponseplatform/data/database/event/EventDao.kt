@@ -4,12 +4,18 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.disasterresponseplatform.data.database.DatabaseInfo
+import com.example.disasterresponseplatform.data.database.need.Need
 
 @Dao
 interface EventDao {
     @Insert
-    suspend fun insertActivation(event: Event)
+    suspend fun insertEvent(event: Event)
 
-    @Query("SELECT ${EventCols.location} FROM ${DatabaseInfo.EVENT} WHERE ${EventCols.creatorID} = :creatorID")
-    fun getLocation(creatorID: String): String
+    @Query("SELECT * FROM ${DatabaseInfo.EVENT}")
+    fun getAllEvents(): List<Event>?
+
+    @Query("DELETE FROM ${DatabaseInfo.EVENT} WHERE ${EventCols.id} = :id")
+    fun deleteEvent(id: Int)
+
+
 }

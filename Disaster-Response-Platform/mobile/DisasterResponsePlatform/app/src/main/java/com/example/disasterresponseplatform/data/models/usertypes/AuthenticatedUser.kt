@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 open class AuthenticatedUser(var username: String, var email: String, var phone: String,
-                             var name: String, var surname: String ) : Serializable {
+                             var name: String, var surname: String ) {
     var id: UUID = UUID.randomUUID()
     var isEmailVerified: Boolean = false
     var isPhoneVerified: Boolean = false
@@ -32,7 +32,7 @@ open class AuthenticatedUser(var username: String, var email: String, var phone:
     var roleBasedProficiency: String = ""
 
     class SocialMedia(var platformName: String, var profileURL: String)
-    class Skill(var definition: String, var level: String, var document: String)
+    class Skill(var definition: String, var level: String, var document: String?)
     class Language(var language: String, var level: String)
     class Profession(var profession: String, var level: String)
 

@@ -13,8 +13,7 @@ async function deleteSkillRoute(req, res) {
     const {url, skill} = req.body;
 
     try {
-        await api.delete(`/api/profiles/${url}`, {
-            data: skill,
+        await api.post(`/api/profiles/${url}`, skill, {
             headers: {
                 'Authorization': `Bearer ${user.accessToken}`,
                 'Content-Type': 'application/json',

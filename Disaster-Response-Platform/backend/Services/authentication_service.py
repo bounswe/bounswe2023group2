@@ -267,3 +267,14 @@ def delete_user(username: str):
     )
 
     return True
+
+def get_all_users():
+    users_cursor = userDb.find({})  # No filter to get all users
+    user_infos = []
+
+    for user_document in users_cursor:
+        # Exclude the password field
+        user_document.pop("password", None)  # Remove password if it exists, do nothing otherwise
+        user_infos.append(UserInfo(**user_document))
+
+    return user_infos

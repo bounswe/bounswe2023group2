@@ -24,6 +24,11 @@ class EmergencyViewModel@Inject constructor(private val emergencyRepository: Eme
         }
     }
 
+    suspend fun deleteEmergency(id: Int){
+        viewModelScope.launch(Dispatchers.IO){
+            emergencyRepository.deleteEmergency(id)
+        }
+    }
 
     private val liveDataIsDeleted = MutableLiveData<Boolean>()
     // this is for updating LiveData, it can be observed from where it is called
@@ -48,4 +53,5 @@ class EmergencyViewModel@Inject constructor(private val emergencyRepository: Eme
             emergencyRepository.deleteAllEmergencies()
         }
     }
+
 }

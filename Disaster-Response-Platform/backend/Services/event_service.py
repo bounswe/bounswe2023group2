@@ -6,6 +6,8 @@ from bson.objectid import ObjectId
 from Services.build_API_returns import *
 import Services.utilities
 
+from pymongo import ASCENDING, DESCENDING
+from typing import Optional
 
 # Get the resources collection using the MongoDB class
 events_collection = MongoDB.get_collection('events')
@@ -24,9 +26,74 @@ def create_event(event: Event) -> str:
         raise ValueError("Event could not be created")
 
 def get_event_by_id(event_id: str) -> list[dict]:
-    return get_events(event_id)
+    return get_events_X(event_id)
 
-def get_events(event_id:str = None) -> list[dict]:
+def get_events(event_id:str = None, types: list = None,
+               is_active: Optional[bool] = None,
+               x: float = None,
+               y: float = None,
+               distance_max: float = None,
+               sort_by: str = 'created_at',
+               order: Optional[str] = 'desc'
+               )  -> list[dict]:
+    projection = {"_id": {"$toString": "$_id"},
+                  "event_type": 1,
+                  "event_time": 1,
+                  "end_time": 1,
+                  "is_active":1,
+                  "x": 1,
+                  "y": 1,
+                  "max_distance_x": 1,
+                  "max_distance_y": 1,
+                  "created_time": 1,
+                  "created_by_user": 1,
+                  "last_confirmed_time": 1,
+                  "confirmed_by_user": 1,
+                  "short_description": 1,
+                  "downvote": 1,
+                  "upvote": 1,
+                  "note": 1
+    }
+    sort_order = ASCENDING if order == 'asc' else DESCENDING
+    query = {}
+
+    if event_id:
+        if ObjectId.is_valid(event_id):
+            query['_id'] = ObjectId(event_id)
+        else:
+            raise ValueError(f"Event id {event_id} is invalid")
+    else:
+        # Apply general filters only when no specific resource ID is provided
+
+        if is_active is not None:
+            query['is_active'] = is_active
+        if types:
+            query['event_type'] = {'$in': types}
+        # Apply the query and sort order to the database call
+        events_cursor = events_collection.find(query, projection).sort(sort_by, sort_order)
+        events_data = list(events_cursor)  # Convert cursor to list
+
+        # Filter by distance if necessary
+        if x is not None and y is not None and distance_max is not None:
+            events_data = [res for res in events_data if
+                              ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
+
+        # Format the resource data
+        formatted_events_data = []
+        for event in events_data:
+            if 'created_time' in event:
+                event['created_time'] = event['created_time'].strftime('%Y-%m-%d %H:%M:%S')
+            if 'last_confirmed_time' in event:
+                if event['last_confirmed_time'] is not None:
+                    event['last_confirmed_time'] = event['last_confirmed_time'].strftime('%Y-%m-%d %H:%M:%S')
+            formatted_events_data.append(event)
+
+        # Generate the result list
+        result_list = create_json_for_successful_data_fetch(formatted_events_data, "events")
+        return result_list
+
+
+def get_events_X(event_id:str = None) -> list[dict]:
     projection = {"_id": {"$toString": "$_id"},
                   "event_type": 1,
                   "event_time": 1,

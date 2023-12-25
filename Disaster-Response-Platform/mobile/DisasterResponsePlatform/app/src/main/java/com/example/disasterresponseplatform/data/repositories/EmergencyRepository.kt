@@ -16,4 +16,8 @@ class EmergencyRepository @Inject constructor(private val emergencyDao: Emergenc
     suspend fun deleteAllEmergencies(){
         emergencyDao.deleteAllEmergencies()
     }
+
+    suspend fun deleteEmergency(id: Int){
+        emergencyDao.deleteEmergency(id)
+    }
 }

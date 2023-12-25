@@ -46,7 +46,6 @@ import retrofit2.Response
 class ProfileFragment(var username: String?) : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    private val editProfileFragment = EditProfileFragment()
     private var profileLevel: Int = 0
 
     override fun onCreateView(
@@ -68,7 +67,7 @@ class ProfileFragment(var username: String?) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         profileLevel = 0
         lateinit var user: AuthenticatedUser
-        if (!DiskStorageManager.hasKey("token")) {
+        if (!DiskStorageManager.checkToken()) {
             binding.profileLoginFirstText.visibility = View.VISIBLE
             binding.profileProgressBar.visibility = View.GONE
             replaceFragment(LoginFragment())
@@ -153,7 +152,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                 user.phone = res.phoneNumber
                                 user.name = res.firstName
                                 user.surname = res.lastName
-                                user.profileInfoShared = res.privateAccount
+                                user.profileInfoShared = !res.privateAccount
                                 user.isEmailVerified = res.isEmailVerified
 
                                 clickButtons(user)
@@ -197,6 +196,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                     user.healthCondition = res.healthCondition
                                     user.bloodType = res.bloodType
                                     user.address = res.address
+                                    user.profilePhoto = res.profilePicture
                                 } else {
                                     println("res null")
                                 }
@@ -305,7 +305,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                             AuthenticatedUser.Skill(
                                                 skill.second,
                                                 skill.third,
-                                                ""
+                                                skill.skillDocument
                                             )
                                         )
                                     }
@@ -451,7 +451,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                 user.phone = res.phoneNumber
                                 user.name = res.firstName
                                 user.surname = res.lastName
-                                user.profileInfoShared = res.privateAccount
+                                user.profileInfoShared = !res.privateAccount
                                 user.isEmailVerified = res.isEmailVerified
 
                                 clickButtons(user)
@@ -614,7 +614,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                 }
                 when (socialMedia.platformName.lowercase()) {
                     "linkedin" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.linkedin_icon)
-                    "x" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.x_icon)
+                    "x", "twitter" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.x_icon)
                     "github" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.github_icon)
                     "youtube" -> profileItemBinding.profileItemIcon.setImageResource(R.drawable.youtube_icon)
                 }
@@ -627,10 +627,12 @@ class ProfileFragment(var username: String?) : Fragment() {
                     ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
                 profileItemBinding.profileItemText.text = skill.definition + ": " + skill.level
                 profileItemBinding.profileItemLink.visibility = View.VISIBLE
+                if (skill.document != null)
                 profileItemBinding.profileItemLink.setOnClickListener {
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(skill.document))
                     startActivity(browserIntent)
                 }
+                else profileItemBinding.profileItemLink.visibility = View.GONE
                 profileTopLayout.addView(profileItemBinding.root, 18 + counter)
                 counter++
             }
@@ -655,19 +657,21 @@ class ProfileFragment(var username: String?) : Fragment() {
     }
 
     private fun clickButtons(user: AuthenticatedUser) {
-
-        binding.profileEditButton.setOnClickListener {
-            addFragment(editProfileFragment, user)
+        // if user (on see user profile) is the same as owner of profile, or user tries to see his/her own profile
+        if (username == DiskStorageManager.getKeyValue("username") || username == null){
+            binding.profileEditButton.setOnClickListener {
+                val editProfileFragment = EditProfileFragment(user)
+                addFragment(editProfileFragment,"EditProfileFragment")
+            }
+        } else{
+            binding.profileEditButton.visibility = View.GONE
         }
     }
 
-    private fun addFragment(fragment: Fragment, user: AuthenticatedUser) {
+    private fun addFragment(fragment: Fragment,fragmentName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
-        val bundle = Bundle()
-        bundle.putSerializable("user", user)
-        fragment.arguments = bundle
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(null)
+        ft.addToBackStack(fragmentName)
         ft.commit()
     }
 

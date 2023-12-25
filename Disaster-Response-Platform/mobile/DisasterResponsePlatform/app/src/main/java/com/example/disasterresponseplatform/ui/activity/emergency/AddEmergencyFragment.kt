@@ -48,7 +48,7 @@ class AddEmergencyFragment(
         }
 
         trackUserPickLocation()
-        binding.etCoordinate.setEndIconOnClickListener {
+        binding.etCoordinate.setStartIconOnClickListener {
             navigateToMapFragment()
         }
         setupButtons()
@@ -104,7 +104,9 @@ class AddEmergencyFragment(
                     description = binding.etDescription.text.toString(),
                     creatorName = binding.etFullname.text.toString(),
                     contactNumber = binding.etPhoneNumber.text.toString(),
-                    location = binding.etCoordinate.editText?.text.toString())
+                    location = binding.etCoordinate.editText?.text.toString(),
+                    x = selectedLocationX,
+                    y = selectedLocationY)
                 emergencyViewModel.insertEmergency(newEmergency) //insert local db
 
                 if (isAdded) { // to ensure it attached a context

@@ -159,7 +159,7 @@ def get_resources(
         formatted_resources_data.append(resource)
 
     # Generate the result list
-    result_list = create_json_for_successful_data_fetch(resources_data, "resources")
+    result_list = create_json_for_successful_data_fetch(formatted_resources_data, "resources")
     return result_list
     
 def update_resource(resource_id: str, resource: Resource) -> Resource:
