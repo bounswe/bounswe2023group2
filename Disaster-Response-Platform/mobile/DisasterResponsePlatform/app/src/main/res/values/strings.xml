@@ -333,4 +333,13 @@
         <item>Hate Speech</item>
     </string-array>
 
+    <!-- Recurrence Activities (with Capital Letter -->
+    <string-array name="recurrence_activities">
+        <item>Action</item>
+        <item>Emergency</item>
+        <item>Event</item>
+        <item>Need</item>
+        <item>Resource</item>
+    </string-array>
+
 </resources>
