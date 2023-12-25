@@ -11,6 +11,8 @@
     flex-direction: row;
     justify-content: space-between;
     width: 100% !important;
+    padding-left: 40vw;  // Add 20vw padding on the left
+    padding-right: 40vw; // Add 20vw padding on the right
     nav {
         margin-left: 0.5em;
         div {
@@ -50,3 +52,6 @@
 
 }
 
+.bg-gradient-horizontal {
+    background: linear-gradient(to right, #0d7ef8, #0a7af1); /* Replace 'blue' and 'bluish-purple' with your desired color values */
+  }

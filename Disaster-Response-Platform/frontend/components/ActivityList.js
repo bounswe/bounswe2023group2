@@ -121,7 +121,7 @@ const ActivityList = ({ labels, userFilter }) => {
             <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={chosenActivityType} />
 
         </div>
-        <div className=' max-h-[700px] bg-slate-500 overflow-y-auto w-4/5 p-2'>
+        <div className=' max-h-[700px] bg-slate-200 shadow-inner rounded-xl overflow-y-auto w-4/5 p-2'>
             <div className="text-end ">
                 <Search search={search} setSearch={setSearch} chosenActivityType={chosenActivityType} activities={activities} setActivities={setActivities} />
                 <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} labels={labels} />

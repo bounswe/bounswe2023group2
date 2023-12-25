@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import fetchJson from "@/lib/fetchJson";
 import styles from "./NavigationBar.module.scss";
 import { FaMapMarkedAlt } from "react-icons/fa";
-import add from "../public/icons/add.png";
+import add from "../public/icons/add.svg";
 import dapp_logo_extended_white from "../public/logo/dapp_logo_extended_white.svg";
 import Image from "next/image";
 import AddNeedForm from "./AddNeed";
@@ -62,17 +62,16 @@ export default function NavBar({ labels }) {
         //  className='w-full justify-center p-0  m-0  text-black bg-need'
       isBordered
       classNames={{
-        base: "bg-need w-full",
-        wrapper: "w-full justify-between p-0  m-0  text-black bg-need",
-        content: "w-full justify-between p-0  m-0  text-black bg-need",
-
+      base: styles['bg-gradient-horizontal'] + " w-full",
+      wrapper: " w-full justify-between px-40vw m-0 text-black",
+      content: " w-full justify-between px-40vw m-0 text-black",
       }
 
       }
 
     >
       <NavbarContent justify="center" >
-        <NavbarBrand className="hover:-translate-y-1 duration-300">
+        <NavbarBrand>
           <Link href={`/`}>
             <Image
               src={dapp_logo_extended_white}
