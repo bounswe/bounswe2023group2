@@ -8,6 +8,7 @@ import Services.utilities
 
 from pymongo import ASCENDING, DESCENDING
 from typing import Optional
+import math
 
 # Get the resources collection using the MongoDB class
 events_collection = MongoDB.get_collection('events')
@@ -26,33 +27,35 @@ def create_event(event: Event) -> str:
         raise ValueError("Event could not be created")
 
 def get_event_by_id(event_id: str) -> list[dict]:
-    return get_events_X(event_id)
+    return get_events(event_id)
 
-def get_events(event_id:str = None, types: list = None,
+def get_events(event_id: str = None, types: list = None,
                is_active: Optional[bool] = None,
                x: float = None,
                y: float = None,
                distance_max: float = None,
                sort_by: str = 'created_at',
                order: Optional[str] = 'desc'
-               )  -> list[dict]:
-    projection = {"_id": {"$toString": "$_id"},
-                  "event_type": 1,
-                  "event_time": 1,
-                  "end_time": 1,
-                  "is_active":1,
-                  "x": 1,
-                  "y": 1,
-                  "max_distance_x": 1,
-                  "max_distance_y": 1,
-                  "created_time": 1,
-                  "created_by_user": 1,
-                  "last_confirmed_time": 1,
-                  "confirmed_by_user": 1,
-                  "short_description": 1,
-                  "downvote": 1,
-                  "upvote": 1,
-                  "note": 1
+               ) -> list[dict]:
+    projection = {
+        "_id": {"$toString": "$_id"},
+        "event_type": 1,
+        "event_time": 1,
+        "end_time": 1,
+        "is_active": 1,
+        "x": 1,
+        "y": 1,
+        "max_distance_x": 1,
+        "max_distance_y": 1,
+        "created_time": 1,
+        "created_by_user": 1,
+        "last_confirmed_time": 1,
+        "confirmed_by_user": 1,
+        "short_description": 1,
+        "downvote": 1,
+        "upvote": 1,
+        "reliability": 1,
+        "note": 1
     }
     sort_order = ASCENDING if order == 'asc' else DESCENDING
     query = {}
@@ -76,9 +79,27 @@ def get_events(event_id:str = None, types: list = None,
         # Filter by distance if necessary
         if x is not None and y is not None and distance_max is not None:
             events_data = [res for res in events_data if
-                              ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
+                           ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
 
-        # Format the resource data
+        for event in events_data:
+            upvotes = event.get('upvote', 0)
+            downvotes = event.get('downvote', 0)
+            total_votes = upvotes + downvotes
+
+            if total_votes > 0:
+                z = 1.96  # 95% confidence interval
+                phat = upvotes / total_votes
+                event['reliability'] = (
+                            phat + z ** 2 / (2 * total_votes) - z * math.sqrt(
+                        (phat * (1 - phat) + z ** 2 / (4 * total_votes)) / total_votes)) / (1 + z ** 2 / total_votes)
+            else:
+                event['reliability'] = 0.5  # Default score for no votes
+
+        # Calculate and sort by reliability score if requested
+        if sort_by == 'reliability':
+            events_data.sort(key=lambda x: x['reliability'], reverse=(order == 'desc'))
+
+        # Formatting datetime fields
         formatted_events_data = []
         for event in events_data:
             if 'created_time' in event:
@@ -93,44 +114,44 @@ def get_events(event_id:str = None, types: list = None,
         return result_list
 
 
-def get_events_X(event_id:str = None) -> list[dict]:
-    projection = {"_id": {"$toString": "$_id"},
-                  "event_type": 1,
-                  "event_time": 1,
-                  "end_time": 1,
-                  "is_active":1,
-                  "x": 1,
-                  "y": 1,
-                  "max_distance_x": 1,
-                  "max_distance_y": 1,
-                  "created_time": 1,
-                  "created_by_user": 1,
-                  "last_confirmed_time": 1,
-                  "confirmed_by_user": 1,
-                  "short_description": 1,
-                  "downvote": 1,
-                  "upvote": 1,
-                  "note": 1
-    }
+# def get_events_X(event_id:str = None) -> list[dict]:
+#     projection = {"_id": {"$toString": "$_id"},
+#                   "event_type": 1,
+#                   "event_time": 1,
+#                   "end_time": 1,
+#                   "is_active":1,
+#                   "x": 1,
+#                   "y": 1,
+#                   "max_distance_x": 1,
+#                   "max_distance_y": 1,
+#                   "created_time": 1,
+#                   "created_by_user": 1,
+#                   "last_confirmed_time": 1,
+#                   "confirmed_by_user": 1,
+#                   "short_description": 1,
+#                   "downvote": 1,
+#                   "upvote": 1,
+#                   "note": 1
+#     }
 
-    if (event_id is None):
-        query = {}
-    else:
-        if (ObjectId.is_valid(event_id)):
-            query = {"_id": ObjectId(event_id)}
-        else:
-            raise ValueError(f"Event id {event_id} is invalid")
+#     if (event_id is None):
+#         query = {}
+#     else:
+#         if (ObjectId.is_valid(event_id)):
+#             query = {"_id": ObjectId(event_id)}
+#         else:
+#             raise ValueError(f"Event id {event_id} is invalid")
 
-    events_data = events_collection.find(query, projection)
+#     events_data = events_collection.find(query, projection)
 
-    if (events_data.explain()["executionStats"]["nReturned"] == 0):
-        if event_id is None:
-            raise ValueError(f"No event exists")
-        else:
-            raise ValueError(f"Event {event_id} does not exist")
+#     if (events_data.explain()["executionStats"]["nReturned"] == 0):
+#         if event_id is None:
+#             raise ValueError(f"No event exists")
+#         else:
+#             raise ValueError(f"Event {event_id} does not exist")
 
-    result_list = create_json_for_successful_data_fetch(events_data, "events")
-    return result_list
+#     result_list = create_json_for_successful_data_fetch(events_data, "events")
+#     return result_list
     
 def update_event(event_id: str, event:Event) -> list[dict]:
     # Fetch the existing resource
