@@ -49,6 +49,7 @@ class EmergencyFragment(
     private lateinit var searchView: SearchView
     private var requireActivity: FragmentActivity? = null
     private val mapFragment = ActivityMap()
+    private lateinit var emergencyList: List<EmergencyBody.EmergencyItem>
     private val networkManager = NetworkManager()
     private val userRoleMap: MutableMap<String, String> = mutableMapOf()
 
@@ -133,6 +134,7 @@ class EmergencyFragment(
 
         emergencyViewModel.getAllEmergencies(queries)
         emergencyViewModel.getLiveDataResponse().observe(requireActivity!!){ emergencyResponse ->
+            emergencyList = emergencyResponse.emergencies
             arrangeRecyclerView(emergencyResponse.emergencies)
         }
     }
