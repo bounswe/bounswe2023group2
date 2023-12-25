@@ -111,7 +111,7 @@ class AddNeedFragment(
             }
             binding.btnSubmit.isEnabled = false
 
-            if (validateFields(binding.laySpecific) && validateRecurrence() && validateFields(binding.layOthers) && validateHardcodedFields()) {
+            if (validation()) {
 
                 val needPost = generatePostNeed()
                 editOrPostNeed(needPost,isAdd)
@@ -122,6 +122,13 @@ class AddNeedFragment(
                 binding.btnSubmit.isEnabled = true
             }
         }
+    }
+
+    private fun validation(): Boolean{
+        return (validateFields(binding.laySpecific) &&
+                validateRecurrence() &&
+                validateFields(binding.layOthers) &&
+                validateHardcodedFields())
     }
 
     /**
@@ -200,30 +207,25 @@ class AddNeedFragment(
     private fun generatePostNeed(): NeedBody.NeedRequestBody {
         val othersList = getOthersList()
         var description: String? = ""
-        var occurAt: String? = ""
-        var recurrenceRate: Int? = null
-        var recurrenceDeadline: String? = ""
         var urgency: Int = 1
         for (field in othersList) {
             Log.i("NEW VALUE", "fieldname: ${field.fieldName}")
             when (field.fieldName) {
                 "Description" -> description = field.input
                 "Urgency" -> urgency = field.input.toInt()
-                "Occur At" -> occurAt = field.input
-                "Recurrence Rate" -> {
-                    if (field.input.isNotEmpty())
-                        recurrenceRate = field.input.toInt()
-                }
-
-                "Recurrence Deadline" -> recurrenceDeadline = field.input
             }
         }
-
         if (description == "") description = null
-        occurAt = if (occurAt == "") null else dateForBackend(occurAt!!)
-        recurrenceDeadline =
-            if (recurrenceDeadline == "") null else dateForBackend(recurrenceDeadline!!)
-        Log.i("occurAt", "occurAt: $occurAt")
+
+        var startAt: String? = null
+        var recurrenceRate: Int? = null
+        var endAt: String? = null
+        if (binding.swRecurrenceFilter.isChecked){
+            recurrenceRate = binding.spRecurrenceRate.text.toString().trim().toInt() // 1,2,3 ?
+            startAt = dateForBackend(binding.etStartDateInput.text.toString())
+            endAt = dateForBackend(binding.etEndDateInput.text.toString())
+        }
+
 
         val subtypeAsLst = mutableListOf<NeedBody.DetailedFields>()
         val subType = binding.spNeedSubType.text.toString().trim()
@@ -244,7 +246,7 @@ class AddNeedFragment(
         //needViewModel.insertNeed(need) insert local db
         return NeedBody.NeedRequestBody(
             description, quantity, urgency, quantity, type2, detailsMap, openAddress,
-            coordinateX, coordinateY, occurAt, recurrenceRate, recurrenceDeadline
+            coordinateX, coordinateY, startAt, recurrenceRate, endAt
         )
     }
 
@@ -305,7 +307,7 @@ class AddNeedFragment(
             android.R.layout.simple_dropdown_item_1line,
             recurrenceUnitList
         )
-        val recurrenceRateList: List<Int> = listOf(1,2,3)
+        val recurrenceRateList: List<Int> = listOf(1,2,3,2880)
         val rateAdapter = ArrayAdapter<Int>(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
