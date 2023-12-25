@@ -112,6 +112,7 @@
 		"update": "Update",
 		"remove": "Remove",
 		"delete": "Delete",
+		"report": "Report",
 		"cancel": "Cancel",
 		"close": "Close",
 		"loading": "Loading",
@@ -212,6 +213,18 @@
 			"max_distance_y": "Affected distance (North-South)",
 			"short_description": "Short description",
 			"note": "Extra notes"
+		},
+		"emergency_form": {
+			"News": "News",
+			"Debris": "Debris",
+			"Fire": "Fire",
+			"Medical Emergency": "Medical Emergency",
+			"contact_name": "Contact Name (optional)",
+			"contact_number": "Contact Number (optional)",
+			"description": "Description",
+			"x": "Center longitude (West-East)",
+			"y": "Center latitude (North-South)",
+			"location": "Location"
 		}
 	},
 	"placeholders": {
