@@ -46,7 +46,7 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({_id, report_type, report_type_id})
+      body: JSON.stringify({report_id: _id, report_type, report_type_id})
     });
     if (!response.ok) {
       toast(labels.feedback.failure);
@@ -274,11 +274,94 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels}};
     }
 
-    const { data: {user_list: allUsers} } = await api.get('/api/users/', {
+    /*const { data: {user_list: allUsers} } = await api.get('/api/users/', {
       headers: {
         'Authorization': `Bearer ${user.accessToken}` 
       }
-    });
+    });*/
+    let allUsersInit = [
+      {
+        "username": "egecans",
+        "email": "egecanserbester@hotmail.com",
+        "first_name": "egecan",
+        "last_name": "serbester",
+        "phone_number": "05346711291",
+        "is_email_verified": false,
+        "private_account": false,
+        "user_role": "ROLE_BASED",
+        "proficiency": {
+          "proficiency": null,
+          "details": null
+        }
+      },
+      {
+        "username": "ibrahim",
+        "email": "egecans@hotmail.com",
+        "first_name": "egecannn",
+        "last_name": "serbester",
+        "phone_number": "05346717191",
+        "is_email_verified": false,
+        "private_account": true,
+        "user_role": "ROLE_BASED",
+        "proficiency": {
+          "proficiency": null,
+          "details": null
+        }
+      },
+      {
+        "username": "egecanslar",
+        "email": "merv@gmail.com",
+        "first_name": "skdfhsdjf",
+        "last_name": "sdfjsdflkj",
+        "phone_number": null,
+        "is_email_verified": false,
+        "private_account": false,
+        "user_role": "AUTHENTICATED",
+        "proficiency": {
+          "proficiency": null,
+          "details": null
+        }
+      },
+      {
+        "username": "amdin_can",
+        "email": "yo@yo.com",
+        "first_name": "amdin",
+        "last_name": "by can bora",
+        "phone_number": "05554443321",
+        "is_email_verified": false,
+        "private_account": false,
+        "user_role": "ADMIN",
+        "proficiency": {
+          "proficiency": null,
+          "details": null
+        }
+      },
+      {
+        "username": "DrCan",
+        "email": "canboraugur@gmail.com",
+        "first_name": "Can",
+        "last_name": "Can",
+        "phone_number": "05555577777",
+        "is_email_verified": false,
+        "private_account": false,
+        "user_role": "ROLE_BASED",
+        "proficiency": {
+          "proficiency": "doctor",
+          "details": "Bir doktor değiliz ama hastamız çok ..."
+        }
+      },
+      {
+        "username": "trust_me",
+        "first_name": "Reliable",
+        "last_name": "Guy",
+        "phone_number": "05353535353",
+        "is_email_verified": true,
+        "private_account": false,
+        "email": "not@scam.com",
+        "user_role": "CREDIBLE",
+        "proficiency": {}
+      }
+    ]
 
     allUsersInit = allUsersInit.map((user, index) => ({...user, initialCredible: user.user_role === "CREDIBLE", index: index}));
 
