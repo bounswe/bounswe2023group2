@@ -122,6 +122,7 @@ data class Skill(
     @SerializedName("username") val first: String,
     @SerializedName("skill_definition") val second: String,
     @SerializedName("skill_level") val third: String,
+    @SerializedName("skill_document") val skillDocument: String?,
 )
 
 data class SkillArray(
