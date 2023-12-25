@@ -26,7 +26,6 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
     const desiredForm = resourceForm['tr'];
     setForm(desiredForm);
   }
-  
 
   const getSubtypes = async (value) => {
     const result = await api.get(`/api/form_fields/type/${value}`)

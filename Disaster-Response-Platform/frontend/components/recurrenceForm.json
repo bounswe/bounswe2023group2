@@ -11,25 +11,6 @@
       "type": "text"
     },
     {
-      "name": "activity",
-      "label": "Activity Type",
-      "type": "select",
-      "options": [
-        {
-          "key": "need",
-          "value": "Need",
-          "label": "need",
-          "index": 0
-        },
-        {
-          "key": "resource",
-          "value": "Resource",
-          "label": "resource",
-          "index": 1
-        }
-      ]
-    },
-    {
       "name": "occurance_rate",
       "label": "Occurrence Rate",
       "type": "number"
@@ -60,11 +41,6 @@
       ]
     },
     {
-      "name": "duration",
-      "label": "Duration",
-      "type": "number"
-    },
-    {
       "name": "start_at",
       "label": "Start Date",
       "type": "date"
@@ -86,25 +62,7 @@
       "label": "Açıklama",
       "type": "text"
     },
-    {
-      "name": "activity",
-      "label": "Aktivite Türü",
-      "type": "select",
-      "options": [
-        {
-          "key": "need",
-          "value": "Need",
-          "label": "ihtiyaç",
-          "index": 0
-        },
-        {
-          "key": "resource",
-          "value": "Resource",
-          "label": "kaynak",
-          "index": 1
-        }
-      ]
-    },
+    
     {
       "name": "occurance_rate",
       "label": "Oluşma Hızı",
@@ -134,11 +92,6 @@
           "index": 2
         }
       ]
-    },
-    {
-      "name": "duration",
-      "label": "Süre",
-      "type": "number"
     },
     {
       "name": "start_at",

@@ -85,8 +85,10 @@ def add_job(job):
             occurrance = {job['occurance_unit']+ 's': 1/job['occurance_rate']}
             occurrance['id'] = str(job['_id'])
             scheduler.add_job(add_resource, 'interval',args =[resource_new], **occurrance)
-    except:
-        raise ValueError("Recurrence could not be scheduled")
+    except Exception as e:
+        print(e)
+        return
+       
     
 def cancel_job(_id):
     try:

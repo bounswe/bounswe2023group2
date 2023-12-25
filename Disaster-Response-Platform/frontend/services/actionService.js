@@ -2,15 +2,7 @@ import { api } from "@/lib/apiUtils";
 
 
 const actionService = {
-  needList: async (params) => {
-    // const accessToken = getToken('accessToken');
-    try {
-      const data = await api.get(`api/actions/`, { params, headers: { Authorization: `Bearer ${accessToken}` , "Content-Type": "application/json" } });
-      return Promise.resolve(data?.data);
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  },
+
   show: async (id) => {
     // const accessToken = getToken('accessToken');
     try {
@@ -18,6 +10,36 @@ const actionService = {
       return { status:200, payload: {data: data?.data , message: 'Success'} };
     } catch (error) {
       return { status:400 , message: 'Error' };
+    }
+  },
+  needList: async (resource_id) => {
+    try {
+      const result = await api.get(`/api/actions/need_list/${resource_id}`);
+      if(result.status === 200){
+        return { status:200, payload: result?.data };
+      }
+      if(result.status === 422){
+        return { status:422 , message: 'Request fields error' };
+      }
+      return { status:500 , message: 'Internal' };
+     
+    } catch (error) {
+      return { status:500 , message: 'Frontend error' };
+    }
+  },
+  resourceList: async (need_id) => {
+    try {
+      const result = await api.get(`/api/actions/resource_list/${need_id}`);
+      if(result.status === 200){
+        return { status:200, payload: result?.data };
+      }
+      if(result.status === 422){
+        return { status:422 , message: 'Request fields error' };
+      }
+      return { status:500 , message: 'Internal' };
+     
+    } catch (error) {
+      return { status:500 , message: 'Frontend error' };
     }
   },
   createAction: async (body, accessToken) => {
@@ -38,8 +60,6 @@ const actionService = {
       return { status:400 , message: 'Error' };
     }
   },
-
-  
   deleteAction: async (id, body, accessToken) => {
     try {
       const data = await api.delete(`/api/actions/${id}`, { headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": 'application/json' } });
@@ -49,7 +69,6 @@ const actionService = {
     }
   },
   doAction: async (action_id, accessToken) => {
-   
     try {
       
       const data = await api.put(`api/actions/do/${action_id}`, {"action_id": action_id}, {
