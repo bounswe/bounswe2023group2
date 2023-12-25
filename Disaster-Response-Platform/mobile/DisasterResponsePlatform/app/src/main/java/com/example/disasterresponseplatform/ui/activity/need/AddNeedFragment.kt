@@ -281,7 +281,7 @@ class AddNeedFragment(
                 val coordinateY = selectedLocationY
 
                 if (description != null) {
-                    annotation.publishAnnotation(DiskStorageManager.getKeyValue("username")!! + subType, description)
+                    annotation.publishAnnotation(DiskStorageManager.getKeyValue("username")!! + "-need-" + subType, description)
                 }
 
                 //val newNeed = Need(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
