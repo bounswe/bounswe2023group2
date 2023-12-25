@@ -57,6 +57,7 @@ class EventBody {
         disaster("Disaster"),
         helpArrived("Help-Arrived")
     }
+    data class EventSearchResponse(val results: List<EventRequestBody>)
 
 
 }
