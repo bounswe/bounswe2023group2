@@ -24,6 +24,7 @@ import com.example.disasterresponseplatform.data.models.authModels.LanguageArray
 import com.example.disasterresponseplatform.data.models.authModels.ProfessionArray
 import com.example.disasterresponseplatform.data.models.authModels.SkillArray
 import com.example.disasterresponseplatform.data.models.authModels.SocialMediaArray
+import com.example.disasterresponseplatform.data.models.authModels.UserGetProficiencyResponse
 import com.example.disasterresponseplatform.data.models.authModels.UserRolesResponse
 import com.example.disasterresponseplatform.data.models.authModels.UsersMeOptionalResponse
 import com.example.disasterresponseplatform.data.models.authModels.UsersMeResponse
@@ -103,24 +104,59 @@ class ProfileFragment(var username: String?) : Fragment() {
                                 when (res.user_role) {
                                     "CREDIBLE" -> {
                                         user.role = Role.CREDIBLE
+                                        fillInformations(user)
                                     }
                                     "ROLE_BASED" -> {
                                         user.role = Role.ROLE_BASED
+                                        networkManager.makeRequest(
+                                            endpoint = Endpoint.GETPROFICIENCY,
+                                            requestType = RequestType.GET,
+                                            headers = headers,
+                                            callback = object : Callback<ResponseBody> {
+                                                override fun onResponse(
+                                                    call: Call<ResponseBody>,
+                                                    response: Response<ResponseBody>
+                                                ) {
+                                                    if (response.isSuccessful()) {
+                                                        val body = response.body()?.string()
+                                                        val gson = Gson()
+                                                        println(body)
+                                                        val res = gson.fromJson(body, UserGetProficiencyResponse::class.java)
+                                                        user.roleBasedProficiency = res.proficiency.proficiency
+                                                        fillInformations(user)
+                                                    } else {
+                                                        println("response not successful")
+                                                        println(response.message())
+                                                        fillInformations(user)
+                                                    }
+                                                }
+
+                                                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                                    println("userrole request failed")
+                                                    fillInformations(user)
+                                                }
+
+                                            }
+                                        )
                                     }
                                     "ADMIN" -> {
                                         user.role = Role.ADMIN
+                                        fillInformations(user)
                                     }
-                                    else -> {}
+                                    else -> {
+                                        fillInformations(user)
+                                    }
                                 }
-                                fillInformations(user)
                             } else {
                                 println("response not successful")
                                 println(response.message())
+                                fillInformations(user)
                             }
                         }
 
                         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                             println("userrole request failed")
+                            fillInformations(user)
                         }
 
                     }
@@ -148,12 +184,12 @@ class ProfileFragment(var username: String?) : Fragment() {
                                 val res = gson.fromJson(body, UsersMeResponse::class.java)
 
                                 user.username = res.username
-                                user.email = res.email
-                                user.phone = res.phoneNumber
+                                user.email = res.email!!
+                                user.phone = res.phoneNumber!!
                                 user.name = res.firstName
                                 user.surname = res.lastName
                                 user.profileInfoShared = !res.privateAccount
-                                user.isEmailVerified = res.isEmailVerified
+                                user.isEmailVerified = res.isEmailVerified!!
 
                                 clickButtons(user)
                                 fillInformations(user)
@@ -381,48 +417,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                     }
                 }
                 user = AuthenticatedUser("", "", "", "", "")
-
-                networkManager.makeRequest(
-                    endpoint = Endpoint.GETUSER,
-                    requestType = RequestType.GET,
-                    headers = headers,
-                    id = username,
-                    callback = object : Callback<ResponseBody> {
-                        override fun onResponse(
-                            call: Call<ResponseBody>,
-                            response: Response<ResponseBody>
-                        ) {
-                            if (response.isSuccessful()) {
-                                val body = response.body()?.string()
-                                val gson = Gson()
-                                println(body)
-                                val res = gson.fromJson(body, UserRolesResponse::class.java)
-                                println("USER ROLE: " + res.user_role)
-                                when (res.user_role) {
-                                    "CREDIBLE" -> {
-                                        user.role = Role.CREDIBLE
-                                    }
-                                    "ROLE_BASED" -> {
-                                        user.role = Role.ROLE_BASED
-                                    }
-                                    "ADMIN" -> {
-                                        user.role = Role.ADMIN
-                                    }
-                                    else -> {}
-                                }
-                                fillInformations(user)
-                            } else {
-                                println("response not successful")
-                                println(response.message())
-                            }
-                        }
-
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            println("userrole request failed")
-                        }
-
-                    }
-                )
+                fillInformations(user)
 
                 networkManager.makeRequest(
                     endpoint = Endpoint.USERS,
@@ -440,31 +435,57 @@ class ProfileFragment(var username: String?) : Fragment() {
                             call: Call<ResponseBody>,
                             response: Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful) {
-                                val body = response.body()?.string()
-                                val gson = Gson()
-                                println(body)
-                                val res = gson.fromJson(body, UsersMeResponse::class.java)
-
-                                user.username = res.username
-                                user.email = res.email
-                                user.phone = res.phoneNumber
-                                user.name = res.firstName
-                                user.surname = res.lastName
-                                user.profileInfoShared = !res.privateAccount
-                                user.isEmailVerified = res.isEmailVerified
-
-                                clickButtons(user)
-                                fillInformations(user)
-                            } else {
+                            if (!response.isSuccessful) {
                                 print(response.message())
                                 println("Hello")
                                 binding.profileLoginFirstText.visibility = View.VISIBLE
                                 binding.profileProgressBar.visibility = View.GONE
                                 binding.profileLoginFirstText.text =
                                     getString(R.string.pr_hidden_profile)
-//                                replaceFragment(LoginFragment())
+                                return
                             }
+                            val body = response.body()?.string()
+                            val gson = Gson()
+                            println(body)
+                            val res = gson.fromJson(body, UsersMeResponse::class.java)
+
+                            if (res.email == null) {
+                                binding.profileLoginFirstText.visibility = View.VISIBLE
+                                binding.profileProgressBar.visibility = View.GONE
+                                binding.profileLoginFirstText.text =
+                                    getString(R.string.pr_hidden_profile)
+                                return
+                            }
+
+                            user.username = res.username
+                            user.email = res.email
+                            user.phone = res.phoneNumber!!
+                            user.name = res.firstName
+                            user.surname = res.lastName
+                            user.profileInfoShared = !res.privateAccount
+                            user.isEmailVerified = res.isEmailVerified!!
+                            when (res.userRole) {
+                                "CREDIBLE" -> {
+                                    user.role = Role.CREDIBLE
+                                }
+                                "ROLE_BASED" -> {
+                                    user.role = Role.ROLE_BASED
+                                    user.roleBasedProficiency = res.proficiency!!.proficiency
+                                }
+                                "ADMIN" -> {
+                                    user.role = Role.ADMIN
+                                }
+                                "GUEST" -> {
+                                    user.role = Role.GUEST
+                                }
+                                else -> {
+                                    user.role = Role.AUTHENTICATED
+                                }
+                            }
+
+                            clickButtons(user)
+                            fillInformations(user)
+//                                replaceFragment(LoginFragment())
                         }
                     }
                 )
@@ -545,7 +566,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                 }
                 Role.ROLE_BASED -> {
                     profileProficiencyLayout.visibility = View.VISIBLE
-                    profileProficiency.text = "Profficient User"
+                    profileProficiency.text = "Profficient User in " + user.roleBasedProficiency
                 }
                 Role.ADMIN -> {
                     profileAdminLayout.visibility = View.VISIBLE

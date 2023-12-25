@@ -37,6 +37,7 @@ enum class Endpoint(val path: String) {
     CHECKVOTE("feedback/check"),
     GETUSER("userroles/role"),
     PROFICIENCY_REQUEST("userroles/proficiency-request"),
+    GETPROFICIENCY("userroles/proficiencies"),
     EVENT("events"),
     REPORTS("reports"),
     EMAIL_VERIFICATION_SEND("email_verification/send"),
