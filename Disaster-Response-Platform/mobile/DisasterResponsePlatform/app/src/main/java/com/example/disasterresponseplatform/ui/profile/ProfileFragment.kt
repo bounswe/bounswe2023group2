@@ -152,7 +152,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                 user.phone = res.phoneNumber
                                 user.name = res.firstName
                                 user.surname = res.lastName
-                                user.profileInfoShared = res.privateAccount
+                                user.profileInfoShared = !res.privateAccount
                                 user.isEmailVerified = res.isEmailVerified
 
                                 clickButtons(user)
@@ -451,7 +451,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                 user.phone = res.phoneNumber
                                 user.name = res.firstName
                                 user.surname = res.lastName
-                                user.profileInfoShared = res.privateAccount
+                                user.profileInfoShared = !res.privateAccount
                                 user.isEmailVerified = res.isEmailVerified
 
                                 clickButtons(user)
