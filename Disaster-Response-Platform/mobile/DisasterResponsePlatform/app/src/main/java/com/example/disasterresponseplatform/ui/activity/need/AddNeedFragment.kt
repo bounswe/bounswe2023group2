@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -23,11 +22,14 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
+import com.example.disasterresponseplatform.data.models.RecurrenceModel
 import com.example.disasterresponseplatform.databinding.FragmentAddNeedBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.generalViewModels.RecurrenceViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.DateUtil
 import com.example.disasterresponseplatform.utils.DateUtil.Companion.dateForBackend
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
@@ -41,7 +43,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import java.util.Calendar
-import kotlin.properties.Delegates
 
 class AddNeedFragment(
     private val needViewModel: NeedViewModel,
@@ -64,6 +65,7 @@ class AddNeedFragment(
         mapFunction()
         fillParameters(need)
         getFormFieldsFromBackend()
+        initRecurrenceView()
         recurrenceListener()
         typeFieldListener()
         submitNeed(need == null)
@@ -97,13 +99,11 @@ class AddNeedFragment(
         return validated
     }
 
+
     /**
      * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
      */
     private fun submitNeed(isAdd: Boolean) {
-        if (requireActivity == null) { // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
 
         binding.btnSubmit.setOnClickListener {
             if (!binding.btnSubmit.isEnabled) { // Prevent multiple clicks
@@ -113,58 +113,8 @@ class AddNeedFragment(
 
             if (validateFields(binding.laySpecific) && validateRecurrence() && validateFields(binding.layOthers) && validateHardcodedFields()) {
 
-                val othersList = getOthersList()
-                var description: String? = ""
-                var occurAt: String? = ""
-                var recurrenceRate: Int? = null
-                var recurrenceDeadline: String? = ""
-                var urgency: Int = 1
-                for (field in othersList) {
-                    Log.i("NEW VALUE", "fieldname: ${field.fieldName}")
-                    when (field.fieldName) {
-                        "Description" -> description = field.input
-                        "Urgency" -> urgency = field.input.toInt()
-                        "Occur At" -> occurAt = field.input
-                        "Recurrence Rate" -> {
-                            if (field.input.isNotEmpty())
-                                recurrenceRate = field.input.toInt()
-                        }
-
-                        "Recurrence Deadline" -> recurrenceDeadline = field.input
-                    }
-                }
-
-                if (description == "") description = null
-                occurAt = if (occurAt == "") null else dateForBackend(occurAt!!)
-                recurrenceDeadline =
-                    if (recurrenceDeadline == "") null else dateForBackend(recurrenceDeadline!!)
-                Log.i("occurAt", "occurAt: $occurAt")
-
-                val subtypeAsLst = mutableListOf<NeedBody.DetailedFields>()
-                val subType = binding.spNeedSubType.text.toString().trim()
-                subtypeAsLst.add(NeedBody.DetailedFields("subtype", subType))
-                val detailedList = getDetailsList(subtypeAsLst)
-                val detailsMap = mutableMapOf<String, String>()
-                for (item in detailedList) {
-                    detailsMap[item.fieldName] = item.input
-                }
-
-                val type2 = binding.spNeedType.text.toString().trim()
-                val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val coordinateX = selectedLocationX
-                val coordinateY = selectedLocationY
-                val openAddress = binding.etOpenAddress.text.toString().trim()
-
-                //val newNeed = Need(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
-                //needViewModel.insertNeed(need) insert local db
-                val needPost = NeedBody.NeedRequestBody(
-                    description, quantity, urgency, quantity, type2, detailsMap, openAddress,
-                    coordinateX, coordinateY, occurAt, recurrenceRate, recurrenceDeadline
-                )
+                val needPost = generatePostNeed()
                 editOrPostNeed(needPost,isAdd)
-                if (binding.swRecurrenceFilter.isChecked){
-                    createRecurrence()
-                }
 
             } else {
                 if (isAdded)
@@ -174,59 +124,227 @@ class AddNeedFragment(
         }
     }
 
-    private fun createRecurrence(){
+    /**
+     * This function generates Recurrence Body for Post
+     */
+    private fun generatePostRecurrence():RecurrenceModel.PostRecurrenceBody{
+        val activity: String = "Need" // Need, Resource, Event, Emergency, Action
+        val recurrenceRate = binding.spRecurrenceRate.text.toString().trim().toInt() // 1,2,3 ?
+        val recurrenceUnit = binding.spRecurrenceUnit.text.toString().trim() // day, week, month
+        val startAt = dateForBackend(binding.etStartDateInput.text.toString())
+        val endAt = dateForBackend(binding.etEndDateInput.text.toString())
+        val title = "Need $startAt to $endAt"
+        val description: String = "Need $startAt to $endAt"
 
+        return RecurrenceModel.PostRecurrenceBody(
+            title = title,
+            description = description,
+            activity = activity,
+            occurance_rate = recurrenceRate,
+            occurance_unit = recurrenceUnit,
+            duration = null,
+            start_at = startAt,
+            end_at = endAt
+        )
     }
 
     /**
-     * This is for post need into backend
+     * This function postRecurrence in backend
      */
-    private fun editOrPostNeed(needPost: NeedBody.NeedRequestBody, isAdd: Boolean ){
+    private fun createRecurrence(recurrenceBody: RecurrenceModel.PostRecurrenceBody, recurrenceViewModel: RecurrenceViewModel, needID: String){
+        recurrenceViewModel.postRecurrence(recurrenceBody)
+        recurrenceViewModel.getCreatedRecurrenceID().observe(requireActivity!!){ createdRecurrenceID ->
+            if (createdRecurrenceID != "-1"){ // created successfully
+                Log.i("Recurrence","Called attachRecurrence")
+                attachRecurrence(recurrenceViewModel,createdRecurrenceID,needID)
+            }else{
+                Log.i("Recurrence","createRecurrence Error")
+            }
+
+        }
+    }
+
+    /**
+     * It attaches recurrenceID with needID
+     */
+    private fun attachRecurrence(recurrenceViewModel: RecurrenceViewModel, recurrenceID: String, needID: String){
+        val attachBody = RecurrenceModel.AttachActivityBody(recurrenceID,needID,"need")
+        recurrenceViewModel.attachRecurrence(attachBody)
+        recurrenceViewModel.getAttachedRecurrenceID().observe(requireActivity!!){attachedID ->
+            if (attachedID!="-1"){
+                Log.i("Recurrence","Called startRecurrence")
+                startRecurrence(attachedID,recurrenceViewModel)
+            }else{
+                Log.i("Recurrence","Error attachRecurrence")
+            }
+        }
+    }
+
+    /**
+     * This is for start recurrence after its attachment is arranged
+     */
+    private fun startRecurrence(attachedID: String, recurrenceViewModel: RecurrenceViewModel){
+        recurrenceViewModel.startRecurrence(attachedID)
+        recurrenceViewModel.getIsRecurrenceStarted().observe(requireActivity!!){started->
+            if (started){
+                Log.i("Recurrence","startRecurrence Success")
+            }else{
+                Log.i("Recurrence","startRecurrence Error")
+            }
+        }
+    }
+
+    /**
+     * This function generates post need body
+     */
+    private fun generatePostNeed(): NeedBody.NeedRequestBody {
+        val othersList = getOthersList()
+        var description: String? = ""
+        var occurAt: String? = ""
+        var recurrenceRate: Int? = null
+        var recurrenceDeadline: String? = ""
+        var urgency: Int = 1
+        for (field in othersList) {
+            Log.i("NEW VALUE", "fieldname: ${field.fieldName}")
+            when (field.fieldName) {
+                "Description" -> description = field.input
+                "Urgency" -> urgency = field.input.toInt()
+                "Occur At" -> occurAt = field.input
+                "Recurrence Rate" -> {
+                    if (field.input.isNotEmpty())
+                        recurrenceRate = field.input.toInt()
+                }
+
+                "Recurrence Deadline" -> recurrenceDeadline = field.input
+            }
+        }
+
+        if (description == "") description = null
+        occurAt = if (occurAt == "") null else dateForBackend(occurAt!!)
+        recurrenceDeadline =
+            if (recurrenceDeadline == "") null else dateForBackend(recurrenceDeadline!!)
+        Log.i("occurAt", "occurAt: $occurAt")
+
+        val subtypeAsLst = mutableListOf<NeedBody.DetailedFields>()
+        val subType = binding.spNeedSubType.text.toString().trim()
+        subtypeAsLst.add(NeedBody.DetailedFields("subtype", subType))
+        val detailedList = getDetailsList(subtypeAsLst)
+        val detailsMap = mutableMapOf<String, String>()
+        for (item in detailedList) {
+            detailsMap[item.fieldName] = item.input
+        }
+
+        val type2 = binding.spNeedType.text.toString().trim()
+        val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
+        val coordinateX = selectedLocationX
+        val coordinateY = selectedLocationY
+        val openAddress = binding.etOpenAddress.text.toString().trim()
+
+        //val newNeed = Need(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
+        //needViewModel.insertNeed(need) insert local db
+        return NeedBody.NeedRequestBody(
+            description, quantity, urgency, quantity, type2, detailsMap, openAddress,
+            coordinateX, coordinateY, occurAt, recurrenceRate, recurrenceDeadline
+        )
+    }
+
+
+    /**
+     * This is for post need into backend
+     * If it creates first time and has a recurrence after it creates need, it will create a recurrence
+     */
+    private fun editOrPostNeed(needPost: NeedBody.NeedRequestBody, isAdd: Boolean){
         if (isAdd) {
             needViewModel.postNeedRequest(needPost)
         } else {
             val needID = "/" + need!!._id // comes from older need
             needViewModel.postNeedRequest(needPost, needID)
         }
-        needViewModel.getLiveDataNeedID().observe(requireActivity!!) {
-            if (it != "-1") { // in error cases it returns this
+        needViewModel.getLiveDataNeedID().observe(requireActivity!!) {createdNeedID ->
+            if (createdNeedID != "-1") { // in error cases it returns this
                 if (isAdded) { // to ensure it attached a context
-                    if (isAdd)
-                        Toast.makeText(
-                            requireContext(),
-                            "Created Need ID: $it",
-                            Toast.LENGTH_LONG
-                        ).show()
+                    if (isAdd){
+                        Toast.makeText(requireContext(), "Created Need ID: $createdNeedID", Toast.LENGTH_LONG).show()
+                        // check recurrence, create
+                        if (binding.swRecurrenceFilter.isChecked){
+                            val recurrenceBody = generatePostRecurrence()
+                            Log.i("Recurrence","Called createRecurrence")
+                            createRecurrence(recurrenceBody,RecurrenceViewModel(),createdNeedID)
+                        }
+                    }
                     else
-                        Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
                 }
 
                 Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
                     if (isAdded) // to ensure it attached a parentFragmentManager
-                        parentFragmentManager.popBackStack(
-                            "AddNeedFragment",
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE
-                        )
+                        parentFragmentManager.popBackStack("AddNeedFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     if (!isAdd)
-                        parentFragmentManager.popBackStack(
-                            "NeedItemFragment",
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE
-                        )
+                        parentFragmentManager.popBackStack("NeedItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     // Re-enable the button after the background operation completes
                     binding.btnSubmit.isEnabled = true
                 }, 200)
             } else {
                 if (isAdded)
-                    Toast.makeText(
-                        requireContext(),
-                        "Error Check Logs",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
                 binding.btnSubmit.isEnabled = true
             }
         }
+    }
+
+    /**
+     * This function arranges initialization view of recurrence layouts
+     */
+    private fun initRecurrenceView(){
+        if (requireActivity == null) { // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
+        val recurrenceUnitList: List<String> = resources.getStringArray(R.array.recurrence_unit).toList()
+        val unitAdapter = ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            recurrenceUnitList
+        )
+        val recurrenceRateList: List<Int> = listOf(1,2,3)
+        val rateAdapter = ArrayAdapter<Int>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            recurrenceRateList
+        )
+
+        binding.spRecurrenceUnit.setAdapter(unitAdapter)
+        binding.spRecurrenceRate.setAdapter(rateAdapter)
+        binding.etStartDateInput.setOnClickListener { showDatePicker(true) }
+        binding.etEndDateInput.setOnClickListener { showDatePicker(false) }
+    }
+
+    /**
+     * This function arranges start and end date picker
+     */
+    private fun showDatePicker(isStart: Boolean) {
+        // Get the current date
+        val calendar: Calendar = Calendar.getInstance()
+        val year: Int = calendar.get(Calendar.YEAR)
+        val month: Int = calendar.get(Calendar.MONTH)
+        val dayOfMonth: Int = calendar.get(Calendar.DAY_OF_MONTH)
+
+        // Create a DatePickerDialog
+        val datePickerDialog = DatePickerDialog(
+            requireActivity!!,
+            DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                val selectedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)
+                if (isStart)
+                    binding.etStartDate.editText?.setText(selectedDate)
+                else
+                    binding.etEndDate.editText?.setText(selectedDate)
+            },
+            year,
+            month,
+            dayOfMonth
+        )
+
+        // Show the DatePickerDialog
+        datePickerDialog.show()
     }
 
     /**

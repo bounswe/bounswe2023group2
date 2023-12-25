@@ -251,6 +251,13 @@
         <item>Yardım Noktası</item>
     </string-array>
 
+    <string-array name="recurrence_unit">
+        <item name="day">günlük</item>
+        <item name="week">haftalık</item>
+        <item name="month">aylık</item>
+    </string-array>
+
+
     <!-- Reports -->
     <string name="inappropriate_content">Uygunsuz İçerik</string>
     <string name="report">Raporla</string>

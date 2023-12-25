@@ -239,7 +239,7 @@ class RecurrenceViewModel {
             "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
             "Content-Type" to "application/json"
         )
-        val functionName = "attachRecurrence"
+            val functionName = "attachRecurrence"
             networkManager.makeRequest(
             endpoint = Endpoint.RECURRENCE,
             requestType = RequestType.DELETE,

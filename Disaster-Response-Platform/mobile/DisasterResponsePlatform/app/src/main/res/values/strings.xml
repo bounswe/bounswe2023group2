@@ -278,6 +278,12 @@
         <item>Help-Arrived</item>
     </string-array>
 
+    <string-array name="recurrence_unit">
+        <item name="day">day</item>
+        <item name="week">week</item>
+        <item name="month">month</item>
+    </string-array>
+
 
     <!-- PROFILE LISTS -->
     <string-array name="language_level_types">

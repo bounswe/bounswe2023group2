@@ -147,28 +147,56 @@
         <LinearLayout
             android:id="@+id/layRecurrence"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:visibility="gone"
+            android:layout_height="wrap_content"
             android:divider="@drawable/empty_divider_h"
             android:orientation="vertical"
             android:showDividers="middle">
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/etStartDate"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
+                android:id="@+id/layDates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/start_date"
-                app:endIconMode="clear_text">
+                android:divider="@drawable/empty_divider_v"
+                android:orientation="horizontal"
+                android:showDividers="middle">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etStartDateInput"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etStartDate"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:focusable="false" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="@integer/material_motion_duration_long_1"
+                    android:hint="@string/start_date"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etStartDateInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/etEndDate"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="@integer/material_motion_duration_long_1"
+                    android:hint="@string/end_date"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEndDateInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -201,22 +229,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/duration"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/duration"
-                app:endIconMode="clear_text">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDuration"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
 

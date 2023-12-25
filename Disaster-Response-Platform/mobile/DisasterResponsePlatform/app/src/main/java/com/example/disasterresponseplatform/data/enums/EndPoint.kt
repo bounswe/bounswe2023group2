@@ -46,8 +46,8 @@ enum class Endpoint(val path: String) {
     UPLOADFILE("uploadfile"),
     RECURRENCE("recurrence/"), //TODO arrange id w.r.t this
     RECURRENCE_ATTACH_ACTIVITY("recurrence/attach_activity"),
-    RECURRENCE_START("recurrence/start/"),
-    RECURRENCE_CANCEL("recurrence/cancel/"),
-    RECURRENCE_RESUME("recurrence/resume/"),
+    RECURRENCE_START("recurrence/start"),
+    RECURRENCE_CANCEL("recurrence/cancel"),
+    RECURRENCE_RESUME("recurrence/resume"),
 
 }
