@@ -37,36 +37,16 @@ async def proficiency_request(prof_request : ProfRequest, response: Response, cu
 
         return error
     
-@router.get("/role", responses={
-    status.HTTP_200_OK: {"model": UserRoleResponse},
-    status.HTTP_400_BAD_REQUEST: {"model": Error}
-
-})
-async def get_user_role(response : Response, current_user: UserProfile = Depends(authentication_service.get_current_user)):
-    user_role_str = current_user.user_role.value   
-    if user_role_str:
-        response.status_code= HTTPStatus.OK
-        return UserRoleResponse(user_role=user_role_str)
- 
-    else:
-        error= Error(ErrorMessage="Could not find user role", ErrorDetail="User role is null")
-        response.status_code= HTTPStatus.BAD_REQUEST
-        #response.response_model= Error
-        return error
 @router.get("/role/{username}", responses={
-    status.HTTP_200_OK: {"model": UserRoleResponse},
+    status.HTTP_200_OK: {"model": UserProfileResponse},
     status.HTTP_400_BAD_REQUEST: {"model": Error}
-
 })
-async def get_user_role(username:str,response : Response):
-    try:
-        role= get_user_role_service(username)
-        return UserRoleResponse(user_role=role)
-    except ValueError as err:
-        error= Error(ErrorMessage="Could not find user role", ErrorDetail=str(err))
-        response.status_code= HTTPStatus.BAD_REQUEST
-        #response.response_model= Error
-        return error
+async def get_user_role(response: Response, current_user: UserProfile = Depends(authentication_service.get_current_user)):
+    if current_user.user_role and current_user.proficiency is not None:
+        return UserProfileResponse(user_role=current_user.user_role.value, proficiency=current_user.proficiency)
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Could not find user role or proficiency")
+
     
 @router.get("/proficiencies", responses={
     status.HTTP_200_OK: {"model": UserRoleResponse},

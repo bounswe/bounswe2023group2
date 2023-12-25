@@ -36,50 +36,54 @@ def json_to_html(json_data, activity):
     <html>
     <head>
         <style>
-            table {
-                width: 100%;
-                border-collapse: collapse;
+            .container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px; /* Space between cards */
             }
-            th, td {
-                padding: 8px;
-                text-align: left;
-                border-bottom: 1px solid #ddd; /* Light gray border */
+            .card {
+                border: 2px solid #007bff; /* Blue border */
+                border-radius: 10px; /* Rounded corners */
+                padding: 15px;
+                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Card shadow */
+                width: calc(50% - 50px); /* Two cards per row, accounting for gap */
+                background-color: white;
+                font-size: 14px; /* Smaller font size */
             }
-            th {
-                background-color: #007bff; /* Bootstrap primary blue */
-                color: white;
+            .card-header {
+                color: #007bff;
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
             }
-            tr:nth-child(even) {
-                background-color: #f2f2f2; /* Light gray for even rows */
+            .card-content {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
             }
-            tr:hover {
-                background-color: #ddd; /* Slightly darker gray for hover */
+            .card-item {
+                margin: 5px;
+                flex: 1 1 45%; /* Each item takes up to 45% of the card width */
             }
         </style>
     </head>
     <body>
-        <table>
+        <div class='container'>
     """
 
-    # Add table headers
-    headers=0
-    if activity=="Resource":
-      headers = json_data["resources"][0].keys()
-      html += "<tr>" + "".join(f"<th>{header}</th>" for header in headers) + "</tr>"
-      for resource in json_data["resources"]:
-        html += "<tr>" + "".join(f"<td>{resource.get(key, '')}</td>" for key in headers) + "</tr>"
+    data = json_data["resources"] if activity == "Resource" else json_data["needs"]
 
-    elif activity=="Need":
-      headers = json_data["needs"][0].keys()
-      html += "<tr>" + "".join(f"<th>{header}</th>" for header in headers) + "</tr>"
-      for need in json_data["needs"]:
-        html += "<tr>" + "".join(f"<td>{need.get(key, '')}</td>" for key in headers) + "</tr>"
+    for item in data:
+        html += "<div class='card'>"
+        html += "<div class='card-header'>" + item.get("title", activity) + "</div>"
+        html += "<div class='card-content'>"
+        for key, value in item.items():
+            html += f"<div class='card-item'><strong>{key}:</strong> {value}</div>"
+        html += "</div></div>"
 
-    
-    # Add table rows
-
-    html += "</table></body></html>"
+    html += "</div></body></html>"
     return html
+
 
 def create_and_upload_file(    
     active: Optional[bool] = None,
@@ -121,7 +125,6 @@ def create_and_upload_file(
           )
       needs= json.loads(needs)
       html_data = json_to_html(needs, activity_type)   
-      print("buraya giriyon dimi")
       filename = "filtered_needs.html"     
         
       # Replace with your desired file name

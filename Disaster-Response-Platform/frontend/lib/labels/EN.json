@@ -6,6 +6,7 @@
 		"username": "Username",
 		"first_name": "First Name",
 		"last_name": "Last Name",
+		"full_name": "Full Name",
 		"password": "Password",
 		"phone_number": "Phone Number",
 		"email": "Email",
@@ -101,7 +102,8 @@
 		"login": "Log in",
 		"logout": "Log out",
 		"redirect_to_login": "Redirecting to login page...",
-		"phone_email_username": "Phone number, email, or username"
+		"phone_email_username": "Phone number, email, or username",
+		"at_least_one": "Please fill at least one of the fields below."
 	},
 	"UI": {
 		"edit": "Edit",
@@ -114,7 +116,9 @@
 		"close": "Close",
 		"loading": "Loading",
 		"forgot": "Forgot password",
-		"details": "Details"
+		"details": "Details",
+		"changed": "Changed",
+		"search": "Search"
 	},
 	"sort_filter": {
 		"sort": "Sort",
@@ -168,8 +172,12 @@
 	},
 	"admin": {
 		"no_access": "You do not have access to the admin panel.",
+		"already_reported_user": "You have already reported this user.",
+		"already_reported_activity": "You have already reported this activity.",
+		"reports": "Reports",
 		"user_reports": "User Reports",
 		"activity_reports": "Activity Reports",
+		"users": "Users",
 		"banned_users": "Banned Users",
 		"reporter": "Reporter",
 		"reported": "Reported",
@@ -177,9 +185,17 @@
 		"details": "Details",
 		"actions": "Actions",
 		"report": "Report",
-		"reject_report": "Reject report",
+		"reject": "Reject",
+		"accept": "Accept",
+		"report_accepted": "Report accepted.",
+		"report_rejected": "Report rejected.",
 		"ban_user": "Ban user",
-		"remove_activity": "Remove activity"
+		"unauthenticate": "Demote to Guest",
+		"unauthenticated": "User has been demoted to Guest",
+		"auth_status": "Auth Status",
+		"remove_activity": "Remove activity",
+		"is_credible": "Credible",
+		"credibility_set": "Credibility set."
 	},
 	"navbar": {
 		"help_feedback": "Help & Feedback",
@@ -203,6 +219,7 @@
 		"password": "Password must contain an uppercase letter and a number",
 		"email": "example@address.com",
 		"search_bar": "Enter your search",
+		"search_users": "Search in users",
 		"resource_type": "Food",
 		"resource_subtype": "Canned food"
 	},
@@ -218,6 +235,7 @@
 		"ROLE_BASED": "Specialist",
 		"CREDIBLE": "Credible User",
 		"ADMIN": "Administrator",
+		"user_role": "Role",
 		"area_of_expertise": "Area of Expertise"
 	},
 	"proficiency": {

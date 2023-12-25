@@ -1,0 +1,169 @@
+{
+  "en": [
+    {
+      "name": "type",
+      "label": "Type",
+      "type": "select",
+      "options": [
+        {
+          "key": "cloth",
+          "value": "cloth",
+          "label": "Cloth",
+          "index": 0
+        },
+        {
+          "key": "food",
+          "value": "food",
+          "label": "food",
+          "index": 1
+        },
+        {
+          "key": "drink",
+          "value": "drink",
+          "label": "drink",
+          "index": 2
+        },
+        {
+          "key": "shelter",
+          "value": "shelter",
+          "label": "shelter",
+          "index": 3
+        },
+        {
+          "key": "medication",
+          "value": "medication",
+          "label": "medication",
+          "index": 4
+        },
+        {
+          "key": "transportation",
+          "value": "transportation",
+          "label": "transportation",
+          "index": 5
+        },
+        {
+          "key": "tool",
+          "value": "tool",
+          "label": "tool",
+          "index": 6
+        },
+        {
+          "key": "human",
+          "value": "human",
+          "label": "human",
+          "index": 7
+        },
+        {
+          "key": "other",
+          "value": "other",
+          "label": "other",
+          "index": 8
+        }
+      ]
+    },
+    {
+      "name": "open_address",
+      "label": "Address",
+      "type": "text"
+    },
+    {
+      "name": "initialQuantity",
+      "label": "Provided Quantity",
+      "type": "number"
+    },
+    {
+      "name": "occur_at",
+      "label": "Occur At",
+      "type": "date"
+    },
+    {
+      "name": "description",
+      "label": "Description",
+      "type": "text"
+    }
+  ],
+  "tr": [
+    {
+      "name": "type",
+      "label": "Tür",
+      "type": "select",
+      "options": [
+        {
+          "key": "cloth",
+          "value": "cloth",
+          "label": "Giysi",
+          "index": 0
+        },
+        {
+          "key": "food",
+          "value": "food",
+          "label": "Yemek",
+          "index": 1
+        },
+        {
+          "key": "drink",
+          "value": "drink",
+          "label": "İçecek",
+          "index": 2
+        },
+        {
+          "key": "shelter",
+          "value": "shelter",
+          "label": "Barınma",
+          "index": 3
+        },
+        {
+          "key": "medication",
+          "value": "medication",
+          "label": "İlaç",
+          "index": 4
+        },
+        {
+          "key": "transportation",
+          "value": "transportation",
+          "label": "Ulaşım",
+          "index": 5
+        },
+        {
+          "key": "tool",
+          "value": "tool",
+          "label": "Araç-gereç",
+          "index": 6
+        },
+        {
+          "key": "human",
+          "value": "human",
+          "label": "İnsan",
+          "index": 7
+        },
+        {
+          "key": "other",
+          "value": "other",
+          "label": "Diğer",
+          "index": 8
+        }
+      ]
+    },
+    
+    {
+      "name": "initialQuantity",
+      "label": "Sağlanan Miktar",
+      "type": "number"
+    }, 
+    {
+      "name": "open_address",
+      "label": "Adres",
+      "type": "text"
+    },
+    {
+      "name": "occur_at",
+      "label": "Oluşma Zamanı",
+      "type": "date"
+    },
+    {
+      "name": "description",
+      "label": "Açıklama",
+      "type": "text"
+    }
+  ]
+}

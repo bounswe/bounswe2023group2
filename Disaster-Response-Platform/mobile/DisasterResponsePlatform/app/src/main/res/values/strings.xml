@@ -165,6 +165,7 @@
     <string name="email_verification_title">E-mail Verification</string>
     <string name="email_verification_description">To verify your e-mail address, enter the verification code sent to you by e-mail.</string>
     <string name="full_name">Full Name</string>
+    <string name="delete_account">Delete Account</string>
 
     <!-- MAP -->
     <string name="more">More</string>
@@ -196,6 +197,31 @@
     <string name="pr_edit_blood">Blood Type</string>
     <string name="pr_hidden_profile">Hidden Profile</string>
     <string name="pr_no_connection">No Connection</string>
+    <string name="dot_representation">%1$s: %2$s</string>
+    <string name="verified_by">Verified By %1$s</string>
+    <string name="profficient_user_in">Profficient User in %1$s</string>
+    <string name="credible_user">Credible User</string>
+    <string name="concat">%1$s %2$s</string>
+    <string name="admin">Admin</string>
+    <string name="birthday">Birthday</string>
+    <string name="level">Level</string>
+    <string name="apply">Apply</string>
+    <string name="platform_name">Platform Name</string>
+    <string name="profile_url">Profile URL</string>
+    <string name="definition">Definition</string>
+    <string name="select_a_file">Select a file</string>
+    <string name="language">Language</string>
+    <string name="profession">Profession</string>
+    <string name="network_error">Network error: %1$s</string>
+    <string name="profile_picture_could_not_be_updated">Profile picture could not be updated</string>
+    <string name="file_could_not_be_uploaded">File could not be uploaded: %1$s</string>
+    <string name="profile_successfully_updated">Profile successfully updated</string>
+    <string name="warning">Warning</string>
+    <string name="delete_warning_message">Are you sure you want to delete your account?</string>
+    <string name="yes">Yes</string>
+    <string name="account_successfully_deleted">Account successfully deleted</string>
+    <string name="no">No</string>
+    <string name="file_could_not_be_selected">File could not be selected</string>
 
     <!-- PLACEHOLDERS -->
     <string name="placeholder_general">Sample Text</string>

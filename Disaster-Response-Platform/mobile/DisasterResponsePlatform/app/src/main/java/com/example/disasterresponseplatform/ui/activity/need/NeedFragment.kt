@@ -19,6 +19,7 @@ import android.view.ViewGroup.LayoutParams
 import android.view.Window
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.text.set
 import androidx.fragment.app.Fragment
@@ -31,6 +32,7 @@ import com.example.disasterresponseplatform.adapter.NeedAdapter
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
+import com.example.disasterresponseplatform.data.models.UserBody
 import com.example.disasterresponseplatform.databinding.FragmentNeedBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
@@ -58,6 +60,7 @@ class NeedFragment(
     private lateinit var searchView: SearchView
     private var requireActivity: FragmentActivity? = null
     private val mapFragment = ActivityMap()
+    private val networkManager = NetworkManager()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -191,7 +194,59 @@ class NeedFragment(
             recyclerView.layoutManager = layoutManager
         }
         // val list = needViewModel.getAllNeeds() // this is for local DB
-        val adapter = NeedAdapter(needList)
+        val userRoleMap: MutableMap<String, String> = mutableMapOf()
+        for (need in needList) {
+            if (!userRoleMap.containsKey(need.created_by)) {
+                val headers = mapOf(
+                    "Content-Type" to "application/json"
+                )
+                networkManager.makeRequest(
+                    endpoint = Endpoint.GETUSER,
+                    requestType = RequestType.GET,
+                    headers = headers,
+                    id = need.created_by,
+                    callback = object : Callback<ResponseBody> {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
+                            Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                            Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                            if (response.isSuccessful) {
+                                val rawJson = response.body()?.string()
+                                if (rawJson != null) {
+                                    try {
+                                        Log.d("ResponseSuccess", "Body: $rawJson")
+                                        val gson = Gson()
+                                        val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
+                                        if (userResponse != null) {
+                                            Log.d("ResponseSuccess", "needResponse: $userResponse")
+                                            userRoleMap[need.created_by] = userResponse.user_role
+                                        }
+                                    } catch (e: IOException) {
+                                        // Handle IOException if reading the response body fails
+                                        Log.e("ResponseError", "Error reading response body: ${e.message}")
+                                    }
+                                } else {
+                                    Log.d("ResponseSuccess", "Body is null")
+                                }
+                            } else {
+                                val errorBody = response.errorBody()?.string()
+                                if (errorBody != null) {
+                                    var responseCode = response.code()
+                                    Log.d("ResponseSuccess", "Body: $errorBody")
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.d("onFailure", "Happens")
+                        }
+                    }
+                )
+            }
+        }
+        val adapter = NeedAdapter(needList, userRoleMap)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function

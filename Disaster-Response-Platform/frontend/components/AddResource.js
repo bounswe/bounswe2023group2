@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import GenericForm from "./GenericForm";
 import {
   Modal,
   ModalContent,
@@ -7,11 +6,13 @@ import {
   ModalBody,
 
 } from "@nextui-org/modal";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import resourceForm from "./resourceForm.json"
+import { Button, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { api } from "@/lib/apiUtils";
 import { useRouter } from "next/router";
+import addressService from "@/services/addressService";
 export default function AddResourceForm({ isOpen, onOpenChange }) {
   const [form, setForm] = useState([]);
   const [subform, setSubform] = useState([]);
@@ -20,34 +21,12 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
   const [types, setTypes] = useState({});
   const [fields, setFields] = useState([]);
   const router = useRouter();
-  const getFrom = async () => {
-    const result = await api.get('/api/form_fields/resource')
-    const desiredForm = result.data.fields;
-    setForm(desiredForm)
-    desiredForm.map((res) => {
-      let temp = {}
-      temp[res.name] = res.type
-      setTypes((prev) => { return { ...prev, ...temp } })
-
-      if (res.name === 'type') {
-        let tmp = []
-        res.options.map((e, index) => {
-
-          tmp = [...tmp, { key: e, value: e, label: e, index: index }]
-
-        })
-        res.options = tmp
-      }
-      else if (res.type === 'select') {
-        let tmp = []
-        res.options.map((e, index) => {
-          tmp = [...tmp, { key: e, value: e, label: e, index: index }]
-        })
-        res.options = tmp
-
-      }
-    })
+  
+  const getForm = () => {
+    const desiredForm = resourceForm['tr'];
+    setForm(desiredForm);
   }
+  
 
   const getSubtypes = async (value) => {
     const result = await api.get(`/api/form_fields/type/${value}`)
@@ -64,27 +43,32 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
     setSubform(_subform)
   }
   useEffect(() => {
-    getFrom();
+    getForm();
   }, [])
 
   const can = async (data) => {
     console.log(data)
     const prepared = {}
     Object.keys(data).map((key, index) => {
-      console.log(types, key)
+     
       if (data[key] === '') { }
-      else if (types[key] === 'number' | key === 'urgency' | key === 'recurrence_rate') {
+      else if (types[key] === 'number') {
         prepared[key] = parseInt(data[key])
       }
       else {
         prepared[key] = data[key]
       }
-
     })
-
     prepared['type'] = chosen
-    console.log(prepared)
     prepared['currentQuantity'] = prepared['initialQuantity']
+    try {
+      let coordinats = await addressService.addressToXY(data.open_address);
+      prepared['x'] = coordinats.payload.x
+      prepared['y'] = coordinats.payload.y
+    }
+    catch (e) {
+      toast.error("Address should contain city, street, street number")
+    }
     const response = await fetch('/api/resource/add', {
       method: 'POST',
       body: JSON.stringify(prepared)
@@ -92,10 +76,7 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
 
     if (response.status === 400) {
       toast.error("An unexpected error occurred while saving, please try again")
-      // const fieldToErrorMessage = await response.json()
-      // for (const [fieldName, errorMessage] of Object.entries(fieldToErrorMessage)) {
-      //   setError(fieldName, { type: 'custom', message: errorMessage })
-      // }
+
     } else if (response.ok) {
       // successful
       toast.success("Successfully saved")
@@ -105,6 +86,7 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
       toast.error("An unexpected error occurred while saving, please try again")
     }
   }
+
   return <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='text-black' scrollBehavior="inside">
     <ModalContent>
       {(onClose) => (
@@ -113,8 +95,6 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
           <ModalBody>
             <form onSubmit={handleSubmit(can)} action="#"
               method="POST" className='flex w-full flex-col  mb-6 md:mb-0 gap-4'  >
-
-
 
               {form !== [] && form.map((res) => {
                 if (res.name === 'type') return <Select
@@ -125,12 +105,9 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
                   className="max-xs"
                   variant={'bordered'}
                   onChange={(e) => { setChosen(e.target.value); getSubtypes(e.target.value); console.log(e) }}
-
-
                 >
                   {(type) => <SelectItem value={type.value} className='text-black'>{type.value}</SelectItem>}
                 </Select>
-
                 else if (res.type === 'select') return <Controller
                   name={res.name}
                   control={control}
@@ -149,6 +126,23 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
                     >
                       {(type) => <SelectItem key={type.value} className='text-black'>{type.value}</SelectItem>}
                     </Select>
+                  )}
+                />
+                else if (res.name === 'description') return <Controller
+                  name={`details.${res.name}`}
+                  control={control}
+                  defaultValue=""
+                  label={res.label}
+                  placeholder={res.label}
+                  render={({ field }) => (
+                    <Textarea type={res.type}
+                      style={{ border: 'none' }}
+                      label={res.label}
+                      placeholder={res.label}
+                      className="max-xs"
+                      variant={'bordered'}
+                      {...field}
+                    />
                   )}
                 />
                 return <Controller
@@ -212,7 +206,7 @@ export default function AddResourceForm({ isOpen, onOpenChange }) {
               })}
 
 
-              <Button type='submit'>
+              <Button type='submit' color='success'>
                 {isSubmitting ? 'Loading' : "Submit"}
               </Button>
             </form>
