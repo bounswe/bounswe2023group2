@@ -28,6 +28,7 @@ import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheet
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -38,6 +39,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private val annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -92,7 +94,11 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         })
         binding.tvLastUpdatedTime.text = need.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = need.created_at.substring(0,10)
-        binding.tvDescription.text = need.description.toString()
+        if (need.details["subtype"] != null)
+            annotation.getAnnotations(need.created_by + need.details["subtype"]) {
+                binding.tvDescription.text = it
+            }
+        else binding.tvDescription.text = need.description.toString()
         //binding.e.text = need.details["subtype"]
         fillDetails(need.details)
         fillRecurrence(need)

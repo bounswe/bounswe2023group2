@@ -27,6 +27,7 @@ import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.Annotation
 import com.example.disasterresponseplatform.utils.DateUtil.Companion.dateForBackend
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
@@ -52,6 +53,7 @@ class AddNeedFragment(
     private var requireActivity: FragmentActivity? = null
     private var selectedLocationX by Delegates.notNull<Double>()
     private var selectedLocationY by Delegates.notNull<Double>()
+    private var annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -277,6 +279,10 @@ class AddNeedFragment(
                 val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
                 val coordinateX = selectedLocationX
                 val coordinateY = selectedLocationY
+
+                if (description != null) {
+                    annotation.publishAnnotation(DiskStorageManager.getKeyValue("username")!! + subType, description)
+                }
 
                 //val newNeed = Need(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
                 //needViewModel.insertNeed(need) insert local db
