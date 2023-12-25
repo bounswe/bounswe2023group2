@@ -8,6 +8,8 @@ export default withIronSessionApiRoute(resourceRoute, sessionConfig);
   async function resourceRoute(req, res) {
     try {
       const result = await resourceService.createNeed(req.body, req.session.user.accessToken)
+      if(result.status === 201 || result.status === 200)
+        res.status(result.status).json(result.payload);
       res.status(result.status).json(result.payload);
     } catch (error) {
       console.log('error', error);

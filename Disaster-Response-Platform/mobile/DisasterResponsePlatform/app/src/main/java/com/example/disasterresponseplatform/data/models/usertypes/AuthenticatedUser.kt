@@ -42,5 +42,6 @@ enum class Role {
     AUTHENTICATED,
     CREDIBLE,
     ROLE_BASED,
-    ADMIN
+    ADMIN,
+    GUEST
 }

@@ -49,22 +49,40 @@ data class UsersMeResponse(
     @SerializedName("username")
     val username: String,
     @SerializedName("email")
-    val email: String,
+    val email: String?,
     @SerializedName("first_name")
     val firstName: String,
     @SerializedName("last_name")
     val lastName: String,
     @SerializedName("phone_number")
-    val phoneNumber: String,
+    val phoneNumber: String?,
     @SerializedName("is_email_verified")
-    val isEmailVerified: Boolean,
+    val isEmailVerified: Boolean?,
     @SerializedName("private_account")
     val privateAccount: Boolean,
+    @SerializedName("user_role")
+    val userRole: String?,
+    @SerializedName("proficiency")
+    val proficiency: UserProficiency?,
 )
 
 data class UserRolesResponse(
 @SerializedName("user_role")
     val user_role: String,
+)
+
+data class UserProficiency(
+    @SerializedName("proficiency")
+    val proficiency: String?,
+    @SerializedName("details")
+    val details: String?,
+)
+
+data class UserGetProficiencyResponse(
+    @SerializedName("user_role")
+    val user_role: String,
+    @SerializedName("proficiency")
+    val proficiency: UserProficiency?,
 )
 
 data class UsersMeOptionalResponse(

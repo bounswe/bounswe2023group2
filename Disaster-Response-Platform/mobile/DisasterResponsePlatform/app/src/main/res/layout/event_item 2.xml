@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iconType"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/recyc_category" />
+
+
+        <ImageView
+            android:id="@+id/upvoteItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/tvUpvoteCount"
+            app:layout_constraintEnd_toStartOf="@+id/downvoteItem"
+            app:srcCompat="@drawable/ic_upvote" />
+
+        <ImageView
+            android:id="@+id/downvoteItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/tvDownvoteCount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCreator"
+            app:srcCompat="@drawable/ic_downvote" />
+
+        <TextView
+            android:id="@+id/tvDownvoteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="100"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/downvoteItem" />
+
+        <TextView
+            android:id="@+id/tvUpvoteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="100"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/upvoteItem" />
+
+        <TextView
+            android:id="@+id/tvType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/debris"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/iconType"
+            app:layout_constraintTop_toTopOf="@+id/iconType" />
+
+        <ImageView
+            android:id="@+id/iconLocation"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@+id/iconType"
+            app:layout_constraintTop_toBottomOf="@+id/iconType"
+            app:srcCompat="@drawable/recyc_location" />
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/placeholder_coordinate"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/iconLocation"
+            app:layout_constraintTop_toTopOf="@+id/iconLocation" />
+
+        <ImageView
+            android:id="@+id/iconDate"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/iconLocation"
+            app:layout_constraintTop_toBottomOf="@+id/iconLocation"
+            app:srcCompat="@drawable/recyc_date_time" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/placeholder_date"
+            android:layout_marginStart="10dp"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/iconDate"
+            app:layout_constraintTop_toTopOf="@+id/iconDate" />
+
+        <ImageView
+            android:id="@+id/iconNote"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvShortNode"
+            app:srcCompat="@drawable/ic_notes" />
+
+        <TextView
+            android:id="@+id/tvShortNode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/short_note"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/iconNote"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iconCreator"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvCreator"
+            app:srcCompat="@drawable/recyc_user" />
+
+        <TextView
+            android:id="@+id/tvCreator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="@string/placeholder_username"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/iconCreator"
+            app:layout_constraintTop_toTopOf="@+id/tvLocation" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/separator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

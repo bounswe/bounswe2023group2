@@ -595,6 +595,17 @@
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delete_account"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_warning"
+                app:iconGravity="textStart"
+                android:backgroundTint="@color/downvote"
+                android:layout_marginTop="10dp"/>
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="50dp" />
@@ -611,6 +622,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/primaryDark"
         android:clickable="true"
         android:src="@drawable/check" />
 
