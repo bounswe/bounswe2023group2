@@ -27,7 +27,7 @@ export default function AddEmergency({ isOpen, onOpenChange, labels }) {
       method: 'POST',
       headers: {
       "Content-Type": "application/json",
-      }, body: JSON.stringify(formData)
+      }, body: JSON.stringify(sentData)
     });
 
     if (!response.ok) {
@@ -49,14 +49,14 @@ export default function AddEmergency({ isOpen, onOpenChange, labels }) {
             <ModalBody>
               <div className="flex flex-row items-center gap-x-4">
                 <div className="flex gap-y-2 flex-col">
-                  <RadioGroup name="emergency_type" id="emergency_type" label={labels.activity_table.event_type} orientation="horizontal">
+                  <RadioGroup name="emergency_type" id="emergency_type" label={labels.activity_table.event_type} orientation="horizontal" required >
                     {emergency_types.map((key) => (
                       <Radio key={`emergency-type-${key}`} value={key}> {labels.forms.emergency_form[key]} </Radio>
                     ))}
                   </RadioGroup>
                   <Input name="contact_name" variant="bordered" label={labels.forms.emergency_form.contact_name} />
                   <Input name="contact_number" variant="bordered" label={labels.forms.emergency_form.contact_number} />
-                  <Textarea name="description" variant="bordered" label={labels.forms.emergency_form.description} />
+                  <Textarea name="description" variant="bordered" label={labels.forms.emergency_form.description} required />
                   <Input name="location" variant="bordered" label={labels.forms.emergency_form.location} />
                 </div>
                 <EmergencyMap position={position} setPosition={setPosition} labels={labels}/>
@@ -66,7 +66,7 @@ export default function AddEmergency({ isOpen, onOpenChange, labels }) {
                 <Button color="danger" variant="light" onPress={onClose}>
                   {labels.UI.cancel}
                 </Button>
-                <Button color="primary" onPress={() => {submitAvatar(); onClose()}}>
+                <Button color="primary" type="submit" onSubmit={event => {addEmergency(event); onClose()}}>
                   {labels.UI.submit}
                 </Button>
             </ModalFooter>
