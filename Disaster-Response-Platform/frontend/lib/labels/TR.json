@@ -109,6 +109,7 @@
 		"update": "Güncelle",
 		"remove": "Kaldır",
 		"delete": "Sil",
+		"report": "Bildir",
 		"cancel": "Vazgeç",
 		"close": "Kapat",
 		"loading": "Yükleniyor",
@@ -195,6 +196,16 @@
 			"max_distance_y": "Etkilenen uzaklık (Kuzey-Güney)",
 			"short_description": "Kısa açıklama",
 			"note": "Ek notlar"
+		},
+		"emergency_form": {
+			"News": "Haber",
+			"Debris": "Enkaz",
+			"Fire": "Yangın",
+			"Medical Emergency": "Tıbbi Acil Durum",
+			"description": "Açıklama",
+			"x": "Merkez boylamı (Batı-Doğu)",
+			"y": "Merkez enlemi (Kuzey-Güney)",
+			"location": "Adres"
 		}
 	},
 	"placeholders": {
