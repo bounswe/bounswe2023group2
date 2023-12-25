@@ -203,6 +203,8 @@
 			"Debris": "Debris",
 			"Fire": "Fire",
 			"Medical Emergency": "Medical Emergency",
+			"contact_name": "Contact Name (optional)",
+			"contact_number": "Contact Number (optional)",
 			"description": "Description",
 			"x": "Center longitude (West-East)",
 			"y": "Center latitude (North-South)",
