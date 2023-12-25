@@ -24,14 +24,36 @@ r_id=0
 def create_need(need: Need) -> str:
     global r_id
     # Manual validation for required fields during creation
-    if not all([need.created_by, need.urgency, 
-                need.initialQuantity is not None, need.unsuppliedQuantity is not None, 
-                need.type, need.details, need.x is not None, need.y is not None]):
-        raise ValueError("All fields are mandatory for creation: created_by, urgency, initialQuantity, unsuppliedQuantity, type, details, x, y")
+    
+        
+    if need.type.lower() == "missing person" and need.details:
+        if not ('missing_person_name' in need.details and 'missing_person_location' in need.details):
+            raise ValueError("Missing person name and location are required for missing person needs.")
+        else:
+            # cursor = needs_collection.find({
+            #     "$and": [
+            #         {"type": {"$regex": "missing person", "$options": "i"}},
+            #         {"details.missing_person_name": {"$regex": need.details['missing_person_name'], "$options": "i"}}
+            #     ]
+            # })
+            existing_need = needs_collection.find_one({"type": "missing person", "details.missing_person_name": {"$regex": need.details['missing_person_name'], "$options": "i"}})   
+            if existing_need:
+                raise ValueError("Emergency for this missing person exists " + existing_need["details"]["missing_person_name"])
+    else:
+        raise ValueError("Missing person details(name and location) are required for missing person needs.")  
+    
 
+    if not all([need.created_by, need.urgency,  
+                need.type, need.details, need.x is not None, need.y is not None]):
+        raise ValueError("All fields are mandatory for creation: created_by, urgency, type, details, x, y")
+
+    if need.type.lower() != "missing person" and not (need.initialQuantity is not None and need.unsuppliedQuantity is not None):
+        raise ValueError("Initial and unsupplied quantities are required for the need.")
+        
+    
     validate_coordinates(need.x, need.y)
     validate_quantities(need.initialQuantity, need.unsuppliedQuantity)
-    
+
     insert_result = needs_collection.insert_one(need.dict())
     print("need added ", insert_result, need.occur_at)
 
