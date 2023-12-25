@@ -87,8 +87,13 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
     ));
   }
 
+  function unauthenticate() {
+
+  }
+
   const rejectButton = (...args) => <Button onPress={() => reject(...args)} className="mx-1 block text-white bg-gray-400 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg px-2 text-center dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-600"> {labels.admin.reject} </Button>;
   const acceptButton = (...args) => <Button onPress={() => accept(...args)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.accept} </Button>;
+  const unauthenticateButton = (...args) => <Button onPress={() => unauthenticate(...args)} className="mx-1 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"> {labels.admin.unauthenticate} </Button>;
   const report_types = ["users", "needs", "resources", "actions", "events"];
 
   let reports = {};
@@ -131,7 +136,8 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
                           {labels.UI.changed}
                         </span>
                       </>
-          )
+          ),
+          unauthenticate: user_role === "GUEST" ? null : unauthenticateButton(index, username)
         }
       }
   );
@@ -202,6 +208,7 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
             <TableColumn key="user_role">{labels.user_roles.user_role}</TableColumn>
             <TableColumn key="proficiency">{labels.user_roles.area_of_expertise}</TableColumn>
             <TableColumn key="credible">{labels.admin.is_credible}</TableColumn>
+            <TableColumn key="unauthenticate">{labels.admin.auth_status}</TableColumn>
           </TableHeader>
           <TableBody items={users}>
             {(item) => (

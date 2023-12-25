@@ -189,6 +189,8 @@
 		"report_accepted": "Report accepted.",
 		"report_rejected": "Report rejected.",
 		"ban_user": "Ban user",
+		"unauthenticate": "Demote to Guest",
+		"auth_status": "Auth Status",
 		"remove_activity": "Remove activity",
 		"is_credible": "Credible",
 		"credibility_set": "Credibility set."

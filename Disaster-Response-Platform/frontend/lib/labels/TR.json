@@ -187,6 +187,8 @@
 		"report_accepted": "Rapor kabul edildi.",
 		"report_rejected": "Rapor reddedildi.",
 		"ban_user": "Kullanıcıyı engelle",
+		"unauthenticate": "Ziyaretçiliğe düşür",
+		"auth_status": "Doğrulama statüsü",
 		"remove_activity": "Aktiviteyi kaldır",
 		"is_credible": "Güvenilir",
 		"credibility_set": "Güvenilirlik değiştirildi."
