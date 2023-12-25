@@ -278,7 +278,7 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                 )
                 profileItemBinding.spinner.setAdapter(levelAdapter)
                 profileItemBinding.spinner.setOnItemClickListener{_, _, position, _ ->
-                    profileItemBinding.spinner.hint = backendLevelArray[position]
+                    profileItemBinding.spinner.setText(levelArray[position])
                     map[profileItemBinding.profileItemText1.text.toString()] = backendLevelArray[position]
                 }
                 profileItemBinding.uploadFile.setOnClickListener {
@@ -308,10 +308,10 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                 )
                 profileItemBinding.spinner.setAdapter(levelAdapter)
                 profileItemBinding.spinner.setOnItemClickListener{_, _, position, _ ->
-                    profileItemBinding.spinner.hint = backendLevelArray[position]
+                    profileItemBinding.spinner.setText(levelArray[position])
                     map[skill.definition] = backendLevelArray[position]
                 }
-                profileItemBinding.spinner.hint = skill.level
+                profileItemBinding.spinner.setText(levelArray[backendLevelArray.indexOf(skill.level)])
                 map[skill.definition] = skill.level
                 profileItemBinding.uploadFile.setOnClickListener {
                     val intent = Intent().setType("*/*").setAction(Intent.ACTION_GET_CONTENT)
@@ -361,7 +361,7 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                 )
                 profileItemBinding.spinner.setAdapter(levelAdapter)
                 profileItemBinding.spinner.setOnItemClickListener{_, _, position, _ ->
-                    profileItemBinding.spinner.hint = backendLevelArray[position]
+                    profileItemBinding.spinner.setText(levelArray[position])
                     map[profileItemBinding.profileItemText1.text.toString()] = backendLevelArray[position]
                 }
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
@@ -387,13 +387,13 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                 )
                 profileItemBinding.spinner.setAdapter(levelAdapter)
                 profileItemBinding.spinner.setOnItemClickListener{_, _, position, _ ->
-                    profileItemBinding.spinner.hint = backendLevelArray[position]
+                    profileItemBinding.spinner.setText(levelArray[position])
                     map[profileItemBinding.profileItemText1.text.toString()] = backendLevelArray[position]
                 }
                 println("language spinner")
                 println(language.level)
                 println(backendLevelArray.indexOf(language.level))
-                profileItemBinding.spinner.hint = language.level
+                profileItemBinding.spinner.setText(levelArray[backendLevelArray.indexOf(language.level)])
                 map[language.language] = language.level
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
                     networkManager.makeRequest(
@@ -438,7 +438,7 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                 )
                 profileItemBinding.spinner.setAdapter(levelAdapter)
                 profileItemBinding.spinner.setOnItemClickListener{_, _, position, _ ->
-                    profileItemBinding.spinner.hint = backendLevelArray[position]
+                    profileItemBinding.spinner.setText(levelArray[position])
                     map[profileItemBinding.profileItemText1.text.toString()] = backendLevelArray[position]
                 }
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
@@ -462,10 +462,10 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                     )
                 profileItemBinding.spinner.setAdapter(levelAdapter)
                 profileItemBinding.spinner.setOnItemClickListener{_, _, position, _ ->
-                    profileItemBinding.spinner.hint = backendLevelArray[position]
+                    profileItemBinding.spinner.setText(levelArray[position])
                     map[profileItemBinding.profileItemText1.text.toString()] = backendLevelArray[position]
                 }
-                profileItemBinding.spinner.hint = profession.level
+                profileItemBinding.spinner.setText(levelArray[backendLevelArray.indexOf(profession.level)])
                 map[profession.profession] = profession.level
                 profileItemBinding.profileDeleteItemIcon.setOnClickListener {
                     networkManager.makeRequest(
