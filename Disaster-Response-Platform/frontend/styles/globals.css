@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
   --border-radius: 12px;
   font-family:  Circular, Helvetica, Arial, sans-serif;
@@ -43,7 +42,9 @@
 
 header{
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  max-width: 1280px !important;
+  max-width: 1280px !important; 
+
+  /* TODO big mistake find the true way */
 
 }
 @media (prefers-color-scheme: dark) {
@@ -90,7 +91,6 @@ body {
   min-width: 600px;
   margin: 0 auto;
   overflow-x: hidden;
-  height:100%;
 }
 
 body {
