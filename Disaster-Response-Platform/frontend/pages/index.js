@@ -12,21 +12,21 @@ import Filter from '@/components/Filter';
 import { withIronSessionSsr } from 'iron-session/next';
 import sessionConfig from '@/lib/sessionConfig';
 import getLabels from '@/lib/getLabels';
+import ActivityList from '@/components/ActivityList'
 
 
 const Map = dynamic(() => import('../components/Map/Map'), {
   ssr: false,
 })
-const colors = ['primary', 'success', 'warning', 'error', 'dark', 'secondary', 'info', 'light'];
 export default function home({ labels }) {
 
   const [chosenActivityType, setChosenActivityType] = useState("resource");
   return (
     <>
+     <Map />
+      <Divider className="mb-6" />
+      <ActivityList  labels={labels} />
       <ToastContainer position="bottom-center" />
-      <Divider className="my-6" />
-      <ActivityTable  labels={labels} />
-    
     </>
   )
 }
