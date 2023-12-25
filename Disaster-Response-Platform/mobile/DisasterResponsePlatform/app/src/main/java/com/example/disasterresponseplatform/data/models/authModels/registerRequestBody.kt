@@ -73,16 +73,16 @@ data class UserRolesResponse(
 
 data class UserProficiency(
     @SerializedName("proficiency")
-    val proficiency: String,
+    val proficiency: String?,
     @SerializedName("details")
-    val details: String,
+    val details: String?,
 )
 
 data class UserGetProficiencyResponse(
     @SerializedName("user_role")
     val user_role: String,
     @SerializedName("proficiency")
-    val proficiency: UserProficiency,
+    val proficiency: UserProficiency?,
 )
 
 data class UsersMeOptionalResponse(

@@ -122,7 +122,8 @@ class ProfileFragment(var username: String?) : Fragment() {
                                                         val gson = Gson()
                                                         println(body)
                                                         val res = gson.fromJson(body, UserGetProficiencyResponse::class.java)
-                                                        user.roleBasedProficiency = res.proficiency.proficiency
+                                                        if (res.proficiency?.proficiency != null)
+                                                                user.roleBasedProficiency = res.proficiency.proficiency
                                                         fillInformations(user)
                                                     } else {
                                                         println("response not successful")
@@ -470,7 +471,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                 }
                                 "ROLE_BASED" -> {
                                     user.role = Role.ROLE_BASED
-                                    user.roleBasedProficiency = res.proficiency!!.proficiency
+                                    user.roleBasedProficiency = res.proficiency?.proficiency ?: ""
                                 }
                                 "ADMIN" -> {
                                     user.role = Role.ADMIN
@@ -493,6 +494,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                     endpoint = Endpoint.ME_OPTIONAL,
                     requestType = RequestType.GET,
                     headers = headers,
+                    queries = mapOf("anyuser" to username!!),
                     callback = object : Callback<ResponseBody> {
                         override fun onResponse(
                             call: Call<ResponseBody>,
@@ -519,6 +521,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                     user.healthCondition = res!!.healthCondition
                                     user.bloodType = res!!.bloodType
                                     user.address = res!!.address
+                                    user.profilePhoto = res!!.profilePicture
                                 } else {
                                     println("res null")
                                 }
