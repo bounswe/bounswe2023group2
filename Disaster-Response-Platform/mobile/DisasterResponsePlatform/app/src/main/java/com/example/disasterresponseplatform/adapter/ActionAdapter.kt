@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +14,7 @@ import com.example.disasterresponseplatform.data.models.ActionBody
 import com.example.disasterresponseplatform.databinding.ActionItemBinding
 
 
-class ActionAdapter(private val actionList: List<ActionBody.ActionItem>?): RecyclerView.Adapter<ActionAdapter.ActionViewHolder>() {
+class ActionAdapter(private val actionList: List<ActionBody.ActionItem>?, val userRoleMap: MutableMap<String, String>): RecyclerView.Adapter<ActionAdapter.ActionViewHolder>() {
 
     inner class ActionViewHolder(val binding: ActionItemBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -42,6 +43,13 @@ class ActionAdapter(private val actionList: List<ActionBody.ActionItem>?): Recyc
         hb.tvCreator.text = currentAction?.created_by
         hb.tvDownvoteCount.text = currentAction?.downvote.toString()
         hb.tvUpvoteCount.text = currentAction?.upvote.toString()
+        // user role
+        val creator = currentAction?.created_by
+        if (creator in userRoleMap.keys && userRoleMap[creator] == "CREDIBLE") {
+            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
+        } else {
+            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+        }
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

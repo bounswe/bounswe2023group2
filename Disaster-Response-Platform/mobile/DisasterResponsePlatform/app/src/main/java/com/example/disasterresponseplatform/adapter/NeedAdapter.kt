@@ -2,18 +2,33 @@ package com.example.disasterresponseplatform.adapter
 
 import android.annotation.SuppressLint
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.data.enums.Endpoint
+import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
+import com.example.disasterresponseplatform.data.models.UserBody
 import com.example.disasterresponseplatform.databinding.NeedItemBinding
+import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.authentication.UserViewModel
+import com.google.gson.Gson
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
+import kotlin.random.Random
 
 
-class NeedAdapter(private val needList: List<NeedBody.NeedItem>?): RecyclerView.Adapter<NeedAdapter.NeedViewHolder>() {
+class NeedAdapter(private val needList: List<NeedBody.NeedItem>?, var userRoleMap: MutableMap<String, String>): RecyclerView.Adapter<NeedAdapter.NeedViewHolder>() {
 
     inner class NeedViewHolder(val binding: NeedItemBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -45,6 +60,13 @@ class NeedAdapter(private val needList: List<NeedBody.NeedItem>?): RecyclerView.
         hb.tvSubType.text = currentNeed?.details?.get("subtype").toString()
         hb.tvDownvoteCount.text = currentNeed?.downvote.toString()
         hb.tvUpvoteCount.text = currentNeed?.upvote.toString()
+        // user role
+        val creator = currentNeed?.created_by
+        if (creator in userRoleMap.keys && userRoleMap[creator] == "CREDIBLE") {
+            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
+        } else {
+            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+        }
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->
