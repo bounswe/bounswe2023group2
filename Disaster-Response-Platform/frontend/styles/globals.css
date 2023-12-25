@@ -42,7 +42,8 @@
 
 header{
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  max-width: 1280px !important; 
+  width: 100% !important;
+  max-width: 100rem !important;
 
   /* TODO big mistake find the true way */
 
