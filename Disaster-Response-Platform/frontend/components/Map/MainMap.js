@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDisclosure } from "@nextui-org/react";
-import AddResourceForm from "../AddResourceMap";
+// import AddResourceForm from "../AddResourceMap";
 import { useRouter } from "next/router";
 import SidePopup from "./SidePopup";
 import {
@@ -222,11 +222,11 @@ export default function Map({
         ))}
 
         {isClickActivated ? <MarkerAdd /> : <></>}
-        <AddResourceForm
+        {/* <AddResourceForm
           onOpenChange={onOpenChange}
           isOpen={isOpen}
           fetchData={fetchData}
-        />
+        /> */}
         {/* {MarkerArr &&
           MarkerArr.map(({ type, subType, dueDate, x_coord, y_coord }) => (
             <Marker position={[x_coord, y_coord]} icon={redIcon}>
