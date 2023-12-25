@@ -25,7 +25,7 @@ def create_emergency(emergency: Emergency) -> str:
         raise ValueError("Contact name and number are required for anonymous users.")
 
     if emergency.created_at is None:
-        emergency.created_at = datetime.datetime.now()
+        emergency.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     Services.utilities.validate_coordinates(emergency.x, emergency.y)
     emergency_dict = Services.utilities.correctDates(emergency)
