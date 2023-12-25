@@ -100,7 +100,8 @@
 		"login": "Giriş yap",
 		"logout": "Hesaptan çık",
 		"redirect_to_login": "Oturum açmaya yönlendiriliyorsunuz...",
-		"phone_email_username": "Telefon numarası, e-posta adresi veya kullanıcı adı"
+		"phone_email_username": "Telefon numarası, e-posta adresi veya kullanıcı adı",
+		"at_least_one": "Lütfen aşağıdakilerden en az birini giriniz."
 	},
 	"UI": {
 		"edit": "Düzenle",
