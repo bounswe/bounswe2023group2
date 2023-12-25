@@ -1,19 +1,20 @@
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Textarea } from "@nextui-org/react";
 import { ToastContainer, toast } from 'react-toastify';
 
-export default function ReportModal({ isOpen, onOpenChange, reported, labels }) {
+export default function ReportModal({ isOpen, onOpenChange, reported, reported_type, labels }) {
 
-  async function reportUser(event) {
+  async function submitReport(event) {
 
     event.preventDefault();
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
     const body = {
-      reported,
+      report_type_id: reported,
+      report_type: reported_type,
       description: formData.description
     };
 
-    const response = await fetch('/api/report-user', {
+    const response = await fetch('/api/reports/create', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +23,15 @@ export default function ReportModal({ isOpen, onOpenChange, reported, labels }) 
     });
 
     if (!response.ok) {
-      toast(labels.feedback.failure);
+      if (response.json()?.ErrorDetail === "Report already exists") {
+        if (reported_type === "users") {
+          toast(labels.admin.already_reported_user);
+        } else {
+          toast(labels.admin.already_reported_activity);
+        }
+      } else {
+        toast(labels.feedback.failure);
+      }
       return;
     }
     toast(labels.feedback.report_success);
@@ -33,7 +42,7 @@ export default function ReportModal({ isOpen, onOpenChange, reported, labels }) 
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         {(onClose) => (
-          <form id="report-modal" onSubmit={() => {reportUser(event); onClose()}}>
+          <form id="report-modal" onSubmit={() => {submitReport(event); onClose()}}>
             <ModalHeader className="flex flex-col gap-1">{labels.admin.report}</ModalHeader>
             <ModalBody>
             	<Textarea name="description" id="description" type="text"
