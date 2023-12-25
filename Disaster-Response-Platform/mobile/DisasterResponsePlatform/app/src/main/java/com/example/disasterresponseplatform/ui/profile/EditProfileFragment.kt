@@ -47,6 +47,7 @@ import com.example.disasterresponseplatform.databinding.ProfileEditSocialMediaBi
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import com.example.disasterresponseplatform.utils.FileUploadTask
 import com.example.disasterresponseplatform.utils.ImageUploadTask
 import com.google.gson.Gson
@@ -101,6 +102,10 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
         // Change ActionBar and StatusBar color
         (activity as AppCompatActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.primary)))
         (activity as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
+
+        Annotation().getAnnotations("testtag123") {
+            println("Annotation server'dan gelen cevap: " + it)
+        }
 
         binding = FragmentProfileEditBinding.inflate(inflater, container,false)
         return binding.root

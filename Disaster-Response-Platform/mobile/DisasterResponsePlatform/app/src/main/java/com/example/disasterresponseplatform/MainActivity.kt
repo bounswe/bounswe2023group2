@@ -22,6 +22,7 @@ import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewMod
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
 import com.example.disasterresponseplatform.ui.map.MapFragment
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -47,6 +48,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         //instead setContentView(R.layout.activity_main) doing that with binding
         setContentView(binding.root)
+
+        val annotation = Annotation()
+        annotation.publishAnnotation("testtag123", "Bu olursa çok iyi olur")
 
         createViewModels()
         mapFragment = MapFragment(needViewModel, resourceViewModel, actionViewModel, eventViewModel, emergencyViewModel)

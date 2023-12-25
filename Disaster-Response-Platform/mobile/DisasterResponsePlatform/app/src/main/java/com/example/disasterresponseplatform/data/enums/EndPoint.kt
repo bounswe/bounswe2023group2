@@ -45,4 +45,6 @@ enum class Endpoint(val path: String) {
     PASSWORD_RESET_SEND("forgot_password/send"),
     PASSWORD_RESET_VERIFY("forgot_password/reset"),
     UPLOADFILE("uploadfile"),
+    ANNOTATIONS("annotations"),
+    SIMPLE_ANNOTATION("simple_annotation"),
 }
