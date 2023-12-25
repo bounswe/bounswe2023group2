@@ -1,7 +1,6 @@
 package com.example.disasterresponseplatform.data.models.authModels
 
 import com.google.gson.annotations.SerializedName
-import java.io.Serial
 
 data class RegisterRequestBody(
     @SerializedName("username") val username: String,
@@ -18,8 +17,20 @@ data class RegisterRequestBody(
 data class SignUpResponseBody(
     @SerializedName("access_token")
     val accessToken: String,
+
     @SerializedName("token_type")
-    val tokenType: String
+    val tokenType: String,
+
+    @SerializedName("user_role")
+    val userRole: String,
+
+    @SerializedName("proficiency")
+    val proficiency: Proficiency
+)
+
+data class Proficiency(
+    val proficiency: String?,
+    val details: String?
 )
 
 data class SignUpResponseBody400 (
