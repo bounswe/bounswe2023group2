@@ -46,7 +46,7 @@ export default function AdminPanel({ unauthorized, allReports, allUsersInit, lab
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({_id, report_type, report_type_id})
+      body: JSON.stringify({report_id: _id, report_type, report_type_id})
     });
     if (!response.ok) {
       toast(labels.feedback.failure);
