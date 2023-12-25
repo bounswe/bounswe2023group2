@@ -10,11 +10,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.emergency.Emergency
 import com.example.disasterresponseplatform.data.models.EmergencyBody
 import com.example.disasterresponseplatform.databinding.FragmentAddEmergencyBinding
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.DateUtil
+import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.textfield.TextInputLayout
 import okhttp3.Call
 import okhttp3.Callback
@@ -51,20 +55,29 @@ class AddEmergencyFragment(
         binding.etCoordinate.setStartIconOnClickListener {
             navigateToMapFragment()
         }
+        initRequiredFields()
         setupButtons()
         submitEmergency(emergency == null)
         return binding.root
     }
 
+    private fun initRequiredFields() {
+        binding.etFullname.markRequired()
+        binding.etPhoneNumber.markRequired()
+        binding.etCoordinate.markRequired()
+        binding.etDescription.markRequired()
+    }
+
     private fun setupButtons() {
         val buttons = listOf(
             binding.btnDebris,
+            binding.btnNews,
             binding.btnFire,
             binding.btnHealth
         )
 
         binding.btnDebris.isChecked = true
-        selectedType = "debris"
+        selectedType = "Debris"
 
         buttons.forEach { button ->
             button.setOnClickListener {
@@ -72,9 +85,10 @@ class AddEmergencyFragment(
                 button.isChecked = true
 
                 selectedType = when (button) {
-                    binding.btnDebris -> "debris"
-                    binding.btnFire -> "fire"
-                    binding.btnHealth -> "medical"
+                    binding.btnDebris -> "Debris"
+                    binding.btnNews -> "News"
+                    binding.btnFire -> "Fire"
+                    binding.btnHealth -> "Medical Emergency"
                     else -> ""
                 }
             }
@@ -97,48 +111,69 @@ class AddEmergencyFragment(
             val layAddEmergency = binding.layAddEmergency
             if (validateFields(layAddEmergency)) {
 
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                val newEmergency = Emergency(
-                    ID = null,
-                    type = selectedType,
-                    description = binding.etDescription.text.toString(),
-                    creatorName = binding.etFullname.text.toString(),
-                    contactNumber = binding.etPhoneNumber.text.toString(),
-                    location = binding.etCoordinate.editText?.text.toString(),
+                val emergencyPost = EmergencyBody.EmergencyPostBody(
+                    contact_name = binding.etFullname.editText?.text.toString(),
+                    contact_number = binding.etPhoneNumber.editText?.text.toString(),
+                    created_at = "${DateUtil.getDate("yyyy-MM-dd")} ${DateUtil.getTime("HH:mm:ss")}",
+                    emergency_type = selectedType,
+                    description = binding.etDescription.editText?.text.toString(),
                     x = selectedLocationX,
-                    y = selectedLocationY)
-                emergencyViewModel.insertEmergency(newEmergency) //insert local db
+                    y = selectedLocationY,
+                    location = binding.etCoordinate.editText?.text.toString(),
+                    is_active = true)
 
-                if (isAdded) { // to ensure it attached a context
-                    Toast.makeText(requireContext(), "It is saved in Local, It will be uploaded when you connect to the internet", Toast.LENGTH_LONG).show()
+
+                if (GeneralUtil.isInternetAvailable(requireContext())) {
+                    // if there is connection, send it to the backend
+                    if (isAdd){
+                        emergencyViewModel.postEmergency(emergencyPost)
+                    } else {
+                        val emergencyID = emergency!!._id // comes from older emergency
+                        emergencyViewModel.postEmergency(emergencyPost, emergencyID)
+                    }
+
+                    emergencyViewModel.getLiveDataEmergencyID().observe(requireActivity!!) {
+                        if (it != "-1") { // in error cases it returns this
+                            if (isAdded) { // to ensure it attached a context
+                                if (isAdd)
+                                    Toast.makeText(requireContext(), "Created Emergency ID: $it", Toast.LENGTH_LONG).show()
+                                else
+                                    Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
+                            }
+
+                            Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                                if (isAdded) // to ensure it attached a parentFragmentManager
+                                    parentFragmentManager.popBackStack("AddEmergencyFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                if (!isAdd)
+                                    parentFragmentManager.popBackStack("EmergencyItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                // Re-enable the button after the background operation completes
+                                binding.btnSubmit.isEnabled = true
+                            }, 200)
+                        } else {
+                            if (isAdded)
+                                Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
+                            binding.btnSubmit.isEnabled = true
+                        }
+                    }
+
+                } else {
+                    // if there is no Connection, insert it into the local db
+                    val emergencyLocal = Emergency(
+                        ID = null,
+                        type = selectedType,
+                        description = binding.etDescription.editText?.text.toString(),
+                        contactName = binding.etFullname.editText?.text.toString(),
+                        contactNumber = binding.etPhoneNumber.editText?.text.toString(),
+                        location = binding.etCoordinate.editText?.text.toString(),
+                        x = selectedLocationX,
+                        y = selectedLocationY)
+                    emergencyViewModel.insertEmergency(emergencyLocal)
+
+                    if (isAdded) { // to ensure it attached a context
+                        Toast.makeText(requireContext(), getString(R.string.saved_local), Toast.LENGTH_LONG).show()
+                    }
+                    parentFragmentManager.popBackStack()
                 }
-                parentFragmentManager.popBackStack()
-
-//              !!--- Emergency is currently running locally ---!!
-//
-//                emergencyViewModel.getLiveDataEmergencyID().observe(requireActivity!!) {
-//                    if (it != "-1") { // in error cases it returns this
-//                        if (isAdded) { // to ensure it attached a context
-//                            if (isAdd)
-//                                Toast.makeText(requireContext(), "Created Emergency ID: $it", Toast.LENGTH_LONG).show()
-//                            else
-//                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
-//                        }
-//
-//                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-//                            if (isAdded) // to ensure it attached a parentFragmentManager
-//                                parentFragmentManager.popBackStack("AddEmergencyFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                            if (!isAdd)
-//                                parentFragmentManager.popBackStack("EmergencyItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                            // Re-enable the button after the background operation completes
-//                            binding.btnSubmit.isEnabled = true
-//                        }, 200)
-//                    } else {
-//                        if (isAdded)
-//                            Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
-//                        binding.btnSubmit.isEnabled = true
-//                    }
-//                }
 
             } else {
                 if (isAdded)
@@ -148,26 +183,24 @@ class AddEmergencyFragment(
         }
     }
 
-
+    /**
+     * Users must enter emergency type, location, description and contact infos
+     */
     private fun validateFields(layout: ViewGroup): Boolean {
         var isValid = true
 
         for (i in 0 until layout.childCount) {
             val view = layout.getChildAt(i)
-
             if (view is TextInputLayout) {
                 val editText = view.editText
                 if (editText != null) {
-                    val hint = editText.hint
-                    if (hint != "Occur At" && hint != "Recurrence Rate" && hint != "Recurrence Deadline" && hint != "Description") {
-                        val text = editText.text.toString().trim()
-                        if (text.isEmpty()) {
-                            isValid = false
-                            view.error = "Cannot be empty"
-                        } else {
-                            view.error = null
-                            view.isErrorEnabled = false
-                        }
+                    val text = editText.text.toString().trim()
+                    if (text.isEmpty()) {
+                        isValid = false
+                        view.error = "Cannot be empty"
+                    } else {
+                        view.error = null
+                        view.isErrorEnabled = false
                     }
                 }
             }
@@ -273,4 +306,9 @@ private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback
         .get()
         .build()
     client.newCall(request).enqueue(callback)
+}
+
+
+fun TextInputLayout.markRequired() {
+    hint = "$hint *"
 }

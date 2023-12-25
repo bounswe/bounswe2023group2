@@ -14,8 +14,8 @@ data class Emergency(
     val type: String,
     @ColumnInfo(name = EmergencyCols.description)
     val description: String?,
-    @ColumnInfo(name = EmergencyCols.creatorName)
-    val creatorName: String?,
+    @ColumnInfo(name = EmergencyCols.contactName)
+    val contactName: String?,
     @ColumnInfo(name = EmergencyCols.contactNumber)
     val contactNumber: String?,
     @ColumnInfo(name = EmergencyCols.location)

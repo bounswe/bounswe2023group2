@@ -123,14 +123,18 @@
     <string name="field_coordinate_x">X Coordinate</string>
     <string name="field_coordinate_y">Y Coordinate</string>
     <string name="field_description">Description</string>
+    <string name="field_contact_name">Contact Name</string>
+    <string name="field_contact_phone">Contact Phone Number</string>
     <string name="submit">Submit</string>
+    <string name="required_fields">* Required Fields</string>
     <string name="edit_need">Edit Need</string>
     <string name="edit_resource">Edit Resource</string>
     <string name="edit_action">Edit Action</string>
     <string name="save_changes">Save Changes</string>
     <string name="debris_button">There Is Someone Under Debris</string>
-    <string name="fire_button">Immediate Response to Fire Required</string>
-    <string name="medical_button">Medical Team Urgently Needed</string>
+    <string name="news_button">Notice - Information</string>
+    <string name="fire_button">Response to Fire Required</string>
+    <string name="medical_button">Medical Team Needed</string>
     <string name="select_1_5">Urgency: Low-Priority(1) to Critical(5) </string>
     <string name="want_recurrence">Recurrence</string>
     <string name="start_date">Start Date</string>
@@ -241,7 +245,6 @@
 
     <!-- EVENT -->
     <string name="short_note">Short Description</string>
-    <string name="debris">Debris</string>
     <string name="event_date">Event Date</string>
     <string name="event_time">Event Time</string>
     <string name="coverage_x_km">Coverage X(km)</string>
@@ -268,6 +271,10 @@
     <string name="human">Human</string>
     <string name="other">Other</string>
     <string name="need_resource">Need - Resource</string>
+    <string name="debris">Someone Under Debris</string>
+    <string name="news">Notice - Information</string>
+    <string name="fire">Fire Alarm</string>
+    <string name="medical_emergency">Medical Emergency</string>
 
     <string-array name="need_types">
         <item>@string/cloth</item>
@@ -295,6 +302,13 @@
 
     <string-array name="action_types">
         <item>@string/need_resource</item>
+    </string-array>
+
+    <string-array name="emergency_types">
+        <item>@string/debris</item>
+        <item>@string/news</item>
+        <item>@string/fire</item>
+        <item>@string/medical_emergency</item>
     </string-array>
 
     <string-array name="event_types">

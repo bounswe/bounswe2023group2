@@ -123,14 +123,18 @@
     <string name="field_coordinate_x">X Koordinatı</string>
     <string name="field_coordinate_y">Y Koordinatı</string>
     <string name="field_description">Açıklama</string>
+    <string name="field_contact_name">İletişime Geçilecek Kişi</string>
+    <string name="field_contact_phone">İletişim Telefon Numarası</string>
     <string name="submit">Gönder</string>
+    <string name="required_fields">* Gerekli Alanlar</string>
     <string name="edit_need">İhtiyacı Düzenle</string>
     <string name="edit_resource">Kaynağı Düzenle</string>
     <string name="edit_action">Aksiyonu Düzenle</string>
     <string name="save_changes">Değişiklikleri Kaydet</string>
     <string name="debris_button">Enkaz Altında Olan Var</string>
-    <string name="fire_button">Yangına Acil Müdahale Gerekli</string>
-    <string name="medical_button">Acilen Sağlık Ekibine İhtiyaç Var</string>
+    <string name="news_button">İhbar - Bilgi</string>
+    <string name="fire_button">Yangına Müdahale Gerekli</string>
+    <string name="medical_button">Sağlık Ekibine İhtiyaç Var</string>
     <string name="select_1_5">Aciliyet: Düşük Öncelikliden(1) Acile(5) Doğru</string>
     <string name="want_recurrence">Tekrarlı</string>
     <string name="start_date">Başlangıç Tarihi</string>
@@ -241,7 +245,6 @@
 
     <!-- EVENT -->
     <string name="short_note">Kısa Açıklama</string>
-    <string name="debris">Deprem</string>
     <string name="event_date">Olay Tarihi</string>
     <string name="event_time">Olay Zamanı</string>
     <string name="coverage_x_km">Kapsama Alanı X(km)</string>
@@ -268,6 +271,10 @@
     <string name="human">İnsan</string>
     <string name="other">Diğer</string>
     <string name="need_resource">İhtiyaç - Kaynak</string>
+    <string name="debris">Enkaz Altında Biri</string>
+    <string name="news">İhbar - Bilgi</string>
+    <string name="fire">Yangın Alarmı</string>
+    <string name="medical_emergency">Acil Sağlık Ekibi</string>
 
 
     <!-- PROFILE LISTS -->

@@ -78,10 +78,10 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
             binding.tvLastUpdatedTimeTitle.visibility = View.GONE
             binding.tvLastUpdatedTime.visibility = View.GONE
 
-            binding.tvCreator.text = emergency.creator_name
+            binding.tvCreator.text = emergency.contact_name
             binding.tvUserRole.text = "GUEST"
         }
-        binding.tvPhoneNumber.text = emergency.phone_number
+        binding.tvPhoneNumber.text = emergency.contact_number
         binding.tvType.text = emergency.type
         binding.tvDescription.text = emergency.description
         binding.tvCreationTime.text = emergency.created_at

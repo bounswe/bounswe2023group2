@@ -1,6 +1,5 @@
 package com.example.disasterresponseplatform.utils
 
-import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -11,6 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
@@ -47,7 +47,8 @@ class GeneralUtil {
             }
         }
 
-        fun checkLocalChanges(needViewModel: NeedViewModel,resourceViewModel: ResourceViewModel,eventViewModel: EventViewModel,activity: FragmentActivity){
+        fun checkLocalChanges(emergencyViewModel: EmergencyViewModel, needViewModel: NeedViewModel,resourceViewModel: ResourceViewModel,eventViewModel: EventViewModel,activity: FragmentActivity){
+            checkLocalEmergencies(emergencyViewModel,activity)
             checkLocalNeeds(needViewModel,activity)
             checkLocalResources(resourceViewModel,activity)
             checkLocalEvents(eventViewModel,activity)
@@ -179,6 +180,37 @@ class GeneralUtil {
                                         eventViewModel.deleteEvent(event.ID!!) //delete it from local
                                     }
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * This function checks whether device has emergencies in local database
+         * If there were some local emergencies, if current username matches with the creator name of that emergencies,
+         * it post these emergencies into backend and remove them from local database
+         */
+        private fun checkLocalEmergencies(emergencyViewModel: EmergencyViewModel,activity: FragmentActivity){
+            if (emergencyViewModel.getAllEmergencies().isNullOrEmpty()){
+                Log.i("Check Local Objects","Emergencies are empty")
+            }else{
+                val emergencyList = emergencyViewModel.getAllEmergencies()
+                if (emergencyList != null) {
+                    Log.i("Check Local Objects","Emergencies are not empty")
+                    val emergencyListCopy = emergencyList.toList() // to do this operations without any error because I deleted them
+                    for (emergency in emergencyListCopy){
+                        val emergencyBody = emergencyViewModel.prepareBodyFromLocal(emergency,activity)
+                        Log.i("ResponseInfo", "Local emergency is sending")
+                        emergencyViewModel.postEmergency(emergencyBody)
+                        emergencyViewModel.getLiveDataEmergencyID().observe(activity){postedID ->
+                            if (postedID == "-1"){ //  in error cases it returns this
+                                Log.i("Check Local Objects", "Error occurred post Emergency")
+                            }else{
+                                Log.i("Check Local Objects", "Post Emergency Successfully")
+                                isPosted.postValue(true)
+                                emergencyViewModel.deleteEmergency(emergency.ID!!) //delete it from local
                             }
                         }
                     }
