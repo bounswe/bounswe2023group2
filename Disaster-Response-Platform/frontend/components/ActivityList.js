@@ -7,6 +7,7 @@ import Sort from './Sort';
 import ActivityModal from './ActivityModal';
 import { api } from '@/lib/apiUtils';
 import Search from './Search';
+import AddActionForm from './AddAction';
 
 const ActivityList = ({ labels, userFilter }) => {
     const [activities, setActivities] = useState([]); // [{_id: "loading"}
@@ -18,12 +19,7 @@ const ActivityList = ({ labels, userFilter }) => {
     const [events, setEvents] = useState([{ _id: "loading" }]);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [activity, setActivity] = useState({});
-
-    const {
-        isOpen: isNeedModalOpen,
-        onOpen: onOpenNeedModal,
-        onOpenChange: onOpenChangeNeedModal,
-    } = useDisclosure()
+   
     const getResources = async () => {
         const response = await fetch('/api/resource/get', { method: 'GET', headers: { "Content-Type": "application/json" } });
         let res = await response.json();
@@ -98,7 +94,8 @@ const ActivityList = ({ labels, userFilter }) => {
     }
 
     return <>
-        <div className="text-center  ">
+        <div className="text-center flex flex-row justify-between max-h-[700px] overflow-y-auto w-4/5 p-2">
+            <Search search={search} setSearch={setSearch} chosenActivityType={chosenActivityType} activities={activities} setActivities={setActivities} />
             <Tabs
                 selectedKey={chosenActivityType}
                 onSelectionChange={setChosenActivityType}
@@ -113,6 +110,11 @@ const ActivityList = ({ labels, userFilter }) => {
                 <Tab key="resource" titleValue={labels.activities.resources} title={labels.activities.resources} />
                 <Tab key="event" titleValue={labels.activities.events} title={labels.activities.events} />
             </Tabs>
+            <p className=''>
+
+                <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} labels={labels} />
+                <Sort chosenActivityType={chosenActivityType} filterActivities={filterActivities} setFilters={setFilters} filters={filters} labels={labels} />
+            </p>
         </div>
         <div class="w-full">
 
@@ -121,11 +123,9 @@ const ActivityList = ({ labels, userFilter }) => {
             <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={chosenActivityType} />
 
         </div>
-        <div className=' max-h-[700px] bg-slate-500 overflow-y-auto w-4/5 p-2'>
+        <div className=' max-h-[700px] bg-slate-100 overflow-y-auto w-4/5 p-2 round-sm'>
             <div className="text-end ">
-                <Search search={search} setSearch={setSearch} chosenActivityType={chosenActivityType} activities={activities} setActivities={setActivities} />
-                <Filter setFilters={setFilters} filters={filters} filterActivities={filterActivities} labels={labels} />
-                <Sort chosenActivityType={chosenActivityType} filterActivities={filterActivities} setFilters={setFilters} filters={filters} labels={labels} />
+             
             </div>
             {(search !== "" )&& activities.map((activity, index) => (
                 <ListItem activityType={'resource'} activity={activity} />
@@ -141,6 +141,7 @@ const ActivityList = ({ labels, userFilter }) => {
                 <ListItem activityType={'event'} activity={event} />
             ))}
         </div>
+        
     </>
 }
 

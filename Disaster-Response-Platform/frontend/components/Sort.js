@@ -6,7 +6,7 @@ export default function Sort({ chosenActivityType, filters, setFilters, filterAc
   const needSorts = ['urgency', 'status', 'occur_at', 'type', 'upvote']
   const resourceSorts = ['currentQuantity', 'status', 'upvote', 'type']
   return (
-    <Popover placement="bottom" showArrow offset={10}>  
+    <Popover placement="bottom" showArrow offset={10} className="mx-4">  
     <PopoverTrigger>
       <Button color="primary">
         <FaSort/>{labels.sort_filter.sort}
