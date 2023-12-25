@@ -5,9 +5,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Search from "../Search";
 import { Input } from "@nextui-org/react";
-
+import Filter from "../Filter";
 import { api } from "@/lib/apiUtils";
-import { Tab, Tabs } from "@nextui-org/react";
+import {
+  Tab,
+  Tabs,
+  Divider,
+  CheckboxGroup,
+  Checkbox,
+  Button,
+} from "@nextui-org/react";
 
 export default function MapFilterMenu({
   activateClick,
@@ -19,17 +26,29 @@ export default function MapFilterMenu({
   labels,
   bounds,
   chosenActivityType,
-  setChosenActivityType
+  setChosenActivityType,
 }) {
   const [resourceChecked, setResourceChecked] = useState(false);
   const [aktifChecked, setAktifChecked] = useState(false);
   const [eventChecked, setEventChecked] = useState(false);
   const [actionsChecked, setActionsChecked] = useState(false);
   const [needsChecked, setNeedsChecked] = useState(false);
-  
+  const [filters, setFilters] = useState({});
   const [search, setSearch] = useState("");
   const [activities, setActivities] = useState([]); // [{_id: "loading"}
-
+  const types = [
+    "cloth",
+    "food",
+    "drink",
+    "shelter",
+    "medication",
+    "transportation",
+    "tool",
+    "human",
+    "other",
+  ];
+  const urgency = [1, 2, 3, 4, 5];
+  const status = ["active", "inactive"];
   useEffect(() => {
     fetchResources();
     fetchNeeds();
@@ -49,6 +68,80 @@ export default function MapFilterMenu({
       autoClose: 5000, // Auto close the notification after 3 seconds (adjust as needed)
     });
   };
+  const filterActivities = async () => {
+    let response;
+    if (chosenActivityType === "need") {
+      let my_filter = new URLSearchParams(filters).toString();
+
+      response = await api.get(`/api/needs/?${my_filter}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      let res = response.data;
+      if (response.status === 200) {
+        setNeedApiData(res.needs);
+      } else {
+        toast.error(labels.feedback.failure);
+      }
+    } else if (chosenActivityType === "resource") {
+      let my_filter = new URLSearchParams(filters).toString();
+
+      response = await api.get(`/api/resources/?${my_filter}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      let res = response.data;
+
+      setResourceApiData(res.resources);
+      if (response.status === 200) {
+        setResourceApiData(res.resources);
+      } else {
+        toast.error(labels.feedback.failure);
+      }
+    } else if (chosenActivityType === "all") {
+      let my_filter = new URLSearchParams(filters).toString();
+
+      resouceResponse = await api.get(`/api/resources/?${my_filter}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      needResponse = await api.get(`/api/needs/?${my_filter}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      let nRes = needResponse.data;
+      let rRes = resouceResponse.data;
+
+      setResourceApiData(rRes.resources);
+      if (response.status === 200) {
+        setResourceApiData(rRes.resources);
+      } else {
+        toast.error(labels.feedback.failure);
+      }
+
+      setNeedApiData(nRes.needs);
+      if (response.status === 200) {
+        setNeedApiData(nRes.needs);
+      } else {
+        toast.error(labels.feedback.failure);
+      }
+    }
+  };
+  const download = async () => {
+    try {
+      let my_filter = new URLSearchParams(filters).toString();
+      response = await api.get(`/api/donwloadfile/?activity_type=Need`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log(response)
+      response = await api.get(`/api/donwloadfile/?activity_type=Resource`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log(response)
+
+    }
+    catch (error) {
+      // Handle unexpected errors
+      console.error("Error:", error);
+    }
+  }
   const fetchResources = async () => {
     try {
       // Make API call to filter resources based on the search term
@@ -165,7 +258,7 @@ export default function MapFilterMenu({
         const events = await eventResponse.data;
         // Process the data as needed
         console.log("Filtered Resources:", events);
-        setResourceApiData(events.events);
+        setEventApiData(events.events);
         events.events.forEach((event) => {
           const xValue = event.x;
           const yValue = event.y;
@@ -318,15 +411,6 @@ export default function MapFilterMenu({
             alignSelf: "center",
           }}
         />
-        <button
-          onClick={() => {
-            notifyFilter();
-          }}
-          className="bg-yellow-500 hover:bg-yellow-700 text-white 
-                          font-bold py-1 px-2 rounded w-full "
-        >
-          {labels.map.scan_certain_area}
-        </button>
 
         <Tabs
           selectedKey={chosenActivityType}
@@ -367,76 +451,106 @@ export default function MapFilterMenu({
           <Tab
             key="all"
             className={`${
-              chosenActivityType === "all" ? "bg-yellow-400 z-10" : "bg-gray-200"
+              chosenActivityType === "all"
+                ? "bg-yellow-400 z-10"
+                : "bg-gray-200"
             } text-slate-50 flex justify-center items-center px-2 py-1 text-xs max-w-[25%]`}
             titleValue={labels.activities.all}
             title={labels.activities.all}
           />
         </Tabs>
-        <div>
-          <form action="#">
-            <label for="types">{labels.sort_criteria.type}</label>
-            <select name="types" id="types">
-              <option value="need"> {labels.activities.needs} </option>
-              <option value="resource"> {labels.activities.resource} </option>
-              <option value="event"> {labels.activities.events} </option>
-            </select>
-          </form>
-        </div>
-        <div>
-          <form action="#">
-            <label for="types">{labels.sort_criteria.type}</label>
-            <select name="types" id="types">
-              <option value="a"> anaaaa </option>
-            </select>
-          </form>
-        </div>
 
-        <div>
-          <form action="#">
-            <label for="types">{labels.sort_criteria.subtype}</label>
-            <select name="types" id="types">
-              <option value="a"> a </option>
-            </select>
-          </form>
+        <div className="px-3 py-2 w-full">
+          <p className="text-small text-black font-bold text-foreground">
+            {labels.sort_filter.filter}
+          </p>
+          <div className="mt-2 flex flex-col gap-2 w-full">
+            <Divider />
+
+            <CheckboxGroup
+              label={labels.sort_filter.types}
+              orientation="horizontal"
+              defaultValue={[]}
+              onValueChange={(e) => {
+                setFilters({ ...filters, types: e });
+              }}
+            >
+              {types.map((type) => (
+                <Checkbox value={type}>{type}</Checkbox>
+              ))}
+            </CheckboxGroup>
+
+            <CheckboxGroup
+              label={labels.sort_filter.urgency}
+              orientation="horizontal"
+              color="secondary"
+              defaultValue={[]}
+              onValueChange={(e) => {
+                setFilters({ ...filters, urgency: e });
+              }}
+            >
+              {urgency.map((urgent) => (
+                <Checkbox value={urgent}>{urgent}</Checkbox>
+              ))}
+            </CheckboxGroup>
+
+            <CheckboxGroup
+              label={labels.sort_filter.status}
+              orientation="horizontal"
+              color="secondary"
+              defaultValue={[]}
+              onValueChange={(e) => {
+                setFilters({ ...filters, status: e });
+              }}
+            >
+              {status.map((stat) => (
+                <Checkbox value={stat}>{labels.sort_filter[stat]}</Checkbox>
+              ))}
+            </CheckboxGroup>
+          </div>
         </div>
-        <div>
-          <input
-            type="checkbox"
-            className={styles.checkbox}
-            checked={aktifChecked}
-            onChange={() => setAktifChecked(!aktifChecked)}
-          />
-          {labels.sort_filter.active_only}
-        </div>
-        <div>
-          <input type="checkbox" className={styles.checkbox} />
-          {labels.activities.resources}
-        </div>
-        <div>
-          <input type="checkbox" className={styles.checkbox} />
-          {labels.activities.events}
-        </div>
-        <div>
-          <input type="checkbox" className={styles.checkbox} />
-          {labels.activities.actions}
-        </div>
-        <div>
-          <input type="checkbox" className={styles.checkbox} />
-          {labels.activities.needs}
-        </div>
-        <div>
-          <input type="checkbox" className={styles.checkbox} />
-          {labels.activities.emergencies}
-        </div>
+      </div>
+
+      <button
+        onClick={() => {
+          notifyFilter();
+        }}
+        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded w-full"
+        // absolute bottom-30 right-0.5"
+      >
+        {labels.map.scan_certain_area}
+      </button>
+
+      <button
+        onClick={() => {
+          filterActivities();
+        }}
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
+        // absolute bottom-20 right-0.5"
+      >
+        {labels.sort_filter.filter}
+      </button>
+      <button
+        onClick={() => {
+          fetchResources();
+          fetchNeeds();
+          fetchEvents();
+        }}
+        className="bg-red-200 hover:bg-red-400 text-white font-bold py-2 px-4 rounded w-full"
+        // absolute bottom-10 right-0.5"
+      >
+        {labels.sort_filter.filter_reset}
+      </button>
+
+      
         <button
           onClick={() => {
-            handleFilterClick();
+            download();
           }}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full
-                          absolute bottom-10 right-0.5"
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full
+           absolute bottom-10 right-0.5"
         >
-          {labels.sort_filter.filter}
+          {labels.map.download}
         </button>
         <button
           onClick={() => {
@@ -444,13 +558,14 @@ export default function MapFilterMenu({
             notifyAdd();
           }}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full
-                          absolute bottom-0 right-0.5"
+           absolute bottom-0 right-0.5"
         >
           {labels.activities.add_resource}
         </button>
+
         {isMapSelected ? popup() : <></>}
         <ToastContainer />
-      </div>
+
     </div>
   );
 }

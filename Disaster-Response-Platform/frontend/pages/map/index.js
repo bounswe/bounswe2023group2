@@ -34,6 +34,9 @@ export default function mapPage({ labels }) {
         labels={labels}
         setBounds={setBounds}
         chosenActivityType={chosenActivityType}
+        setResourceApiData={setResourceApiData}
+        setNeedApiData={setNeedApiData}
+        setEventApiData={setEventApiData}
       />
       <MapFilterMenu
         activateClick={activateClick}

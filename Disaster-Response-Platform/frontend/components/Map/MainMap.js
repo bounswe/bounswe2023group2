@@ -258,27 +258,7 @@ export default function Map({
           return null;
         })}
 
-        {eventApiData.map((event, index) => {
-          // Check if both x and y values are defined
-          if (typeof event.x === 'number' && typeof event.y === 'number') {
-            return (
-              <Marker
-                key={index}
-                position={[event.x, event.y]}
-                icon={redIcon}
-                eventHandlers={{
-                  click: () => {
-                    event.nre = "Event";
-                    event.feedback = 0;
-                    setSelectedMarker(event);
-                  },
-                }}
-              ></Marker>
-            );
-          }
-          // Return null for events with undefined x or y values
-          return null;
-        })}
+        
 
         {isClickActivated ? <MarkerAdd /> : <></>}
         {/* <AddResourceForm
