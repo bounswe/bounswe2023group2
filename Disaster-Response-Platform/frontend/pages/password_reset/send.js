@@ -50,7 +50,7 @@ export default function login({ labels }) {
     <Button disabled={isSubmitting} color='primary' type='submit' className='m-3 self-end mr-0 w-10'>
       {isSubmitting ? labels.UI.loading : labels.UI.submit}
     </Button>
-    <ToastContainer position="bottom-center" />
+    <ToastContainer />
   </form>;
 }
 
