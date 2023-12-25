@@ -96,7 +96,7 @@ def accept_report(report: AcceptReport, response:Response, current_user: UserPro
         response.status_code=HTTPStatus.OK
         # return json.loads(res)
         if not res:
-            raise ValueError(f"Report id {report_id} not rejected") 
+            raise ValueError(f"Report id {report.report_id} not accepted") 
         return f'Report {report.report_id} accepted'
     except ValueError as err:
         err_json = create_json_for_error("Report accept error", str(err))

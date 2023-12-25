@@ -1,4 +1,4 @@
-package com.example.disasterresponseplatform.ui.activity
+package com.example.disasterresponseplatform.ui.activity.generalViewModels
 
 import android.util.Log
 import androidx.lifecycle.LiveData

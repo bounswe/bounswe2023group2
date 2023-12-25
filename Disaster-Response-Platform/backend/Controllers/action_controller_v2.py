@@ -53,6 +53,7 @@ def create_action(action: Action, response:Response, current_user: str = Depends
         response.response_model= Error
         return error
 
+
 @router.post("/{action_id}")
 def update(action_id:str, body: Action, response: Response ,current_user: str = Depends(authentication_service.get_current_username)):
     try:      
@@ -66,7 +67,7 @@ def update(action_id:str, body: Action, response: Response ,current_user: str = 
         return error
 
 
-@router.get("/need_list")
+@router.get("/need_list/{id}")
 def get_related_needs(id: str, response: Response):
     try:
         response.status_code = HTTPStatus.OK
@@ -78,7 +79,7 @@ def get_related_needs(id: str, response: Response):
         response.response_model= Error
         return error
 
-@router.get("/resource_list")
+@router.get("/resource_list/{id}")
 def get_related_resources(id: str, response: Response):
     try:
         response.status_code = HTTPStatus.OK
@@ -90,11 +91,24 @@ def get_related_resources(id: str, response: Response):
         response.response_model= Error
         return error
 
-@router.get('/perform_action')
-def perform_action(id: str, response: Response):
+@router.get('/perform_action/{id}')
+def perform_action(id: str, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
     try:
         response.status_code = HTTPStatus.OK
-        resource_list = action_service_v2.do_action(id)
+        resource_list = action_service_v2.get_match_list(id,current_user)
+        return resource_list
+    except ValueError as err:
+        error= Error(ErrorMessage="Resources could not be fetched", ErrorDetail= str(err))
+        response.status_code= HTTPStatus.BAD_REQUEST
+        response.response_model= Error
+        return error
+@router.post('/perform_action/{id}')
+def perform_action(id: str, match: MatchList, response: Response, current_user: str = Depends(authentication_service.get_current_username)):
+    try:
+        response.status_code = HTTPStatus.OK
+        resource_list = action_service_v2.do_action(id,current_user, match)
+        if not resource_list:
+            return {"Message": "Moved", "Action_id":id}
         return json.loads(resource_list)
     except ValueError as err:
         error= Error(ErrorMessage="Resources could not be fetched", ErrorDetail= str(err))

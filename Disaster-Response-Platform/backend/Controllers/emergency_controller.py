@@ -20,10 +20,10 @@ router = APIRouter()
     status.HTTP_403_FORBIDDEN: {"model": Error}})
 def create_emergency(emergency: Emergency, response:Response, user: UserProfile = Depends(authentication_service.get_current_user)):
     try:
-        if user.user_role.value == "GUEST":
-            emergency.created_by_user = "GUEST"
+        if user is None:
+            emergency.created_by_user = "ANONYMOUS"
         else:
-             emergency.created_by_user = user.username
+            emergency.created_by_user = user.username
         
         emergency_result = emergency_service.create_emergency(emergency)
         response.status_code = HTTPStatus.OK
@@ -34,6 +34,22 @@ def create_emergency(emergency: Emergency, response:Response, user: UserProfile 
         return json.loads(err_json)
 
 # Get the emergency with the specified ID.
+@router.post("/anonymous", responses={
+    status.HTTP_200_OK: {"model": Emergencies},
+    status.HTTP_404_NOT_FOUND: {"model": Error},
+    status.HTTP_403_FORBIDDEN: {"model": Error}})
+def create_emergency_anonymous(emergency: Emergency, response: Response):
+        emergency.created_by_user = "ANONYMOUS"
+        try:
+            emergency_result = emergency_service.create_emergency(emergency)
+            response.status_code = HTTPStatus.OK
+            return json.loads(emergency_result)
+        except ValueError as err:
+            err_json = create_json_for_error("Emergency create error", str(err))
+            response.status_code = HTTPStatus.NOT_FOUND
+            return json.loads(err_json)
+
+
 @router.get("/{emergency_id}", responses={
     status.HTTP_200_OK: {"model": Emergencies},
     status.HTTP_404_NOT_FOUND: {"model": Error},
@@ -54,9 +70,37 @@ def get_emergency(emergency_id: str, response: Response):
     status.HTTP_200_OK: {"model": Emergencies},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_403_FORBIDDEN: {"model": Error}})
-def get_all_emergencies(response: Response):
+def get_all_emergencies(
+    response: Response,
+    emergency_types: List[str] = Query(None, description="Filter by types of emergencies"),
+    contact_names: List[str] = Query(None, description="Filter by Contact Names"),
+    created_by_users: List[str] = Query(None, description="Filter by User names creating the emergency"),
+    is_active: Optional[bool] = Query(None, description="Filter by active status"),
+    is_verified: Optional[bool] = Query(None, description="Filter by verification status"),
+    x: float = Query(None, description="X coordinate for distance calculation"),
+    y: float = Query(None, description="Y coordinate for distance calculation"),
+    distance_max: float = Query(None, description="Maximum distance for filtering"),
+    sort_by: str = Query('created_at', description="Field to sort by"),
+    order: Optional[str] = Query('desc', description="Sort order")
+):
+    if emergency_types:
+        types_list = emergency_types[0].split(',')
+    else:
+        types_list = []
+
     try:
-        emergencies = emergency_service.get_emergencies()
+        emergencies = emergency_service.get_emergencies(
+            emergency_types=types_list,
+            is_active=is_active,
+            is_verified=is_verified,
+            x=x,
+            y=y,
+            distance_max=distance_max,
+            sort_by=sort_by,
+            order=order,
+            contact_names=contact_names,
+            created_by_users=created_by_users
+        )
         response.status_code = HTTPStatus.OK
         return json.loads(emergencies)
     except ValueError as err:

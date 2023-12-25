@@ -5,6 +5,7 @@ from pymongo import ASCENDING, DESCENDING
 from Services.build_API_returns import *
 from typing import Optional
 from datetime import datetime, timedelta
+import math
 
 # Get the resources collection using the MongoDB class
 resources_collection = MongoDB.get_collection('resources')
@@ -98,57 +99,77 @@ def get_resources(
     sort_by: str = 'created_at',
     order: Optional[str] = 'desc'
 ) -> list[dict]:
-    projection = {"_id": {"$toString": "$_id"},
-                  "created_by": 1,
-                  "description": 1,
-                  "condition": 1,
-                  "initialQuantity": 1,
-                  "currentQuantity": 1,
-                  "quantityUnit": 1,
-                  "type": 1,
-                  "details":1,
-                  "recurrence_id": 1,
-                  "recurrence_rate": 1,
-                  "recurrence_deadline": 1,
-                  "x":1,
-                  "y":1,
-                  "active": 1,
-                  "occur_at": 1,
-                  "created_at":1,
-                  "last_updated_at":1,
-                  "upvote":1,
-                  "downvote":1 ,
-                  "open_address":1
-                  }
+    projection = {
+        "_id": {"$toString": "$_id"},
+        "created_by": 1,
+        "description": 1,
+        "condition": 1,
+        "initialQuantity": 1,
+        "currentQuantity": 1,
+        "quantityUnit": 1,
+        "type": 1,
+        "details": 1,
+        "recurrence_id": 1,
+        "recurrence_rate": 1,
+        "recurrence_deadline": 1,
+        "x": 1,
+        "y": 1,
+        "active": 1,
+        "occur_at": 1,
+        "created_at": 1,
+        "last_updated_at": 1,
+        "upvote": 1,
+        "downvote": 1,
+        "reliability": 1,
+        "open_address": 1
+    }
     
     sort_order = ASCENDING if order == 'asc' else DESCENDING
     query = {}
     
+    # Apply filters based on resource_id, active status, types, and subtypes
     if resource_id:
-        
         if ObjectId.is_valid(resource_id):
-            
             query['_id'] = ObjectId(resource_id)
         else:
             raise ValueError(f"Resource id {resource_id} is invalid")
     else:
-        # Apply general filters only when no specific resource ID is provided
-        
         if active is not None:
             query['active'] = active    
         if types:
             query['type'] = {'$in': types}
         if subtypes:
             query['details.subtype'] = {'$in': subtypes}
-    
-    # Apply the query and sort order to the database call
-    resources_cursor = resources_collection.find(query, projection).sort(sort_by, sort_order)
+
+    # Fetch the resources from the database
+    resources_cursor = resources_collection.find(query, projection)
+
+    # Sort in the database only if the sort criteria is not 'reliability_score'
+    if sort_by != 'reliability':
+        resources_cursor = resources_cursor.sort(sort_by, sort_order)
+
     resources_data = list(resources_cursor)  # Convert cursor to list
 
     # Filter by distance if necessary
     if x is not None and y is not None and distance_max is not None:
         resources_data = [res for res in resources_data if ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
-    
+
+    for resource in resources_data:
+        upvotes = resource.get('upvote', 0)
+        downvotes = resource.get('downvote', 0)
+        total_votes = upvotes + downvotes
+
+        if total_votes > 0:
+            z = 1.96  # 95% confidence interval
+            phat = upvotes / total_votes
+            resource['reliability'] = (phat + z**2 / (2 * total_votes) - z * math.sqrt((phat * (1 - phat) + z**2 / (4 * total_votes)) / total_votes)) / (1 + z**2 / total_votes)
+        else:
+            resource['reliability'] = 0.5  # Default score for no votes
+
+    # Calculate and sort by reliability score if requested
+    if sort_by == 'reliability':
+        resources_data.sort(key=lambda x: x['reliability'], reverse=(order == 'desc'))
+
     # Format the resource data
     formatted_resources_data = []
     for resource in resources_data:
@@ -159,7 +180,7 @@ def get_resources(
         formatted_resources_data.append(resource)
 
     # Generate the result list
-    result_list = create_json_for_successful_data_fetch(resources_data, "resources")
+    result_list = create_json_for_successful_data_fetch(formatted_resources_data, "resources")
     return result_list
     
 def update_resource(resource_id: str, resource: Resource) -> Resource:

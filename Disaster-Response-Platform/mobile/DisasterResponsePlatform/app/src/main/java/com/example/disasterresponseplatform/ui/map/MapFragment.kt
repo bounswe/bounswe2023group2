@@ -16,8 +16,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.data.enums.Endpoint
+import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.ResourceBody
+import com.example.disasterresponseplatform.data.models.UserBody
+import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
@@ -25,6 +29,8 @@ import com.example.disasterresponseplatform.ui.activity.need.NeedItemFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceItemFragment
 import com.example.disasterresponseplatform.ui.activity.resource.ResourceViewModel
+import com.google.gson.Gson
+import okhttp3.ResponseBody
 import org.osmdroid.api.IMapController
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
 import org.osmdroid.config.Configuration
@@ -32,6 +38,10 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -45,6 +55,7 @@ class MapFragment(
     private lateinit var mapViewModel: MapViewModel
     private lateinit var needClusterer: RadiusMarkerClusterer
     private lateinit var allClusters: RadiusMarkerClusterer
+    private val networkManager = NetworkManager()
 
     private var requireActivity: FragmentActivity? = null
 
@@ -245,6 +256,55 @@ class MapFragment(
             marker.title = needItem.type
             marker.subDescription = needItem.details["subtype"]
             marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.need_map_icon)
+
+            val headers = mapOf(
+                "Content-Type" to "application/json"
+            )
+            networkManager.makeRequest(
+                endpoint = Endpoint.GETUSER,
+                requestType = RequestType.GET,
+                headers = headers,
+                id = needItem.created_by,
+                callback = object : Callback<ResponseBody> {
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                        Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                        if (response.isSuccessful) {
+                            val rawJson = response.body()?.string()
+                            if (rawJson != null) {
+                                try {
+                                    Log.d("ResponseSuccess", "Body: $rawJson")
+                                    val gson = Gson()
+                                    val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
+                                    if (userResponse != null) {
+                                        Log.d("ResponseSuccess", "needResponse: $userResponse")
+                                        if (userResponse.user_role == "CREDIBLE")
+                                            marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.credible_need_map_icon)
+                                    }
+                                } catch (e: IOException) {
+                                    // Handle IOException if reading the response body fails
+                                    Log.e("ResponseError", "Error reading response body: ${e.message}")
+                                }
+                            } else {
+                                Log.d("ResponseSuccess", "Body is null")
+                            }
+                        } else {
+                            val errorBody = response.errorBody()?.string()
+                            if (errorBody != null) {
+                                var responseCode = response.code()
+                                Log.d("ResponseSuccess", "Body: $errorBody")
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.d("onFailure", "Happens")
+                    }
+                }
+            )
             needClusterer.add(marker)
         }
     }
@@ -268,6 +328,57 @@ class MapFragment(
 //            val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon
 //            defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
 //            marker.icon = defaultDrawable
+
+
+            val headers = mapOf(
+                "Content-Type" to "application/json"
+            )
+            networkManager.makeRequest(
+                endpoint = Endpoint.GETUSER,
+                requestType = RequestType.GET,
+                headers = headers,
+                id = resourceItem.created_by,
+                callback = object : Callback<ResponseBody> {
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                        Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                        if (response.isSuccessful) {
+                            val rawJson = response.body()?.string()
+                            if (rawJson != null) {
+                                try {
+                                    Log.d("ResponseSuccess", "Body: $rawJson")
+                                    val gson = Gson()
+                                    val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
+                                    if (userResponse != null) {
+                                        Log.d("ResponseSuccess", "needResponse: $userResponse")
+                                        if (userResponse.user_role == "CREDIBLE")
+                                            marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.credible_resource_map_icon)
+                                    }
+                                } catch (e: IOException) {
+                                    // Handle IOException if reading the response body fails
+                                    Log.e("ResponseError", "Error reading response body: ${e.message}")
+                                }
+                            } else {
+                                Log.d("ResponseSuccess", "Body is null")
+                            }
+                        } else {
+                            val errorBody = response.errorBody()?.string()
+                            if (errorBody != null) {
+                                var responseCode = response.code()
+                                Log.d("ResponseSuccess", "Body: $errorBody")
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.d("onFailure", "Happens")
+                    }
+                }
+            )
+
             needClusterer.add(marker)
         }
     }
@@ -278,8 +389,4 @@ class MapFragment(
         ft.addToBackStack(fragmentName)
         ft.commit()
     }
-
-
-
-
 }

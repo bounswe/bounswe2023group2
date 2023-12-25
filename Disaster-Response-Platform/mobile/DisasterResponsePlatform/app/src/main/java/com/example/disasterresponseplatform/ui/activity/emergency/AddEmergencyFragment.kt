@@ -252,7 +252,6 @@ class AddEmergencyFragment(
     }
 
     private fun navigateToMapFragment() {
-
         mapFragment.isDialog = true // arrange that as a dialog instead of fragment
         mapFragment.coordinatesSelectedListener = this@AddEmergencyFragment
         mapFragment.show(parentFragmentManager, "mapDialog")

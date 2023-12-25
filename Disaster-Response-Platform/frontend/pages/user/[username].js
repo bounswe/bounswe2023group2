@@ -69,7 +69,7 @@ export default function OtherProfile({ unauthorized, self_role, main_info, optio
         }
       </div>
       <ActivityTable labels={labels} userFilter={username} />
-      <ReportModal isOpen={isOpen} onOpenChange={onOpenChange} reported={username} labels={labels}/>
+      <ReportModal isOpen={isOpen} onOpenChange={onOpenChange} reported={username} reported_type="users" labels={labels}/>
       <ToastContainer />
     </main>
   </>

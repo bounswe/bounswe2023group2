@@ -37,6 +37,7 @@ enum class Endpoint(val path: String) {
     CHECKVOTE("feedback/check"),
     GETUSER("userroles/role"),
     PROFICIENCY_REQUEST("userroles/proficiency-request"),
+    GETPROFICIENCY("userroles/proficiencies"),
     EVENT("events"),
     REPORTS("reports"),
     EMAIL_VERIFICATION_SEND("email_verification/send"),
@@ -47,5 +48,10 @@ enum class Endpoint(val path: String) {
     SEARCH_NEED("search/needs"),
     SEARCH_RESOURCE("search/resources"),
     SEARCH_EVENT("search/events"),
-    SEARCH_ACTION("search/actions")
+    SEARCH_ACTION("search/actions"),
+    RECURRENCE("recurrence/"), //TODO arrange id w.r.t this
+    RECURRENCE_ATTACH_ACTIVITY("recurrence/attach_activity"),
+    RECURRENCE_START("recurrence/start"),
+    RECURRENCE_CANCEL("recurrence/cancel"),
+    RECURRENCE_RESUME("recurrence/resume"),
 }

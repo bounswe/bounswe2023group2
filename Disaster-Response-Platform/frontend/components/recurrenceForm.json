@@ -1,0 +1,107 @@
+{
+  "en": [
+    {
+      "name": "title",
+      "label": "Title",
+      "type": "text"
+    },
+    {
+      "name": "description",
+      "label": "Description",
+      "type": "text"
+    },
+    {
+      "name": "occurance_rate",
+      "label": "Occurrence Rate",
+      "type": "number"
+    },
+    {
+      "name": "occurance_unit",
+      "label": "Occurrence Unit",
+      "type": "select",
+      "options": [
+        {
+          "key": "day",
+          "value": "day",
+          "label": "Day",
+          "index": 0
+        },
+        {
+          "key": "week",
+          "value": "week",
+          "label": "Week",
+          "index": 1
+        },
+        {
+          "key": "month",
+          "value": "month",
+          "label": "Month",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "name": "start_at",
+      "label": "Start Date",
+      "type": "date"
+    },
+    {
+      "name": "end_at",
+      "label": "End Date",
+      "type": "date"
+    }
+  ],
+  "tr": [
+    {
+      "name": "title",
+      "label": "Başlık",
+      "type": "text"
+    },
+    {
+      "name": "description",
+      "label": "Açıklama",
+      "type": "text"
+    },
+    
+    {
+      "name": "occurance_rate",
+      "label": "Oluşma Hızı",
+      "type": "number"
+    },
+    {
+      "name": "occurance_unit",
+      "label": "Oluşma Birimi",
+      "type": "select",
+      "options": [
+        {
+          "key": "day",
+          "value": "day",
+          "label": "Gün",
+          "index": 0
+        },
+        {
+          "key": "week",
+          "value": "week",
+          "label": "Hafta",
+          "index": 1
+        },
+        {
+          "key": "month",
+          "value": "month",
+          "label": "Ay",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "name": "start_at",
+      "label": "Başlangıç Tarihi",
+      "type": "date"
+    },
+    {
+      "name": "end_at",
+      "label": "Bitiş Tarihi",
+      "type": "date"
+    }
+  ]
+}  

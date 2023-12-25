@@ -10,6 +10,8 @@ import Services.event_service as event_service
 import Services.authentication_service as authentication_service
 from Services.build_API_returns import create_json_for_error
 
+from typing import List, Optional
+
 # Change history:
 # Created using resource as a template
 
@@ -51,9 +53,15 @@ def get_event(event_id: str, response: Response):
     status.HTTP_200_OK: {"model": Events},
     status.HTTP_404_NOT_FOUND: {"model": Error},
     status.HTTP_403_FORBIDDEN: {"model": Error}})
-def get_all_events(response: Response):
+def get_all_events( response: Response, event_id:str = None, types: list = None,
+               is_active: Optional[bool] = None,
+               x: float = None,
+               y: float = None,
+               distance_max: float = None,
+               sort_by: str = 'created_at',
+               order: Optional[str] = 'desc'):
     try:
-        events = event_service.get_events()
+        events = event_service.get_events(event_id, types, is_active, x, y, distance_max, sort_by, order)
         response.status_code = HTTPStatus.OK
         return json.loads(events)
     except ValueError as err:

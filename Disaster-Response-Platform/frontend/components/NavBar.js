@@ -59,8 +59,16 @@ export default function NavBar({ labels }) {
 
   return (
     <Navbar
-      className='w-full justify-center p-0  m-0 max-w-screen-xl text-black bg-blue-700'
+        //  className='w-full justify-center p-0  m-0  text-black bg-need'
       isBordered
+      classNames={{
+        base: "bg-need w-full",
+        wrapper: "w-full justify-between p-0  m-0  text-black bg-need",
+        content: "w-full justify-between p-0  m-0  text-black bg-need",
+
+      }
+
+      }
 
     >
       <NavbarContent justify="center" >
@@ -195,7 +203,7 @@ export default function NavBar({ labels }) {
       <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
       <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} labels={labels} />
       <AddActionFromId onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} />
-      <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} />
+      <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} labels={labels} />
     </Navbar>
   );
 }

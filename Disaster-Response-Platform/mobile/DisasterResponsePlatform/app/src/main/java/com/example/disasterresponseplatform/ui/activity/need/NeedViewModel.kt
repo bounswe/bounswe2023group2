@@ -60,11 +60,11 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         val y = need.y
         //details
         val detailsMap = mutableMapOf<String, String>()
-        if (!address.contains(activity.getString(R.string.selected_from_map))) detailsMap["address"] = address
+        val postAddress: String? = if (!address.contains(activity.getString(R.string.selected_from_map))) address else null
         detailsMap["additionalNotes"] = additionalNotes
         detailsMap["subtype"] = "No Internet Connection"
         return NeedBody.NeedRequestBody(
-            shortDescription, quantity, 1, quantity, type, detailsMap,
+            shortDescription, quantity, 1, quantity, type, detailsMap,postAddress,
             x, y, null, null, null, true, 0, 0
         )
     }

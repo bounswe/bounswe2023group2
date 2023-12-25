@@ -20,7 +20,7 @@
         android:padding="3dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_weight="100"
-        android:hint="Birthday">
+        android:hint="@string/birthday">
     <EditText
         android:id="@+id/profile_item_text1"
         android:layout_width="match_parent"

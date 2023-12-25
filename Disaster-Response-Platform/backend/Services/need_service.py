@@ -5,6 +5,7 @@ from Services.build_API_returns import *
 from pymongo import ASCENDING, DESCENDING
 from typing import Optional
 from datetime import datetime, timedelta
+import math
 
 # Get the needs collection using the MongoDB class
 needs_collection = MongoDB.get_collection('needs')
@@ -24,14 +25,36 @@ r_id=0
 def create_need(need: Need) -> str:
     global r_id
     # Manual validation for required fields during creation
-    if not all([need.created_by, need.urgency, 
-                need.initialQuantity is not None, need.unsuppliedQuantity is not None, 
-                need.type, need.details, need.x is not None, need.y is not None]):
-        raise ValueError("All fields are mandatory for creation: created_by, urgency, initialQuantity, unsuppliedQuantity, type, details, x, y")
+    
+        
+    if need.type.lower() == "missing person" and need.details:
+        if not ('missing_person_name' in need.details and 'missing_person_location' in need.details):
+            raise ValueError("Missing person name and location are required for missing person needs.")
+        else:
+            # cursor = needs_collection.find({
+            #     "$and": [
+            #         {"type": {"$regex": "missing person", "$options": "i"}},
+            #         {"details.missing_person_name": {"$regex": need.details['missing_person_name'], "$options": "i"}}
+            #     ]
+            # })
+            existing_need = needs_collection.find_one({"type": "missing person", "details.missing_person_name": {"$regex": need.details['missing_person_name'], "$options": "i"}})   
+            if existing_need:
+                raise ValueError("Emergency for this missing person exists " + existing_need["details"]["missing_person_name"])
+    else:
+        raise ValueError("Missing person details(name and location) are required for missing person needs.")  
+    
 
+    if not all([need.created_by, need.urgency,  
+                need.type, need.details, need.x is not None, need.y is not None]):
+        raise ValueError("All fields are mandatory for creation: created_by, urgency, type, details, x, y")
+
+    if need.type.lower() != "missing person" and not (need.initialQuantity is not None and need.unsuppliedQuantity is not None):
+        raise ValueError("Initial and unsupplied quantities are required for the need.")
+        
+    
     validate_coordinates(need.x, need.y)
     validate_quantities(need.initialQuantity, need.unsuppliedQuantity)
-    
+
     insert_result = needs_collection.insert_one(need.dict())
     print("need added ", insert_result, need.occur_at)
 
@@ -96,29 +119,30 @@ def get_needs(
     order: Optional[str] = 'desc'
 ) -> list[dict]:
     projection = {
-            "_id": {"$toString": "$_id"},
-            "created_by": 1,
-            "description": 1,
-            "urgency": 1,
-            "initialQuantity": 1,
-            "unsuppliedQuantity": 1,
-            "quantityUnit": 1,
-            "type": 1,
-            "details": 1,
-            "recurrence_id": 1,
-            "recurrence_rate": 1,
-            "recurrence_deadline": 1,
-            "x": 1,
-            "y": 1,
-            "active": 1,
-            "occur_at": 1,
-            "created_at": 1,
-            "last_updated_at": 1,
-            "upvote": 1,
-            "downvote": 1,
-            "open_address":1
-            # Add other fields if necessary
-        }
+        "_id": {"$toString": "$_id"},
+        "created_by": 1,
+        "description": 1,
+        "urgency": 1,
+        "initialQuantity": 1,
+        "unsuppliedQuantity": 1,
+        "quantityUnit": 1,
+        "type": 1,
+        "details": 1,
+        "recurrence_id": 1,
+        "recurrence_rate": 1,
+        "recurrence_deadline": 1,
+        "x": 1,
+        "y": 1,
+        "active": 1,
+        "occur_at": 1,
+        "created_at": 1,
+        "last_updated_at": 1,
+        "upvote": 1,
+        "downvote": 1,
+        "reliability": 1,
+        "open_address": 1
+        # Add other fields if necessary
+    }
     
     sort_order = ASCENDING if order == 'asc' else DESCENDING
     query = {}
@@ -139,9 +163,25 @@ def get_needs(
     needs_cursor = needs_collection.find(query, projection).sort(sort_by, sort_order)
     needs_data = list(needs_cursor)
 
-      # Filter by distance if necessary
+    # Filter by distance if necessary
     if x is not None and y is not None and distance_max is not None:
         needs_data = [need for need in needs_data if ((need['x'] - x) ** 2 + (need['y'] - y) ** 2) ** 0.5 <= distance_max]
+
+    for need in needs_data:
+        upvotes = need.get('upvote', 0)
+        downvotes = need.get('downvote', 0)
+        total_votes = upvotes + downvotes
+
+        if total_votes > 0:
+            z = 1.96  # 95% confidence interval
+            phat = upvotes / total_votes
+            need['reliability'] = (phat + z**2 / (2 * total_votes) - z * math.sqrt((phat * (1 - phat) + z**2 / (4 * total_votes)) / total_votes)) / (1 + z**2 / total_votes)
+        else:
+            need['reliability'] = 0.5  # Default score for no votes
+
+    # Calculate and sort by reliability score if requested
+    if sort_by == 'reliability':
+        needs_data.sort(key=lambda x: x['reliability'], reverse=(order == 'desc'))
 
     # Formatting datetime fields
     formatted_needs_data = []

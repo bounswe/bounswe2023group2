@@ -19,7 +19,7 @@ def create_action(action: Action) -> str:
                 action.type]):
         raise ValueError("All fields are mandatory for creation.")
     if (action.type== ActionType.need_resource):
-        if action.resources == [] or action.needs == []:
+        if action.resources == [] or action.needs == []: #TODO len check
             raise ValueError("At least one need and resource is needed")
         insert_result = actions_collection.insert_one(action.dict())
 
@@ -38,6 +38,25 @@ def create_action(action: Action) -> str:
             return ActionSuccess(action_id= str(insert_result.inserted_id))
         else:
             raise ValueError("Action could not be created")
+    elif(action.type== ActionType.transport):
+        if action.resources == []:
+            raise ValueError("At least one resource is needed")
+        if not all([action.end_x, action.end_y]):
+            raise ValueError("Please enter locations")
+        insert_result = actions_collection.insert_one(action.dict())
+        if insert_result.inserted_id:
+            for resource_id in action.resources:
+                resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
+                resource["status"] = statusEnum.inprogress
+                resource["action_list"].append(insert_result.inserted_id)
+                resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set":resource})
+            return ActionSuccess(action_id= str(insert_result.inserted_id))
+    elif(action.type== ActionType.move_survivors):
+        if action.number_of_people==0:
+            raise ValueError("Please enter the number of people that are moved")
+        insert_result = actions_collection.insert_one(action.dict())
+        return ActionSuccess(action_id= str(insert_result.inserted_id))
+        
 
 def find_many():
     actions = actions_collection.find()
@@ -86,6 +105,35 @@ def update(action_id: str, current_user, body):
     res = actions_collection.find_one({"_id": ObjectId(action_id)})
     return  res
 
+
+def get_match_list(action_id:str, current_user:str):
+    action = actions_collection.find_one({"_id": ObjectId(action_id)})
+    if not action:
+        raise ValueError("There is no action with this id")
+    match_list = []
+    for need_id in action['needs']:
+        need = needs_collection.find_one({"_id": ObjectId(need_id)})
+        if not need:
+            continue
+        if need['status'] == statusEnum.done:
+            continue
+        match_list.append(need)
+    for resource_id in action['resources']:
+        resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
+        if not resource:
+            continue
+        if resource['status'] == statusEnum.done:
+            continue
+        match_list.append(resource)
+    for payload in match_list:
+        print(payload)
+        payload['_id'] = str(payload['_id']) 
+        if len(payload['action_list']) != 0 :
+            payload['action_list'] = [str(action) for action in payload['action_list']]
+    return match_list
+
+
+
 # bir resource needleri karsiliyor
 def do_action(action_id:str, current_user:str, match_list):
     action = actions_collection.find_one({"_id": ObjectId(action_id)})
@@ -94,26 +142,40 @@ def do_action(action_id:str, current_user:str, match_list):
     
     if(action['created_by']!= current_user ):
         raise ValueError("Only user created the action can do it")
-    
-    for match in match_list: #[{need_id: sdasds, resource_id:asdasd, amount:  }]
-        need = needs_collection.find_one({"_id": ObjectId(match.need_id)})
-        remain = need.unsuppliedQuantity - match.amount
-        if(remain<=0):
-            need.status = 'done'
-        else:
-            need.unsuppliedQuantity = remain
-            need.status = 'active'
-        need.save()
-        resource = resources_collection.find_one({"_id": ObjectId(match.resource_id)})
-        remain = resource.currentQuantity - match.amount
-        if(remain<=0):
-            resource.status = 'done'
-        else:
-            resource.currentQuantity = remain
-            resource.status = 'active'
-        resource.save()
-    action.status = "done"
-    action.save()
+    if (action.get("type")== ActionType.need_resource):
+        for match in match_list:
+            need = needs_collection.find_one({"_id": ObjectId(match.need_id)})
+            remain = need.unsuppliedQuantity - match.amount
+            if(remain<=0):
+                need.status = 'done'
+            else:
+                need.unsuppliedQuantity = remain
+                need.status = 'active'
+            needs_collection.update_one({"_id": ObjectId(match.need_id)}, {"$set":need})
+            resource = resources_collection.find_one({"_id": ObjectId(match.resource_id)})
+            remain = resource.currentQuantity - match.amount
+            if(remain<=0):
+                resource.status = 'done'
+            else:
+                resource.currentQuantity = remain
+                resource.status = 'active'
+            resources_collection.update_one({"_id": ObjectId(match.resource_id)}, {"$set":resource})
+    elif(action.get("type")==ActionType.transport):
+        for resource_id in action.get('resources'):
+            resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
+            new_x = action.get("end_x")
+            new_y = action.get("end_y")
+            update_data = {
+                "$set": {
+                    "x": new_x,
+                    "y": new_y,
+                    "status":'active'
+                }
+            }
+            resources_collection.update_one({"_id": ObjectId(resource_id)}, update_data)
+    action['status'] = "done"
+    # update action
+    actions_collection.update_one({"_id": ObjectId(action_id)}, {"$set":action})
 
 def get_action(action_id:str) :
     if (ObjectId.is_valid(action_id)):
@@ -124,10 +186,11 @@ def get_action(action_id:str) :
                   "created_by": 1,
                   "description": 1,
                   "type": 1,
-                  "start_location_x": 1,
-                  "start_location_y": 1,
-                  "endLocation_x": 1,
-                  "endLocation_y": 1,
+                  "start_x": 1,
+                  "start_y": 1,
+                  "end_x": 1,
+                  "end_y": 1,
+                  "number_of_people":1,
                   "status": 1,
                   "x":1,
                   "y":1,
@@ -172,7 +235,8 @@ def get_action(action_id:str) :
 def cancel_action(action_id: str, current_user: str):
     
     action = actions_collection.find_one({"_id": ObjectId(action_id)})
-    if(action.start_at < current_time_gmt3):
+    #TODO i am checking if the action is already started, but i am not sure if this is the correct way
+    if(action.start_at < datetime.datetime.now()):
         raise ValueError('Action already started: {action_id}')
     if action:
         action= Action(**action) 
@@ -230,4 +294,6 @@ def restore_resources(resource_id, action_id):
     if update_result.modified_count <= 0:
         raise ValueError(f"No ActionHistory found with action_id '{action_id}'.")
     return
+
+
                 

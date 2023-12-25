@@ -5,6 +5,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/color"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/borderless_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -153,13 +156,6 @@
             app:layout_constraintEnd_toStartOf="@+id/iconCreator"
             app:layout_constraintTop_toTopOf="@+id/tvLocation" />
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/separator"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
