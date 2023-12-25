@@ -63,6 +63,7 @@ class AddNeedFragment(
         mapFunction()
         fillParameters(need)
         getFormFieldsFromBackend()
+        recurrenceListener()
         typeFieldListener()
         submitNeed(need == null)
         return binding.root
@@ -219,6 +220,18 @@ class AddNeedFragment(
                 }
 
             })
+    }
+
+    /**
+     * if user open recurrence, recurrence relations should be visible
+     * these layout items are not visible at first (this code is in xml)
+     */
+    private fun recurrenceListener(){
+        binding.swRecurrenceFilter.setOnClickListener {
+            binding.layOthers.visibility = if (binding.swRecurrenceFilter.isChecked) View.VISIBLE else View.GONE
+            binding.recurrenceUnit.visibility = if (binding.swRecurrenceFilter.isChecked) View.VISIBLE else View.GONE
+            binding.spRecurrenceRate.visibility = if (binding.swRecurrenceFilter.isChecked) View.VISIBLE else View.GONE
+        }
     }
 
     /**
@@ -444,6 +457,7 @@ class AddNeedFragment(
 
     /**
      * This function gets the form fields from backend and show them in Form dynamically
+     * This form is layOther which is for recurrence relations
      */
     private fun getFormFieldsFromBackend() {
         val networkManager = NetworkManager()

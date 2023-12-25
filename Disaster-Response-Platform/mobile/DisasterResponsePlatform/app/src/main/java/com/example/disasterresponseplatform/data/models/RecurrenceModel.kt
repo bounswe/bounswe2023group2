@@ -5,7 +5,6 @@ class RecurrenceModel {
     data class RecurrenceResponse(val events: List<GetRecurrenceBody>)
 
     data class PostRecurrenceBody(
-        val _id: String,
         val title: String, // unit + start + end day
         val description: String, // description of activity
         val activity: String,
