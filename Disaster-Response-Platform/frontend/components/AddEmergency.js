@@ -41,23 +41,23 @@ export default function AddEmergency({ isOpen, onOpenChange, labels }) {
   const emergency_types = ["News", "Debris", "Fire", "Medical Emergency"];
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='text-black w-full' scrollBehavior="inside">
+    <Modal isOpen={isOpen} size="3xl" onOpenChange={onOpenChange} className='text-black' scrollBehavior="inside">
       <ModalContent>
         {(onClose) => (
           <form onSubmit={(event) => {event.preventDefault(); addEmergency(event); onClose()}} >
             <ModalHeader className="flex flex-col gap-1">{labels.activities.report_emergency}</ModalHeader>
             <ModalBody>
-              <div className="flex flex-row">
-                <div>
+              <div className="flex flex-row items-center gap-x-4">
+                <div className="flex gap-y-2 flex-col">
                   <RadioGroup name="emergency_type" id="emergency_type" label={labels.activity_table.event_type} orientation="horizontal">
                     {emergency_types.map((key) => (
                       <Radio key={`emergency-type-${key}`} value={key}> {labels.forms.emergency_form[key]} </Radio>
                     ))}
                   </RadioGroup>
-                  <Input name="contact_name" label={labels.forms.emergency_form.contact_name} />
-                  <Input name="contact_number" label={labels.forms.emergency_form.contact_number} />
-                  <Textarea name="description" label={labels.forms.emergency_form.description} />
-                  <Input name="location" label={labels.forms.emergency_form.location} />
+                  <Input name="contact_name" variant="bordered" label={labels.forms.emergency_form.contact_name} />
+                  <Input name="contact_number" variant="bordered" label={labels.forms.emergency_form.contact_number} />
+                  <Textarea name="description" variant="bordered" label={labels.forms.emergency_form.description} />
+                  <Input name="location" variant="bordered" label={labels.forms.emergency_form.location} />
                 </div>
                 <EmergencyMap position={position} setPosition={setPosition} labels={labels}/>
               </div>

@@ -49,7 +49,7 @@ export default function Map({
         center={center}
         zoom={ZOOM_LEVEL}
         ref={mapRef}
-        className="w-96 h-60"
+        className="w-96 h-96"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
