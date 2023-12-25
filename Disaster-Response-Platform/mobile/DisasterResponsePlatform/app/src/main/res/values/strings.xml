@@ -157,6 +157,7 @@
     <string name="email_verification_title">E-mail Verification</string>
     <string name="email_verification_description">To verify your e-mail address, enter the verification code sent to you by e-mail.</string>
     <string name="full_name">Full Name</string>
+    <string name="delete_account">Delete Account</string>
 
     <!-- MAP -->
     <string name="more">More</string>

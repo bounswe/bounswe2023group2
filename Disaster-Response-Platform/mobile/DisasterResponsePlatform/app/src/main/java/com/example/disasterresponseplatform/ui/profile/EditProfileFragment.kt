@@ -20,6 +20,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
@@ -45,6 +46,7 @@ import com.example.disasterresponseplatform.databinding.ProfileEditSkillBinding
 import com.example.disasterresponseplatform.databinding.ProfileEditSocialMediaBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.authentication.LoginFragment
 import com.example.disasterresponseplatform.utils.FileUploadTask
 import com.example.disasterresponseplatform.utils.ImageUploadTask
 import com.google.gson.Gson
@@ -974,6 +976,45 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                 }, year, month, day)
                 datePickerDialog.show()
             }
+
+            deleteAccount.setOnClickListener {
+                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                alertDialogBuilder.setTitle("Warning")
+                alertDialogBuilder.setMessage("Are you sure you want to delete your account?")
+                alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    networkManager.makeRequest(
+                        endpoint = Endpoint.USERS,
+                        requestType = RequestType.DELETE,
+                        headers = headers,
+                        callback = object : retrofit2.Callback<ResponseBody> {
+                            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Network error: ${t.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            override fun onResponse(
+                                call: retrofit2.Call<ResponseBody>,
+                                response: retrofit2.Response<ResponseBody>
+                            ) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Account successfully deleted",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                DiskStorageManager.removeKey("token")
+                                replaceFragment(LoginFragment())
+
+                            }
+                        }
+                    )
+                }
+                alertDialogBuilder.setIcon(R.drawable.ic_warning)
+                alertDialogBuilder.setNegativeButton("No") { _, _ -> }
+                alertDialogBuilder.show()
+            }
         }
     }
 
@@ -1001,6 +1042,13 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
             println("WHUTT")
 //            Toast.makeText(requireContext(), "Profile successfully updated", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack("EditProfileFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        parentFragmentManager.beginTransaction().apply {
+            replace(R.id.container, fragment) //replacing fragment
+            commit() //call signals to the FragmentManager that all operations have been added to the transaction
         }
     }
 
