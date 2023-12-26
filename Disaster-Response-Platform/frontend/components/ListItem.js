@@ -16,7 +16,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
         onOpen()
       }}>
         <CardHeader className="flex justify-between px-5">
-          <div> {activity?.event_type} </div>
+          <div> {activity?.event_type} </div> {activity?.is_active && <div className="bg-green-500 text-white rounded-md px-2.5">Active</div>}
         </CardHeader>
         <Divider />
         <CardBody>
@@ -31,7 +31,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
         </CardBody>
         <Divider />
         <CardFooter className="flex justify-between px-5">
-          <div> date: {activity?.event_time ?? activity?.created_time} </div > <Link isClickable className={`bg-${activityType} p-2.5 rounded-md text-black` }onClick={onOpenNeedModal}> Take Action</Link> 
+          <div> date: {activity?.event_time ?? activity?.created_time} </div  >
         </CardFooter>
       </Card>
     }
@@ -40,13 +40,14 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
         onOpen()
       }}>
         <CardHeader className="flex justify-between px-5">
-          <div> {activity?.type} </div>
+          <div> {activity?.type} </div> {activity?.active && <div className="bg-green-500 text-white rounded-md px-2.5">Active</div>} {activity?.verified && <div className="bg-green-500 text-white rounded-md px-2.5">Verified</div>}
         </CardHeader>
         <Divider />
         <CardBody>
           <div>
             <div> {activity?.description}</div>
             <div> {activity?.note}</div>
+            <div> {activity?.currentQuantity}/{activity?.initialQuantity} {activity?.quantityUnit} </div>
           </div>
           <div className="flex justify-between items-center">
             Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y}</Link> 
@@ -64,12 +65,20 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
         onOpen()
       }}>
         <CardHeader className="flex justify-between px-5">
-          <div> {activity?.type} </div>
+          <div> {activity?.type} </div> {activity?.active && <div className="bg-green-500 text-white rounded-md px-2.5">Active</div>} 
         </CardHeader>
         <Divider />
         <CardBody>
           <div>
             <p> {activity?.description}</p>
+            <div> {activity?.unsuppliedQuantity}/{activity?.initialQuantity} {activity?.quantityUnit} </div>
+            
+            {activity?.urgency == 5 && <div className="bg-red-500 text-white rounded-md px-2.5">Urgent</div>}
+            {activity?.urgency == 4 && <div className="bg-yellow-500 text-white rounded-md px-2.5">High</div>}
+            {activity?.urgency == 3 && <div className="bg-blue-500 text-white rounded-md px-2.5">Medium</div>}
+            {activity?.urgency == 2 && <div className="bg-green-500 text-white rounded-md px-2.5">Low</div>}
+            {activity?.urgency == 1 && <div className="bg-gray-500 text-white rounded-md px-2.5">Very Low</div>}
+          
           </div>
           <div className="flex justify-between items-center">
             <div>Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y} </Link> </div>
@@ -86,12 +95,16 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
       <Card shadow='none'  isPressable className='border-1 w-3/4 m-auto mb-3' onClick={()=>{
         onOpen()
       }}>
+         <CardHeader className="flex justify-between px-5">
+          <div> {activity?.emergency_type} </div> {activity?.is_active && <div className="bg-green-500 text-white rounded-md px-2.5">Active</div>} {activity?.is_verified && <div className="bg-green-500 text-white rounded-md px-2.5">Verified</div>}
+        </CardHeader>
         <CardBody>
           <div>
-            <p> {activity?.description}</p>
+            <p> {activity?.desciption}</p>
+            {activity?.verification_note &&  <p> activity?.verification_note  </p>}
           </div>
           <div className="flex justify-between items-center">
-            <div>Address: <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y} </Link> </div>
+            <div>Address: <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.locations?? activity.x } {activity?.open_address?? activity.y} </Link> </div>
           </div>
 
         </CardBody>
