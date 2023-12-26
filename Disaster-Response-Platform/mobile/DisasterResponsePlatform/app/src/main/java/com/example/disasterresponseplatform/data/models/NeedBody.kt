@@ -1,7 +1,5 @@
 package com.example.disasterresponseplatform.data.models
 
-import com.example.disasterresponseplatform.data.database.need.Need
-import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.google.gson.annotations.SerializedName
 
 class NeedBody {
@@ -81,5 +79,5 @@ class NeedBody {
         @SerializedName("_id") val _id: String
     )
 
-
+    data class NeedSearchResponse(val results: List<NeedItem>)
 }

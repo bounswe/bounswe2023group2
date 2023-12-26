@@ -1,7 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.action
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import com.example.disasterresponseplatform.data.models.ActionBody
 import com.example.disasterresponseplatform.data.repositories.ActionRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
-import com.example.disasterresponseplatform.utils.DateUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -79,6 +77,58 @@ class ActionViewModel@Inject constructor(private val actionRepository: ActionRep
                                 if (actionResponse != null) { // TODO check null
                                     Log.d("ResponseSuccess", "actionResponse: $actionResponse")
                                     liveDataResponse.postValue(actionResponse)
+                                }
+                            } catch (e: IOException) {
+                                // Handle IOException if reading the response body fails
+                                Log.e("ResponseError", "Error reading response body: ${e.message}")
+                            }
+                        } else {
+                            Log.d("ResponseSuccess", "Body is null")
+                        }
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            var responseCode = response.code()
+                            Log.d("ResponseSuccess", "Body: $errorBody")
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("onFailure", "Happens")
+                }
+            }
+        )
+    }
+
+    fun sendGetSearchResult(query: String) {
+        val token = DiskStorageManager.getKeyValue("token")
+        val headers = mapOf(
+            "Authorization" to "bearer $token",
+            "Content-Type" to "application/json"
+        )
+        networkManager.makeRequest(
+            endpoint = Endpoint.SEARCH_ACTION,
+            requestType = RequestType.GET,
+            headers = headers,
+            id = query,
+            callback = object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                    if (response.isSuccessful) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
+                            try {
+                                Log.d("ResponseSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val actionResponse = gson.fromJson(rawJson, ActionBody.ActionSearchResponse::class.java)
+                                if (actionResponse != null) { // TODO check null
+                                    Log.d("ResponseSuccess", "actionResponse: $actionResponse")
+                                    liveDataResponse.postValue(ActionBody.ActionResponse(actionResponse.results))
                                 }
                             } catch (e: IOException) {
                                 // Handle IOException if reading the response body fails

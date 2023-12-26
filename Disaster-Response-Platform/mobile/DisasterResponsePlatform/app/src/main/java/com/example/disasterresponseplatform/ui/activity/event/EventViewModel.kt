@@ -1,7 +1,6 @@
 package com.example.disasterresponseplatform.ui.activity.event
 
 import android.util.Log
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,11 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.event.Event
-import com.example.disasterresponseplatform.data.database.need.Need
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.EventBody
-import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.repositories.EventRepository
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
@@ -67,6 +64,59 @@ class EventViewModel@Inject constructor(private val eventRepository: EventReposi
                                 if (eventResponse != null) { // TODO check null
                                     Log.d("ResponseSuccess", "eventResponse: $eventResponse")
                                     liveDataResponse.postValue(eventResponse)
+                                }
+                            } catch (e: IOException) {
+                                // Handle IOException if reading the response body fails
+                                Log.e("ResponseError", "Error reading response body: ${e.message}")
+                            }
+                        } else {
+                            Log.d("ResponseSuccess", "Body is null")
+                        }
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            var responseCode = response.code()
+                            Log.d("ResponseSuccess", "Body: $errorBody")
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("onFailure", "Happens")
+                }
+            }
+        )
+    }
+
+    fun sendGetSearchResult(query: String) {
+        val token = DiskStorageManager.getKeyValue("token")
+        val headers = mapOf(
+            "Authorization" to "bearer $token",
+            "Content-Type" to "application/json"
+        )
+        networkManager.makeRequest(
+            endpoint = Endpoint.SEARCH_EVENT,
+            requestType = RequestType.GET,
+            headers = headers,
+            id = query,
+            callback = object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
+                            try {
+                                Log.d("ResponseSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val eventResponse = gson.fromJson(rawJson, EventBody.EventSearchResponse::class.java)
+                                if (eventResponse != null) { // TODO check null
+                                    Log.d("ResponseSuccess", "eventResponse: $eventResponse")
+                                    liveDataResponse.postValue(EventBody.EventResponse(eventResponse.results))
                                 }
                             } catch (e: IOException) {
                                 // Handle IOException if reading the response body fails
