@@ -40,9 +40,6 @@ def create_need(need: Need) -> str:
             existing_need = needs_collection.find_one({"type": "missing person", "details.missing_person_name": {"$regex": need.details['missing_person_name'], "$options": "i"}})   
             if existing_need:
                 raise ValueError("Emergency for this missing person exists " + existing_need["details"]["missing_person_name"])
-    else:
-        raise ValueError("Missing person details(name and location) are required for missing person needs.")  
-    
 
     if not all([need.created_by, need.urgency,  
                 need.type, need.details, need.x is not None, need.y is not None]):
