@@ -425,7 +425,7 @@ export default function MapFilterMenu({
     const results = payload.results;
     console.log(results)
     if(chosenActivityType === "need"){
-      
+      setNeedApiData(results);
     }
     setActivities(results);
   };
