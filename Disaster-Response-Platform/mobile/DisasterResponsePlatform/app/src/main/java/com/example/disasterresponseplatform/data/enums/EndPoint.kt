@@ -9,6 +9,7 @@ enum class Endpoint(val path: String) {
     RESOURCE("resources"),
     ACTIONS("actions"),
     NEED("needs"),
+    EMERGENCIES("emergencies"),
     USERS("users"),
     ME("users/me"),
     ME_OPTIONAL("profiles/user-optional-infos"),
