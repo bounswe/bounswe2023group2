@@ -63,6 +63,7 @@
 		}
 	},
 	"activities": {
+		"add": "Ekle",
 		"all": "Hepsi",
 		"resource": "Kaynak",
 		"need": "İhtiyaç",
