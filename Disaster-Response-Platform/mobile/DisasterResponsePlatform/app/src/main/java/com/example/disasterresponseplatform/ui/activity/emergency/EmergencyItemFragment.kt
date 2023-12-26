@@ -29,6 +29,7 @@ import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import com.example.disasterresponseplatform.utils.Annotation
+import com.example.disasterresponseplatform.utils.UserRoleUtil
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -69,11 +70,8 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
         // Check whether it is created by user or guest
         if (!creatorUsername.isNullOrEmpty()) {
             binding.tvCreator.text = creatorUsername
-            userViewModel.getUserRole(creatorUsername)
-            userViewModel.getLiveDataUserRole().observe(requireActivity!!) {
-                val userRole = if (it == "null") "AUTHENTICATED" else it
-                binding.tvUserRole.text = userRole
-            }
+            val userRole = UserRoleUtil.getUserRole(creatorUsername)
+            binding.tvUserRole.text = userRole
         } else {
             // Hide Creation time
             binding.iconCreationTime.visibility = View.GONE

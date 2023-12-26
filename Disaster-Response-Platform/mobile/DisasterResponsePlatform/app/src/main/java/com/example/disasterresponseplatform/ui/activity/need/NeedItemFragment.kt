@@ -30,6 +30,7 @@ import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import com.example.disasterresponseplatform.utils.Annotation
+import com.example.disasterresponseplatform.utils.UserRoleUtil
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -142,11 +143,8 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         //binding.e.text = need.details["subtype"]
         fillDetails(need.details)
         fillRecurrence(need)
-        userViewModel.getUserRole(creatorName)
-        userViewModel.getLiveDataUserRole().observe(requireActivity!!){
-            val userRole = if (it == "null") "AUTHENTICATED" else it
-            binding.tvUserRole.text = userRole
-        }
+        val userRole = UserRoleUtil.getUserRole(creatorName)
+        binding.tvUserRole.text = userRole
     }
 
     /**

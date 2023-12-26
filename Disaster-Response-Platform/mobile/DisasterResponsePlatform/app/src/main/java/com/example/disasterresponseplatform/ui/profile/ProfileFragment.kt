@@ -536,7 +536,7 @@ class ProfileFragment(var username: String?) : Fragment() {
 
     private fun fillInformations(user: AuthenticatedUser) {
         profileLevel += 1
-        if (profileLevel < 7) return
+        if (profileLevel < 6) return
         binding.apply {
             // read image from url and set it to profilePhoto
             profileProgressBar.visibility = View.GONE

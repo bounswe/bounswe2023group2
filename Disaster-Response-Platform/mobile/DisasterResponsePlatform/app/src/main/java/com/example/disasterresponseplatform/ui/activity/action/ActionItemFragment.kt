@@ -28,6 +28,7 @@ import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheet
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.utils.Annotation
+import com.example.disasterresponseplatform.utils.UserRoleUtil
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -94,10 +95,8 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
             binding.tvDescription.text = action.description
         })
         userViewModel.getUserRole(creatorName)
-        userViewModel.getLiveDataUserRole().observe(requireActivity!!){
-            val userRole = if (it == "null") "AUTHENTICATED" else it
-            binding.etUserRole.text = userRole
-        }
+        val userRole = UserRoleUtil.getUserRole(creatorName)
+        binding.etUserRole.text = userRole
     }
 
 
