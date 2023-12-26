@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.example.disasterresponseplatform.ui.activity.generalViewModels.VoteVi
 import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheetFragment
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -36,6 +38,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private var annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,10 +67,32 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
         val creatorName = action.created_by
         binding.etCreatedBy.text = creatorName
         binding.etType.text = action.type
-        binding.tvLastUpdatedTime.text = action.last_updated_at.substring(0,10)
+        annotation.getAnnotations(action.type, {annotationText ->
+            binding.etType.setOnLongClickListener {
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorAction)
+                    tvWord.text = action.type
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
+                false
+            }
+        }, {})
+//        binding.tvLastUpdatedTime.text = action.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = action.created_at.substring(0,10)
         binding.tvUpvoteCount.text = action.upvote.toString()
         binding.tvDownVoteCount.text = action.downvote.toString()
+        annotation.getAnnotations(action.created_by + "-action-" + action.type, {
+            binding.tvDescription.text = it
+        }, {
+            binding.tvDescription.text = action.description
+        })
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it
@@ -238,7 +263,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
 
 
     private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
-        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y&api_key=658a6bb850a62680253220cju871eba"
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(url)

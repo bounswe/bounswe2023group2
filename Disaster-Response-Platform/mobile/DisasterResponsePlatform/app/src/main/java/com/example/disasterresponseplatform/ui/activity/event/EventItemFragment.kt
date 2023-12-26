@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -27,6 +30,7 @@ import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheet
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -36,6 +40,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private val annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +69,41 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         val creatorName = event.created_by_user
         binding.tvCreator.text = creatorName
         binding.tvType.text = event.event_type
+        annotation.getAnnotations(event.event_type, {annotationText ->
+            binding.tvType.setOnLongClickListener {
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorEvent)
+                    tvWord.text = event.event_type
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
+                false
+            }
+        }, {})
         binding.tvDescription.text = event.short_description
+        annotation.getAnnotations(event.short_description ?: "", {annotationText ->
+            binding.tvDescription.setOnLongClickListener {
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorEvent)
+                    tvWord.text = event.short_description
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
+                false
+            }
+        }, {})
         binding.tvCreationTime.text = event.created_time
         if (event.last_confirmed_time == null){
             binding.iconUpdate.isVisible = false
@@ -73,13 +112,20 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         } else {
             binding.tvLastUpdatedTime.text = event.last_confirmed_time
         }
-        if (event.note == null){
-            binding.iconDetails.isVisible = false
-            binding.tvNote.isVisible = false
-            binding.tvDetailsTitle.isVisible = false
-        } else{
-            binding.tvNote.text = event.note
-        }
+
+        binding.iconDetails.isVisible = false
+        binding.tvNote.isVisible = false
+        binding.tvDetailsTitle.isVisible = false
+        annotation.getAnnotations(event.created_by_user + "-event-" + event.event_type, {
+            binding.iconDetails.isVisible = true
+            binding.tvNote.isVisible = true
+            binding.tvDetailsTitle.isVisible = true
+            binding.tvNote.text = it
+        }, {
+            if (event.note != null){
+                binding.tvNote.text = event.note
+            }
+        })
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it
@@ -115,7 +161,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
 
-        if (!DiskStorageManager.checkToken()) {
+        if (!DiskStorageManager.checkToken() && !DiskStorageManager.checkIsGuest()) {
             binding.iconReliability.visibility = View.GONE
             binding.tvReliability.visibility = View.GONE
             binding.btnUpvote.visibility = View.GONE
@@ -286,7 +332,7 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
 
 
     private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
-        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y&api_key=658a6bb850a62680253220cju871eba"
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(url)

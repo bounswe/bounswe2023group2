@@ -71,8 +71,8 @@ def get_related_needs(resource_id:str):
     'type': need_type,
     'active': True,
     '$or': [
-        {'created_at':{'$lte': resource['occur_at'] + timedelta(days=3)}},
-        {'created_at':{'$gte': resource['occur_at'] - timedelta(days=3)}}]
+        {'created_at':{'$lte': resource['created_at'] + timedelta(days=3)}},
+        {'created_at':{'$gte': resource['created_at'] - timedelta(days=3)}}]
     }
 
     needs = needs_collection.find(query)
@@ -87,8 +87,8 @@ def get_related_resources(need_id:str):
     'type': resource_type,
     'active': True,
     '$or': [
-        {'occur_at':{'$lte': need['occur_at'] + timedelta(days=3)}},
-        {'occur_at':{'$gte': need['occur_at'] - timedelta(days=3)}}]
+        {'created_at':{'$lte': need['created_at'] + timedelta(days=3)}},
+        {'created_at':{'$gte': need['created_at'] - timedelta(days=3)}}]
     }
 
     resources = resources_collection.find(query)

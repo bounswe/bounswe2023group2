@@ -8,6 +8,10 @@ import ActivityModal from './ActivityModal';
 import { api } from '@/lib/apiUtils';
 import Search from './Search';
 import AddActionForm from './AddAction';
+import get from '@/pages/api/resource/get';
+import { set } from 'react-hook-form';
+import emergencyService from '@/services/emergencyService';
+import actionService from '@/services/actionService';
 
 const ActivityList = ({ labels, userFilter }) => {
     const [activities, setActivities] = useState([]); // [{_id: "loading"}
@@ -19,7 +23,8 @@ const ActivityList = ({ labels, userFilter }) => {
     const [events, setEvents] = useState([{ _id: "loading" }]);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [activity, setActivity] = useState({});
-   
+    const [emergencies, setEmergencies] = useState([{ _id: "loading" }]);
+    const [actions, setActions] = useState([{ _id: "loading" }]);
     const getResources = async () => {
         const response = await fetch('/api/resource/get', { method: 'GET', headers: { "Content-Type": "application/json" } });
         let res = await response.json();
@@ -60,10 +65,39 @@ const ActivityList = ({ labels, userFilter }) => {
             toast.error(labels.feedback.failure);
         }
     }
+    const getEmergencies = async (data) => {
+        const response = await emergencyService.getAll();
+        console.log(response)
+        if (response.status === 200) {
+            // successful
+            setEmergencies(response.payload.emergencies)
+            toast.success('Success')
+            // Usage!
+        } else {
+            // unknown error
+            toast.error('Error')
+        }
+    }
+    const getActions = async (data) => {
+        const response = await actionService.getAll();
+        console.log(response)
+        if (response.status === 200) {
+            // successful
+            setActions(response.payload.actions)
+            toast.success('Success')
+            // Usage!
+        }
+        else {
+            // unknown error
+            toast.error('Error')
+        }
+    }
     useEffect(() => {
         getResources();
         getNeeds();
         getEvents();
+        getEmergencies();
+        getActions();
     }, [])
 
     const filterActivities = async () => {
@@ -109,6 +143,8 @@ const ActivityList = ({ labels, userFilter }) => {
                 <Tab key="need" titleValue={labels.activities.needs} title={labels.activities.needs} />
                 <Tab key="resource" titleValue={labels.activities.resources} title={labels.activities.resources} />
                 <Tab key="event" titleValue={labels.activities.events} title={labels.activities.events} />
+                <Tab key="emergency" titleValue={'Emergency'} title={'Emergency'} />
+                <Tab key="action" titleValue={'Actions'} title={'Actions'} />
             </Tabs>
             <p className=''>
 
@@ -125,14 +161,16 @@ const ActivityList = ({ labels, userFilter }) => {
         </div>
         <div className=' max-h-[700px] bg-slate-100 overflow-y-auto w-4/5 p-2 round-sm'>
             <div className="text-end ">
-             
+
             </div>
-            {(search !== "" )&& activities.map((activity, index) => (
+
+            {(search !== "" ) && activities.map((activity, index) => (
                 <ListItem activityType={'resource'} activity={activity} labels={labels} />
             ))}
 
-            {chosenActivityType === "resource" && search=== "" && resources.map((resource, index) => (
+            {chosenActivityType === "resource" && search === "" && resources.map((resource, index) => (
                 <ListItem activityType={'resource'} activity={resource} labels={labels} />
+
             ))}
             {chosenActivityType === "need" && needs.map((need, index) => (
                 <ListItem activityType={'need'} activity={need} labels={labels} />
@@ -140,8 +178,14 @@ const ActivityList = ({ labels, userFilter }) => {
             {chosenActivityType === "event" && events.map((event, index) => (
                 <ListItem activityType={'event'} activity={event} labels={labels} />
             ))}
+            {chosenActivityType === "emergency" && emergencies.map((emergency, index) => (
+                <ListItem activityType={'emergency'} activity={emergency} />
+            ))}
+             {chosenActivityType === "action" && actions.map((action, index) => (
+                <ListItem activityType={'action'} activity={action} />
+            ))}
         </div>
-        
+
     </>
 }
 

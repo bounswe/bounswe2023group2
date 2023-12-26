@@ -9,6 +9,8 @@ enum class Endpoint(val path: String) {
     RESOURCE("resources"),
     ACTIONS("actions"),
     NEED("needs"),
+    EMERGENCY("emergencies"),
+    EMERGENCY_ANONYMOUS("emergencies/anonymous"),
     USERS("users"),
     ME("users/me"),
     ME_OPTIONAL("profiles/user-optional-infos"),
@@ -54,4 +56,6 @@ enum class Endpoint(val path: String) {
     RECURRENCE_START("recurrence/start"),
     RECURRENCE_CANCEL("recurrence/cancel"),
     RECURRENCE_RESUME("recurrence/resume"),
+    ANNOTATIONS("annotations"),
+    SIMPLE_ANNOTATION("simple_annotation"),
 }

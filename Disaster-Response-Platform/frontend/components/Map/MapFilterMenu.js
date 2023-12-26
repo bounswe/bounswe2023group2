@@ -39,6 +39,9 @@ export default function MapFilterMenu({
   const [filters, setFilters] = useState({});
   const [search, setSearch] = useState("");
   const [activities, setActivities] = useState([]); // [{_id: "loading"}
+  const [isDownloadPopupVisible, setIsDownloadPopupVisible] = useState(false);
+  const [downloadNResult, setDownloadNResult] = useState(null);
+  const [downloadRResult, setDownloadRResult] = useState(null);
   const types = [
     "cloth",
     "food",
@@ -166,21 +169,48 @@ export default function MapFilterMenu({
     }
   };
   const downloadFile = async () => {
-    setFilters({ ...filters, activityType: "Need" });
+    // setFilters({ ...filters, activity_type: "Need" });
+    const updatedFiltersN = { ...filters, activity_type: "Need" };
+    let my_filterN = new URLSearchParams(updatedFiltersN).toString();
 
-    let my_filter = new URLSearchParams(filters).toString();
+    const updatedFiltersR = { ...filters, activity_type: "Resource" };
+    let my_filterR = new URLSearchParams(updatedFiltersR).toString();
+    // const responseH = await api.put("/api/downloadfile/?active=true&activity_type=Need",{
+    //   headers: {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZ2VjYW5zIiwiZXhwIjoxNzAzNTkyODYxfQ.J6SmPEhPE3yrZHB3mBqaWaZNs9u7croSjyzoYWIxhMk',
+    //   "Content-Type": "application/json"}
+    // });
 
-    const response = await fetch("/api/download/download", {
+    const responseN = await fetch("/api/download/download", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ filter: my_filter }),
+      body: JSON.stringify({ filter: my_filterN }),
     });
-    const data = await response.json();
+    const dataN = await responseN.json();
 
-    console.log("filteeer:", my_filter);
-    console.log(response);
+    setDownloadNResult(dataN?.url.url); // Assuming 'data' is what you want to display
+    setIsDownloadPopupVisible(true);
+    console.log("filteeer:", my_filterN);
+    console.log(dataN);
+
+
+    const responseR = await fetch("/api/download/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ filter: my_filterR }),
+    });
+    const dataR = await responseR.json();
+
+    setDownloadRResult(dataR?.url.url); // Assuming 'data' is what you want to display
+    console.log("filteeer:", my_filterR);
+    console.log(dataR);
+
+
+
+
     // try {
 
     //   let my_filter = new URLSearchParams(filters).toString();
@@ -200,6 +230,51 @@ export default function MapFilterMenu({
     //   // Handle unexpected errors
     //   console.error("Error:", error);
     // }
+  };
+  const DownloadPopup = () => {
+    if (!isDownloadPopupVisible) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+  <div className="bg-black bg-opacity-50 absolute inset-0"></div> {/* Overlay */}
+  <div className="bg-white p-6 rounded shadow-lg z-50">
+    <h2 className="text-lg font-bold mb-4">Download Results:</h2>
+    <div className="flex flex-col space-y-3">
+      <a
+        href={downloadNResult}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Download the 'Need' file"
+        className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out flex items-center justify-center"
+      >
+        <svg className="w-4 h-4 mr-2 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path d="M13 8V3H7v5H2l8 8 8-8h-5z" />
+        </svg>
+        Download Need
+      </a>
+      <a
+        href={downloadRResult}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Download the 'Resource' file"
+        className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out flex items-center justify-center"
+      >
+        <svg className="w-4 h-4 mr-2 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path d="M13 8V3H7v5H2l8 8 8-8h-5z" />
+        </svg>
+        Download Resource
+      </a>
+    </div>
+    <button
+      onClick={() => setIsDownloadPopupVisible(false)}
+      className="inline-block mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    >
+      Close
+    </button>
+  </div>
+</div>
+
+    );
   };
   const fetchResources = async () => {
     try {
@@ -404,8 +479,6 @@ export default function MapFilterMenu({
   };
 
   const handleSubmit = async () => {
-
-
     if (chosenActivityType === undefined || chosenActivityType === "all") {
       toast.error("Please choose an activity type");
       return;
@@ -423,9 +496,9 @@ export default function MapFilterMenu({
       return;
     }
     const results = payload.results;
-    console.log(results)
-    if(chosenActivityType === "need"){
-      
+    console.log(results);
+    if (chosenActivityType === "need") {
+      setNeedApiData(results);
     }
     setActivities(results);
   };
@@ -624,11 +697,12 @@ export default function MapFilterMenu({
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full
            absolute bottom-0 right-0.5"
       >
-        {labels.activities.add_resource}
+        {labels.activities.add}
       </button>
 
       {isMapSelected ? popup() : <></>}
       <ToastContainer />
+      <DownloadPopup />
     </div>
   );
 }

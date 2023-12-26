@@ -6,15 +6,19 @@ export default withIronSessionApiRoute(downloadRoute, sessionConfig);
 
 async function downloadRoute(req, res) {
   try {
-    const { filter } = JSON.parse(req.body);
+    console.log(req.body);
+
     const result = await downloadService.download(
       req.body,
-      filter,
+      req.body.filter,
       req.session.user.accessToken
     );
-    if (result.status === 201 || result.status === 200)
+    
+    if (result.status === 201 || result.status === 200) {
+      console.log("rrrrrrrrrrrr", result);
+      
       res.status(result.status).json(result.payload);
-    else {
+    } else {
       res.status(result.status).json(result.payload);
     }
   } catch (error) {

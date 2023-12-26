@@ -6,7 +6,7 @@ class EmergencyCols {
         const val id: String = "id"
         const val type: String = "type"
         const val description: String = "description"
-        const val creatorName: String = "creatorName"
+        const val contactName: String = "contactName"
         const val contactNumber: String = "contactNumber"
         const val location: String = "location"
         const val x: String = "x"

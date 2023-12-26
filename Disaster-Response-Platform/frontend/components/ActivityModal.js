@@ -96,7 +96,7 @@ return (
                       {labels.sort_criteria.unreliable}
                     </Button>
                   </div>
-                  <Link href={`/profile/${activity.created_by}`}>
+                  <Link href={`/user/${activity.created_by}`}>
                     <Chip
                       color="warning"
                       size="lg"

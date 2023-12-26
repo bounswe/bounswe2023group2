@@ -6,7 +6,7 @@ import {
   ModalBody,
 
 } from "@nextui-org/modal";
-import resourceForm from "./resourceForm.json"
+import resourceForm from "../resourceForm.json"
 import { Button, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -61,9 +61,10 @@ export default function AddResourceForm({ isOpen, onOpenChange, x, y }) {
     prepared['type'] = chosen
     prepared['currentQuantity'] = prepared['initialQuantity']
     try {
+      
       let coordinats = await addressService.XYToAddress({ x: x, y: y });
-      prepared['x'] = x
-      prepared['y'] = y
+      prepared['x'] = x.toString()
+      prepared['y'] = y.toString()
       prepared['open_address'] = coordinats.payload.address
     }
     catch (e) {
@@ -87,7 +88,7 @@ export default function AddResourceForm({ isOpen, onOpenChange, x, y }) {
     }
   }
 
-  return <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='text-black' scrollBehavior="inside">
+  return <Modal isOpen={isOpen} onOpenChange={onOpenChange}  className='text-black' scrollBehavior="inside">
     <ModalContent>
       {(onClose) => (
         <>
