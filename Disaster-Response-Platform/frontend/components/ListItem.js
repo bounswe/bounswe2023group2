@@ -31,7 +31,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
         </CardBody>
         <Divider />
         <CardFooter className="flex justify-between px-5">
-          <div> date: {activity?.event_time ?? activity?.created_time} </div > <Link isClickable className={`bg-${activityType} p-2.5 rounded-md text-black` }onClick={onOpenNeedModal}> Take Action</Link> 
+          <div> date: {activity?.event_time ?? activity?.created_time} </div  >
         </CardFooter>
       </Card>
     }
