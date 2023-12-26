@@ -231,7 +231,7 @@
     <string name="file_could_not_be_selected">Dosya seçilemedi</string>
 
     <!-- PLACEHOLDERS -->
-    <string name="placeholder_general">Örnek Metin</string>
+    <string name="placeholder_general"></string>
     <string name="placeholder_activity">İhtiyaç</string>
     <string name="placeholder_type">Yiyecek</string>
     <string name="placeholder_subtype">Bebek Yiyeceği</string>

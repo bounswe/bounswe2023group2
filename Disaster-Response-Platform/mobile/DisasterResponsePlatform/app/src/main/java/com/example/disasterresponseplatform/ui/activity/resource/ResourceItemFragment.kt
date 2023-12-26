@@ -129,7 +129,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
             })
         }
 
-        binding.tvLastUpdatedTime.text = resource.last_updated_at.substring(0,10)
+        binding.tvLastUpdatedTime.text = resource.last_updated_at?.substring(0,10)
         binding.tvCreationTime.text = resource.created_at.substring(0,10)
         if (resource.details["subtype"] != null)
             annotation.getAnnotations(resource.created_by + "-resource-" + resource.details["subtype"], {

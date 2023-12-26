@@ -230,7 +230,7 @@
     <string name="file_could_not_be_selected">File could not be selected</string>
 
     <!-- PLACEHOLDERS -->
-    <string name="placeholder_general">Sample Text</string>
+    <string name="placeholder_general"></string>
     <string name="placeholder_activity">Need</string>
     <string name="placeholder_type">Food</string>
     <string name="placeholder_subtype">Baby Food</string>
