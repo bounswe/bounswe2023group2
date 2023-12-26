@@ -18,6 +18,7 @@ import com.example.disasterresponseplatform.databinding.FragmentAddEmergencyBind
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.Annotation
 import com.example.disasterresponseplatform.utils.DateUtil
 import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.textfield.TextInputLayout

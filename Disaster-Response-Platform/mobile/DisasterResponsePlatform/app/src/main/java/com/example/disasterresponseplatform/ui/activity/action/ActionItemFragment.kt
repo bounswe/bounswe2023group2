@@ -84,7 +84,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
                 false
             }
         }, {})
-        binding.tvLastUpdatedTime.text = action.last_updated_at.substring(0,10)
+//        binding.tvLastUpdatedTime.text = action.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = action.created_at.substring(0,10)
         binding.tvUpvoteCount.text = action.upvote.toString()
         binding.tvDownVoteCount.text = action.downvote.toString()

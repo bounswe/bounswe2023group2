@@ -405,8 +405,8 @@ class MapFragment(
 //            defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
 //            marker.icon = defaultDrawable
 
-        if (emergencyItem.created_by != null)
-        UserRoleUtil.isCredibleNonBlocking(emergencyItem.created_by) {
+        if (emergencyItem.created_by_user != null)
+        UserRoleUtil.isCredibleNonBlocking(emergencyItem.created_by_user) {
             if (it) {
                 marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.credible_emergency_map_icon)
             }

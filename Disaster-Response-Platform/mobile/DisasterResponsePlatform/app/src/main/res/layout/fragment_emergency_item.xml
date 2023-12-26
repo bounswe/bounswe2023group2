@@ -398,11 +398,11 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/UpvoteDownvoteLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.15"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <!-- rows on column has same width -->
                 <LinearLayout

@@ -8,7 +8,7 @@ class EmergencyBody {
     data class EmergencyResponse(val emergencies: List<EmergencyItem>)
 
     data class EmergencyItem(
-        @SerializedName("created_by") val created_by: String? = null,
+        @SerializedName("created_by_user") val created_by_user: String? = null,
         @SerializedName("contact_name") val contact_name: String? = null,
         @SerializedName("contact_number") val contact_number: String?,
 
