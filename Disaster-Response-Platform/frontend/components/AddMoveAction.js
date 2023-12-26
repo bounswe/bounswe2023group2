@@ -11,11 +11,11 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import { useRouter } from "next/router";
-import actionForm from "./addActionTransport.json"
+import actionForm from "./addActionMove.json"
 import actionService from "@/services/actionService";
 import ActivitySimple from "./ActivitySimple";
 import addressService from "@/services/addressService";
-export default function AddTransportAction({ isOpen, onOpenChange, type = 'need', labels, selected }) {
+export default function AddMoveAction({ isOpen, onOpenChange, type = 'need', labels, selected }) {
 
   const [form, setForm] = useState([]);
   const { reset, handleSubmit, control, formState: { isSubmitting }, setValue } = useForm();
@@ -55,8 +55,8 @@ const [resources, setResources] = useState([]);
         prepared[key] = data[key]
       }
     })
-    prepared['type'] = 'Transport' 
-    prepared['resources'] = [data.resources]
+    prepared['type'] = 'move_survivors' 
+   
     try {
       let coordinats = await addressService.addressToXY(data.start_location);
       console.log(coordinats)
@@ -140,30 +140,7 @@ const [resources, setResources] = useState([]);
                   )}
                 />
               })}
-              <Controller
-                name={'resources'}
-                control={control}
-                selectionMode="multiple"
-                label={'Kaynak seçiniz'}
-                placeholder={'Kaynak seçiniz'}
-                render={({ field }) => (
-                  <Select
-                    id={'resources'} name={'resources'}
-                    items={resources}
-                    label={'Kaynak seçiniz'}
-                    placeholder={'Kaynak seçiniz'}
-
-                    variant={'bordered'}
-
-                    {...field}
-                  >
-                    {(x) => <SelectItem key={x._id} value={x._id} className='text-black'><ActivitySimple activity={x} activityType={'resource'} /></SelectItem>}
-                  </Select>
-                )}
-              />
-
-
-
+            
               <Button type='submit' className="bg-action">
                 {isSubmitting ? 'Loading' : "Submit"}
               </Button>

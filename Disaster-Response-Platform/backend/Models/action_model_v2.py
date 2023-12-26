@@ -67,7 +67,7 @@ class Action(BaseModel):
             try:
                 return datetime.datetime.strptime(value, '%Y-%m-%d')
             except ValueError:
-                raise ValueError("Incorrect date format, should be YYYY-MM-DD HH:MM")
+                raise ValueError("Incorrect date format, should be YYYY-MM-DD")
         return value
 
 

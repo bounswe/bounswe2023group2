@@ -15,6 +15,7 @@ import AddActionForm from '@/components/AddAction';
 import get from '../api/resource/get';
 import actionService from '@/services/actionService';
 import PerformAction from '@/components/performAction';
+import emergencyService from '@/services/emergencyService';
 export default function deneme() {
   const router = useRouter()
   const [list, setList] = useState([])
@@ -56,6 +57,7 @@ export default function deneme() {
 
   useEffect(() => {
     getRecurrences()
+    getEmergencies()
   }, [])
   const attach = async (data) => {
     const response = await fetch('/api/recurrence/attach', {
@@ -93,6 +95,20 @@ export default function deneme() {
       method: 'POST',
       body: JSON.stringify(data)
     });
+    console.log(response)
+    if (response.status === 200) {
+      // successful
+
+      toast.success('Success')
+      // Usage!
+
+    } else {
+      // unknown error
+      toast.error('Error')
+    }
+  }
+  const getEmergencies = async (data) => {
+    const response = await emergencyService.getAll();
     console.log(response)
     if (response.status === 200) {
       // successful
