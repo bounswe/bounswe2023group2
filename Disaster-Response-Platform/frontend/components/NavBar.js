@@ -14,6 +14,7 @@ import Image from "next/image";
 import AddNeedForm from "./AddNeed";
 import AddEventForm from "./AddEvent";
 import AddEmergencyForm from "./AddEmergency";
+import AddTransportAction from "./AddTransportAction";
 
 
 export default function NavBar({ labels }) {
@@ -202,6 +203,7 @@ export default function NavBar({ labels }) {
       <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
       <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} labels={labels} />
       <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} labels={labels} />
+      <AddTransportAction onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} labels={labels} />
     </Navbar>
   );
 }
