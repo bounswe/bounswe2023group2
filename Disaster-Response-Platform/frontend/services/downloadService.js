@@ -5,11 +5,10 @@ const downloadService = {
   download: async (body,filter, accessToken) => {
     // const accessToken = getToken('accessToken');
     try {
-        let my_filter = new URLSearchParams(filter).toString();
-        const data = await api.post(`api/downloadfile/?${my_filter}`, {
+        
+        const data = await api.post(`api/downloadfile/?${filter}`, {
             headers: { Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json' },
-            
          });
       return Promise.resolve(data?.data);
     } catch (error) {

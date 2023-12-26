@@ -3,6 +3,8 @@ import { FaSearch } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { withIronSessionApiRoute } from "iron-session/next";
+import { withIronSessionSsr } from "iron-session/next";
+import sessionConfig from "@/lib/sessionConfig";
 import "react-toastify/dist/ReactToastify.css";
 import Search from "../Search";
 import { Input } from "@nextui-org/react";
@@ -68,7 +70,7 @@ export default function MapFilterMenu({
     const lat2 = Number(boundsArray[2]);
     const lon1 = Number(boundsArray[1]);
     const lon2 = Number(boundsArray[3]);
-    const dWT = Math.sqrt((lat1-lat2)**2 + (lon1-lon2)**2);
+    const dWT = Math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2);
     const φ1 = (lat1 * Math.PI) / 180,
       φ2 = (lat2 * Math.PI) / 180,
       Δλ = ((lon2 - lon1) * Math.PI) / 180,
@@ -77,24 +79,26 @@ export default function MapFilterMenu({
       Math.acos(
         Math.sin(φ1) * Math.sin(φ2) + Math.cos(φ1) * Math.cos(φ2) * Math.cos(Δλ)
       ) * R;
-    
-    
+
     let dLon = toRadians(lon2 - lon1);
-      
+
     let lat1r = toRadians(lat1);
     let lat2r = toRadians(lat2);
     let lon1r = toRadians(lon1);
-    
+
     let Bx = Math.cos(lat2r) * Math.cos(dLon);
     let By = Math.cos(lat2r) * Math.sin(dLon);
-    const lat3 = toDegrees(Math.atan2(Math.sin(lat1r) + Math.sin(lat2r), Math.sqrt((Math.cos(lat1r) + Bx) * (Math.cos(lat1r) + Bx) + By * By)));
+    const lat3 = toDegrees(
+      Math.atan2(
+        Math.sin(lat1r) + Math.sin(lat2r),
+        Math.sqrt((Math.cos(lat1r) + Bx) * (Math.cos(lat1r) + Bx) + By * By)
+      )
+    );
     const lon3 = toDegrees(lon1r + Math.atan2(By, Math.cos(lat1r) + Bx));
 
-    
-    
-    setFilters({ ...filters,x:lon3, y: lat3,  distance_max:dWT });
+    setFilters({ ...filters, x: lon3, y: lat3, distance_max: dWT });
     console.log(dWT);
-    console.log("x : ", lon3," y: ",lat3)
+    console.log("x : ", lon3, " y: ", lat3);
     filterActivities();
   };
 
@@ -108,7 +112,7 @@ export default function MapFilterMenu({
     let response;
     if (chosenActivityType === "need") {
       let my_filter = new URLSearchParams(filters).toString();
-      
+
       response = await api.get(`/api/needs/?${my_filter}`, {
         headers: { "Content-Type": "application/json" },
       });
@@ -162,11 +166,21 @@ export default function MapFilterMenu({
     }
   };
   const downloadFile = async () => {
+    setFilters({ ...filters, activityType: "Need" });
+
+    let my_filter = new URLSearchParams(filters).toString();
+
     const response = await fetch("/api/download/download", {
       method: "POST",
-      filter: filters,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ filter: my_filter }),
     });
-    console.log(response)
+    const data = await response.json();
+
+    console.log("filteeer:", my_filter);
+    console.log(response);
     // try {
 
     //   let my_filter = new URLSearchParams(filters).toString();
@@ -389,10 +403,10 @@ export default function MapFilterMenu({
     }
   };
 
-  const handleSubmit = async (text) => {
-    text.preventDefault();
+  const handleSubmit = async () => {
 
-    if (chosenActivityType === undefined) {
+
+    if (chosenActivityType === undefined || chosenActivityType === "all") {
       toast.error("Please choose an activity type");
       return;
     }
@@ -409,6 +423,10 @@ export default function MapFilterMenu({
       return;
     }
     const results = payload.results;
+    console.log(results)
+    if(chosenActivityType === "need"){
+      
+    }
     setActivities(results);
   };
 
@@ -436,7 +454,13 @@ export default function MapFilterMenu({
             // startContent={<FaSearch className={styles.searchTerm} />}
             type="search"
           />
-          <button type="submit" className={styles.searchButton}>
+          <button
+            onClick={() => {
+              handleSubmit();
+            }}
+            type="submit"
+            className={styles.searchButton}
+          >
             <FaSearch />
           </button>
         </div>
