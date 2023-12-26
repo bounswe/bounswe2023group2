@@ -24,6 +24,7 @@ class ActionType(str,Enum):
     search_for_survivors="Search for survivors"
     dispatch_of_a_relief_team="dispatch of a relief team"
     need_resource="need_resource"
+    move_survivors="move_survivors"
 
 
 class ActivityType(str,Enum):
@@ -55,7 +56,11 @@ class Action(BaseModel):
     resources: List[str] = Field(default_factory=list) #TODO group same activiy types
     needs: List[str] = Field(default_factory=list)
     recurrence: str = Field(default=None) # Object_id
-
+    start_x: float = Field(default=None)
+    start_y: float = Field(default=None)
+    end_x: float = Field(default=None)
+    end_y: float = Field(default=None)
+    number_of_people: int = Field(default=0)
     @validator('end_at', 'start_at', pre=True)
     def convert_str_to_datetime(cls, value):
         if isinstance(value, str):

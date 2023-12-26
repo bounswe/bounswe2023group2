@@ -40,6 +40,7 @@ class AddEmergencyFragment(
     private val mapFragment = ActivityMap()
     private val annotation = Annotation()
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

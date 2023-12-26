@@ -42,7 +42,7 @@ class ActionBody {
         val _id: String
     )
 
-    data class ActionResponse(val actions: List<ActionBody.ActionItem>)
+    data class ActionResponse(val actions: List<ActionItem>)
 
 
     data class ActionItem(
@@ -71,4 +71,6 @@ class ActionBody {
         @SerializedName("related_needs") val relatedNeeds: List<String>,
         @SerializedName("related_resources") val relatedResources: List<String>
     )
+
+    data class ActionSearchResponse(val results: List<ActionItem>)
 }
