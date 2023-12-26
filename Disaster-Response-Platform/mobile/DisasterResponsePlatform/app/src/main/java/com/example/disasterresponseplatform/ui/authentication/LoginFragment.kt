@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.databinding.FragmentLoginBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.utils.UserRoleUtil
 
 class LoginFragment : Fragment() {
 
@@ -57,7 +58,8 @@ class LoginFragment : Fragment() {
                 Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
                 Log.d("", "Sent sign in request")
-                DiskStorageManager.setKeyValue("username", usernameEditText.text.toString())
+                val username = usernameEditText.text.toString()
+                DiskStorageManager.setKeyValue("username", username)
                 authViewModel.sendSignInRequest()
             }
         })
@@ -68,9 +70,17 @@ class LoginFragment : Fragment() {
 
         authViewModel.signInSuccessful.observe(viewLifecycleOwner, Observer { isSuccessful ->
             if (isSuccessful) {
-                Toast.makeText(context, "Logged in as " + DiskStorageManager.getKeyValue("username"), Toast.LENGTH_SHORT ).show()
-                requireActivity().finish()
-                startActivity(requireActivity().intent)
+                if (!UserRoleUtil.isEmailVerified(DiskStorageManager.getKeyValue("username")!!)) {
+                    addFragment(EmailVerificationFragment())
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Logged in as " + DiskStorageManager.getKeyValue("username"),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    requireActivity().finish()
+                    startActivity(requireActivity().intent)
+                }
             }
         })
 

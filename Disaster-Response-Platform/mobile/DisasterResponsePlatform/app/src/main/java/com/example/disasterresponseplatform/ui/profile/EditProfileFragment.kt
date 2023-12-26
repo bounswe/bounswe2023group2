@@ -1008,7 +1008,7 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                                     getString(R.string.account_successfully_deleted),
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                DiskStorageManager.removeKey("token")
+                                DiskStorageManager.removeAuthKeys()
                                 replaceFragment(LoginFragment())
 
                             }

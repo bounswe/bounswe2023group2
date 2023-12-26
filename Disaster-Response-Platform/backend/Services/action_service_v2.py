@@ -71,8 +71,8 @@ def get_related_needs(resource_id:str):
     'type': need_type,
     'active': True,
     '$or': [
-        {'occur_at':{'$lte': resource['occur_at'] + timedelta(days=3)}},
-        {'occur_at':{'$gte': resource['occur_at'] - timedelta(days=3)}}]
+        {'created_at':{'$lte': resource['occur_at'] + timedelta(days=3)}},
+        {'created_at':{'$gte': resource['occur_at'] - timedelta(days=3)}}]
     }
 
     needs = needs_collection.find(query)
@@ -106,31 +106,40 @@ def update(action_id: str, current_user, body):
     return  res
 
 
-def get_match_list(action_id:str, current_user:str):
+def get_match_list(action_id:str, current_user:str): #needs [{}] resource
     action = actions_collection.find_one({"_id": ObjectId(action_id)})
     if not action:
         raise ValueError("There is no action with this id")
-    match_list = []
+    need_match_list = []
+    resource_match_list = []
+
     for need_id in action['needs']:
         need = needs_collection.find_one({"_id": ObjectId(need_id)})
         if not need:
             continue
         if need['status'] == statusEnum.done:
             continue
-        match_list.append(need)
+    
+        need_match_list.append(need)
     for resource_id in action['resources']:
         resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
         if not resource:
             continue
         if resource['status'] == statusEnum.done:
             continue
-        match_list.append(resource)
-    for payload in match_list:
+        resource_match_list.append(resource)
+    for payload in need_match_list:
         print(payload)
         payload['_id'] = str(payload['_id']) 
         if len(payload['action_list']) != 0 :
             payload['action_list'] = [str(action) for action in payload['action_list']]
-    return match_list
+    for payload in resource_match_list:
+        print(payload)
+        payload['_id'] = str(payload['_id']) 
+        if len(payload['action_list']) != 0 :
+            payload['action_list'] = [str(action) for action in payload['action_list']]
+    
+    return {"needs": need_match_list, "resources": resource_match_list}
 
 
 
@@ -139,27 +148,28 @@ def do_action(action_id:str, current_user:str, match_list):
     action = actions_collection.find_one({"_id": ObjectId(action_id)})
     if not action:
         raise ValueError("There is no action with this id")
-    
+    print(match_list.matches)
     if(action['created_by']!= current_user ):
         raise ValueError("Only user created the action can do it")
     if (action.get("type")== ActionType.need_resource):
-        for match in match_list:
+        for match in match_list.matches:
             need = needs_collection.find_one({"_id": ObjectId(match.need_id)})
-            remain = need.unsuppliedQuantity - match.amount
+            remain = need['unsuppliedQuantity'] - match.amount
             if(remain<=0):
-                need.status = 'done'
+                need['status'] = 'done'
             else:
-                need.unsuppliedQuantity = remain
-                need.status = 'active'
+                need['unsuppliedQuantity'] = remain
+                need['status'] = 'active'
             needs_collection.update_one({"_id": ObjectId(match.need_id)}, {"$set":need})
             resource = resources_collection.find_one({"_id": ObjectId(match.resource_id)})
-            remain = resource.currentQuantity - match.amount
+            remain = resource['currentQuantity'] - match.amount
             if(remain<=0):
-                resource.status = 'done'
+                resource['status'] = 'done'
             else:
-                resource.currentQuantity = remain
-                resource.status = 'active'
+                resource['currentQuantity'] = remain
+                resource['status'] = 'active'
             resources_collection.update_one({"_id": ObjectId(match.resource_id)}, {"$set":resource})
+        return {"met_needs": [match.need_id for match in match_list.matches], "used_resources": [match.resource_id for match in match_list.matches]}
     elif(action.get("type")==ActionType.transport):
         for resource_id in action.get('resources'):
             resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
@@ -173,6 +183,9 @@ def do_action(action_id:str, current_user:str, match_list):
                 }
             }
             resources_collection.update_one({"_id": ObjectId(resource_id)}, update_data)
+        return {"used_resources": [resource_id for resource_id in action.get('resources')]}
+    
+
     action['status'] = "done"
     # update action
     actions_collection.update_one({"_id": ObjectId(action_id)}, {"$set":action})
@@ -185,23 +198,26 @@ def get_action(action_id:str) :
     projection = {"$project":{"_id": {"$toString": "$_id"},
                   "created_by": 1,
                   "description": 1,
+                  "title": 1,
                   "type": 1,
+                  "status":1,
                   "start_x": 1,
                   "start_y": 1,
                   "end_x": 1,
                   "end_y": 1,
                   "number_of_people":1,
+                  "location":1,
+                  "location_coordinates":1,
                   "status": 1,
                   "x":1,
                   "y":1,
-                  "occur_at": 1,
                   "created_at":1,
-                  "last_updated_at":1,
+                  "updated_at":1,
                   "upvote":1,
                   "downvote":1,
                   "needs":1,
                   "resources":1,
-                  "end_at":1
+                  "end_at":1,
                   }}
     aggregation = [
         {"$match": {"_id": ObjectId(action_id)} },

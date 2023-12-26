@@ -149,6 +149,7 @@
     <string name="sign_in_camel">Giriş Yap</string>
     <string name="username">Kullanıcı Adı</string>
     <string name="e_mail">E-posta</string>
+    <string name="phone_number">Telefon Numarası</string>
     <string name="username_or_email">Kullanıcı Adı veya E-posta</string>
     <string name="password">Parola</string>
     <string name="confirm_password">Parolayı Onayla</string>
@@ -171,7 +172,7 @@
     <string name="more">İncele</string>
 
     <!-- PROFILE -->
-    <string name="pr_login_required">Üye girişi yapmanız gerekiyor.</string>
+    <string name="pr_login_required">Üye girişi yapıp emailinizi onaylamanız gerekiyor.</string>
     <string name="pr_full_name">İsim Soyisim</string>
     <string name="pr_username">Kullanıcı Adı</string>
     <string name="pr_call">Ara</string>

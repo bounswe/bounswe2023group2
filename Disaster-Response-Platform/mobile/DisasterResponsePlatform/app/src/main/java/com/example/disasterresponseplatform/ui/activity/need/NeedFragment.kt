@@ -144,7 +144,7 @@ class NeedFragment(
      * It opens add Need fragment if user is authenticated, else warns the user
      */
     private fun addNeed(){
-        if (DiskStorageManager.checkToken()) {
+        if (DiskStorageManager.checkToken() && !DiskStorageManager.checkIsGuest()) {
             // check whether it is connected to the internet
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addNeedFragment = AddNeedFragment(needViewModel,null)

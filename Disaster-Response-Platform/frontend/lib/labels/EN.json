@@ -64,6 +64,7 @@
 		}
 	},
 	"activities": {
+		"all": "All",
 		"resource": "Resource",
 		"need": "Need",
 		"action": "Action",
@@ -95,7 +96,8 @@
 		"short_description": "Short Description",
 		"take_action": "Take Action",
 		"recurrence_rate": "Recurrence Rate (days)",
-		"no_content": "There is no data to show."
+		"no_content": "There is no data to show.",
+		"urgency":"Urgency"
 	},
 	"auth": {
 		"register": "Register",
@@ -121,9 +123,21 @@
 		"changed": "Changed",
 		"search": "Search"
 	},
+	"filter_category":{
+		"cloth":"Cloth",
+		"food": "Food",
+		"drink": "Drink",
+		"shelter": "Shelter",
+		"medication": "Medication",
+		"transportation": "transportation",
+		"tool": "Tool",
+		"human": "Human",
+		"other": "Other"
+	},
 	"sort_filter": {
 		"sort": "Sort",
 		"filter": "Filter",
+		"filter_reset": "Reset Filters",
 		"filters": "Filters",
 		"sort_criterion": "Sorting metric",
 		"sort_direction": "Sort direction",
@@ -237,9 +251,10 @@
 		"resource_subtype": "Canned food"
 	},
 	"map": {
+		"download":"Download as a List",
 		"choose_scan_center": "Choose the center of the area you want to scan",
 		"choose_location": "Choose your location in the map",
-		"scan_certain_area": "Scan a certain area",
+		"scan_certain_area": "Scan this area",
 		"you_are_here": "You are here"
 	},
 	"user_roles": {
