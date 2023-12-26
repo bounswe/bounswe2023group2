@@ -75,5 +75,25 @@
             app:layout_constraintStart_toEndOf="@+id/iconDate"
             app:layout_constraintTop_toTopOf="@+id/iconDate" />
 
+        <ImageView
+            android:id="@+id/iconReliability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iconDate"
+            app:srcCompat="@drawable/ic_shield_qm"
+            app:tint="@color/icon" />
+
+        <TextView
+            android:id="@+id/tvReliability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text=""
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/iconReliability"
+            app:layout_constraintTop_toTopOf="@+id/tvDate" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -44,6 +44,7 @@ class EmergencyAdapter(private val emergencyList: List<EmergencyBody.EmergencyIt
         hb.tvDate.text = currentEmergency?.created_at.toString()
      //   hb.tvLocation.text = "x: ${String.format("%.2f", currentEmergency?.x).replace(',', '.')}, y: ${String.format("%.2f", currentEmergency?.y).replace(',', '.')}"
         hb.tvLocation.text = currentEmergency?.location.toString()
+        hb.tvReliability.text =  String.format("%.2f", currentEmergency?.reliability)
         // user role
         val creator = currentEmergency?.created_by_user
         // user role
