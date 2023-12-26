@@ -31,8 +31,10 @@ import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
+import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.utils.GeneralUtil
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -57,6 +59,7 @@ class NeedFragment(
     private val networkManager = NetworkManager()
 
     private val userRoleMap: MutableMap<String, String> = mutableMapOf()
+    private val userRoleViewModel = UserRoleViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -190,7 +193,7 @@ class NeedFragment(
             recyclerView.layoutManager = layoutManager
         }
         //checkAdmin(needList)
-        val adapter = NeedAdapter(needList, userRoleMap)
+        val adapter = NeedAdapter(needList, userRoleViewModel, requireActivity!!)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
