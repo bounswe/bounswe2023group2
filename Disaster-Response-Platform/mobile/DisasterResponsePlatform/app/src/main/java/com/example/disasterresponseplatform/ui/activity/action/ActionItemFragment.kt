@@ -70,9 +70,11 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
         binding.tvCreationTime.text = action.created_at.substring(0,10)
         binding.tvUpvoteCount.text = action.upvote.toString()
         binding.tvDownVoteCount.text = action.downvote.toString()
-        annotation.getAnnotations(action.created_by + "-action-" + action.type) {
+        annotation.getAnnotations(action.created_by + "-action-" + action.type, {
             binding.tvDescription.text = it
-        }
+        }, {
+            binding.tvDescription.text = action.description
+        })
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it

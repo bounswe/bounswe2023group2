@@ -49,9 +49,6 @@ class MainActivity : AppCompatActivity() {
         //instead setContentView(R.layout.activity_main) doing that with binding
         setContentView(binding.root)
 
-        val annotation = Annotation()
-        annotation.publishAnnotation("testtag123", "Bu olursa çok iyi olur")
-
         createViewModels()
         mapFragment = MapFragment(needViewModel, resourceViewModel, actionViewModel, eventViewModel, emergencyViewModel)
         navBarListener()

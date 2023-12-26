@@ -79,19 +79,16 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         binding.iconDetails.isVisible = false
         binding.tvNote.isVisible = false
         binding.tvDetailsTitle.isVisible = false
-        annotation.getAnnotations(event.created_by_user + "-event-" + event.event_type) {
+        annotation.getAnnotations(event.created_by_user + "-event-" + event.event_type, {
             binding.iconDetails.isVisible = true
             binding.tvNote.isVisible = true
             binding.tvDetailsTitle.isVisible = true
             binding.tvNote.text = it
-        }
-//        if (event.note == null){
-//            binding.iconDetails.isVisible = false
-//            binding.tvNote.isVisible = false
-//            binding.tvDetailsTitle.isVisible = false
-//        } else{
-//            binding.tvNote.text = event.note
-//        }
+        }, {
+            if (event.note != null){
+                binding.tvNote.text = event.note
+            }
+        })
         userViewModel.getUserRole(creatorName)
         userViewModel.getLiveDataUserRole().observe(requireActivity!!){
             val userRole = if (it == "null") "AUTHENTICATED" else it

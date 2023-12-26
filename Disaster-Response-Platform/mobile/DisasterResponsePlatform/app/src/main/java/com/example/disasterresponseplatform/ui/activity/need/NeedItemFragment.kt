@@ -98,9 +98,11 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         binding.tvLastUpdatedTime.text = need.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = need.created_at.substring(0,10)
         if (need.details["subtype"] != null)
-            annotation.getAnnotations(need.created_by + "-need-" + need.details["subtype"]) {
+            annotation.getAnnotations(need.created_by + "-need-" + need.details["subtype"], {
                 binding.tvDescription.text = it
-            }
+            }, {
+                binding.tvDescription.text = need.description.toString()
+            })
         else binding.tvDescription.text = need.description.toString()
         //binding.e.text = need.details["subtype"]
         fillDetails(need.details)

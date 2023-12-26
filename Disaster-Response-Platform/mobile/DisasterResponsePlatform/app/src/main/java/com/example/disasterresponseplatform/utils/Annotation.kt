@@ -68,7 +68,8 @@ class Annotation {
 //        )
     }
 
-    fun getAnnotations(key: String, callback: (input: String) -> Unit) {
+    fun getAnnotations(key: String, callback: (input: String) -> Unit, onError: () -> Unit) {
+        println("getting annotations: $key")
         getNetworkManager.makeRequest(
             endpoint = Endpoint.ANNOTATIONS,
             requestType = RequestType.GET,
@@ -81,6 +82,7 @@ class Annotation {
             callback = object : retrofit2.Callback<ResponseBody> {
                 override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
                     println("Failed to fetch annotation")
+                    onError()
                 }
 
                 override fun onResponse(
@@ -91,14 +93,17 @@ class Annotation {
                         var body = response.body()?.string()
                         if (body != null) {
                             try {
+                                println("Unparsed annotation: $body")
                                 body = body.substring(body.indexOf("\"value\":\"") + 9)
                                 body = body.substring(0, body.indexOf("\\n\\n\""))
+                                println("Received annotation: $body")
                                 callback(body)
                             } catch (e: Exception) {
                                 println("Failed to parse annotation")
+                                onError()
                             }
-                        }
-                    }
+                        } else onError()
+                    } else onError()
                 }
             }
         )

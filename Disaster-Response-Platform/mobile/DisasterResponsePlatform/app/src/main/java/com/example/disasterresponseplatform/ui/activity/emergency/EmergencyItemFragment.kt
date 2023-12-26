@@ -66,7 +66,7 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
         if (!creatorUsername.isNullOrEmpty()) {
             binding.tvCreator.text = creatorUsername
             userViewModel.getUserRole(creatorUsername)
-            userViewModel.getLiveDataUserRole().observe(requireActivity!!){
+            userViewModel.getLiveDataUserRole().observe(requireActivity!!) {
                 val userRole = if (it == "null") "AUTHENTICATED" else it
                 binding.tvUserRole.text = userRole
             }
@@ -85,9 +85,12 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
         }
         binding.tvPhoneNumber.text = emergency.phone_number
         binding.tvType.text = emergency.type
-        annotation.getAnnotations(emergency.created_by + "-emergency-" + emergency.type) {
+        annotation.getAnnotations(emergency.created_by + "-emergency-" + emergency.type, {
             binding.tvDescription.text = it
-        }
+        }, {
+            binding.tvDescription.text = emergency.description
+
+        })
 //        binding.tvDescription.text = emergency.description
         binding.tvCreationTime.text = emergency.created_at
         binding.tvLastUpdatedTime.text = emergency.last_updated_at

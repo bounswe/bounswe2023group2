@@ -100,10 +100,6 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.primary)))
         (activity as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
 
-        Annotation().getAnnotations("testtag123") {
-            println("Annotation server'dan gelen cevap: " + it)
-        }
-
         binding = FragmentProfileEditBinding.inflate(inflater, container,false)
         return binding.root
     }
