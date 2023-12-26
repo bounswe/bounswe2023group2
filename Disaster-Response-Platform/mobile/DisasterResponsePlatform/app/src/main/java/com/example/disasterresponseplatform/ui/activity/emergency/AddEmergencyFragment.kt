@@ -15,6 +15,7 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.emergency.Emergency
 import com.example.disasterresponseplatform.data.models.EmergencyBody
 import com.example.disasterresponseplatform.databinding.FragmentAddEmergencyBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.DateUtil
@@ -40,6 +41,7 @@ class AddEmergencyFragment(
     private var selectedLocationX by Delegates.notNull<Double>()
     private var selectedLocationY by Delegates.notNull<Double>()
     private val mapFragment = ActivityMap()
+    private val annotation = Annotation()
 
 
     override fun onCreateView(
@@ -300,7 +302,7 @@ class AddEmergencyFragment(
 }
 
 private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
-    val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+    val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y&api_key=658a6bb850a62680253220cju871eba"
     val client = OkHttpClient()
     val request = Request.Builder()
         .url(url)

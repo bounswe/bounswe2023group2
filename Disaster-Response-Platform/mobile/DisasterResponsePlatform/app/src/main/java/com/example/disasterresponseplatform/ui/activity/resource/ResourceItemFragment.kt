@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheet
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -37,6 +39,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private val annotation = Annotation()
 
 
     override fun onCreateView(
@@ -67,7 +70,41 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         val creatorName = resource.created_by
         binding.tvCreator.text = creatorName
         binding.tvType.text = resource.type
+        annotation.getAnnotations(resource.type, {annotationText ->
+            binding.tvType.setOnLongClickListener {
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorResource)
+                    tvWord.text = resource.type
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
+                false
+            }
+        }, {})
         binding.tvSubType.text = resource.details["subtype"]
+        annotation.getAnnotations(resource.details["subtype"] ?: "", {annotationText ->
+            binding.tvSubType.setOnLongClickListener {
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorResource)
+                    tvWord.text = resource.details["subtype"]
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
+                false
+            }
+        }, {})
         binding.tvInitialQuantity.text = resource.initialQuantity.toString()
         binding.tvCurrentQuantity.text = resource.currentQuantity.toString()
         if (resource.x != 0.0 && resource.y != 0.0){
@@ -94,7 +131,13 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
 
         binding.tvLastUpdatedTime.text = resource.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = resource.created_at.substring(0,10)
-        binding.tvDescription.text = resource.description.toString()
+        if (resource.details["subtype"] != null)
+            annotation.getAnnotations(resource.created_by + "-resource-" + resource.details["subtype"], {
+                binding.tvDescription.text = it
+            }, {
+                binding.tvDescription.text = resource.description.toString()
+            })
+        else binding.tvDescription.text = resource.description.toString()
         fillDetails(resource.details)
         fillRecurrence(resource)
         userViewModel.getUserRole(creatorName)
@@ -332,7 +375,7 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
     }
 
     private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
-        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y&api_key=658a6bb850a62680253220cju871eba"
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(url)

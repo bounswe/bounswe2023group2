@@ -30,6 +30,7 @@ import com.example.disasterresponseplatform.ui.activity.generalViewModels.Recurr
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.DateUtil
+import com.example.disasterresponseplatform.utils.Annotation
 import com.example.disasterresponseplatform.utils.DateUtil.Companion.dateForBackend
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
@@ -54,6 +55,7 @@ class AddNeedFragment(
     private var requireActivity: FragmentActivity? = null
     private var selectedLocationX = 0.0
     private var selectedLocationY = 0.0
+    private var annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -229,6 +231,10 @@ class AddNeedFragment(
         val coordinateX = selectedLocationX
         val coordinateY = selectedLocationY
         val openAddress = binding.etOpenAddress.text.toString().trim()
+
+        if (description != null) {
+            annotation.publishAnnotation(DiskStorageManager.getKeyValue("username")!! + "-need-" + subType, description)
+        }
 
         //val newNeed = Need(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
         //needViewModel.insertNeed(need) insert local db
@@ -1068,7 +1074,7 @@ class AddNeedFragment(
 
 
 private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
-    val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+    val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y&api_key=658a6bb850a62680253220cju871eba"
     val client = OkHttpClient()
     val request = Request.Builder()
         .url(url)

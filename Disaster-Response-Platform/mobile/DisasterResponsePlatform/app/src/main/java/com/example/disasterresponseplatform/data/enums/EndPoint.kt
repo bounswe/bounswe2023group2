@@ -56,4 +56,6 @@ enum class Endpoint(val path: String) {
     RECURRENCE_START("recurrence/start"),
     RECURRENCE_CANCEL("recurrence/cancel"),
     RECURRENCE_RESUME("recurrence/resume"),
+    ANNOTATIONS("annotations"),
+    SIMPLE_ANNOTATION("simple_annotation"),
 }
