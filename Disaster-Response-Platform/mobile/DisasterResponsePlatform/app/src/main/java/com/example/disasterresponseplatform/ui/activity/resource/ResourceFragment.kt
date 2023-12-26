@@ -117,7 +117,7 @@ class ResourceFragment(
      * If it is created resource should be null, else resource should be the clicked item
      */
     private fun addResource(){
-        if (DiskStorageManager.checkToken()) {
+        if (DiskStorageManager.checkToken() && !DiskStorageManager.checkIsGuest()) {
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addResourceFragment = AddResourceFragment(resourceViewModel,null)
                 addFragment(addResourceFragment,"AddResourceFragment")

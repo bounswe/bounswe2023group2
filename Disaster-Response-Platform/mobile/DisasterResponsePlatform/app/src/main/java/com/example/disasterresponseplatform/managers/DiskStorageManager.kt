@@ -28,6 +28,13 @@ object DiskStorageManager {
         sharedPreferences.edit().remove(key).apply()
     }
 
+    fun removeAuthKeys(){
+        removeKey("token")
+        removeKey("user_role")
+        removeKey("proficiency")
+        removeKey("proficiency_details")
+    }
+
     /**
      * Checks whether it has a not null token (user logs in)
      */
@@ -35,6 +42,10 @@ object DiskStorageManager {
         val token = getKeyValue("token")
         Log.i("token", "Token $token")
         return (hasKey("token") and !token.isNullOrEmpty())
+    }
+
+    fun checkIsGuest(): Boolean{
+        return (getKeyValue("user_role") == "GUEST")
     }
 
     /**

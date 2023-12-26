@@ -171,7 +171,7 @@
     <string name="more">More</string>
 
     <!-- PROFILE -->
-    <string name="pr_login_required">You need to log in.</string>
+    <string name="pr_login_required">You need to log in and verify your email</string>
     <string name="pr_full_name">Full Name</string>
     <string name="pr_username">Username</string>
     <string name="pr_call">Call</string>

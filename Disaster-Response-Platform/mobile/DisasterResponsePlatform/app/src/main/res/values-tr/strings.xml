@@ -172,7 +172,7 @@
     <string name="more">İncele</string>
 
     <!-- PROFILE -->
-    <string name="pr_login_required">Üye girişi yapmanız gerekiyor.</string>
+    <string name="pr_login_required">Üye girişi yapıp emailinizi onaylamanız gerekiyor.</string>
     <string name="pr_full_name">İsim Soyisim</string>
     <string name="pr_username">Kullanıcı Adı</string>
     <string name="pr_call">Ara</string>

@@ -163,7 +163,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
 
-        if (!DiskStorageManager.checkToken()) {
+        if (!DiskStorageManager.checkToken() && !DiskStorageManager.checkIsGuest()) {
             binding.iconReliability.visibility = View.GONE
             binding.tvReliability.visibility = View.GONE
             binding.btnUpvote.visibility = View.GONE
