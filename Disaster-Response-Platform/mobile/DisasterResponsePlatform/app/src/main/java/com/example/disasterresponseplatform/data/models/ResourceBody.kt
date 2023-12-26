@@ -82,6 +82,7 @@ class ResourceBody {
         @SerializedName("last_updated_at") val last_updated_at: String,
         @SerializedName("upvote") val upvote: Int,
         @SerializedName("downvote") val downvote: Int,
+        @SerializedName("reliability") val reliability: Double,
         @SerializedName("_id") val _id: String,
         @SerializedName("open_address")val open_address : String?,
     )
