@@ -2,7 +2,7 @@ import { api } from "@/lib/apiUtils";
 import { getToken } from "@/lib/localStorageUtils";
 
 const downloadService = {
-  download: async (body, accessToken) => {
+  download: async (body,filter, accessToken) => {
     // const accessToken = getToken('accessToken');
     try {
         const data = await api.post(`api/downloadfile/`, body, {
