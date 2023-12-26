@@ -66,6 +66,8 @@
     <string name="act_reliability">Güvenilirlik Hakkında Geri Bildirim Ver:</string>
     <string name="act_upvote">Güvenilir</string>
     <string name="act_downvote">Güvenilmez</string>
+    <string name="act_contact_name">İletişim Kişisi:</string>
+    <string name="act_contact_phone">İletişim Telefon No:</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sırala &amp; Filtrele</string>

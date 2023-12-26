@@ -66,6 +66,8 @@
     <string name="act_reliability">Give Feedback About Reliability:</string>
     <string name="act_upvote">Reliable</string>
     <string name="act_downvote">Not Reliable</string>
+    <string name="act_contact_name">Contact Name:</string>
+    <string name="act_contact_phone">Contact Phone:</string>
 
     <!-- SORT AND FILTER -->
     <string name="sf_title">Sort &amp; Filter</string>

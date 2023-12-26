@@ -77,11 +77,17 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
             binding.iconUpdate.visibility = View.GONE
             binding.tvLastUpdatedTimeTitle.visibility = View.GONE
             binding.tvLastUpdatedTime.visibility = View.GONE
-
-            binding.tvCreator.text = emergency.contact_name
-            binding.tvUserRole.text = "GUEST"
+            //Hide Creator
+            binding.iconCreator.visibility = View.GONE
+            binding.tvUsernameTitle.visibility = View.GONE
+            binding.tvCreator.visibility = View.GONE
+            //Hide UserRole
+            binding.iconUserRole.visibility = View.GONE
+            binding.tvUserRoleTitle.visibility = View.GONE
+            binding.tvUserRole.visibility = View.GONE
         }
-        binding.tvPhoneNumber.text = emergency.contact_number
+        binding.tvContactName.text = emergency.contact_name
+        binding.tvContactNumber.text = emergency.contact_number
         binding.tvType.text = emergency.type
         binding.tvDescription.text = emergency.description
         binding.tvCreationTime.text = emergency.created_at
