@@ -104,7 +104,7 @@ return (
                       {activity?.upvote ?? 0}
                     </span>
                   </div>
-                  <Link href={`/profile/${activity.created_by}`}>
+                  <Link href={`/user/${activity.created_by}`}>
                     <Chip
                       color="warning"
                       size="lg"
