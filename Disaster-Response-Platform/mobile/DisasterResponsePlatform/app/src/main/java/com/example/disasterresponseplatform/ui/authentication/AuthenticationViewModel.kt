@@ -40,6 +40,7 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
     private val _signUpFullName = MutableLiveData<String>()
     private val _signUpUsername = MutableLiveData<String>()
+    private val _signUpPhoneNumber = MutableLiveData<String>()
     private val _signUpEmail = MutableLiveData<String>()
     private val _signUpPassword = MutableLiveData<String>()
     private val _signUpConfirmPassword = MutableLiveData<String>()
@@ -90,6 +91,10 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
         _signUpUsername.value = signUpUsername
     }
 
+    fun updatePhoneNumber(signUpPhoneNumber: String) {
+        _signUpPhoneNumber.value = signUpPhoneNumber
+    }
+
     fun updateSignUpEmail(signUpEmail: String) {
         _signUpEmail.value = signUpEmail
     }
@@ -125,12 +130,13 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
         // Perform your validation logic here
         val fullName = _signUpFullName.value
         val username = _signUpUsername.value
+        val phoneNumber = _signUpPhoneNumber.value
         val email = _signUpEmail.value
         val password = _signUpPassword.value
         val confirmPassword = _signUpConfirmPassword.value
 
         // Check if any of the fields are empty or null
-        if (fullName.isNullOrEmpty() || username.isNullOrEmpty() ||
+        if (fullName.isNullOrEmpty() || username.isNullOrEmpty() || phoneNumber.isNullOrEmpty() ||
             email.isNullOrEmpty() || password.isNullOrEmpty() || confirmPassword.isNullOrEmpty()
         ) {
             _signUpValidation.value = 0
@@ -243,11 +249,10 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
         // Safely unwrap the values
         val username = _signUpUsername.value ?: "defaultUsername"
+        val phoneNumber = _signUpPhoneNumber.value ?: "05555555555"
         val email = _signUpEmail.value ?: "defaultEmail@example.com"
         val password = _signUpPassword.value ?: "defaultPassword"
         val fullName = _signUpFullName.value ?: "Default Name"
-        val phoneNumber =
-            ("0534671" + Random.nextInt(1000, 10000).toString()) ?: "defaultPhoneNumber"
 
         // Splitting the full name into first name and last name
         val parts = fullName.split(" ", limit = 2)
@@ -439,5 +444,6 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
             }
         )
     }
+
 }
 

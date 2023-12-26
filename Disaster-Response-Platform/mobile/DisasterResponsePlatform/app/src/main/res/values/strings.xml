@@ -355,6 +355,7 @@
     <!-- Reports -->
     <string name="inappropriate_content">Inappropriate Content</string>
     <string name="report">Report</string>
+    <string name="phone_number">Phone Number</string>
     <!-- Report Options for non-users type -->
     <string-array name="report_options_non_users">
         <item>Inappropriate Content</item>
