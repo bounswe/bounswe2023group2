@@ -145,6 +145,8 @@
 		"type": "Kategori",
 		"subtype": "Alt kategori",
 		"upvote": "Güvenilirlik",
+		"reliable": "Güvenilir",
+		"unreliable": "Güvenilmez",
 		"currentQuantity": "Mevcut miktar",
 		"due_date": "Bitiş Tarihi",
 		"description": "Açıklama"

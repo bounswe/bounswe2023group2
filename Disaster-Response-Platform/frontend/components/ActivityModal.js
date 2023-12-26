@@ -6,7 +6,7 @@ import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import Status from "./StatusBar";
 import Link from "next/link";
 import { api } from "@/lib/apiUtils";
-export default function ActivityModal({ isOpen, onOpen, onOpenChange, activity, activityType }) {
+export default function ActivityModal({ isOpen, onOpen, onOpenChange, activity, activityType, labels }) {
   const [like, setLike] = React.useState(false);
   const [dislike, setDislike] = React.useState(false);
   const [display, setDisplay] = React.useState({});
@@ -79,31 +79,22 @@ return (
                 <Divider />
                 <div className='flex flex-row justify-between items-center'>
                   <div className='flex flex-row gap-1 items-center'>
-                    <span className=" flex flex-row gap-1 items-center ">
-
-                      <Avatar
+                    <Button
+                        className="hover:bg-gray-300"
                         onClick={(e) => { setLike(!like); setDislike(false); handleLike({ voteType: 'like', vote: like }) }}
-                        radius="full" className=" hover:bg-gray-300"
-                        icon={!like ? <FaAngleUp className='w-8 h-8' /> : <FaAngleUp className='w-8 h-8' color="green" />}
-                        classNames={{
-                          base: "color-white bg-white",
-                          icon: "",
-                        }}
-                      />
-                      {activity?.downvote ?? 0}
-                    </span>
-                    <span className=" flex flex-row gap-1 items-center " >
-                      <Avatar
+                        variant="bordered"
+                        startContent={!like ? <FaAngleUp className='w-8 h-8' /> : <FaAngleUp className='w-8 h-8' color="green" />}
+                    >
+                      {labels.sort_criteria.reliable}
+                    </Button>
+                    <Button
+                        className="hover:bg-gray-300"
                         onClick={(e) => { setLike(false); setDislike(!dislike); handleLike({ voteType: 'dislike', vote: dislike }) }}
-                        radius="full" className=" hover:bg-gray-300"
-                        icon={!dislike ? <FaAngleDown className='w-8 h-8' /> : <FaAngleDown className='w-8 h-8' color="red" />}
-                        classNames={{
-                          base: "color-white bg-white",
-                          icon: "",
-                        }}
-                      />
-                      {activity?.upvote ?? 0}
-                    </span>
+                        variant="bordered"
+                        startContent={!dislike ? <FaAngleDown className='w-8 h-8' /> : <FaAngleDown className='w-8 h-8' color="red" />}
+                    >
+                      {labels.sort_criteria.unreliable}
+                    </Button>
                   </div>
                   <Link href={`/profile/${activity.created_by}`}>
                     <Chip

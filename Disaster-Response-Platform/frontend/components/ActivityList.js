@@ -120,7 +120,7 @@ const ActivityList = ({ labels, userFilter }) => {
 
 
 
-            <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={chosenActivityType} />
+            <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={chosenActivityType} labels={labels} />
 
         </div>
         <div className=' max-h-[700px] bg-slate-100 overflow-y-auto w-4/5 p-2 round-sm'>
@@ -128,17 +128,17 @@ const ActivityList = ({ labels, userFilter }) => {
              
             </div>
             {(search !== "" )&& activities.map((activity, index) => (
-                <ListItem activityType={'resource'} activity={activity} />
+                <ListItem activityType={'resource'} activity={activity} labels={labels} />
             ))}
 
             {chosenActivityType === "resource" && search=== "" && resources.map((resource, index) => (
-                <ListItem activityType={'resource'} activity={resource} />
+                <ListItem activityType={'resource'} activity={resource} labels={labels} />
             ))}
             {chosenActivityType === "need" && needs.map((need, index) => (
-                <ListItem activityType={'need'} activity={need} />
+                <ListItem activityType={'need'} activity={need} labels={labels} />
             ))}
             {chosenActivityType === "event" && events.map((event, index) => (
-                <ListItem activityType={'event'} activity={event} />
+                <ListItem activityType={'event'} activity={event} labels={labels} />
             ))}
         </div>
         
