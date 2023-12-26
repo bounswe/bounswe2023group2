@@ -13,7 +13,6 @@ import dapp_logo_extended_white from "../public/logo/dapp_logo_extended_white.sv
 import Image from "next/image";
 import AddNeedForm from "./AddNeed";
 import AddEventForm from "./AddEvent";
-import AddActionFromId from "./AddActionFromId";
 import AddEmergencyForm from "./AddEmergency";
 
 
@@ -202,7 +201,6 @@ export default function NavBar({ labels }) {
       <AddResourceForm onOpenChange={onOpenChange} isOpen={isOpen} />
       <AddNeedForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} />
       <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} labels={labels} />
-      <AddActionFromId onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} />
       <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} labels={labels} />
     </Navbar>
   );
