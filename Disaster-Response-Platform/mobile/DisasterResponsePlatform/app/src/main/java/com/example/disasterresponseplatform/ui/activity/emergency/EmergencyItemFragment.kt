@@ -5,9 +5,12 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -24,6 +27,7 @@ import com.example.disasterresponseplatform.ui.activity.generalViewModels.VoteVi
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -33,6 +37,7 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private val annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +69,7 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
         if (!creatorUsername.isNullOrEmpty()) {
             binding.tvCreator.text = creatorUsername
             userViewModel.getUserRole(creatorUsername)
-            userViewModel.getLiveDataUserRole().observe(requireActivity!!){
+            userViewModel.getLiveDataUserRole().observe(requireActivity!!) {
                 val userRole = if (it == "null") "AUTHENTICATED" else it
                 binding.tvUserRole.text = userRole
             }
@@ -83,7 +88,30 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
         }
         binding.tvPhoneNumber.text = emergency.phone_number
         binding.tvType.text = emergency.type
-        binding.tvDescription.text = emergency.description
+        annotation.getAnnotations(emergency.type, {annotationText ->
+            binding.tvType.setOnLongClickListener {
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorEmergency)
+                    tvWord.text = emergency.type
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
+                false
+            }
+        }, {})
+        annotation.getAnnotations(emergency.created_by + "-emergency-" + emergency.type, {
+            binding.tvDescription.text = it
+        }, {
+            binding.tvDescription.text = emergency.description
+
+        })
+//        binding.tvDescription.text = emergency.description
         binding.tvCreationTime.text = emergency.created_at
         binding.tvLastUpdatedTime.text = emergency.last_updated_at
         binding.tvAddress.text = emergency.location
@@ -255,7 +283,7 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
 
 
     private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
-        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y&api_key=658a6bb850a62680253220cju871eba"
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(url)

@@ -25,7 +25,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
             <div> {activity?.note}</div>
           </div>
           <div className="flex justify-between items-center">
-            <div>Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address} {activity.x}:{activity.y} </Link> </div>
+            <div>Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y} </Link> </div>
           </div>
 
         </CardBody>
@@ -49,7 +49,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
             <div> {activity?.note}</div>
           </div>
           <div className="flex justify-between items-center">
-            Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address} {activity.x}:{activity.y} </Link> 
+            Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y}</Link> 
           </div>
 
         </CardBody>
@@ -72,7 +72,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
             <p> {activity?.description}</p>
           </div>
           <div className="flex justify-between items-center">
-            <div>Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address} {activity.x}:{activity.y} </Link> </div>
+            <div>Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y} </Link> </div>
           </div>
 
         </CardBody>
@@ -82,6 +82,45 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
         </CardFooter>
       </Card>
 } 
+{activityType === "emergency" && 
+      <Card shadow='none'  isPressable className='border-1 w-3/4 m-auto mb-3' onClick={()=>{
+        onOpen()
+      }}>
+        <CardBody>
+          <div>
+            <p> {activity?.description}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <div>Address: <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y} </Link> </div>
+          </div>
+
+        </CardBody>
+        <Divider />
+        <CardFooter className="flex justify-between px-5">
+          date: {activity?.occur_at ?? activity?.created_at} 
+        </CardFooter>
+      </Card>
+} 
+{activityType === "action" && 
+      <Card shadow='none'  isPressable className='border-1 w-3/4 m-auto mb-3' onClick={()=>{
+        onOpen()
+      }}>
+        <CardBody>
+          <div>
+            <p> {activity?.description}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <div>Address: <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y} </Link> </div>
+          </div>
+
+        </CardBody>
+        <Divider />
+        <CardFooter className="flex justify-between px-5">
+          date: {activity?.occur_at ?? activity?.created_at} 
+        </CardFooter>
+      </Card>
+} 
+
 <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={activityType} />
  <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} selected={activity} type={activityType}  />
 

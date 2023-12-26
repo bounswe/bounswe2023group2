@@ -12,6 +12,21 @@ const actionService = {
       return { status:400 , message: 'Error' };
     }
   },
+  getAll: async () => {
+    try {
+      const result = await api.get(`/api/actions/`);
+      if(result.status === 200){
+        return { status:200, payload: result?.data };
+      }
+      if(result.status === 422){
+        return { status:422 , message: 'Request fields error' };
+      }
+      return { status:500 , message: 'Internal' };
+    } catch (error) {
+      return { status:500 , message: 'Frontend error' };
+    }
+  },
+
   needList: async (resource_id) => {
     try {
       const result = await api.get(`/api/actions/need_list/${resource_id}`);

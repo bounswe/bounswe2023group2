@@ -40,9 +40,7 @@ import retrofit2.http.QueryMap
  * );
  * </pre>
  */
-class NetworkManager {
-
-    private val baseUrl = "http://3.218.226.215:8000/api/"
+class NetworkManager(private val baseUrl: String? = "http://3.218.226.215:8000/api/") {
 
     val api: ApiService by lazy {
         val retrofit = Retrofit.Builder()
