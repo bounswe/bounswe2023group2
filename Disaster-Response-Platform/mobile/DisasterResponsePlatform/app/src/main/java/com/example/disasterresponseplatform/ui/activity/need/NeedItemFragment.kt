@@ -77,7 +77,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         binding.tvSubType.text = need.details["subtype"]
         annotation.getAnnotations(need.details["subtype"] ?: "", {annotationText ->
             binding.tvSubType.setOnLongClickListener {
-                Toast.makeText(context, "${need.details["subtype"]}: $annotationText", Toast.LENGTH_LONGdd).show()
+                Toast.makeText(context, "${need.details["subtype"]}: $annotationText", Toast.LENGTH_LONG).show()
                 false
             }
         }, {})
