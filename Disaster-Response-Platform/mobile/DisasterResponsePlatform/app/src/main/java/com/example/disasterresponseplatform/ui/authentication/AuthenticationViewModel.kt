@@ -16,6 +16,7 @@ import com.example.disasterresponseplatform.data.models.authModels.SignUpRespons
 import com.example.disasterresponseplatform.data.models.authModels.SignUpResponseBody422
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.utils.UserRoleUtil
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -189,6 +190,7 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                                 val signUpResponse = gson.fromJson(rawJson, SignUpResponseBody::class.java)
                                 Log.d("Sign In Access Token", signUpResponse.accessToken + ".")
                                 DiskStorageManager.setKeyValue("token", signUpResponse.accessToken)
+                                UserRoleUtil.resetMap()
                                 _signInSuccessful.value = true
                             } catch (e: IOException) {
                                 Log.e("ResponseError", "Error reading response body: ${e.message}")
