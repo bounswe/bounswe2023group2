@@ -1,0 +1,72 @@
+{
+  "en": [
+    {
+      "name": "title",
+      "label": "Title",
+      "type": "text"
+    },
+    {
+      "name": "description",
+      "label": "Description",
+      "type": "text"
+    },
+    {
+      "name": "start_at",
+      "label": "Start Date",
+      "type": "date"
+    },
+    {
+      "name": "end_at",
+      "label": "End Date",
+      "type": "date"
+    },
+
+    {
+      "name": "start_location",
+      "label": "Start Location",
+      "type": "text"
+    },
+    {
+      "name": "end_location",
+      "label": "End Location",
+      "type": "text"
+    }
+  
+
+  ],
+  "tr":[
+    {
+      "name": "title",
+      "label": "Başlık",
+      "type": "text"
+    },
+    {
+      "name": "description",
+      "label": "Açıklama",
+      "type": "text"
+    },
+    {
+      "name": "start_at",
+      "label": "Başlangıç Tarihi",
+      "type": "date"
+    },
+    {
+      "name": "end_at",
+      "label": "Bitiş Tarihi",
+      "type": "date"
+    },
+
+    {
+      "name": "start_location",
+      "label": "Başlangıç Lokasyonu",
+      "type": "text"
+    },
+    {
+      "name": "end_location",
+      "label": "Bitiş Lokasyonu",
+      "type": "text"
+    }
+    
+  ]
+
+}
