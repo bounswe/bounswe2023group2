@@ -6,4 +6,9 @@ class UserBody {
         val user_role: String
     )
 
+    data class UserMessageModel(
+        val username: String?,
+        val user_role: String
+    )
+
 }

@@ -34,6 +34,7 @@ class RegistrationFragment : Fragment() {
 
         val fullname = view.findViewById<TextView>(R.id.fullname)
         val username = view.findViewById<TextView>(R.id.username)
+        val phoneNumber = view.findViewById<TextView>(R.id.phoneNumber)
         val email = view.findViewById<TextView>(R.id.email)
         val password = view.findViewById<TextView>(R.id.password)
         val password_confirm = view.findViewById<TextView>(R.id.password_confirm)
@@ -66,6 +67,7 @@ class RegistrationFragment : Fragment() {
         binding.signUpButton.setOnClickListener {
             authViewModel.updateSignUpFullName(fullname.text.toString())
             authViewModel.updateSignUpUsername(username.text.toString())
+            authViewModel.updatePhoneNumber(phoneNumber.text.toString())
             authViewModel.updateSignUpEmail(email.text.toString())
             authViewModel.updateSignUpPassword(password.text.toString())
             authViewModel.updateSignUpConfirmPassword(password_confirm.text.toString())

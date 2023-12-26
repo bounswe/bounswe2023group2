@@ -30,6 +30,7 @@ import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
+import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.GeneralUtil
@@ -54,7 +55,7 @@ class ResourceFragment(
     private val mapFragment = ActivityMap()
     private val networkManager = NetworkManager()
 
-    private val userRoleMap: MutableMap<String, String> = mutableMapOf()
+    private val userRoleViewModel = UserRoleViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -116,7 +117,7 @@ class ResourceFragment(
      * If it is created resource should be null, else resource should be the clicked item
      */
     private fun addResource(){
-        if (DiskStorageManager.checkToken()) {
+        if (DiskStorageManager.checkToken() && !DiskStorageManager.checkIsGuest()) {
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addResourceFragment = AddResourceFragment(resourceViewModel,null)
                 addFragment(addResourceFragment,"AddResourceFragment")
@@ -163,7 +164,7 @@ class ResourceFragment(
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
         //checkAdmin(resourceList)
-        val adapter = ResourceAdapter(resourceList, userRoleMap)
+        val adapter = ResourceAdapter(resourceList, userRoleViewModel, requireActivity!!)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
@@ -171,64 +172,6 @@ class ResourceFragment(
             openResourceItemFragment(it)
         }
     }
-
-    private fun checkAdmin(resourceList : List<ResourceBody.ResourceItem>){
-        if (DiskStorageManager.checkToken()){
-            for (resource in resourceList) {
-                if (!userRoleMap.containsKey(resource.created_by)) {
-                    val headers = mapOf(
-                        "Authorization" to "bearer ${DiskStorageManager.getKeyValue("token")}",
-                        "Content-Type" to "application/json"
-                    )
-                    networkManager.makeRequest(
-                        endpoint = Endpoint.GETUSER,
-                        requestType = RequestType.GET,
-                        headers = headers,
-                        id = resource.created_by,
-                        callback = object : Callback<ResponseBody> {
-                            override fun onResponse(
-                                call: Call<ResponseBody>,
-                                response: Response<ResponseBody>
-                            ) {
-                                Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                                Log.d("ResponseInfo", "Headers: ${response.headers()}")
-                                if (response.isSuccessful) {
-                                    val rawJson = response.body()?.string()
-                                    if (rawJson != null) {
-                                        try {
-                                            Log.d("ResponseSuccess", "Body: $rawJson")
-                                            val gson = Gson()
-                                            val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
-                                            if (userResponse != null) {
-                                                Log.d("ResponseSuccess", "needResponse: $userResponse")
-                                                userRoleMap[resource.created_by] = userResponse.user_role
-                                            }
-                                        } catch (e: IOException) {
-                                            // Handle IOException if reading the response body fails
-                                            Log.e("ResponseError", "Error reading response body: ${e.message}")
-                                        }
-                                    } else {
-                                        Log.d("ResponseSuccess", "Body is null")
-                                    }
-                                } else {
-                                    val errorBody = response.errorBody()?.string()
-                                    if (errorBody != null) {
-                                        var responseCode = response.code()
-                                        Log.d("ResponseSuccess", "Body: $errorBody")
-                                    }
-                                }
-                            }
-
-                            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                                Log.d("onFailure", "Happens")
-                            }
-                        }
-                    )
-                }
-            }
-        }
-    }
-
 
     /**
      * Arrange search view

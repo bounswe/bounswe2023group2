@@ -6,14 +6,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.EventBody
 import com.example.disasterresponseplatform.databinding.EventItemBinding
+import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
+import com.example.disasterresponseplatform.utils.UserRoleUtil
 
-class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?, val userRoleMap: MutableMap<String, String>): RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
+class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?, private val userRoleViewModel: UserRoleViewModel, private val fragmentActivity: FragmentActivity): RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     inner class EventViewHolder(val binding: EventItemBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -47,11 +50,21 @@ class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?, val
         hb.tvUpvoteCount.text = currentEvent?.upvote.toString()
         // user role
         val creator = currentEvent?.created_by_user
-        if (creator in userRoleMap.keys && userRoleMap[creator] == "CREDIBLE") {
-            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
-        } else {
-            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+        // user role
+        hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+        if (creator != null) UserRoleUtil.isCredibleNonBlocking(creator) {
+            if (it) hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
         }
+//        userRoleViewModel.isUserRoleCredible(creator)
+//        userRoleViewModel.getLiveDataMessage().observe(fragmentActivity){
+//            if (it.username == creator){
+//                if (it.is_credible){
+//                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
+//                } else{
+//                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+//                }
+//            }
+//        }
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

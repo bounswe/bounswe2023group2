@@ -60,7 +60,10 @@ function SidePopup({ card, closePopup,labels }) {
         <h2 className={styles.title}> {card.nre} Details</h2>
         <div className={styles.content}>
           <p>{labels.sort_criteria.type}: {card.type}</p>
+          <p>{labels.activity_table.created_at}: {card.created_at}</p>
+          <p>{labels.activity_table.created_by}: {card.created_by}</p>
           <p>{labels.sort_criteria.description}: {card.description} </p>
+          <p>{labels.sort_criteria.urgency}: {card.urgency} </p>
           {/* Add more details as needed */}
         </div>
         <div className={styles.votingButtons}>
