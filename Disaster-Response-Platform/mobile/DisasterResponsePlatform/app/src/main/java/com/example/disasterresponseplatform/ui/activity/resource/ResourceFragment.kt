@@ -326,7 +326,7 @@ class ResourceFragment(
 
         val selectedXCoordinate = filterBinding.etCoordinateX.text.toString()
         val selectedYCoordinate = filterBinding.etCoordinateY.text.toString()
-        val selectedMaxDistance = filterBinding.slDistance.value.toString()
+        val selectedMaxDistance = (filterBinding.slDistance.value/100).toString()
 
         for (chipId in selectedTypeIds) {
             val chip = typesChipGroup.findViewById<Chip>(chipId)
