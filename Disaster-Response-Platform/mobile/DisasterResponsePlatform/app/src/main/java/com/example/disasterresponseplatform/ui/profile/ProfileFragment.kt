@@ -224,7 +224,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                     }
                                 }
                                 if (res != null) {
-                                    if (res.dateOfBirth.isNotBlank()) {
+                                    if (!res.dateOfBirth.isNullOrEmpty()) {
                                         user.birth = res.dateOfBirth.split(" ")[0]
                                     }
                                     user.nationality = res.nationality

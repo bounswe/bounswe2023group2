@@ -30,6 +30,7 @@ import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.AddNoInternetFormFragment
+import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.GeneralUtil
@@ -54,7 +55,7 @@ class EventFragment(
     private val mapFragment = ActivityMap()
     private val networkManager = NetworkManager()
 
-    val userRoleMap: MutableMap<String, String> = mutableMapOf()
+    private val userRoleViewModel = UserRoleViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,72 +102,12 @@ class EventFragment(
         }
 
         //checkAdmins(eventList)
-        val adapter = EventAdapter(eventList, userRoleMap)
+        val adapter = EventAdapter(eventList, userRoleViewModel, requireActivity!!)
         binding.adapter = adapter
 
         // this observes getLiveIntent, whenever a value is posted it enters this function
         adapter.getLiveIntent().observe(requireActivity!!){
             openEventItemFragment(it)
-        }
-    }
-
-    /**
-     * It checks the admin if it is authenticated user
-     */
-    private fun checkAdmins(eventList : List<EventBody.EventRequestBody>){
-        if (DiskStorageManager.checkToken()){
-            for (event in eventList) {
-                if (!userRoleMap.containsKey(event.created_by_user)) {
-                    val headers = mapOf(
-                        "Authorization" to "bearer ${DiskStorageManager.getKeyValue("token")}",
-                        "Content-Type" to "application/json"
-                    )
-                    networkManager.makeRequest(
-                        endpoint = Endpoint.GETUSER,
-                        requestType = RequestType.GET,
-                        headers = headers,
-                        id = event.created_by_user,
-                        callback = object : Callback<ResponseBody> {
-                            override fun onResponse(
-                                call: Call<ResponseBody>,
-                                response: Response<ResponseBody>
-                            ) {
-                                Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                                Log.d("ResponseInfo", "Headers: ${response.headers()}")
-                                if (response.isSuccessful) {
-                                    val rawJson = response.body()?.string()
-                                    if (rawJson != null) {
-                                        try {
-                                            Log.d("ResponseSuccess", "Body: $rawJson")
-                                            val gson = Gson()
-                                            val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
-                                            if (userResponse != null) {
-                                                Log.d("ResponseSuccess", "needResponse: $userResponse")
-                                                userRoleMap[event.created_by_user] = userResponse.user_role
-                                            }
-                                        } catch (e: IOException) {
-                                            // Handle IOException if reading the response body fails
-                                            Log.e("ResponseError", "Error reading response body: ${e.message}")
-                                        }
-                                    } else {
-                                        Log.d("ResponseSuccess", "Body is null")
-                                    }
-                                } else {
-                                    val errorBody = response.errorBody()?.string()
-                                    if (errorBody != null) {
-                                        var responseCode = response.code()
-                                        Log.d("ResponseSuccess", "Body: $errorBody")
-                                    }
-                                }
-                            }
-
-                            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                                Log.d("onFailure", "Happens")
-                            }
-                        }
-                    )
-                }
-            }
         }
     }
 

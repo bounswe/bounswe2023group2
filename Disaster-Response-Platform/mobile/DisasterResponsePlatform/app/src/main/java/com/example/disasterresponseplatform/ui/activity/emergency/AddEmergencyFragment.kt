@@ -37,6 +37,7 @@ class AddEmergencyFragment(
     private var selectedLocationY by Delegates.notNull<Double>()
     private val mapFragment = ActivityMap()
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

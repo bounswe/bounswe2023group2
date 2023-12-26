@@ -6,15 +6,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.ActionBody
 import com.example.disasterresponseplatform.databinding.ActionItemBinding
+import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
 
 
-class ActionAdapter(private val actionList: List<ActionBody.ActionItem>?, val userRoleMap: MutableMap<String, String>): RecyclerView.Adapter<ActionAdapter.ActionViewHolder>() {
+class ActionAdapter(private val actionList: List<ActionBody.ActionItem>?, private val userRoleViewModel: UserRoleViewModel, private val fragmentActivity: FragmentActivity): RecyclerView.Adapter<ActionAdapter.ActionViewHolder>() {
 
     inner class ActionViewHolder(val binding: ActionItemBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -45,10 +47,16 @@ class ActionAdapter(private val actionList: List<ActionBody.ActionItem>?, val us
         hb.tvUpvoteCount.text = currentAction?.upvote.toString()
         // user role
         val creator = currentAction?.created_by
-        if (creator in userRoleMap.keys && userRoleMap[creator] == "CREDIBLE") {
-            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
-        } else {
-            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+        // user role
+        userRoleViewModel.isUserRoleCredible(creator)
+        userRoleViewModel.getLiveDataMessage().observe(fragmentActivity){
+            if (it.username == creator){
+                if (it.is_credible){
+                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
+                } else{
+                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+                }
+            }
         }
 
         // for make them clickable
