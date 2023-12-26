@@ -83,7 +83,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
       </Card>
 } 
 <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={activityType} />
- <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} table_need={activity} need_type={activity.type}  />
+ <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} selected={activity} type={activityType}  />
 
   </>
 };

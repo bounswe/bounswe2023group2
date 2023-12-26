@@ -60,11 +60,11 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
         val y = need.y
         //details
         val detailsMap = mutableMapOf<String, String>()
-        if (!address.contains(activity.getString(R.string.selected_from_map))) detailsMap["address"] = address
+        val postAddress: String? = if (!address.contains(activity.getString(R.string.selected_from_map))) address else null
         detailsMap["additionalNotes"] = additionalNotes
         detailsMap["subtype"] = "No Internet Connection"
         return NeedBody.NeedRequestBody(
-            shortDescription, quantity, 1, quantity, type, detailsMap,
+            shortDescription, quantity, 1, quantity, type, detailsMap,postAddress,
             x, y, null, null, null, true, 0, 0
         )
     }
@@ -106,6 +106,58 @@ class NeedViewModel@Inject constructor(private val needRepository: NeedRepositor
                                 if (needResponse != null) { // TODO check null
                                     Log.d("ResponseSuccess", "needResponse: $needResponse")
                                     liveDataResponse.postValue(needResponse)
+                                }
+                            } catch (e: IOException) {
+                                // Handle IOException if reading the response body fails
+                                Log.e("ResponseError", "Error reading response body: ${e.message}")
+                            }
+                        } else {
+                            Log.d("ResponseSuccess", "Body is null")
+                        }
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            val responseCode = response.code()
+                            Log.d("ResponseSuccess", "Error Body: $errorBody Response Code: $responseCode")
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("onFailure", "Happens")
+                }
+            }
+        )
+    }
+
+    fun sendGetSearchResult(query: String) {
+        val token = DiskStorageManager.getKeyValue("token")
+        val headers = mapOf(
+            "Authorization" to "bearer $token",
+            "Content-Type" to "application/json"
+        )
+        networkManager.makeRequest(
+            endpoint = Endpoint.SEARCH_NEED,
+            requestType = RequestType.GET,
+            headers = headers,
+            id = query,
+            callback = object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                    if (response.isSuccessful) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
+                            try {
+                                Log.d("ResponseSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val needResponse = gson.fromJson(rawJson, NeedBody.NeedSearchResponse::class.java)
+                                if (needResponse != null) { // TODO check null
+                                    Log.d("ResponseSuccess", "needResponse: $needResponse")
+                                    liveDataResponse.postValue(NeedBody.NeedResponse(needResponse.results))
                                 }
                             } catch (e: IOException) {
                                 // Handle IOException if reading the response body fails

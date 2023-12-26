@@ -95,7 +95,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                             call: Call<ResponseBody>,
                             response: Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful) {
                                 val body = response.body()?.string()
                                 val gson = Gson()
                                 println(body)
@@ -117,13 +117,13 @@ class ProfileFragment(var username: String?) : Fragment() {
                                                     call: Call<ResponseBody>,
                                                     response: Response<ResponseBody>
                                                 ) {
-                                                    if (response.isSuccessful()) {
-                                                        val body = response.body()?.string()
-                                                        val gson = Gson()
-                                                        println(body)
-                                                        val res = gson.fromJson(body, UserGetProficiencyResponse::class.java)
-                                                        if (res.proficiency?.proficiency != null)
-                                                                user.roleBasedProficiency = res.proficiency.proficiency
+                                                    if (response.isSuccessful) {
+                                                        val body2 = response.body()?.string()
+                                                        val gson2 = Gson()
+                                                        println(body2)
+                                                        val res2 = gson2.fromJson(body2, UserGetProficiencyResponse::class.java)
+                                                        if (res2.proficiency?.proficiency != null)
+                                                                user.roleBasedProficiency = res2.proficiency.proficiency
                                                         fillInformations(user)
                                                     } else {
                                                         println("response not successful")
@@ -211,7 +211,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                             call: Call<ResponseBody>,
                             response: Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful) {
                                 val body = response.body()?.string()
                                 val gson = Gson()
                                 println(body)
@@ -224,7 +224,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                     }
                                 }
                                 if (res != null) {
-                                    if (res.dateOfBirth != null && res.dateOfBirth.isNotBlank()) {
+                                    if (!res.dateOfBirth.isNullOrEmpty()) {
                                         user.birth = res.dateOfBirth.split(" ")[0]
                                     }
                                     user.nationality = res.nationality
@@ -265,17 +265,13 @@ class ProfileFragment(var username: String?) : Fragment() {
                                 val gson = Gson()
                                 println(body)
                                 val res = gson.fromJson(body, LanguageArray::class.java)
-                                if (res.list != null) {
-                                    for (language in res.list) {
-                                        user.languages.add(
-                                            AuthenticatedUser.Language(
-                                                language.second,
-                                                language.third
-                                            )
+                                for (language in res.list) {
+                                    user.languages.add(
+                                        AuthenticatedUser.Language(
+                                            language.second,
+                                            language.third
                                         )
-                                    }
-                                } else {
-                                    println("Res nasıl null çıkıyo ya")
+                                    )
                                 }
                                 fillInformations(user)
                             } else {
@@ -297,20 +293,19 @@ class ProfileFragment(var username: String?) : Fragment() {
                             call: Call<ResponseBody>,
                             response: Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful) {
                                 val body = response.body()?.string()
                                 val gson = Gson()
                                 println(body)
                                 val res = gson.fromJson(body, SocialMediaArray::class.java)
-                                if (res.list != null)
-                                    for (socialMedia in res.list) {
-                                        user.socialMedia.add(
-                                            AuthenticatedUser.SocialMedia(
-                                                socialMedia.second,
-                                                socialMedia.third
-                                            )
+                                for (socialMedia in res.list) {
+                                    user.socialMedia.add(
+                                        AuthenticatedUser.SocialMedia(
+                                            socialMedia.second,
+                                            socialMedia.third
                                         )
-                                    }
+                                    )
+                                }
                                 fillInformations(user)
                             } else {
                                 println("response not successful")
@@ -331,21 +326,20 @@ class ProfileFragment(var username: String?) : Fragment() {
                             call: Call<ResponseBody>,
                             response: Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful) {
                                 val body = response.body()?.string()
                                 val gson = Gson()
                                 println(body)
                                 val res = gson.fromJson(body, SkillArray::class.java)
-                                if (res.list != null)
-                                    for (skill in res.list) {
-                                        user.skills.add(
-                                            AuthenticatedUser.Skill(
-                                                skill.second,
-                                                skill.third,
-                                                skill.skillDocument
-                                            )
+                                for (skill in res.list) {
+                                    user.skills.add(
+                                        AuthenticatedUser.Skill(
+                                            skill.second,
+                                            skill.third,
+                                            skill.skillDocument
                                         )
-                                    }
+                                    )
+                                }
                                 fillInformations(user)
                             } else {
                                 println("response not successful")
@@ -366,21 +360,20 @@ class ProfileFragment(var username: String?) : Fragment() {
                             call: Call<ResponseBody>,
                             response: Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful) {
                                 val body = response.body()?.string()
                                 val gson = Gson()
                                 println(body)
                                 val res = gson.fromJson(body, ProfessionArray::class.java)
-                                if (res.list != null)
-                                    for (profession in res.list) {
-                                        user.professions.add(
-                                            AuthenticatedUser.Profession(
-                                                profession.second,
-                                                profession.third
-                                            )
+                                for (profession in res.list) {
+                                    user.professions.add(
+                                        AuthenticatedUser.Profession(
+                                            profession.second,
+                                            profession.third
                                         )
-                                        println("profession added: " + profession.second)
-                                    }
+                                    )
+                                    println("profession added: " + profession.second)
+                                }
 
                                 fillInformations(user)
                             } else {
@@ -394,7 +387,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                     }
                 )
             } else {
-                println("username: " + username)
+                println("username: $username")
                 profileLevel += 4
                 binding.profileCallButton.setOnClickListener {
                     if (ActivityCompat.checkSelfPermission(
@@ -403,7 +396,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
                         // Permission is granted, make the phone call
-                        var callIntent = Intent(Intent.ACTION_CALL)
+                        val callIntent = Intent(Intent.ACTION_CALL)
                         callIntent.data = Uri.parse(
                             "tel:" + binding.profilePhoneNumber.text.toString().replace(" ", "")
                         )
@@ -500,7 +493,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                             call: Call<ResponseBody>,
                             response: Response<ResponseBody>
                         ) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful) {
                                 val body = response.body()?.string()
                                 val gson = Gson()
                                 println(body)
@@ -512,7 +505,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                                     }
                                 }
                                 if (res != null) {
-                                    if (res!!.dateOfBirth != null && res!!.dateOfBirth.isNotBlank()) {
+                                    if (res!!.dateOfBirth.isNotBlank()) {
                                         user.birth = res!!.dateOfBirth.split(" ")[0]
                                     }
                                     user.nationality = res!!.nationality
@@ -533,10 +526,8 @@ class ProfileFragment(var username: String?) : Fragment() {
                         }
 
                         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            println("Unexpected Error occurred")
                             println(t.message)
                         }
-
                     }
                 )
             }
@@ -545,7 +536,6 @@ class ProfileFragment(var username: String?) : Fragment() {
 
     private fun fillInformations(user: AuthenticatedUser) {
         profileLevel += 1
-        println("profileLevel: " + profileLevel)
         if (profileLevel < 7) return
         binding.apply {
             // read image from url and set it to profilePhoto
@@ -554,7 +544,7 @@ class ProfileFragment(var username: String?) : Fragment() {
             if (user.profilePhoto != null) {
                 Picasso.get().load(user.profilePhoto!!.toUri()).into(profileImage)
             }
-            profileFullname.text = user.name + " " + user.surname
+            profileFullname.text = getString(R.string.concat, user.name, user.surname)
             profileUsername.text = user.username
             profileEmail.text = user.email
             profilePhoneNumber.text = user.phone
@@ -565,15 +555,16 @@ class ProfileFragment(var username: String?) : Fragment() {
             when (user.role) {
                 Role.CREDIBLE -> {
                     profileRegionLayout.visibility = View.VISIBLE
-                    profileRegion.text = "Credible User"
+                    profileRegion.text = getString(R.string.credible_user)
                 }
                 Role.ROLE_BASED -> {
                     profileProficiencyLayout.visibility = View.VISIBLE
-                    profileProficiency.text = "Profficient User in " + user.roleBasedProficiency
+                    profileProficiency.text =
+                        getString(R.string.profficient_user_in, user.roleBasedProficiency)
                 }
                 Role.ADMIN -> {
                     profileAdminLayout.visibility = View.VISIBLE
-                    profileAdmin.text = "Admin"
+                    profileAdmin.text = getString(R.string.admin)
                 }
                 else -> {}
             }
@@ -581,7 +572,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                 1 -> {
                     profileVerifiedIcon.visibility = View.VISIBLE
                     profileVerifiedByLayout.visibility = View.VISIBLE
-                    profileVerifiedBy.text = "Verified By " + user.verifiedBy
+                    profileVerifiedBy.text = getString(R.string.verified_by, user.verifiedBy)
                 }
 
                 2 -> profileAdminIcon.visibility = View.VISIBLE
@@ -649,7 +640,8 @@ class ProfileFragment(var username: String?) : Fragment() {
             for (skill in user.skills) {
                 val profileItemBinding: ProfileItemBinding =
                     ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
-                profileItemBinding.profileItemText.text = skill.definition + ": " + skill.level
+                profileItemBinding.profileItemText.text =
+                    getString(R.string.dot_representation, skill.definition, skill.level)
                 profileItemBinding.profileItemLink.visibility = View.VISIBLE
                 if (skill.document != null)
                 profileItemBinding.profileItemLink.setOnClickListener {
@@ -664,7 +656,8 @@ class ProfileFragment(var username: String?) : Fragment() {
             for (language in user.languages) {
                 val profileItemBinding: ProfileItemBinding =
                     ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
-                profileItemBinding.profileItemText.text = language.language + ": " + language.level
+                profileItemBinding.profileItemText.text =
+                    getString(R.string.dot_representation, language.language, language.level)
                 profileTopLayout.addView(profileItemBinding.root, 20 + counter)
                 counter++
             }
@@ -673,7 +666,7 @@ class ProfileFragment(var username: String?) : Fragment() {
                 val profileItemBinding: ProfileItemBinding =
                     ProfileItemBinding.inflate(LayoutInflater.from(requireContext()))
                 profileItemBinding.profileItemText.text =
-                    profession.profession + ": " + profession.level
+                    getString(R.string.dot_representation, profession.profession, profession.level)
                 profileTopLayout.addView(profileItemBinding.root, 22 + counter)
                 counter++
             }
@@ -685,17 +678,17 @@ class ProfileFragment(var username: String?) : Fragment() {
         if (username == DiskStorageManager.getKeyValue("username") || username == null){
             binding.profileEditButton.setOnClickListener {
                 val editProfileFragment = EditProfileFragment(user)
-                addFragment(editProfileFragment,"EditProfileFragment")
+                addEditProfileFragment(editProfileFragment)
             }
         } else{
             binding.profileEditButton.visibility = View.GONE
         }
     }
 
-    private fun addFragment(fragment: Fragment,fragmentName: String) {
+    private fun addEditProfileFragment(fragment: Fragment) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
-        ft.addToBackStack(fragmentName)
+        ft.addToBackStack("EditProfileFragment")
         ft.commit()
     }
 

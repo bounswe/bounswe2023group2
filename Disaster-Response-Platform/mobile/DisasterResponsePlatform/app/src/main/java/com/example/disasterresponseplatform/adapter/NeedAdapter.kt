@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,6 +19,7 @@ import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.UserBody
 import com.example.disasterresponseplatform.databinding.NeedItemBinding
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.google.gson.Gson
 import okhttp3.ResponseBody
@@ -28,7 +30,7 @@ import java.io.IOException
 import kotlin.random.Random
 
 
-class NeedAdapter(private val needList: List<NeedBody.NeedItem>?, var userRoleMap: MutableMap<String, String>): RecyclerView.Adapter<NeedAdapter.NeedViewHolder>() {
+class NeedAdapter(private val needList: List<NeedBody.NeedItem>?, private val userRoleViewModel: UserRoleViewModel, private val fragmentActivity: FragmentActivity): RecyclerView.Adapter<NeedAdapter.NeedViewHolder>() {
 
     inner class NeedViewHolder(val binding: NeedItemBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -60,12 +62,18 @@ class NeedAdapter(private val needList: List<NeedBody.NeedItem>?, var userRoleMa
         hb.tvSubType.text = currentNeed?.details?.get("subtype").toString()
         hb.tvDownvoteCount.text = currentNeed?.downvote.toString()
         hb.tvUpvoteCount.text = currentNeed?.upvote.toString()
-        // user role
+
         val creator = currentNeed?.created_by
-        if (creator in userRoleMap.keys && userRoleMap[creator] == "CREDIBLE") {
-            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
-        } else {
-            hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+        // user role
+        userRoleViewModel.isUserRoleCredible(creator)
+        userRoleViewModel.getLiveDataMessage().observe(fragmentActivity){
+            if (it.username == creator){
+                if (it.is_credible){
+                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
+                } else{
+                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+                }
+            }
         }
 
         // for make them clickable

@@ -37,6 +37,7 @@ class AddEmergencyFragment(
     private var selectedLocationY by Delegates.notNull<Double>()
     private val mapFragment = ActivityMap()
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -252,7 +253,6 @@ class AddEmergencyFragment(
     }
 
     private fun navigateToMapFragment() {
-
         mapFragment.isDialog = true // arrange that as a dialog instead of fragment
         mapFragment.coordinatesSelectedListener = this@AddEmergencyFragment
         mapFragment.show(parentFragmentManager, "mapDialog")
