@@ -48,14 +48,14 @@ class Dict2Class(object):
       
 #TODO add _ids of activities to the recurrences
 def add_need(need: Need):
-    occur = datetime.datetime.today().strftime('%Y-%m-%d') 
+    occur = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S') 
     need['occur_at'] = occur
     need['created_at'] = occur
     result = need_service.create_need(Dict2Class(need))
     print(result)
 
 def add_resource(resource):
-    occur = datetime.datetime.today().strftime('%Y-%m-%d') 
+    occur = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S') 
     resource['created_at'] = occur
     resource['occur_at'] = occur
     result = resource_service.create_resource(resource)
