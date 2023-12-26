@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ import com.example.disasterresponseplatform.ui.activity.report.ReportBottomSheet
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -38,6 +40,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
     private var requireActivity: FragmentActivity? = null
     private val voteViewModel = VoteViewModel()
     private val userViewModel = UserViewModel()
+    private val annotation = Annotation()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +69,41 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         val creatorName = need.created_by
         binding.tvCreator.text = creatorName
         binding.tvType.text = need.type
+        annotation.getAnnotations(need.type, {annotationText ->
+            binding.tvType.setOnLongClickListener {
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorNeed)
+                    tvWord.text = need.type
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
+                false
+            }
+        }, {})
         binding.tvSubType.text = need.details["subtype"]
+        annotation.getAnnotations(need.details["subtype"] ?: "", {annotationText ->
+            binding.tvSubType.setOnLongClickListener {
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorNeed)
+                    tvWord.text = need.details["subtype"]
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
+                false
+            }
+        }, {})
         binding.tvInitialQuantity.text = need.initialQuantity.toString()
         binding.tvUnsuppliedQuantity.text = need.unsuppliedQuantity.toString()
         binding.tvUrgency.text = need.urgency.toString()
@@ -95,7 +132,13 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         }
         binding.tvLastUpdatedTime.text = need.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = need.created_at.substring(0,10)
-        binding.tvDescription.text = need.description.toString()
+        if (need.details["subtype"] != null)
+            annotation.getAnnotations(need.created_by + "-need-" + need.details["subtype"], {
+                binding.tvDescription.text = it
+            }, {
+                binding.tvDescription.text = need.description.toString()
+            })
+        else binding.tvDescription.text = need.description.toString()
         //binding.e.text = need.details["subtype"]
         fillDetails(need.details)
         fillRecurrence(need)
@@ -339,7 +382,7 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
 
 
     private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
-        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y&api_key=658a6bb850a62680253220cju871eba"
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(url)

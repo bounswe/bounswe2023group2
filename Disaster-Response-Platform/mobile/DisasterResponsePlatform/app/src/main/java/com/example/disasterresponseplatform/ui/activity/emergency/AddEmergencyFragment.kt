@@ -13,8 +13,10 @@ import androidx.fragment.app.FragmentActivity
 import com.example.disasterresponseplatform.data.database.emergency.Emergency
 import com.example.disasterresponseplatform.data.models.EmergencyBody
 import com.example.disasterresponseplatform.databinding.FragmentAddEmergencyBinding
+import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.example.disasterresponseplatform.utils.Annotation
 import com.google.android.material.textfield.TextInputLayout
 import okhttp3.Call
 import okhttp3.Callback
@@ -36,6 +38,7 @@ class AddEmergencyFragment(
     private var selectedLocationX by Delegates.notNull<Double>()
     private var selectedLocationY by Delegates.notNull<Double>()
     private val mapFragment = ActivityMap()
+    private val annotation = Annotation()
 
 
     override fun onCreateView(
@@ -98,6 +101,8 @@ class AddEmergencyFragment(
             val layAddEmergency = binding.layAddEmergency
             if (validateFields(layAddEmergency)) {
 
+
+                annotation.publishAnnotation(DiskStorageManager.getKeyValue("username")!! + "-emergency-" + selectedType, binding.etDescription.text.toString())
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 val newEmergency = Emergency(
                     ID = null,
@@ -267,7 +272,7 @@ class AddEmergencyFragment(
 }
 
 private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
-    val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+    val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y&api_key=658a6bb850a62680253220cju871eba"
     val client = OkHttpClient()
     val request = Request.Builder()
         .url(url)
