@@ -28,8 +28,9 @@ class ResourceBody {
         @SerializedName("currentQuantity") val currentQuantity: Int,
         @SerializedName("type") val type: String,
         @SerializedName("details") val details: MutableMap<String,String>,
-        @SerializedName("x") val x: Double?,
-        @SerializedName("y") val y: Double?,
+        @SerializedName("open_address")val open_address : String?,
+        @SerializedName("x") val x: Double,
+        @SerializedName("y") val y: Double,
         @SerializedName("occur_at") val occur_at: String?,
         @SerializedName("recurrence_rate") val recurrence_rate: Int?,
         @SerializedName("recurrence_deadline") val recurrence_deadline: String?,
@@ -81,7 +82,8 @@ class ResourceBody {
         @SerializedName("last_updated_at") val last_updated_at: String,
         @SerializedName("upvote") val upvote: Int,
         @SerializedName("downvote") val downvote: Int,
-        @SerializedName("_id") val _id: String
+        @SerializedName("_id") val _id: String,
+        @SerializedName("open_address")val open_address : String?,
     )
     data class ResourceSearchResponse(val results: List<ResourceItem>)
 

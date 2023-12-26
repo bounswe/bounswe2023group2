@@ -28,6 +28,7 @@ import com.example.disasterresponseplatform.data.models.UserBody
 import com.example.disasterresponseplatform.databinding.FragmentActionBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.managers.DiskStorageManager.checkIsGuest
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
@@ -119,7 +120,7 @@ class ActionFragment(
      * It opens add Action fragment if user is authenticated, else warns the user
      */
     private fun addAction(){
-        if (DiskStorageManager.checkToken()) {
+        if (DiskStorageManager.checkToken() && !checkIsGuest()) {
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addActionFragment = AddActionFragment(actionViewModel,null)
                 addFragment(addActionFragment,"AddActionFragment")

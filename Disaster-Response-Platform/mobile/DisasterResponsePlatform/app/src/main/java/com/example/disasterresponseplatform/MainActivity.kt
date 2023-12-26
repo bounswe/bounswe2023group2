@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logOutActions() {
-        DiskStorageManager.removeKey("token")
+        DiskStorageManager.removeAuthKeys()
         finish()
         startActivity(intent)
     }

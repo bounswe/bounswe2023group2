@@ -72,25 +72,28 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         binding.tvSubType.text = resource.details["subtype"]
         binding.tvInitialQuantity.text = resource.initialQuantity.toString()
         binding.tvCurrentQuantity.text = resource.currentQuantity.toString()
-        coordinateToAddress(resource.x, resource.y, object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
-                Log.e("Network", "Error: ${e.message}")
-            }
-            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                val responseBody = response.body?.string()
-                Log.i("Network", "Response: $responseBody")
-                if (responseBody != null) {
-                    var address = responseBody.subSequence(
-                        responseBody.indexOf("display_name") + 15,
-                        responseBody.length
-                    )
-                    address = address.subSequence(0, address.indexOf("\""))
-                    requireActivity?.runOnUiThread {
-                        binding.tvAddress.text = address
+        if (resource.x != 0.0 && resource.y != 0.0){
+            coordinateToAddress(resource.x, resource.y, object : okhttp3.Callback {
+                override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                    Log.e("Network", "Error: ${e.message}")
+                }
+                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                    val responseBody = response.body?.string()
+                    Log.i("Network", "Response: $responseBody")
+                    if (responseBody != null) {
+                        var address = responseBody.subSequence(
+                            responseBody.indexOf("display_name") + 15,
+                            responseBody.length
+                        )
+                        address = address.subSequence(0, address.indexOf("\""))
+                        requireActivity?.runOnUiThread {
+                            binding.tvAddress.text = address
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
+
         binding.tvLastUpdatedTime.text = resource.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = resource.created_at.substring(0,10)
         if (resource.details["subtype"] != null)
