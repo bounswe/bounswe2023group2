@@ -109,7 +109,7 @@ def perform_action(id: str, match: MatchList, response: Response, current_user: 
         resource_list = action_service_v2.do_action(id,current_user, match)
         if not resource_list:
             return {"Message": "Moved", "Action_id":id}
-        return json.loads(resource_list)
+        return resource_list
     except ValueError as err:
         error= Error(ErrorMessage="Resources could not be fetched", ErrorDetail= str(err))
         response.status_code= HTTPStatus.BAD_REQUEST
