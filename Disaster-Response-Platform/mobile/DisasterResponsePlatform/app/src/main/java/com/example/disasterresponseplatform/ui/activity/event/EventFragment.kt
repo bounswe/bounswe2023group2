@@ -186,7 +186,7 @@ class EventFragment(
     }
 
     private fun addEvent(){
-        if ( DiskStorageManager.checkToken()) {
+        if ( DiskStorageManager.checkToken() && !DiskStorageManager.checkIsGuest()) {
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addEventFragment = AddEventFragment(eventViewModel,null)
                 addFragment(addEventFragment,"AddEventFragment")

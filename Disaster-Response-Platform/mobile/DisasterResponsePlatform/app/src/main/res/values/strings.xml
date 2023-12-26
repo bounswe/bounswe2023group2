@@ -171,7 +171,7 @@
     <string name="more">More</string>
 
     <!-- PROFILE -->
-    <string name="pr_login_required">You need to log in.</string>
+    <string name="pr_login_required">You need to log in and verify your email</string>
     <string name="pr_full_name">Full Name</string>
     <string name="pr_username">Username</string>
     <string name="pr_call">Call</string>
@@ -355,6 +355,7 @@
     <!-- Reports -->
     <string name="inappropriate_content">Inappropriate Content</string>
     <string name="report">Report</string>
+    <string name="phone_number">Phone Number</string>
     <!-- Report Options for non-users type -->
     <string-array name="report_options_non_users">
         <item>Inappropriate Content</item>

@@ -81,7 +81,7 @@ class ProfileFragment(var username: String?) : Fragment() {
             if (username == null) { // get self profile info
                 binding.profileCallButton.text = getString(R.string.pr_logout)
                 binding.profileCallButton.setOnClickListener {
-                    DiskStorageManager.removeKey("token")
+                    DiskStorageManager.removeAuthKeys()
                     replaceFragment(LoginFragment())
                 }
                 user = AuthenticatedUser("", "", "", "", "")

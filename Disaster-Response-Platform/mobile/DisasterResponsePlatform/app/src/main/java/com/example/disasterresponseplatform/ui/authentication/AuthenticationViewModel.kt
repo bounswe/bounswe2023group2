@@ -16,6 +16,7 @@ import com.example.disasterresponseplatform.data.models.authModels.SignUpRespons
 import com.example.disasterresponseplatform.data.models.authModels.SignUpResponseBody422
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.utils.UserRoleUtil
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,6 +39,7 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
     private val _signUpFullName = MutableLiveData<String>()
     private val _signUpUsername = MutableLiveData<String>()
+    private val _signUpPhoneNumber = MutableLiveData<String>()
     private val _signUpEmail = MutableLiveData<String>()
     private val _signUpPassword = MutableLiveData<String>()
     private val _signUpConfirmPassword = MutableLiveData<String>()
@@ -88,6 +90,10 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
         _signUpUsername.value = signUpUsername
     }
 
+    fun updatePhoneNumber(signUpPhoneNumber: String) {
+        _signUpPhoneNumber.value = signUpPhoneNumber
+    }
+
     fun updateSignUpEmail(signUpEmail: String) {
         _signUpEmail.value = signUpEmail
     }
@@ -123,12 +129,13 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
         // Perform your validation logic here
         val fullName = _signUpFullName.value
         val username = _signUpUsername.value
+        val phoneNumber = _signUpPhoneNumber.value
         val email = _signUpEmail.value
         val password = _signUpPassword.value
         val confirmPassword = _signUpConfirmPassword.value
 
         // Check if any of the fields are empty or null
-        if (fullName.isNullOrEmpty() || username.isNullOrEmpty() ||
+        if (fullName.isNullOrEmpty() || username.isNullOrEmpty() || phoneNumber.isNullOrEmpty() ||
             email.isNullOrEmpty() || password.isNullOrEmpty() || confirmPassword.isNullOrEmpty()
         ) {
             _signUpValidation.value = 0
@@ -191,6 +198,7 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                                 DiskStorageManager.setKeyValue("user_role",signUpResponse.userRole)
                                 DiskStorageManager.setKeyValue("proficiency",signUpResponse.proficiency.proficiency.toString())
                                 DiskStorageManager.setKeyValue("proficiency_details",signUpResponse.proficiency.details.toString())
+                                UserRoleUtil.resetMap()
                                 _signInSuccessful.value = true
                             } catch (e: IOException) {
                                 Log.e("ResponseError", "Error reading response body: ${e.message}")
@@ -243,11 +251,10 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
 
         // Safely unwrap the values
         val username = _signUpUsername.value ?: "defaultUsername"
+        val phoneNumber = _signUpPhoneNumber.value ?: "05555555555"
         val email = _signUpEmail.value ?: "defaultEmail@example.com"
         val password = _signUpPassword.value ?: "defaultPassword"
         val fullName = _signUpFullName.value ?: "Default Name"
-        val phoneNumber =
-            ("0534671" + Random.nextInt(1000, 10000).toString()) ?: "defaultPhoneNumber"
 
         // Splitting the full name into first name and last name
         val parts = fullName.split(" ", limit = 2)
@@ -348,45 +355,46 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
     }
 
     fun sendEmailVerification() {
+        if (DiskStorageManager.checkToken()){
+            val headers = mapOf(
+                "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+                "Content-Type" to "application/json",
+            )
 
-        val headers = mapOf(
-            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
-            "Content-Type" to "application/json",
-        )
+            val emptyRequestBody = "".toRequestBody("application/json".toMediaTypeOrNull())
 
-        val emptyRequestBody = "".toRequestBody("application/json".toMediaTypeOrNull())
+            networkManager.makeRequest(
+                endpoint = Endpoint.EMAIL_VERIFICATION_SEND,
+                requestType = RequestType.POST,
+                headers = headers,
+                requestBody = emptyRequestBody,
+                callback = object : Callback<ResponseBody> {
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                        Log.d("ResponseInfo", "Headers: ${response.headers()}")
 
-        networkManager.makeRequest(
-            endpoint = Endpoint.EMAIL_VERIFICATION_SEND,
-            requestType = RequestType.POST,
-            headers = headers,
-            requestBody = emptyRequestBody,
-            callback = object : Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                        if (response.isSuccessful) {
+                            _emailVerificationSendSuccess.value = true
 
-                    if (response.isSuccessful) {
-                        _emailVerificationSendSuccess.value = true
+                        } else {
+                            Log.d("Error Message", "Error: ${response.message()}")
+                            _emailVerificationSendError.value = "Error: ${response.message()}"
 
-                    } else {
-                        Log.d("Error Message", "Error: ${response.message()}")
-                        _emailVerificationSendError.value = "Error: ${response.message()}"
+                        }
+                    }
 
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        // Handle failure to make the API call (update UI with error message)
+                        _emailVerificationSendError.value =
+                            "Failed to send email verification. Please check your connection."
+                        Log.e("ResponseError", "Request failed: ${t.message}")
                     }
                 }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    // Handle failure to make the API call (update UI with error message)
-                    _emailVerificationSendError.value =
-                        "Failed to send email verification. Please check your connection."
-                    Log.e("ResponseError", "Request failed: ${t.message}")
-                }
-            }
-        )
+            )
+        }
     }
 
     fun verifyEmail(verificationCode: String) {
@@ -439,5 +447,6 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
             }
         )
     }
+
 }
 
