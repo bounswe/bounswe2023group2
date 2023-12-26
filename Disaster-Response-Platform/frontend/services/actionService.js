@@ -69,20 +69,26 @@ const actionService = {
     }
   },
   perform: async (action_id,match, accessToken) => {
+    let data
     try {
       
-      const data = await api.post(`/api/actions/perform_action/${action_id}`, match,{
+       data = await api.post(`/api/actions/perform_action/${action_id}`, match,{
          headers: { 
           Authorization: `Bearer ${accessToken}`,
          'Content-Type': 'application/json' 
         },
          
       });
-      console.log(data)
-      return { status:200, payload: {data: data?.data , message: 'Success'} };
+      if(data.status === 200){
+        return { status:200, payload: data?.data };
+      }
+      if(data.status === 422){
+        return { status:422 , message: 'Request fields error' };
+      }
+      return { status:500 , payload: {data: data?.data , message: 'Success'}  };
     } catch (error) {
       console.log(error)
-      return { status:400 , message: 'Error' };
+      return { status:400 , message: data?.data.ErrorMessage ?? 'Error' };
     }
   },
   getMatchlist: async (action_id, accessToken) => {
