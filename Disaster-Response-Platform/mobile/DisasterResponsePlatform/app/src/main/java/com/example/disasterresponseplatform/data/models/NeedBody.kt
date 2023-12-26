@@ -1,7 +1,5 @@
 package com.example.disasterresponseplatform.data.models
 
-import com.example.disasterresponseplatform.data.database.need.Need
-import com.example.disasterresponseplatform.data.enums.NeedTypes
 import com.google.gson.annotations.SerializedName
 
 class NeedBody {
@@ -25,8 +23,9 @@ class NeedBody {
         @SerializedName("unsuppliedQuantity") val unsuppliedQuantity: Int,
         @SerializedName("type") val type: String,
         @SerializedName("details") val details: MutableMap<String,String>,
-        @SerializedName("x") val x: Double?,
-        @SerializedName("y") val y: Double?,
+        @SerializedName("open_address")val open_address : String?,
+        @SerializedName("x") val x: Double,
+        @SerializedName("y") val y: Double,
         @SerializedName("occur_at") val occur_at: String?,
         @SerializedName("recurrence_rate") val recurrence_rate: Int?,
         @SerializedName("recurrence_deadline") val recurrence_deadline: String?,
@@ -66,6 +65,7 @@ class NeedBody {
         @SerializedName("unsuppliedQuantity") val unsuppliedQuantity: Int,
         @SerializedName("type") val type: String,
         @SerializedName("details") val details: MutableMap<String,String>,
+        @SerializedName("open_address")val open_address : String?,
         @SerializedName("x") val x: Double,
         @SerializedName("y") val y: Double,
         @SerializedName("occur_at") val occur_at: String?,
@@ -79,5 +79,5 @@ class NeedBody {
         @SerializedName("_id") val _id: String
     )
 
-
+    data class NeedSearchResponse(val results: List<NeedItem>)
 }

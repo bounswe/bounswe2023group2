@@ -19,7 +19,7 @@
             {"name": "initialQuantity", "label": "Initial Quantity", "type": "number"},
             {"name": "quantityUnit", "label": "Unit", "type": "select", "options": ["kg", "piece", "portion", "daily", "lt", "gram", "box", "pack"]},
             {"name": "urgency", "label": "Urgency", "type": "select", "options": [1, 2, 3, 4, 5]},
-            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "drink", "shelter", "medication", "transportation", "tool", "human", "other"]},
+            {"name": "type", "label": "Type", "type": "select", "options": ["cloth", "food", "drink", "shelter", "medication", "transportation", "tool", "human", "missing person", "other"]},
             {"name": "x", "label": "X Coordinate", "type": "number"},
             {"name": "y", "label": "Y Coordinate", "type": "number"},
             {"name": "occur_at", "label": "Occur At", "type": "date"},
@@ -107,6 +107,12 @@
                 {"name": "proficiency", "label": "Proficiency", "type": "text"},
                 {"name": "number_of_people", "label": "Number of People", "type": "number"},
                 {"name": "subtype", "label": "Subtype", "type": "select", "options": ["doctor", "engineer", "teacher", "laborer"]}
+            ]
+        },
+        "missing person": {
+            "fields": [
+                {"name": "missing_person_name", "label": "Missing Person Name Surname", "type": "text"},
+                {"name": "missing_person_location", "label": "Number of People", "type": "number"}
             ]
         }
     }

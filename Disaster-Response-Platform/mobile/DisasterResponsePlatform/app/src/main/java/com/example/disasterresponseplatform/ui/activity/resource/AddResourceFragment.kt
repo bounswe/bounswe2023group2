@@ -22,10 +22,12 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.database.resource.Resource
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
+import com.example.disasterresponseplatform.data.models.RecurrenceModel
 import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.databinding.FragmentAddResourceBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
+import com.example.disasterresponseplatform.ui.activity.generalViewModels.RecurrenceViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
 import com.example.disasterresponseplatform.utils.DateUtil
@@ -51,8 +53,8 @@ class AddResourceFragment(
 
     private lateinit var binding: FragmentAddResourceBinding
     private var requireActivity: FragmentActivity? = null
-    private var selectedLocationX by Delegates.notNull<Double>()
-    private var selectedLocationY by Delegates.notNull<Double>()
+    private var selectedLocationX = 0.0
+    private var selectedLocationY = 0.0
     private val mapFragment = ActivityMap()
 
     override fun onCreateView(
@@ -66,96 +68,13 @@ class AddResourceFragment(
             requireActivity = requireActivity()
         }
         trackUserPickLocation()
-        binding.etCoordinate.setStartIconOnClickListener {
-            navigateToMapFragment()
-        }
         fillParameters(resource)
         getFormFieldsFromBackend()
+        initRecurrenceView()
+        recurrenceListener()
         typeFieldListener()
         submitResource(resource == null)
         return binding.root
-    }
-
-    private fun trackUserPickLocation(){
-        mapFragment.getLocationChosen().observe(requireActivity!!){chosen ->
-            if (chosen){
-                Log.i("LocationMAP","IS CHOSEN")
-                parentFragmentManager.setFragmentResultListener(
-                    "coordinatesKey",
-                    viewLifecycleOwner
-                ) { _, bundle ->
-                    selectedLocationX = bundle.getDouble("x_coord")
-                    selectedLocationY = bundle.getDouble("y_coord")
-                    coordinateToAddress(
-                        selectedLocationX,
-                        selectedLocationY,
-                        object : Callback {
-                            override fun onFailure(call: Call, e: java.io.IOException) {
-                                val handler = Handler(Looper.getMainLooper())
-                                handler.post {
-                                    binding.etCoordinate.editText?.setText(
-                                        "%.2f, %.2f".format(
-                                            selectedLocationX,
-                                            selectedLocationY
-                                        )
-                                    )
-                                }
-                            }
-
-                            override fun onResponse(call: Call, response: Response) {
-                                if (response.isSuccessful) {
-                                    val responseBody = response.body?.string()
-                                    if (responseBody == null) {
-                                        val handler = Handler(Looper.getMainLooper())
-                                        handler.post {
-                                            binding.etCoordinate.editText?.setText(
-                                                "%.2f, %.2f".format(
-                                                    selectedLocationX,
-                                                    selectedLocationY
-                                                )
-                                            )
-                                        }
-                                    } else {
-                                        var address = responseBody.subSequence(
-                                            responseBody.indexOf("display_name") + 15,
-                                            responseBody.length
-                                        )
-                                        address = address.subSequence(0, address.indexOf("\""))
-                                        val handler = Handler(Looper.getMainLooper())
-                                        handler.post {
-                                            binding.etCoordinate.editText?.setText(address)
-                                        }
-                                    }
-                                } else {
-                                    val handler = Handler(Looper.getMainLooper())
-                                    handler.post {
-                                        binding.etCoordinate.editText?.setText(
-                                            "%.2f, %.2f".format(
-                                                selectedLocationX,
-                                                selectedLocationY
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-
-                        })
-                }
-                // to ensure it's not continuously listening the port after the location is received
-                parentFragmentManager.clearFragmentResultListener("coordinatesKey")
-            }
-        }
-    }
-
-    private fun navigateToMapFragment() {
-
-        mapFragment.isDialog = true // arrange that as a dialog instead of fragment
-        mapFragment.coordinatesSelectedListener = this@AddResourceFragment
-        mapFragment.show(parentFragmentManager, "mapDialog")
-        //val transaction = parentFragmentManager.beginTransaction()
-        //transaction.replace(R.id.container, mapFragment)
-        //transaction.addToBackStack(null)
-        //transaction.commit()
     }
 
     /** It fills the layout's fields corresponding data if it is editResource
@@ -172,65 +91,9 @@ class AddResourceFragment(
 
             selectedLocationX = resource.x
             selectedLocationY = resource.y
-            coordinateToAddress(
-                selectedLocationX,
-                selectedLocationY,
-                object : Callback {
-                    override fun onFailure(call: Call, e: java.io.IOException) {
-                        val handler = Handler(Looper.getMainLooper())
-                        handler.post {
-                            binding.etCoordinate.editText?.setText(
-                                "%.2f, %.2f".format(
-                                    selectedLocationX,
-                                    selectedLocationY
-                                )
-                            )
-                        }
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        if (response.isSuccessful) {
-                            val responseBody = response.body?.string()
-                            if (responseBody == null) {
-                                val handler = Handler(Looper.getMainLooper())
-                                handler.post {
-                                    binding.etCoordinate.editText?.setText(
-                                        "%.2f, %.2f".format(
-                                            selectedLocationX,
-                                            selectedLocationY
-                                        )
-                                    )
-                                }
-                            } else {
-                                var address = responseBody.subSequence(
-                                    responseBody.indexOf("display_name") + 15,
-                                    responseBody.length
-                                )
-                                address = address.subSequence(0, address.indexOf("\""))
-
-                                val handler = Handler(Looper.getMainLooper())
-                                handler.post {
-                                    binding.etCoordinate.editText?.setText(address)
-                                }
-                            }
-                        } else {
-
-                            val handler = Handler(Looper.getMainLooper())
-                            handler.post {
-                                binding.etCoordinate.editText?.setText(
-                                    "%.2f, %.2f".format(
-                                        selectedLocationX,
-                                        selectedLocationY
-                                    )
-                                )
-                            }
-                        }
-                    }
-
-                })
+            coordinateToAddress()
         }
     }
-
 
     /**
      * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
@@ -241,90 +104,215 @@ class AddResourceFragment(
                 return@setOnClickListener
             }
             binding.btnSubmit.isEnabled = false
-            val layAddResource = binding.layAddResource
-            if (validateFields(layAddResource)) {
 
-                val othersList = getOthersList()
-                var description: String? = ""
-                var occurAt: String? = ""
-                var recurrenceRate: Int? = null
-                var recurrenceDeadline: String? = ""
-                var condition: String = "new"
-                for (field in othersList) {
-                    Log.i("NEW VALUE", "fieldname: ${field.fieldName}")
-                    when (field.fieldName) {
-                        "Description" -> description = field.input
-                        "Condition" -> condition = field.input
-                        "Occur At" -> occurAt = field.input
-                        "Recurrence Rate" -> {
-                            if (field.input.isNotEmpty())
-                                recurrenceRate = field.input.toInt()
-                        }
-
-                        "Recurrence Deadline" -> recurrenceDeadline = field.input
-                    }
-                }
-
-                if (description == "") description = null
-                occurAt = if (occurAt == "") null else DateUtil.dateForBackend(occurAt!!)
-                recurrenceDeadline = if (recurrenceDeadline == "") null else DateUtil.dateForBackend(recurrenceDeadline!!)
-
-                val subtypeAsLst = mutableListOf<ResourceBody.DetailedFields>()
-                val subType = binding.spResourceSubType.text.toString().trim()
-                subtypeAsLst.add(ResourceBody.DetailedFields("subtype", subType))
-                val detailedList = getDetailsList(subtypeAsLst)
-                val detailsMap = mutableMapOf<String, String>()
-                for (item in detailedList) {
-                    detailsMap[item.fieldName] = item.input
-                }
-
-                val type2 = binding.spResourceType.text.toString().trim()
-                val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
-                val coordinateX = selectedLocationX
-                val coordinateY = selectedLocationY
-
-                //val newResource = Resource(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
-                //resourceViewModel.insertResource(resource) insert local db
-                val resourcePost = ResourceBody.ResourceRequestBody(
-                    description, quantity, quantity, type2, detailsMap,
-                    coordinateX, coordinateY, occurAt, recurrenceRate, recurrenceDeadline
-                ) //TODO edit
-
-                if (isAdd) {
-                    resourceViewModel.postResourceRequest(resourcePost)
-                } else {
-                    val resourceID = "/" + resource!!._id // comes from older resource
-                    resourceViewModel.postResourceRequest(resourcePost, resourceID)
-                }
-                resourceViewModel.getLiveDataResourceID().observe(requireActivity!!) {
-                    if (it != "-1") { // in error cases it returns this
-                        if (isAdded) { // to ensure it attached a context
-                            if (isAdd)
-                                Toast.makeText(requireContext(), "Created Resource ID: $it", Toast.LENGTH_LONG).show()
-                            else
-                                Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
-                        }
-
-                        Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
-                            if (isAdded) // to ensure it attached a parentFragmentManager
-                                parentFragmentManager.popBackStack("AddResourceFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                            if (!isAdd)
-                                parentFragmentManager.popBackStack("ResourceItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                            // Re-enable the button after the background operation completes
-                            binding.btnSubmit.isEnabled = true
-                        }, 200)
-                    } else {
-                        if (isAdded)
-                            Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
-                        binding.btnSubmit.isEnabled = true
-                    }
-                }
+            if (validation()) {
+                val resourcePost = generatePostResource()
+                editOrPostResource(isAdd,resourcePost)
             } else {
                 if (isAdded)
                     Toast.makeText(context, "Check the Fields", Toast.LENGTH_LONG).show()
                 binding.btnSubmit.isEnabled = true
             }
         }
+    }
+
+    private fun generatePostResource():ResourceBody.ResourceRequestBody{
+        val othersList = getOthersList()
+        var description: String? = ""
+        var condition: String = "new"
+        for (field in othersList) {
+            Log.i("NEW VALUE", "fieldname: ${field.fieldName}")
+            when (field.fieldName) {
+                "Description" -> description = field.input
+                "Condition" -> condition = field.input
+            }
+        }
+        if (description == "") description = null
+
+        var startAt: String? = null
+        var recurrenceRate: Int? = null
+        var endAt: String? = null
+        if (binding.swRecurrenceFilter.isChecked){
+            recurrenceRate = binding.spRecurrenceRate.text.toString().trim().toInt() // 1,2,3 ?
+            startAt = DateUtil.dateForBackend(binding.etStartDateInput.text.toString())
+            endAt = DateUtil.dateForBackend(binding.etEndDateInput.text.toString())
+        }
+
+        val subtypeAsLst = mutableListOf<ResourceBody.DetailedFields>()
+        val subType = binding.spResourceSubType.text.toString().trim()
+        subtypeAsLst.add(ResourceBody.DetailedFields("subtype", subType))
+        val detailedList = getDetailsList(subtypeAsLst)
+        val detailsMap = mutableMapOf<String, String>()
+        for (item in detailedList) {
+            detailsMap[item.fieldName] = item.input
+        }
+
+        val type2 = binding.spResourceType.text.toString().trim()
+        val quantity = binding.etQuantity.editText?.text.toString().trim().toInt()
+        val coordinateX = selectedLocationX
+        val coordinateY = selectedLocationY
+        val openAddress = binding.etOpenAddress.text.toString().trim()
+
+        //val newResource = Resource(StringUtil.generateRandomStringID(), creatorName, type, details, date, quantity, coordinateX, coordinateY, 1)
+        //resourceViewModel.insertResource(resource) insert local db
+        return ResourceBody.ResourceRequestBody(
+            description, quantity, quantity, type2, detailsMap,openAddress,
+            coordinateX, coordinateY, startAt, recurrenceRate, endAt
+        )
+    }
+
+    //explained in AddNeedFragment
+    private fun editOrPostResource(isAdd: Boolean, resourcePost: ResourceBody.ResourceRequestBody){
+        if (isAdd) {
+            resourceViewModel.postResourceRequest(resourcePost)
+        } else {
+            val resourceID = "/" + resource!!._id // comes from older resource
+            resourceViewModel.postResourceRequest(resourcePost, resourceID)
+        }
+        resourceViewModel.getLiveDataResourceID().observe(requireActivity!!) {  resourceID->
+            if (resourceID != "-1") { // in error cases it returns this
+                if (isAdded) { // to ensure it attached a context
+                    if (isAdd){
+                        if (binding.swRecurrenceFilter.isChecked){
+                            Toast.makeText(requireContext(), "Created Resource ID: $resourceID", Toast.LENGTH_LONG).show()
+                            val recurrenceBody = generatePostRecurrence()
+                            Log.i("Recurrence","Resource Called createRecurrence")
+                            createRecurrence(recurrenceBody, RecurrenceViewModel(),resourceID)
+                        }
+                    }
+                    else
+                        Toast.makeText(requireContext(), "UPDATED", Toast.LENGTH_SHORT).show()
+                }
+
+                Handler(Looper.getMainLooper()).postDelayed({ // delay for not giving error because of requireActivity
+                    if (isAdded) // to ensure it attached a parentFragmentManager
+                        parentFragmentManager.popBackStack("AddResourceFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    if (!isAdd)
+                        parentFragmentManager.popBackStack("ResourceItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    // Re-enable the button after the background operation completes
+                    binding.btnSubmit.isEnabled = true
+                }, 200)
+            } else {
+                if (isAdded)
+                    Toast.makeText(requireContext(), "Error Check Logs", Toast.LENGTH_SHORT).show()
+                binding.btnSubmit.isEnabled = true
+            }
+        }
+    }
+
+    private fun generatePostRecurrence(): RecurrenceModel.PostRecurrenceBody{
+        val activity: String = "Resource" // Need, Resource, Event, Emergency, Action
+        val recurrenceRate = binding.spRecurrenceRate.text.toString().trim().toInt() // 1,2,3 ?
+        val recurrenceUnit = binding.spRecurrenceUnit.text.toString().trim() // day, week, month
+        val startAt = DateUtil.dateForBackend(binding.etStartDateInput.text.toString())
+        val endAt = DateUtil.dateForBackend(binding.etEndDateInput.text.toString())
+        val title = "Resource $startAt to $endAt"
+        val description: String = "Resource $startAt to $endAt"
+
+        return RecurrenceModel.PostRecurrenceBody(
+            title = title,
+            description = description,
+            activity = activity,
+            occurance_rate = recurrenceRate,
+            occurance_unit = recurrenceUnit,
+            duration = null,
+            start_at = startAt,
+            end_at = endAt
+        )
+    }
+
+    private fun createRecurrence(recurrenceBody: RecurrenceModel.PostRecurrenceBody, recurrenceViewModel: RecurrenceViewModel, resourceID: String){
+        recurrenceViewModel.postRecurrence(recurrenceBody)
+        recurrenceViewModel.getCreatedRecurrenceID().observe(requireActivity!!){ createdRecurrenceID ->
+            if (createdRecurrenceID != "-1"){ // created successfully
+                Log.i("Recurrence","Resource Called attachRecurrence")
+                attachRecurrence(recurrenceViewModel,createdRecurrenceID,resourceID)
+            }else{
+                Log.i("Recurrence","Resource createRecurrence Error")
+            }
+
+        }
+    }
+
+    private fun attachRecurrence(recurrenceViewModel: RecurrenceViewModel, recurrenceID: String, resourceID: String){
+        val activityType = "resource"
+        val attachBody = RecurrenceModel.AttachActivityBody(recurrenceID,resourceID,activityType)
+        recurrenceViewModel.attachRecurrence(attachBody)
+        recurrenceViewModel.getAttachedRecurrenceID().observe(requireActivity!!){attachedID ->
+            if (attachedID!="-1"){
+                Log.i("Recurrence","Called startRecurrence")
+                startRecurrence(attachedID,recurrenceViewModel)
+            }else{
+                Log.i("Recurrence","Error attachRecurrence")
+            }
+        }
+    }
+
+    /**
+     * This is for start recurrence after its attachment is arranged
+     */
+    private fun startRecurrence(attachedID: String, recurrenceViewModel: RecurrenceViewModel){
+        recurrenceViewModel.startRecurrence(attachedID)
+        recurrenceViewModel.getIsRecurrenceStarted().observe(requireActivity!!){started->
+            if (started){
+                Log.i("Recurrence","startRecurrence Success")
+            }else{
+                Log.i("Recurrence","startRecurrence Error")
+            }
+        }
+    }
+
+    private fun recurrenceListener(){
+        binding.swRecurrenceFilter.setOnClickListener {
+            binding.layRecurrence.visibility = if (binding.swRecurrenceFilter.isChecked) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun initRecurrenceView(){
+
+        val recurrenceUnitList: List<String> = resources.getStringArray(R.array.recurrence_unit).toList()
+        val unitAdapter = ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            recurrenceUnitList
+        )
+        val recurrenceRateList: List<Int> = listOf(1,2,3,2880)
+        val rateAdapter = ArrayAdapter<Int>(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            recurrenceRateList
+        )
+
+        binding.spRecurrenceUnit.setAdapter(unitAdapter)
+        binding.spRecurrenceRate.setAdapter(rateAdapter)
+        binding.etStartDateInput.setOnClickListener { showDatePicker(true) }
+        binding.etEndDateInput.setOnClickListener { showDatePicker(false) }
+    }
+
+    private fun showDatePicker(isStart: Boolean) {
+        // Get the current date
+        val calendar: Calendar = Calendar.getInstance()
+        val year: Int = calendar.get(Calendar.YEAR)
+        val month: Int = calendar.get(Calendar.MONTH)
+        val dayOfMonth: Int = calendar.get(Calendar.DAY_OF_MONTH)
+
+        // Create a DatePickerDialog
+        val datePickerDialog = DatePickerDialog(
+            requireActivity!!,
+            DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                val selectedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)
+                if (isStart)
+                    binding.etStartDate.editText?.setText(selectedDate)
+                else
+                    binding.etEndDate.editText?.setText(selectedDate)
+            },
+            year,
+            month,
+            dayOfMonth
+        )
+
+        // Show the DatePickerDialog
+        datePickerDialog.show()
     }
 
     /**
@@ -431,6 +419,90 @@ class AddResourceFragment(
         })
     }
 
+    private fun trackUserPickLocation(){
+        mapFragment.getLocationChosen().observe(requireActivity!!){chosen ->
+            if (chosen){
+                Log.i("LocationMAP","IS CHOSEN")
+                parentFragmentManager.setFragmentResultListener(
+                    "coordinatesKey",
+                    viewLifecycleOwner
+                ) { _, bundle ->
+                    selectedLocationX = bundle.getDouble("x_coord")
+                    selectedLocationY = bundle.getDouble("y_coord")
+                    coordinateToAddress(
+                        selectedLocationX,
+                        selectedLocationY,
+                        object : Callback {
+                            override fun onFailure(call: Call, e: java.io.IOException) {
+                                val handler = Handler(Looper.getMainLooper())
+                                handler.post {
+                                    binding.etCoordinate.editText?.setText(
+                                        "%.2f, %.2f".format(
+                                            selectedLocationX,
+                                            selectedLocationY
+                                        )
+                                    )
+                                }
+                            }
+
+                            override fun onResponse(call: Call, response: Response) {
+                                if (response.isSuccessful) {
+                                    val responseBody = response.body?.string()
+                                    if (responseBody == null) {
+                                        val handler = Handler(Looper.getMainLooper())
+                                        handler.post {
+                                            binding.etCoordinate.editText?.setText(
+                                                "%.2f, %.2f".format(
+                                                    selectedLocationX,
+                                                    selectedLocationY
+                                                )
+                                            )
+                                        }
+                                    } else {
+                                        var address = responseBody.subSequence(
+                                            responseBody.indexOf("display_name") + 15,
+                                            responseBody.length
+                                        )
+                                        address = address.subSequence(0, address.indexOf("\""))
+                                        val handler = Handler(Looper.getMainLooper())
+                                        handler.post {
+                                            binding.etCoordinate.editText?.setText(address)
+                                        }
+                                    }
+                                } else {
+                                    val handler = Handler(Looper.getMainLooper())
+                                    handler.post {
+                                        binding.etCoordinate.editText?.setText(
+                                            "%.2f, %.2f".format(
+                                                selectedLocationX,
+                                                selectedLocationY
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+
+                        })
+                }
+                // to ensure it's not continuously listening the port after the location is received
+                parentFragmentManager.clearFragmentResultListener("coordinatesKey")
+            }
+        }
+        binding.etCoordinate.setStartIconOnClickListener {
+            navigateToMapFragment()
+        }
+    }
+
+    private fun navigateToMapFragment() {
+        mapFragment.isDialog = true // arrange that as a dialog instead of fragment
+        mapFragment.coordinatesSelectedListener = this@AddResourceFragment
+        mapFragment.show(parentFragmentManager, "mapDialog")
+        //val transaction = parentFragmentManager.beginTransaction()
+        //transaction.replace(R.id.container, mapFragment)
+        //transaction.addToBackStack(null)
+        //transaction.commit()
+    }
+
     /**
      * This function gets the form fields from backend and show them in Form dynamically
      */
@@ -467,7 +539,7 @@ class AddResourceFragment(
                                     rawJson,
                                     ResourceBody.ResourceFormFieldsResponse::class.java
                                 )
-                                if (formFieldsResourceResponse != null) { // TODO check null
+                                if (formFieldsResourceResponse != null) {
                                     Log.d(
                                         "ResponseSuccess",
                                         "formFieldsResourceResponse: $formFieldsResourceResponse"
@@ -480,11 +552,12 @@ class AddResourceFragment(
                                     for (field in fields) {
                                         val name = field.name
                                         val label = field.label
-                                        when (field.type) {
-                                            "number" -> {
-                                                if (name == "x" || name == "y" || name == "initialQuantity" || name == "unsuppliedQuantity") {
-                                                    // Pass
-                                                } else {
+                                        if (name == "x" || name == "y" || name == "initialQuantity" || name == "unsuppliedQuantity"
+                                            || name == "occur_at" || name == "recurrence_rate" || name == "recurrence_deadline" ||  name == "open_address") {
+                                            // Pass
+                                        }else{
+                                            when (field.type) {
+                                                "number" -> {
                                                     val textInputLayout = TextInputLayout(
                                                         requireContext(),
                                                         null,
@@ -500,59 +573,60 @@ class AddResourceFragment(
                                                     textInputLayout.addView(textInputEditText)
                                                     othersLayout.addView(textInputLayout)
                                                 }
-                                            }
 
-                                            "select" -> {
-                                                if (name == "type") {
-                                                    // Create Spinner for select type
-                                                    val options = field.options ?: emptyList()
-                                                    val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
-                                                    val spResourceType = binding.spResourceType
-                                                    spResourceType.setAdapter(optionsAdapter)
-                                                } else {
-                                                    val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customDropDownStyle)
-                                                    textInputLayout.hint = label
-                                                    textInputLayout.isEndIconVisible = true
-                                                    textInputLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
-                                                    textInputLayout.layoutParams =
-                                                        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
+                                                "select" -> {
+                                                    if (name == "type") {
+                                                        // Create Spinner for select type
+                                                        val options = field.options ?: emptyList()
+                                                        val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+                                                        val spResourceType = binding.spResourceType
+                                                        spResourceType.setAdapter(optionsAdapter)
+                                                    } else {
+                                                        val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customDropDownStyle)
+                                                        textInputLayout.hint = label
+                                                        textInputLayout.isEndIconVisible = true
+                                                        textInputLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
+                                                        textInputLayout.layoutParams =
+                                                            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
 
-                                                    val materialAutoCompleteTextView =
-                                                        MaterialAutoCompleteTextView(textInputLayout.context)
-                                                    materialAutoCompleteTextView.inputType = InputType.TYPE_CLASS_TEXT
+                                                        val materialAutoCompleteTextView =
+                                                            MaterialAutoCompleteTextView(textInputLayout.context)
+                                                        materialAutoCompleteTextView.inputType = InputType.TYPE_CLASS_TEXT
 
-                                                    textInputLayout.addView(materialAutoCompleteTextView)
-                                                    othersLayout.addView(textInputLayout)
+                                                        textInputLayout.addView(materialAutoCompleteTextView)
+                                                        othersLayout.addView(textInputLayout)
 
-                                                    // Create Spinner for select type
-                                                    val options = field.options ?: emptyList()
-                                                    val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
-                                                    materialAutoCompleteTextView.setAdapter(optionsAdapter)
-                                                }
-                                            }
-
-                                            else -> {
-                                                val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customTextInputStyle)
-                                                textInputLayout.hint = label
-                                                textInputLayout.isEndIconVisible = true
-                                                textInputLayout.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
-                                                textInputLayout.layoutParams =
-                                                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
-                                                val textInputEditText = TextInputEditText(textInputLayout.context)
-                                                when (field.type) {
-                                                    "text" -> textInputEditText.inputType =
-                                                        InputType.TYPE_CLASS_TEXT
-
-                                                    "date" -> {
-                                                        textInputEditText.inputType = InputType.TYPE_NULL
-                                                        textInputEditText.setOnClickListener {
-                                                            showDatePickerDialog(textInputEditText)
-                                                        }
+                                                        // Create Spinner for select type
+                                                        val options = field.options ?: emptyList()
+                                                        val optionsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
+                                                        materialAutoCompleteTextView.setAdapter(optionsAdapter)
                                                     }
                                                 }
-                                                textInputLayout.addView(textInputEditText)
-                                                othersLayout.addView(textInputLayout)
+
+                                                else -> {
+                                                    val textInputLayout = TextInputLayout(requireContext(), null, R.attr.customTextInputStyle)
+                                                    textInputLayout.hint = label
+                                                    textInputLayout.isEndIconVisible = true
+                                                    textInputLayout.endIconMode = TextInputLayout.END_ICON_CLEAR_TEXT
+                                                    textInputLayout.layoutParams =
+                                                        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,)
+                                                    val textInputEditText = TextInputEditText(textInputLayout.context)
+                                                    when (field.type) {
+                                                        "text" -> textInputEditText.inputType =
+                                                            InputType.TYPE_CLASS_TEXT
+
+                                                        "date" -> {
+                                                            textInputEditText.inputType = InputType.TYPE_NULL
+                                                            textInputEditText.setOnClickListener {
+                                                                showDatePickerDialog(textInputEditText)
+                                                            }
+                                                        }
+                                                    }
+                                                    textInputLayout.addView(textInputEditText)
+                                                    othersLayout.addView(textInputLayout)
+                                                }
                                             }
+
                                         }
                                     }
 
@@ -755,6 +829,44 @@ class AddResourceFragment(
         }
     }
 
+    private fun validation(): Boolean{
+        return (validateFields(binding.laySpecific) &&
+                validateRecurrence() &&
+                validateFields(binding.layOthers) &&
+                validateHardcodedFields())
+    }
+
+    private fun validateRecurrence(): Boolean{
+        val validated = if (binding.swRecurrenceFilter.isChecked){
+            validateFields(binding.layRecurrence)
+        } else{
+            true
+        }
+        return validated
+    }
+
+    private fun validateHardcodedFields(): Boolean{
+        var returnVal = true // return val
+        // if check for open address from layOthers (dynamic list)
+        if (binding.etInputCoordinate.text.isNullOrEmpty() && binding.etOpenAddress.text.isNullOrEmpty()){
+            binding.etCoordinate.error = "Cannot be empty"
+            binding.tvOpenAddress.error = "Cannot be empty"
+            returnVal = false
+        }
+        if (binding.spResourceType.text.isNullOrEmpty()){
+            binding.boxResourceType.error = "Cannot be empty"
+            returnVal = false
+        }
+        if (binding.spResourceSubType.text.isNullOrEmpty()){
+            binding.boxResourceSubType.error = "Cannot be empty"
+            returnVal = false
+        }
+        if (binding.quantityInput.text.isNullOrEmpty()){
+            binding.etQuantity.error = "Cannot be empty"
+            returnVal = false
+        }
+        return returnVal
+    }
 
     private fun validateFields(layout: ViewGroup): Boolean {
         var isValid = true
@@ -819,6 +931,64 @@ class AddResourceFragment(
         //}
     }
 
+    private fun coordinateToAddress(){
+        coordinateToAddress(
+            selectedLocationX,
+            selectedLocationY,
+            object : Callback {
+                override fun onFailure(call: Call, e: java.io.IOException) {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.post {
+                        binding.etCoordinate.editText?.setText(
+                            "%.2f, %.2f".format(
+                                selectedLocationX,
+                                selectedLocationY
+                            )
+                        )
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body?.string()
+                        if (responseBody == null) {
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(
+                                    "%.2f, %.2f".format(
+                                        selectedLocationX,
+                                        selectedLocationY
+                                    )
+                                )
+                            }
+                        } else {
+                            var address = responseBody.subSequence(
+                                responseBody.indexOf("display_name") + 15,
+                                responseBody.length
+                            )
+                            address = address.subSequence(0, address.indexOf("\""))
+
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.post {
+                                binding.etCoordinate.editText?.setText(address)
+                            }
+                        }
+                    } else {
+
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            binding.etCoordinate.editText?.setText(
+                                "%.2f, %.2f".format(
+                                    selectedLocationX,
+                                    selectedLocationY
+                                )
+                            )
+                        }
+                    }
+                }
+
+            })
+    }
 }
 
 

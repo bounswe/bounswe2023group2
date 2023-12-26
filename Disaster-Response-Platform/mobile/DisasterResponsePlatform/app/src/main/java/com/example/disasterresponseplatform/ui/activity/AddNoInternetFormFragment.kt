@@ -181,11 +181,9 @@ class AddNoInternetFormFragment(private val viewModel: ViewModel) : Fragment(),
 
     private fun navigateToMapFragment() {
         val mapFragment = ActivityMap()
+        mapFragment.isDialog = true // arrange that as a dialog instead of fragment
         mapFragment.coordinatesSelectedListener = this@AddNoInternetFormFragment
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, mapFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        mapFragment.show(parentFragmentManager, "mapDialog")
     }
 
     override fun onCoordinatesSelected(x: Double, y: Double) {}

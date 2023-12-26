@@ -38,6 +38,25 @@ def create_action(action: Action) -> str:
             return ActionSuccess(action_id= str(insert_result.inserted_id))
         else:
             raise ValueError("Action could not be created")
+    elif(action.type== ActionType.transport):
+        if action.resources == []:
+            raise ValueError("At least one resource is needed")
+        if not all([action.end_x, action.end_y]):
+            raise ValueError("Please enter locations")
+        insert_result = actions_collection.insert_one(action.dict())
+        if insert_result.inserted_id:
+            for resource_id in action.resources:
+                resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
+                resource["status"] = statusEnum.inprogress
+                resource["action_list"].append(insert_result.inserted_id)
+                resources_collection.update_one({"_id": ObjectId(resource_id)}, {"$set":resource})
+            return ActionSuccess(action_id= str(insert_result.inserted_id))
+    elif(action.type== ActionType.move_survivors):
+        if action.number_of_people==0:
+            raise ValueError("Please enter the number of people that are moved")
+        insert_result = actions_collection.insert_one(action.dict())
+        return ActionSuccess(action_id= str(insert_result.inserted_id))
+        
 
 def find_many():
     actions = actions_collection.find()
@@ -123,25 +142,38 @@ def do_action(action_id:str, current_user:str, match_list):
     
     if(action['created_by']!= current_user ):
         raise ValueError("Only user created the action can do it")
-    
-    for match in match_list:
-        need = needs_collection.find_one({"_id": ObjectId(match.need_id)})
-        remain = need.unsuppliedQuantity - match.amount
-        if(remain<=0):
-            need.status = 'done'
-        else:
-            need.unsuppliedQuantity = remain
-            need.status = 'active'
-        needs_collection.update_one({"_id": ObjectId(match.need_id)}, {"$set":need})
-        resource = resources_collection.find_one({"_id": ObjectId(match.resource_id)})
-        remain = resource.currentQuantity - match.amount
-        if(remain<=0):
-            resource.status = 'done'
-        else:
-            resource.currentQuantity = remain
-            resource.status = 'active'
-        resources_collection.update_one({"_id": ObjectId(match.resource_id)}, {"$set":resource})
-    action.status = "done"
+    if (action.get("type")== ActionType.need_resource):
+        for match in match_list:
+            need = needs_collection.find_one({"_id": ObjectId(match.need_id)})
+            remain = need.unsuppliedQuantity - match.amount
+            if(remain<=0):
+                need.status = 'done'
+            else:
+                need.unsuppliedQuantity = remain
+                need.status = 'active'
+            needs_collection.update_one({"_id": ObjectId(match.need_id)}, {"$set":need})
+            resource = resources_collection.find_one({"_id": ObjectId(match.resource_id)})
+            remain = resource.currentQuantity - match.amount
+            if(remain<=0):
+                resource.status = 'done'
+            else:
+                resource.currentQuantity = remain
+                resource.status = 'active'
+            resources_collection.update_one({"_id": ObjectId(match.resource_id)}, {"$set":resource})
+    elif(action.get("type")==ActionType.transport):
+        for resource_id in action.get('resources'):
+            resource = resources_collection.find_one({"_id": ObjectId(resource_id)})
+            new_x = action.get("end_x")
+            new_y = action.get("end_y")
+            update_data = {
+                "$set": {
+                    "x": new_x,
+                    "y": new_y,
+                    "status":'active'
+                }
+            }
+            resources_collection.update_one({"_id": ObjectId(resource_id)}, update_data)
+    action['status'] = "done"
     # update action
     actions_collection.update_one({"_id": ObjectId(action_id)}, {"$set":action})
 
@@ -154,10 +186,11 @@ def get_action(action_id:str) :
                   "created_by": 1,
                   "description": 1,
                   "type": 1,
-                  "start_location_x": 1,
-                  "start_location_y": 1,
-                  "endLocation_x": 1,
-                  "endLocation_y": 1,
+                  "start_x": 1,
+                  "start_y": 1,
+                  "end_x": 1,
+                  "end_y": 1,
+                  "number_of_people":1,
                   "status": 1,
                   "x":1,
                   "y":1,

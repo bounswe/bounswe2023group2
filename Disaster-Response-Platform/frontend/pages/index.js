@@ -23,11 +23,11 @@ export default function home({ labels }) {
   const [chosenActivityType, setChosenActivityType] = useState("resource");
   return (
     <>
-    <div className='bg-need bg-resource bg-event'></div>
+    <div className='bg-need bg-resource bg-event'> </div>
      <Map />
       <Divider className="mb-6" />
       <ActivityList  labels={labels} />
-      <ToastContainer position="bottom-center" />
+     
     </>
   )
 }

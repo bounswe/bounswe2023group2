@@ -14,13 +14,17 @@ import { useRouter } from "next/router";
 import { withIronSessionSsr } from "iron-session/next";
 import sessionConfig from "@/lib/sessionConfig";
 import addressService from "@/services/addressService";
+import AddRecurrenceForm from "./AddRecurrence";
 export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
   const [form, setForm] = useState([]);
+  const [isRecurrenct, setIsRecurrence] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [subform, setSubform] = useState([]);
   const { reset, handleSubmit, control, formState: { isSubmitting }, setValue } = useForm();
   const [chosen, setChosen] = useState('');
   const [types, setTypes] = useState({});
   const [fields, setFields] = useState([]);
+  const [id, setID] = useState('');
   const router = useRouter();
 
   const getForm = () => {
@@ -82,8 +86,10 @@ export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
       toast.error("An unexpected error occurred while saving, please try again")
     } else if (response.ok) {
       // successful
+      setIsSuccess(true)
+     let result =  await response.json()
+      setID(result.data.needs[0]._id)
       toast.success("Successfully saved")
-      router.push("/")
     } else {
       // unknown error
       toast.error("An unexpected error occurred while saving, please try again")
@@ -95,7 +101,7 @@ export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
         <>
           <ModalHeader className="flex flex-col gap-1">Add Need</ModalHeader>
           <ModalBody>
-            <form onSubmit={handleSubmit(can)} action="#"
+            {!isSuccess && <form onSubmit={handleSubmit(can)} action="#"
               method="POST" className='flex w-full flex-col  mb-6 md:mb-0 gap-4'  >
               {form !== [] && form.map((res) => {
                 if (res.name === 'type') return <Select
@@ -212,9 +218,14 @@ export default function AddNeedForm({ isOpen, onOpenChange, lang, ...props }) {
                 {isSubmitting ? 'Loading' : "Submit"}
               </Button>
             </form>
+}           
+{isSuccess && <Button onClick={() => { setIsRecurrence(!isRecurrenct); reset() }}>Schedule your need</Button> }
+{isRecurrenct && <AddRecurrenceForm activity_id={id} activityType='Need'/>}
+
           </ModalBody>
         </>
       )}
+
     </ModalContent>
   </Modal>
 }
