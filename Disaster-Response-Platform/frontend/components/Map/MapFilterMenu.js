@@ -164,7 +164,7 @@ export default function MapFilterMenu({
   const downloadFile = async () => {
     const response = await fetch("/api/download/download", {
       method: "POST",
-      body: JSON.stringify(prepared),
+      filter: filters,
     });
     // try {
 
