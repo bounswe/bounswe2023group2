@@ -291,7 +291,7 @@ class MapViewModel@Inject constructor() : ViewModel() {
             "Content-Type" to "application/json"
         )
         networkManager.makeRequest(
-            endpoint = Endpoint.EMERGENCIES,
+            endpoint = Endpoint.EMERGENCY,
             requestType = RequestType.GET,
             headers = headers,
             callback = object : Callback<ResponseBody> {

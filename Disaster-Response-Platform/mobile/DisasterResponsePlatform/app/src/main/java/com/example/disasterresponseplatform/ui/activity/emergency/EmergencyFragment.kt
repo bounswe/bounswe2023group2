@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.Fragment
@@ -30,6 +31,7 @@ import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.activity.util.map.OnCoordinatesSelectedListener
+import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.gson.Gson
 import okhttp3.ResponseBody
@@ -57,6 +59,7 @@ class EmergencyFragment(
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentEmergencyBinding.inflate(inflater,container,false)
+        sendRequest()
         return binding.root
     }
 
@@ -130,20 +133,11 @@ class EmergencyFragment(
             requireActivity = requireActivity()
         }
 
-        if (!emergencyViewModel.getAllEmergencies().isNullOrEmpty()){
-            emergencyList = emergencyViewModel.getAllEmergencies()!!.map { EmergencyMapper.fromEmergencyToEmergencyItem(it) }
-            arrangeRecyclerView(emergencyList)
+        emergencyViewModel.getAllEmergencies(queries)
+        emergencyViewModel.getLiveDataResponse().observe(requireActivity!!){ emergencyResponse ->
+            emergencyList = emergencyResponse.emergencies
+            arrangeRecyclerView(emergencyResponse.emergencies)
         }
-
-//        !!--- Emergency is currently running locally ---!!
-//
-//        if (requireActivity == null){ // to handle error when user enters this page twice
-//            requireActivity = requireActivity()
-//        }
-//        emergencyViewModel.getLiveDataResponse().observe(requireActivity!!){ emergencyResponse ->
-//            arrangeRecyclerView(emergencyResponse.emergencies)
-//        }
-
     }
 
     /**
@@ -213,17 +207,28 @@ class EmergencyFragment(
         val applyButton = filterBinding.btApply
         val cancelButton = filterBinding.btCancel
         val mapButton = filterBinding.btSelectFromMap
+        val typesChipGroup = filterBinding.cgTypes
 
         filterBinding.chUrgency.visibility = View.GONE
         filterBinding.cgSubTypes.visibility = View.GONE
         filterBinding.tvSubType.visibility = View.GONE
 
+        // Add chips from emergency_types array into Type chip group
+        for (emergencyType in resources.getStringArray(R.array.emergency_types)) {
+            val chip = Chip(requireContext())
+            chip.text = emergencyType
+            chip.isCheckable = true
+            chip.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+            )
+            typesChipGroup.addView(chip)
+        }
+
         // Set up Type Filter switch listener
         typeSwitch.setOnClickListener {
             typeLay.visibility = if (typeSwitch.isChecked) View.VISIBLE else View.GONE
         }
-
-
 
         // Set up Location Filter switch listener
         locationSwitch.setOnClickListener {
@@ -256,6 +261,55 @@ class EmergencyFragment(
         dialog.show()
     }
 
+    private fun gatherFilterDetails(): MutableMap<String, String> {
+        val sortByChipGroup = filterBinding.cgSort
+        val selectedSortById = filterBinding.cgSort.checkedChipId
+
+        val selectedSortBy: String = when (sortByChipGroup.findViewById<Chip>(selectedSortById)?.text) {
+            getString(R.string.sf_creation) -> "created_at"
+            getString(R.string.sf_last_update) -> "last_updated_at"
+            getString(R.string.sf_reliability) -> "upvote"
+            else -> ""
+        }
+
+        val selectedOrder = "desc"
+
+        val typeSwitch = filterBinding.swTypeFilter
+        val locationSwitch = filterBinding.swLocationFilter
+
+        val typesChipGroup = filterBinding.cgTypes
+        val selectedTypeIds = filterBinding.cgTypes.checkedChipIds
+        val selectedTypes = mutableListOf<String>()
+
+        val selectedXCoordinate = filterBinding.etCoordinateX.text.toString()
+        val selectedYCoordinate = filterBinding.etCoordinateY.text.toString()
+        val selectedMaxDistance = filterBinding.slDistance.value.toString()
+
+        for (chipId in selectedTypeIds) {
+            val chip = typesChipGroup.findViewById<Chip>(chipId)
+            chip?.let { selectedTypes.add(it.text.toString()) }
+        }
+
+        val queries = mutableMapOf<String, String>()
+        queries["active"] = "true"
+        selectedSortBy.let { queries["sort_by"] = it }
+        selectedOrder.let { queries["order"] = it }
+        selectedTypes.let { selectedTypes ->
+            if (typeSwitch.isChecked && selectedTypes.isNotEmpty()) {
+                queries["types"] = selectedTypes.joinToString(",")
+            }
+        }
+
+        if (locationSwitch.isChecked && selectedXCoordinate.isNotBlank() && selectedYCoordinate.isNotBlank()){
+            selectedXCoordinate.let { queries["x"] = it }
+            selectedYCoordinate.let { queries["y"] = it }
+            selectedMaxDistance.let { queries["distance_max"] = it
+            }
+        }
+
+        return queries
+    }
+
     private fun addFragment(fragment: Fragment, fragmentName: String) {
         val ft: FragmentTransaction = parentFragmentManager.beginTransaction()
         ft.replace(R.id.container, fragment)
@@ -286,34 +340,4 @@ class EmergencyFragment(
         //Log.d("YOOO x", x.toString())
         //Log.d("YOOO y", y.toString())
     }
-
-
-    // Convert Emergency(local) to EmergencyItem(live) and vice-versa
-    object EmergencyMapper {
-
-        fun fromEmergencyItemToEmergency(emergencyItem: EmergencyBody.EmergencyItem): Emergency {
-            return Emergency(
-                ID = null,
-                type = emergencyItem.type,
-                description = emergencyItem.description,
-                creatorName = emergencyItem.creator_name,
-                contactNumber = emergencyItem.phone_number,
-                location = emergencyItem.location,
-                x = emergencyItem.x,
-                y = emergencyItem.y
-            )
-        }
-
-        fun fromEmergencyToEmergencyItem(emergency: Emergency): EmergencyBody.EmergencyItem {
-            return EmergencyBody.EmergencyItem(
-                type = emergency.type,
-                description = emergency.description,
-                creator_name = emergency.creatorName,
-                phone_number = emergency.contactNumber,
-                location = emergency.location,
-                created_at = "-"
-            )
-        }
-    }
-
 }

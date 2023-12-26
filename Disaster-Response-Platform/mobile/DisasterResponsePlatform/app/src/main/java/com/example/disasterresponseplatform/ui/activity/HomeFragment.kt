@@ -171,7 +171,7 @@ class HomeFragment(
         if (requireActivity == null) requireActivity = requireActivity()
         if (GeneralUtil.isInternetAvailable(requireContext())){
             Log.i("InternetConnection","OK")
-            GeneralUtil.checkLocalChanges(needViewModel,resourceViewModel,eventViewModel,requireActivity!!)
+            GeneralUtil.checkLocalChanges(emergencyViewModel, needViewModel,resourceViewModel,eventViewModel,requireActivity!!)
             val timer = GeneralUtil.getIsPostedTimer()
             timer.start() // start timer
             GeneralUtil.getIsPosted().observe(requireActivity!!){isPosted ->

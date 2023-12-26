@@ -45,7 +45,7 @@ class EmergencyAdapter(private val emergencyList: List<EmergencyBody.EmergencyIt
      //   hb.tvLocation.text = "x: ${String.format("%.2f", currentEmergency?.x).replace(',', '.')}, y: ${String.format("%.2f", currentEmergency?.y).replace(',', '.')}"
         hb.tvLocation.text = currentEmergency?.location.toString()
         // user role
-        val creator = currentEmergency?.created_by
+        val creator = currentEmergency?.created_by_user
         // user role
         hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
         if (creator != null) UserRoleUtil.isCredibleNonBlocking(creator) {
