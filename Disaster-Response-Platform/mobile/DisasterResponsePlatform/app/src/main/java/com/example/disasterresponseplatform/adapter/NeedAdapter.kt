@@ -47,8 +47,8 @@ class NeedAdapter(private val needList: List<NeedBody.NeedItem>?, private val us
         hb.tvQuantity.text = currentNeed?.initialQuantity.toString()
         hb.tvCreator.text = currentNeed?.created_by
         hb.tvSubType.text = currentNeed?.details?.get("subtype").toString()
-        hb.tvDownvoteCount.text = currentNeed?.downvote.toString()
-        hb.tvUpvoteCount.text = currentNeed?.upvote.toString()
+        hb.tvReliability.text =  String.format("%.2f", currentNeed?.reliability)
+
 
         val creator = currentNeed?.created_by
         // user role
