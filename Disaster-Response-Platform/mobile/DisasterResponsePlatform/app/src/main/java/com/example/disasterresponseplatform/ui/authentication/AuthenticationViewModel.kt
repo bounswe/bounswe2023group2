@@ -21,7 +21,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -196,6 +195,9 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                                 val signUpResponse = gson.fromJson(rawJson, SignUpResponseBody::class.java)
                                 Log.d("Sign In Access Token", signUpResponse.accessToken + ".")
                                 DiskStorageManager.setKeyValue("token", signUpResponse.accessToken)
+                                DiskStorageManager.setKeyValue("user_role",signUpResponse.userRole)
+                                DiskStorageManager.setKeyValue("proficiency",signUpResponse.proficiency.proficiency.toString())
+                                DiskStorageManager.setKeyValue("proficiency_details",signUpResponse.proficiency.details.toString())
                                 UserRoleUtil.resetMap()
                                 _signInSuccessful.value = true
                             } catch (e: IOException) {
@@ -214,7 +216,7 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                                     Log.d("Error Message", errorResponse.detail[0].message)
                                     _signInError.value = errorResponse.detail[0].message
                                 }
-                                else if (responseCode == 400) {
+                                else if (responseCode == 401) {
                                     val errorResponse = gson.fromJson(errorBody, SignInResponseBody401::class.java)
                                     Log.d("Error Message", errorResponse.errorDetail)
                                     _signInError.value = errorResponse.errorDetail
@@ -326,7 +328,7 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
                                         Log.d("Error Message", errorResponse.detail[0].message)
                                         _signUpError.value = errorResponse.detail[0].message
                                     }
-                                    else if (responseCode == 401) {
+                                    else if (responseCode == 400) {
                                         val errorResponse = gson.fromJson(errorBody, SignUpResponseBody400::class.java)
                                         Log.d("Error Message", errorResponse.errorDetail)
                                         _signUpError.value = errorResponse.errorDetail

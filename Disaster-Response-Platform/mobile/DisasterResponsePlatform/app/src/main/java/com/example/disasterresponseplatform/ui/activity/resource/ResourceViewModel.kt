@@ -57,11 +57,11 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
         val y = resource.y
         //details
         val detailsMap = mutableMapOf<String, String>()
+        val postAddress: String? = if (!address.contains(activity.getString(R.string.selected_from_map))) address else null
         // if address is given by hand
-        if (!address.contains(activity.getString(R.string.selected_from_map))) detailsMap["address"] = address
         detailsMap["additionalNotes"] = additionalNotes
         detailsMap["subtype"] = "No Internet Connection"
-        return ResourceBody.ResourceRequestBody(shortDescription,quantity,quantity,type,detailsMap,x,y,
+        return ResourceBody.ResourceRequestBody(shortDescription,quantity,quantity,type,detailsMap,postAddress,x,y,
             null,null,null,true,0,0)
     }
 
@@ -198,8 +198,8 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
             val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
 
             val requestType = if (id == null) RequestType.POST else RequestType.PUT
-
-            Log.d("requestBody", json.toString())
+            val functionName = "postResourceRequest"
+            Log.d("requestBody", "$functionName $json")
             networkManager.makeRequest(
                 endpoint = Endpoint.RESOURCE,
                 requestType = requestType,
@@ -211,21 +211,21 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                         call: Call<ResponseBody>,
                         response: Response<ResponseBody>
                     ) {
-                        Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                        Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                        Log.d("ResponseInfo", "$functionName Status Code: ${response.code()}")
+                        Log.d("ResponseInfo", "$functionName Headers: ${response.headers()}")
 
                         if (response.isSuccessful) {
                             val rawJson = response.body()?.string()
                             if (rawJson != null) {
                                 try {
-                                    Log.d("ResponseSuccess", "Body: $rawJson")
+                                    Log.d("ResponseSuccess", "$functionName Body: $rawJson")
                                     val gson = Gson()
                                     val registerResponse = gson.fromJson(
                                         rawJson,
                                         ResourceBody.PostRegisterResponseList::class.java
                                     )
                                     val resourceID = registerResponse.resources[0]._id
-                                    Log.i("Created Resource ", "ID: $resourceID ")
+                                    Log.i("Created Resource ", "$functionName ID: $resourceID ")
                                     liveDataResourceID.postValue(resourceID)
 
                                 } catch (e: IOException) {
@@ -233,12 +233,12 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                                     liveDataResourceID.postValue("-1")
                                     Log.e(
                                         "ResponseError",
-                                        "Error reading response body: ${e.message}"
+                                        "$functionName Error reading response body: ${e.message}"
                                     )
                                 }
                             } else {
                                 liveDataResourceID.postValue("-1")
-                                Log.d("ResponseSuccess", "Body is null")
+                                Log.d("ResponseSuccess", "$functionName Body is null")
                             }
                         } else {
                             liveDataResourceID.postValue("-1")
@@ -247,14 +247,14 @@ class ResourceViewModel @Inject constructor(private val resourceRepository: Reso
                                 var responseCode = response.code()
                                 Log.d(
                                     "ResponseSuccess",
-                                    "Body: $errorBody Response Code: $responseCode"
+                                    "$functionName Body: $errorBody Response Code: $responseCode"
                                 )
                             }
                         }
                     }
 
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e("onFailure", "Post Resource Request")
+                        Log.e("onFailure", "$functionName Post Resource Request")
                     }
                 }
             )
