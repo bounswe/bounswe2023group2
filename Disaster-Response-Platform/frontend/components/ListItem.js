@@ -25,7 +25,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
             <div> {activity?.note}</div>
           </div>
           <div className="flex justify-between items-center">
-            <div>Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y} </Link> </div>
+            <div>Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address ?? <p> {activity.x} { activity.y} </p> } </Link> </div>
           </div>
 
         </CardBody>
@@ -50,7 +50,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
             <div> {activity?.currentQuantity}/{activity?.initialQuantity} {activity?.quantityUnit} </div>
           </div>
           <div className="flex justify-between items-center">
-            Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y}</Link> 
+            Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address ?? <p> {activity.x} { activity.y} </p> }</Link> 
           </div>
 
         </CardBody>
@@ -81,7 +81,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
           
           </div>
           <div className="flex justify-between items-center">
-            <div>Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address?? activity.x } {activity?.open_address?? activity.y} </Link> </div>
+            <div>Address <Link href={`https://www.google.com/maps/place/${activity.x},${activity.y}`}>{activity?.open_address ?? <p> {activity.x} { activity.y} </p> } </Link> </div>
           </div>
 
         </CardBody>
