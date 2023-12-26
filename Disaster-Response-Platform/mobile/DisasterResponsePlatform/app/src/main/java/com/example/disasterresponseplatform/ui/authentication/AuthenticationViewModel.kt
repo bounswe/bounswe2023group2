@@ -355,45 +355,46 @@ class AuthenticationViewModel@Inject constructor() : ViewModel() {
     }
 
     fun sendEmailVerification() {
+        if (DiskStorageManager.checkToken()){
+            val headers = mapOf(
+                "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
+                "Content-Type" to "application/json",
+            )
 
-        val headers = mapOf(
-            "Authorization" to "bearer " + DiskStorageManager.getKeyValue("token"),
-            "Content-Type" to "application/json",
-        )
+            val emptyRequestBody = "".toRequestBody("application/json".toMediaTypeOrNull())
 
-        val emptyRequestBody = "".toRequestBody("application/json".toMediaTypeOrNull())
+            networkManager.makeRequest(
+                endpoint = Endpoint.EMAIL_VERIFICATION_SEND,
+                requestType = RequestType.POST,
+                headers = headers,
+                requestBody = emptyRequestBody,
+                callback = object : Callback<ResponseBody> {
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        Log.d("ResponseInfo", "Status Code: ${response.code()}")
+                        Log.d("ResponseInfo", "Headers: ${response.headers()}")
 
-        networkManager.makeRequest(
-            endpoint = Endpoint.EMAIL_VERIFICATION_SEND,
-            requestType = RequestType.POST,
-            headers = headers,
-            requestBody = emptyRequestBody,
-            callback = object : Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    Log.d("ResponseInfo", "Status Code: ${response.code()}")
-                    Log.d("ResponseInfo", "Headers: ${response.headers()}")
+                        if (response.isSuccessful) {
+                            _emailVerificationSendSuccess.value = true
 
-                    if (response.isSuccessful) {
-                        _emailVerificationSendSuccess.value = true
+                        } else {
+                            Log.d("Error Message", "Error: ${response.message()}")
+                            _emailVerificationSendError.value = "Error: ${response.message()}"
 
-                    } else {
-                        Log.d("Error Message", "Error: ${response.message()}")
-                        _emailVerificationSendError.value = "Error: ${response.message()}"
+                        }
+                    }
 
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        // Handle failure to make the API call (update UI with error message)
+                        _emailVerificationSendError.value =
+                            "Failed to send email verification. Please check your connection."
+                        Log.e("ResponseError", "Request failed: ${t.message}")
                     }
                 }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    // Handle failure to make the API call (update UI with error message)
-                    _emailVerificationSendError.value =
-                        "Failed to send email verification. Please check your connection."
-                    Log.e("ResponseError", "Request failed: ${t.message}")
-                }
-            }
-        )
+            )
+        }
     }
 
     fun verifyEmail(verificationCode: String) {
