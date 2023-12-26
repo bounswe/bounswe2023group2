@@ -213,7 +213,8 @@
 		"auth_status": "Auth Status",
 		"remove_activity": "Remove activity",
 		"is_credible": "Credible",
-		"credibility_set": "Credibility set."
+		"credibility_set": "Credibility set.",
+		"admin_page": "Admin page"
 	},
 	"navbar": {
 		"help_feedback": "Help & Feedback",
