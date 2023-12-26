@@ -95,7 +95,8 @@
 		"short_description": "Short Description",
 		"take_action": "Take Action",
 		"recurrence_rate": "Recurrence Rate (days)",
-		"no_content": "There is no data to show."
+		"no_content": "There is no data to show.",
+		"urgency":"Urgency"
 	},
 	"auth": {
 		"register": "Register",

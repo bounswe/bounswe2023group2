@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDisclosure } from "@nextui-org/react";
-// import AddResourceForm from "../AddResourceMap";
+import AddResourceForm from "../AddResource";
 import { useRouter } from "next/router";
 import SidePopup from "./SidePopup";
 import {
@@ -85,7 +85,7 @@ export default function Map({
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [center, setCenter] = useState({ lat: 41.08714, lng: 29.043474 });
   const [selectedMarker, setSelectedMarker] = useState(null);
-
+  const [isAddressSelected, setIsAddressSelected] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState({
     x_coord: "",
     y_coord: "",
@@ -261,17 +261,18 @@ export default function Map({
         
 
         {isClickActivated ? <MarkerAdd /> : <></>}
-        {/* <AddResourceForm
+        <AddResourceForm
           onOpenChange={onOpenChange}
           isOpen={isOpen}
+          isAddressSelected={isAddressSelected}
           fetchData={fetchData}
           labels={labels}
         />
-        {/* {MarkerArr &&
+        {MarkerArr &&
           MarkerArr.map(({ type, subType, dueDate, x_coord, y_coord }) => (
             <Marker position={[x_coord, y_coord]} icon={redIcon}>
             </Marker>
-          ))} */}
+          ))}
       </MapContainer>
       <SidePopup
         card={selectedMarker}

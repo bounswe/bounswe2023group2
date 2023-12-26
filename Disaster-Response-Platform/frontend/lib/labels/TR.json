@@ -94,7 +94,8 @@
 		"short_description": "Kısa Açıklama",
 		"take_action": "Aksiyon al",
 		"recurrence_rate": "Tekrar Sıklığı (gün)",
-		"no_content": "Gösterebileceğimiz bir veri yok."
+		"no_content": "Gösterebileceğimiz bir veri yok.",
+		"urgency": "Aciliyet"
 	},
 	"auth": {
 		"register": "Kayıt ol",

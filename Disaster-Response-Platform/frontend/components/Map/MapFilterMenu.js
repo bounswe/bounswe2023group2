@@ -2,6 +2,7 @@ import styles from "./MapFilterMenu.module.scss";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { withIronSessionApiRoute } from "iron-session/next";
 import "react-toastify/dist/ReactToastify.css";
 import Search from "../Search";
 import { Input } from "@nextui-org/react";
@@ -54,12 +55,47 @@ export default function MapFilterMenu({
     fetchNeeds();
     fetchEvents();
   }, []);
+  function toRadians(degrees) {
+    return degrees * (Math.PI / 180);
+  }
+  function toDegrees(radians) {
+    return radians * (180 / Math.PI);
+  }
+  const scanScreen = (bounds) => {
+    console.log(bounds);
+    let boundsArray = bounds.split(",");
+    const lat1 = Number(boundsArray[0]);
+    const lat2 = Number(boundsArray[2]);
+    const lon1 = Number(boundsArray[1]);
+    const lon2 = Number(boundsArray[3]);
+    const dWT = Math.sqrt((lat1-lat2)**2 + (lon1-lon2)**2);
+    const φ1 = (lat1 * Math.PI) / 180,
+      φ2 = (lat2 * Math.PI) / 180,
+      Δλ = ((lon2 - lon1) * Math.PI) / 180,
+      R = 6371e3;
+    const d =
+      Math.acos(
+        Math.sin(φ1) * Math.sin(φ2) + Math.cos(φ1) * Math.cos(φ2) * Math.cos(Δλ)
+      ) * R;
+    
+    
+    let dLon = toRadians(lon2 - lon1);
+      
+    let lat1r = toRadians(lat1);
+    let lat2r = toRadians(lat2);
+    let lon1r = toRadians(lon1);
+    
+    let Bx = Math.cos(lat2r) * Math.cos(dLon);
+    let By = Math.cos(lat2r) * Math.sin(dLon);
+    const lat3 = toDegrees(Math.atan2(Math.sin(lat1r) + Math.sin(lat2r), Math.sqrt((Math.cos(lat1r) + Bx) * (Math.cos(lat1r) + Bx) + By * By)));
+    const lon3 = toDegrees(lon1r + Math.atan2(By, Math.cos(lat1r) + Bx));
 
-  const notifyFilter = () => {
-    toast.info(labels.map.choose_scan_center, {
-      position: "top-center",
-      autoClose: 5000, // Auto close the notification after 3 seconds (adjust as needed)
-    });
+    
+    
+    setFilters({ ...filters,x:lon3, y: lat3,  distance_max:dWT });
+    console.log(dWT);
+    console.log("x : ", lon3," y: ",lat3)
+    filterActivities();
   };
 
   const notifyAdd = () => {
@@ -72,7 +108,7 @@ export default function MapFilterMenu({
     let response;
     if (chosenActivityType === "need") {
       let my_filter = new URLSearchParams(filters).toString();
-
+      
       response = await api.get(`/api/needs/?${my_filter}`, {
         headers: { "Content-Type": "application/json" },
       });
@@ -98,50 +134,58 @@ export default function MapFilterMenu({
       }
     } else if (chosenActivityType === "all") {
       let my_filter = new URLSearchParams(filters).toString();
-
-      resouceResponse = await api.get(`/api/resources/?${my_filter}`, {
+      console.log(my_filter);
+      const resourceResponse = await api.get(`/api/resources/?${my_filter}`, {
         headers: { "Content-Type": "application/json" },
       });
-      needResponse = await api.get(`/api/needs/?${my_filter}`, {
+      const needResponse = await api.get(`/api/needs/?${my_filter}`, {
         headers: { "Content-Type": "application/json" },
       });
 
       let nRes = needResponse.data;
-      let rRes = resouceResponse.data;
-
+      let rRes = resourceResponse.data;
+      console.log(nRes);
+      console.log(rRes);
       setResourceApiData(rRes.resources);
-      if (response.status === 200) {
+      if (resourceResponse.status === 200) {
         setResourceApiData(rRes.resources);
       } else {
         toast.error(labels.feedback.failure);
       }
 
       setNeedApiData(nRes.needs);
-      if (response.status === 200) {
+      if (needResponse.status === 200) {
         setNeedApiData(nRes.needs);
       } else {
         toast.error(labels.feedback.failure);
       }
     }
   };
-  const download = async () => {
-    try {
-      let my_filter = new URLSearchParams(filters).toString();
-      response = await api.get(`/api/donwloadfile/?activity_type=Need`, {
-        headers: { "Content-Type": "application/json" },
-      });
-      console.log(response)
-      response = await api.get(`/api/donwloadfile/?activity_type=Resource`, {
-        headers: { "Content-Type": "application/json" },
-      });
-      console.log(response)
+  const downloadFile = async () => {
+    const response = await fetch("/api/download/download", {
+      method: "POST",
+      body: JSON.stringify(prepared),
+    });
+    // try {
 
-    }
-    catch (error) {
-      // Handle unexpected errors
-      console.error("Error:", error);
-    }
-  }
+    //   let my_filter = new URLSearchParams(filters).toString();
+    //   response = await api.post(`/api/donwloadfile/?activity_type=Need`, {
+    //     headers: { Authorization: `Bearer ${accessToken}`,
+    //     'Content-Type': 'application/json' },
+    //   });
+    //   console.log(response)
+    //   response = await api.post(`/api/donwloadfile/?activity_type=Resource`, {
+    //     headers: { Authorization: `Bearer ${accessToken}`,
+    //     'Content-Type': 'application/json' },
+    //   });
+    //   console.log(response)
+
+    // }
+    // catch (error) {
+    //   // Handle unexpected errors
+    //   console.error("Error:", error);
+    // }
+  };
   const fetchResources = async () => {
     try {
       // Make API call to filter resources based on the search term
@@ -156,18 +200,15 @@ export default function MapFilterMenu({
           // Additional headers or credentials if needed
         }
       );
-      console.log("consolelog:", resourceResponse.status);
+
       if (resourceResponse.status == 200) {
         const resources = await resourceResponse.data;
         // Process the data as needed
-        console.log("Filtered Resources:", resources);
+
         setResourceApiData(resources.resources);
         resources.resources.forEach((resource) => {
           const xValue = resource.x;
           const yValue = resource.y;
-          console.log(
-            `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
-          );
         });
       } else {
         // Handle errors
@@ -193,16 +234,15 @@ export default function MapFilterMenu({
         // Additional headers or credentials if needed
       }
     );
-    console.log("consolelog:", needResponse.status);
+
     if (needResponse.status == 200) {
       const needs = await needResponse.data;
       // Process the data as needed
-      console.log("Filtered Needs:", needs);
+
       setNeedApiData(needs.needs);
       needs.needs.forEach((resource) => {
         const xValue = resource.x;
         const yValue = resource.y;
-        console.log(`Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`);
       });
     } else {
       // Handle errors
@@ -217,16 +257,15 @@ export default function MapFilterMenu({
       },
       // Additional headers or credentials if needed
     });
-    console.log("consolelog:", eventResponse.status);
+
     if (eventResponse.status == 200) {
       const events = await eventResponse.data;
       // Process the data as needed
-      console.log("Filtered events:", events);
+
       setEventApiData(events.events);
       events.events.forEach((event) => {
         const xValue = event.x;
         const yValue = event.y;
-        console.log(`Event ID: ${event._id}, x: ${xValue}, y: ${yValue}`);
       });
     } else {
       // Handle errors
@@ -237,104 +276,104 @@ export default function MapFilterMenu({
     }
   };
 
-  const handleFilterClick = async () => {
-    console.log("I am in handleFilterClick");
-    try {
-      // Make API call to filter resources based on the search term
-      //const searchTerm = /* Get the search term from your input field */;
+  // const handleFilterClick = async () => {
+  //   console.log("I am in handleFilterClick");
+  //   try {
+  //     // Make API call to filter resources based on the search term
+  //     //const searchTerm = /* Get the search term from your input field */;
 
-      const eventResponse = await api.get(
-        `/api/resources/?sort_by=created_at&order=asc`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // Additional headers or credentials if needed
-        }
-      );
-      console.log("consolelog:", eventResponse.status);
-      if (eventResponse.status == 200) {
-        const events = await eventResponse.data;
-        // Process the data as needed
-        console.log("Filtered Resources:", events);
-        setEventApiData(events.events);
-        events.events.forEach((event) => {
-          const xValue = event.x;
-          const yValue = event.y;
-          console.log(`Resource ID: ${event._id}, X: ${xValue}, Y: ${yValue}`);
-        });
-      } else {
-        // Handle errors
-        console.error(
-          "Error fetching filtered resources:",
-          eventResponse.statusText
-        );
-      }
+  //     const eventResponse = await api.get(
+  //       `/api/resources/?sort_by=created_at&order=asc`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         // Additional headers or credentials if needed
+  //       }
+  //     );
+  //     console.log("consolelog:", eventResponse.status);
+  //     if (eventResponse.status == 200) {
+  //       const events = await eventResponse.data;
+  //       // Process the data as needed
+  //       console.log("Filtered Resources:", events);
+  //       setEventApiData(events.events);
+  //       events.events.forEach((event) => {
+  //         const xValue = event.x;
+  //         const yValue = event.y;
+  //         console.log(`Resource ID: ${event._id}, X: ${xValue}, Y: ${yValue}`);
+  //       });
+  //     } else {
+  //       // Handle errors
+  //       console.error(
+  //         "Error fetching filtered resources:",
+  //         eventResponse.statusText
+  //       );
+  //     }
 
-      const resourceResponse = await api.get(
-        `/api/resources/?sort_by=created_at&order=asc`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // Additional headers or credentials if needed
-        }
-      );
-      console.log("consolelog:", resourceResponse.status);
-      if (resourceResponse.status == 200) {
-        const resources = await resourceResponse.data;
-        // Process the data as needed
-        console.log("Filtered Resources:", resources);
-        setResourceApiData(resources.resources);
-        resources.resources.forEach((resource) => {
-          const xValue = resource.x;
-          const yValue = resource.y;
-          console.log(
-            `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
-          );
-        });
-      } else {
-        // Handle errors
-        console.error(
-          "Error fetching filtered resources:",
-          response.statusText
-        );
-      }
+  //     const resourceResponse = await api.get(
+  //       `/api/resources/?sort_by=created_at&order=asc`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         // Additional headers or credentials if needed
+  //       }
+  //     );
+  //     console.log("consolelog:", resourceResponse.status);
+  //     if (resourceResponse.status == 200) {
+  //       const resources = await resourceResponse.data;
+  //       // Process the data as needed
+  //       console.log("Filtered Resources:", resources);
+  //       setResourceApiData(resources.resources);
+  //       resources.resources.forEach((resource) => {
+  //         const xValue = resource.x;
+  //         const yValue = resource.y;
+  //         console.log(
+  //           `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+  //         );
+  //       });
+  //     } else {
+  //       // Handle errors
+  //       console.error(
+  //         "Error fetching filtered resources:",
+  //         response.statusText
+  //       );
+  //     }
 
-      const needResponse = await api.get(
-        `/api/needs/?sort_by=created_at&order=asc`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // Additional headers or credentials if needed
-        }
-      );
-      console.log("consolelog:", needResponse.status);
-      if (needResponse.status == 200) {
-        const needs = await needResponse.data;
-        // Process the data as needed
-        console.log("Filtered Needs:", needs);
-        setNeedApiData(needs.needs);
-        needs.needs.forEach((resource) => {
-          const xValue = resource.x;
-          const yValue = resource.y;
-          console.log(
-            `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
-          );
-        });
-      } else {
-        // Handle errors
-        console.error("Error fetching filtered resources:", needs.statusText);
-      }
-    } catch (error) {
-      // Handle unexpected errors
-      console.error("Error:", error);
-    }
-  };
+  //     const needResponse = await api.get(
+  //       `/api/needs/?sort_by=created_at&order=asc`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         // Additional headers or credentials if needed
+  //       }
+  //     );
+  //     console.log("consolelog:", needResponse.status);
+  //     if (needResponse.status == 200) {
+  //       const needs = await needResponse.data;
+  //       // Process the data as needed
+  //       console.log("Filtered Needs:", needs);
+  //       setNeedApiData(needs.needs);
+  //       needs.needs.forEach((resource) => {
+  //         const xValue = resource.x;
+  //         const yValue = resource.y;
+  //         console.log(
+  //           `Resource ID: ${resource._id}, X: ${xValue}, Y: ${yValue}`
+  //         );
+  //       });
+  //     } else {
+  //       // Handle errors
+  //       console.error("Error fetching filtered resources:", needs.statusText);
+  //     }
+  //   } catch (error) {
+  //     // Handle unexpected errors
+  //     console.error("Error:", error);
+  //   }
+  // };
 
   const getCursorColor = (type) => {
     switch (type) {
@@ -351,7 +390,7 @@ export default function MapFilterMenu({
 
   const handleSubmit = async (text) => {
     text.preventDefault();
-    console.log(search);
+
     if (chosenActivityType === undefined) {
       toast.error("Please choose an activity type");
       return;
@@ -513,7 +552,7 @@ export default function MapFilterMenu({
 
       <button
         onClick={() => {
-          notifyFilter();
+          scanScreen(bounds);
         }}
         className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded w-full"
         // absolute bottom-30 right-0.5"
@@ -542,30 +581,28 @@ export default function MapFilterMenu({
         {labels.sort_filter.filter_reset}
       </button>
 
-      
-        <button
-          onClick={() => {
-            download();
-          }}
-          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full
+      <button
+        onClick={() => {
+          download();
+        }}
+        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full
            absolute bottom-10 right-0.5"
-        >
-          {labels.map.download}
-        </button>
-        <button
-          onClick={() => {
-            activateClick();
-            notifyAdd();
-          }}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full
+      >
+        {labels.map.download}
+      </button>
+      <button
+        onClick={() => {
+          activateClick();
+          notifyAdd();
+        }}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full
            absolute bottom-0 right-0.5"
-        >
-          {labels.activities.add_resource}
-        </button>
+      >
+        {labels.activities.add_resource}
+      </button>
 
-        {isMapSelected ? popup() : <></>}
-        <ToastContainer />
-
+      {isMapSelected ? popup() : <></>}
+      <ToastContainer />
     </div>
   );
 }
