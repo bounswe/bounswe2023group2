@@ -243,7 +243,7 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
 
 
     private fun coordinateToAddress(x: Double, y: Double, callback: okhttp3.Callback) {
-        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y"
+        val url = "https://geocode.maps.co/reverse?lat=$x&lon=$y&api_key=658a6bb850a62680253220cju871eba"
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(url)
