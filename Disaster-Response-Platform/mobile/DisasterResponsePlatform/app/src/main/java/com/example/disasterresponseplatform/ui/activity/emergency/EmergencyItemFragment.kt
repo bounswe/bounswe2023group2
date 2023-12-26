@@ -85,6 +85,12 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
         }
         binding.tvPhoneNumber.text = emergency.phone_number
         binding.tvType.text = emergency.type
+        annotation.getAnnotations(emergency.type, {annotationText ->
+            binding.tvType.setOnLongClickListener {
+                Toast.makeText(context, "${emergency.type}: $annotationText", Toast.LENGTH_LONG).show()
+                false
+            }
+        }, {})
         annotation.getAnnotations(emergency.created_by + "-emergency-" + emergency.type, {
             binding.tvDescription.text = it
         }, {

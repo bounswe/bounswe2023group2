@@ -68,7 +68,19 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         val creatorName = need.created_by
         binding.tvCreator.text = creatorName
         binding.tvType.text = need.type
+        annotation.getAnnotations(need.type, {annotationText ->
+            binding.tvType.setOnLongClickListener {
+                Toast.makeText(context, "${need.type}: $annotationText", Toast.LENGTH_LONG).show()
+                false
+            }
+        }, {})
         binding.tvSubType.text = need.details["subtype"]
+        annotation.getAnnotations(need.details["subtype"] ?: "", {annotationText ->
+            binding.tvSubType.setOnLongClickListener {
+                Toast.makeText(context, "${need.details["subtype"]}: $annotationText", Toast.LENGTH_LONGdd).show()
+                false
+            }
+        }, {})
         binding.tvInitialQuantity.text = need.initialQuantity.toString()
         binding.tvUnsuppliedQuantity.text = need.unsuppliedQuantity.toString()
         binding.tvUrgency.text = need.urgency.toString()

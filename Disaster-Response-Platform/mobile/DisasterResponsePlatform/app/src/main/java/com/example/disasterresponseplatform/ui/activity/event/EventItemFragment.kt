@@ -66,7 +66,19 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
         val creatorName = event.created_by_user
         binding.tvCreator.text = creatorName
         binding.tvType.text = event.event_type
+        annotation.getAnnotations(event.event_type, {annotationText ->
+            binding.tvType.setOnLongClickListener {
+                Toast.makeText(context, "${event.event_type}: $annotationText", Toast.LENGTH_LONG).show()
+                false
+            }
+        }, {})
         binding.tvDescription.text = event.short_description
+        annotation.getAnnotations(event.short_description ?: "", {annotationText ->
+            binding.tvDescription.setOnLongClickListener {
+                Toast.makeText(context, "${event.short_description}: $annotationText", Toast.LENGTH_LONG).show()
+                false
+            }
+        }, {})
         binding.tvCreationTime.text = event.created_time
         if (event.last_confirmed_time == null){
             binding.iconUpdate.isVisible = false

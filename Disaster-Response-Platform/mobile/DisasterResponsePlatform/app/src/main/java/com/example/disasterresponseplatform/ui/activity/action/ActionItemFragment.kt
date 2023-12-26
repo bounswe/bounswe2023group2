@@ -66,6 +66,12 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
         val creatorName = action.created_by
         binding.etCreatedBy.text = creatorName
         binding.etType.text = action.type
+        annotation.getAnnotations(action.type, {annotationText ->
+            binding.etType.setOnLongClickListener {
+                Toast.makeText(context, "${action.type}: $annotationText", Toast.LENGTH_LONG).show()
+                false
+            }
+        }, {})
         binding.tvLastUpdatedTime.text = action.last_updated_at.substring(0,10)
         binding.tvCreationTime.text = action.created_at.substring(0,10)
         binding.tvUpvoteCount.text = action.upvote.toString()

@@ -69,7 +69,19 @@ class ResourceItemFragment(private val resourceViewModel: ResourceViewModel, pri
         val creatorName = resource.created_by
         binding.tvCreator.text = creatorName
         binding.tvType.text = resource.type
+        annotation.getAnnotations(resource.type, {annotationText ->
+            binding.tvType.setOnLongClickListener {
+                Toast.makeText(context, "${resource.type}: $annotationText", Toast.LENGTH_LONG).show()
+                false
+            }
+        }, {})
         binding.tvSubType.text = resource.details["subtype"]
+        annotation.getAnnotations(resource.details["subtype"] ?: "", {annotationText ->
+            binding.tvSubType.setOnLongClickListener {
+                Toast.makeText(context, "${resource.details["subtype"]}: $annotationText", Toast.LENGTH_LONG).show()
+                false
+            }
+        }, {})
         binding.tvInitialQuantity.text = resource.initialQuantity.toString()
         binding.tvCurrentQuantity.text = resource.currentQuantity.toString()
         if (resource.x != 0.0 && resource.y != 0.0){
