@@ -11,7 +11,7 @@ from Services.build_API_returns import *
 
 from typing import Optional
 from datetime import datetime, timedelta
-
+import math
 
 # Get the emergencies collection using the MongoDB class
 emergencies_collection = MongoDB.get_collection('emergencies')
@@ -64,6 +64,7 @@ def get_emergencies(
                   "max_distance_y": 1,
                   "upvote": 1,
                   "downvote": 1,
+                  "reliability": 1,
                   "x": 1,
                   "y": 1,
                   "location": 1,
@@ -103,6 +104,24 @@ def get_emergencies(
     # Filter by distance if necessary
     if x is not None and y is not None and distance_max is not None:
         emergencies_data = [res for res in emergencies_data if ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
+        
+    for emergency in emergencies_data:
+        upvotes = emergency.get('upvote', 0)
+        downvotes = emergency.get('downvote', 0)
+        total_votes = upvotes + downvotes
+
+        if total_votes > 0:
+            z = 1.96  # 95% confidence interval
+            phat = upvotes / total_votes
+            emergency['reliability'] = (
+                        phat + z ** 2 / (2 * total_votes) - z * math.sqrt(
+                    (phat * (1 - phat) + z ** 2 / (4 * total_votes)) / total_votes)) / (1 + z ** 2 / total_votes)
+        else:
+            emergency['reliability'] = 0.5  # Default score for no votes
+
+    # Calculate and sort by reliability score if requested
+    if sort_by == 'reliability':
+        emergencies_data.sort(key=lambda x: x['reliability'], reverse=(order == 'desc'))
 
         # Format the emergency data
     formatted_emergencies_data = []
