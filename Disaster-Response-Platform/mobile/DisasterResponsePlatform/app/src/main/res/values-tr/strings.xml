@@ -149,6 +149,7 @@
     <string name="sign_in_camel">Giriş Yap</string>
     <string name="username">Kullanıcı Adı</string>
     <string name="e_mail">E-posta</string>
+    <string name="phone_number">Telefon Numarası</string>
     <string name="username_or_email">Kullanıcı Adı veya E-posta</string>
     <string name="password">Parola</string>
     <string name="confirm_password">Parolayı Onayla</string>
