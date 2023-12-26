@@ -19,6 +19,7 @@ class EmergencyBody {
         @SerializedName("description") val description: String?,
         @SerializedName("upvote") val upvote: Int = 0,
         @SerializedName("downvote") val downvote: Int = 0,
+        @SerializedName("reliability") val reliability: Double,
 
         @SerializedName("x") val x: Double = 0.0,
         @SerializedName("y") val y: Double = 0.0,

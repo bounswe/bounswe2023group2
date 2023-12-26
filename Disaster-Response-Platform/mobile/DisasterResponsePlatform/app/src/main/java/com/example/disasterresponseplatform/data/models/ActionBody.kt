@@ -60,6 +60,7 @@ class ActionBody {
         @SerializedName("last_updated_at") val last_updated_at: String,
         @SerializedName("upvote") val upvote: Int,
         @SerializedName("downvote") val downvote: Int,
+        @SerializedName("reliability") val reliability: Double,
         @SerializedName("related_groups") val relatedGroups: List<RelatedGroup>,
         //@SerilizedName("related_groups") val related_groups: ??
         @SerializedName("_id") val _id: String

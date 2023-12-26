@@ -46,8 +46,8 @@ class EventAdapter(private val eventList: List<EventBody.EventRequestBody>?, pri
         val shortDescription = currentEvent?.short_description.toString()
         hb.tvShortNode.text = shortDescription.substring(0, minOf(25,shortDescription.length))
         hb.tvCreator.text = currentEvent?.created_by_user
-        hb.tvDownvoteCount.text = currentEvent?.downvote.toString()
-        hb.tvUpvoteCount.text = currentEvent?.upvote.toString()
+        hb.tvReliability.text =  String.format("%.2f", currentEvent?.reliability)
+
         // user role
         val creator = currentEvent?.created_by_user
         // user role

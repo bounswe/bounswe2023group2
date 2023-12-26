@@ -286,7 +286,7 @@ class EventFragment(
         val selectedSortBy: String = when (sortByChipGroup.findViewById<Chip>(selectedSortById)?.text) {
             getString(R.string.sf_creation) -> "created_at"
             getString(R.string.sf_last_update) -> "last_updated_at"
-            getString(R.string.sf_reliability) -> "upvote"
+            getString(R.string.sf_reliability) -> "reliability"
             else -> ""
         }
 

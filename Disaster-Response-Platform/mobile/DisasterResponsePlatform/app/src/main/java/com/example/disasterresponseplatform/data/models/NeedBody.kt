@@ -76,6 +76,7 @@ class NeedBody {
         @SerializedName("active") val active: Boolean,
         @SerializedName("upvote") val upvote: Int,
         @SerializedName("downvote") val downvote: Int,
+        @SerializedName("reliability") val reliability: Double,
         @SerializedName("_id") val _id: String
     )
 
