@@ -39,8 +39,8 @@ class AddEmergencyFragment(
     private lateinit var binding: FragmentAddEmergencyBinding
     private var requireActivity: FragmentActivity? = null
     private var selectedType: String = ""
-    private var selectedLocationX by Delegates.notNull<Double>()
-    private var selectedLocationY by Delegates.notNull<Double>()
+    private var selectedLocationX: Double = 0.0
+    private var selectedLocationY: Double = 0.0
     private val mapFragment = ActivityMap()
     private val annotation = Annotation()
 
