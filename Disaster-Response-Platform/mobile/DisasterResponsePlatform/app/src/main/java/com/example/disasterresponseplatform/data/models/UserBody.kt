@@ -8,7 +8,7 @@ class UserBody {
 
     data class UserMessageModel(
         val username: String?,
-        val is_credible: Boolean
+        val user_role: String
     )
 
 }
