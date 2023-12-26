@@ -14,11 +14,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.disasterresponseplatform.R
+import com.example.disasterresponseplatform.data.models.EmergencyBody
+import com.example.disasterresponseplatform.data.models.EventBody
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.action.ActionViewModel
+import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyItemFragment
 import com.example.disasterresponseplatform.ui.activity.emergency.EmergencyViewModel
+import com.example.disasterresponseplatform.ui.activity.event.EventItemFragment
 import com.example.disasterresponseplatform.ui.activity.event.EventViewModel
 import com.example.disasterresponseplatform.ui.activity.need.NeedItemFragment
 import com.example.disasterresponseplatform.ui.activity.need.NeedViewModel
@@ -103,21 +107,25 @@ class MapFragment(
         mapViewModel.sendGetAllNeedRequest()
         mapViewModel.getLiveDataNeedResponse().observe(requireActivity!!) { needItems ->
             needItems?.needs?.forEach { needItem ->
-                if (!needClusterer.items.any { marker -> marker.id == needItem._id }
-                // UnComment them if you only want to see today's needs
-                //&& needItem.occur_at?.startsWith(currentDate) != false
-                //&& needItem.active
-                ) {
-                    addNeedMarker(needItem)
+                try {
+                    if (!needClusterer.items.any { marker -> marker.id == needItem._id }
+                    // UnComment them if you only want to see today's needs
+                    //&& needItem.occur_at?.startsWith(currentDate) != false
+                    //&& needItem.active
+                    ) {
+                        addNeedMarker(needItem)
+                        mapView.postInvalidate()
+                    }
+                    val marker = Marker(mapView)
+                    marker.id = needItem._id
+                    val point = GeoPoint(needItem.x, needItem.y)
+                    marker.position = point
+                    allClusters.add(marker)
                     mapView.postInvalidate()
+                    mapView.invalidate()
+                } catch (e: Exception) {
+                    Log.d("hata in need", e.toString())
                 }
-                val marker = Marker(mapView)
-                marker.id = needItem._id
-                val point = GeoPoint(needItem.x, needItem.y)
-                marker.position = point
-                allClusters.add(marker)
-                mapView.postInvalidate()
-                mapView.invalidate()
             }
             mapView.overlays.add(needClusterer)
             mapView.invalidate()
@@ -129,22 +137,87 @@ class MapFragment(
         mapViewModel.sendGetAllResourceRequest()
         mapViewModel.getLiveDataResourceResponse().observe(requireActivity!!) { resourceItems ->
             resourceItems?.resources?.forEach {resourceItem ->
-                if (!needClusterer.items.any { marker -> marker.id == resourceItem._id }
-                // UnComment them if you only want to see today's resources
-                //&& resourceItem.occur_at?.startsWith(currentDate) != false
-                //&& resourceItem.active
-                )
-                {
-                    addResourceMarker(resourceItem)
+                try {
+                    if (!needClusterer.items.any { marker -> marker.id == resourceItem._id }
+                    // UnComment them if you only want to see today's resources
+                    //&& resourceItem.occur_at?.startsWith(currentDate) != false
+                    //&& resourceItem.active
+                    ) {
+                        addResourceMarker(resourceItem)
+                        mapView.postInvalidate()
+                    }
+                    val marker = Marker(mapView)
+                    marker.id = resourceItem._id
+                    val point = GeoPoint(resourceItem.x, resourceItem.y)
+                    marker.position = point
+                    allClusters.add(marker)
                     mapView.postInvalidate()
+                    mapView.invalidate()
+                } catch (e: Exception) {
+                    Log.d("hata in resource", e.toString())
                 }
-                val marker = Marker(mapView)
-                marker.id = resourceItem._id
-                val point = GeoPoint(resourceItem.x, resourceItem.y)
-                marker.position = point
-                allClusters.add(marker)
-                mapView.postInvalidate()
-                mapView.invalidate()
+            }
+            //mapView.overlays.add(needClusterer)
+            mapView.overlays.add(needClusterer)
+            mapView.invalidate()
+            mapView.postInvalidate()
+        }
+    }
+
+    private fun showEventsOnMap(){
+        mapViewModel.sendGetAllEventRequest()
+        mapViewModel.getLiveDataEventResponse().observe(requireActivity!!) { eventItems ->
+            eventItems?.events?.forEach {eventItem ->
+                try {
+                    if (!needClusterer.items.any { marker -> marker.id == eventItem._id }
+                    // UnComment them if you only want to see today's resources
+                    //&& resourceItem.occur_at?.startsWith(currentDate) != false
+                    //&& resourceItem.active
+                    ) {
+                        addEventMarker(eventItem)
+                        mapView.postInvalidate()
+                    }
+                    val marker = Marker(mapView)
+                    marker.id = eventItem._id
+                    val point = GeoPoint(eventItem.x, eventItem.y)
+                    marker.position = point
+                    allClusters.add(marker)
+                    mapView.postInvalidate()
+                    mapView.invalidate()
+                } catch (e: Exception) {
+                    Log.d("hata in event", e.toString())
+                }
+            }
+            //mapView.overlays.add(needClusterer)
+            mapView.overlays.add(needClusterer)
+            mapView.invalidate()
+            mapView.postInvalidate()
+        }
+    }
+
+    private fun showEmergenciesOnMap(){
+        mapViewModel.sendGetAllEmergenciesRequest()
+        mapViewModel.getLiveDataEmergencyResponse().observe(requireActivity!!) { emergencyItems ->
+            emergencyItems?.emergencies?.forEach {emergencyItem ->
+                try {
+                    if (!needClusterer.items.any { marker -> marker.id == emergencyItem._id }
+                    // UnComment them if you only want to see today's resources
+                    //&& resourceItem.occur_at?.startsWith(currentDate) != false
+                    //&& resourceItem.active
+                    ) {
+                        addEmergencyMarker(emergencyItem)
+                        mapView.postInvalidate()
+                    }
+                    val marker = Marker(mapView)
+                    marker.id = emergencyItem._id
+                    val point = GeoPoint(emergencyItem.x, emergencyItem.y)
+                    marker.position = point
+                    allClusters.add(marker)
+                    mapView.postInvalidate()
+                    mapView.invalidate()
+                } catch (e: Exception) {
+                    Log.d("hata in emergency", e.toString())
+                }
             }
             //mapView.overlays.add(needClusterer)
             mapView.overlays.add(needClusterer)
@@ -183,6 +256,8 @@ class MapFragment(
         needClusterer.items.clear()
         showNeedsOnMap()
         showResourcesOnMap()
+        showEventsOnMap()
+        showEmergenciesOnMap()
         //showActionsOnMap()
     }
 
@@ -283,6 +358,61 @@ class MapFragment(
 
             needClusterer.add(marker)
         }
+    }
+
+    private fun addEventMarker(eventItem: EventBody.EventRequestBody) {
+            val point = GeoPoint(eventItem.x.toDouble(), eventItem.y.toDouble())
+            val marker = Marker(mapView)
+            marker.setInfoWindow(BubbleInfoView(mapView) {
+                addFragment(EventItemFragment(eventViewModel, eventItem),"ResourceItemFragment")
+            })
+            marker.id = eventItem._id
+            marker.position = point
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marker.title = eventItem.event_type
+            marker.subDescription = eventItem.short_description
+
+            // Apply a color filter to the default marker
+            marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.event_map_icon)
+//            val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon
+//            defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
+//            marker.icon = defaultDrawable
+
+            UserRoleUtil.isCredibleNonBlocking(eventItem.created_by_user) {
+                if (it) {
+                    marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.credible_event_map_icon)
+                }
+            }
+
+            needClusterer.add(marker)
+    }
+
+    private fun addEmergencyMarker(emergencyItem: EmergencyBody.EmergencyItem) {
+        val point = GeoPoint(emergencyItem.x.toDouble(), emergencyItem.y.toDouble())
+        val marker = Marker(mapView)
+        marker.setInfoWindow(BubbleInfoView(mapView) {
+            addFragment(EmergencyItemFragment(emergencyViewModel, emergencyItem),"ResourceItemFragment")
+        })
+        marker.id = emergencyItem._id
+        marker.position = point
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        marker.title = emergencyItem.type
+        marker.subDescription = emergencyItem.description
+
+        // Apply a color filter to the default marker
+        marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.emergency_map_icon)
+//            val defaultDrawable = marker.icon.mutate() // Get and mutate the default icon
+//            defaultDrawable.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(requireContext(), R.color.black), PorterDuff.Mode.SRC_IN)
+//            marker.icon = defaultDrawable
+
+        if (emergencyItem.created_by != null)
+        UserRoleUtil.isCredibleNonBlocking(emergencyItem.created_by) {
+            if (it) {
+                marker.icon = ContextCompat.getDrawable(requireContext(), R.drawable.credible_emergency_map_icon)
+            }
+        }
+
+        needClusterer.add(marker)
     }
 
     private fun addFragment(fragment: Fragment,fragmentName: String) {
