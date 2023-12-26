@@ -44,8 +44,8 @@ class ActionAdapter(private val actionList: List<ActionBody.ActionItem>?, privat
         hb.tvType.text = currentAction?.type.toString()
         hb.tvDate.text = currentAction?.created_at?.substring(0,19)
         hb.tvCreator.text = currentAction?.created_by
-        hb.tvDownvoteCount.text = currentAction?.downvote.toString()
-        hb.tvUpvoteCount.text = currentAction?.upvote.toString()
+        hb.tvReliability.text =  String.format("%.2f", currentAction?.reliability)
+
         // user role
         val creator = currentAction?.created_by
         // user role
