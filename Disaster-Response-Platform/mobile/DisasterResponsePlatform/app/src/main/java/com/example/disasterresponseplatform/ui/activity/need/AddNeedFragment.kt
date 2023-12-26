@@ -62,6 +62,9 @@ class AddNeedFragment(
     ): View {
 
         binding = FragmentAddNeedBinding.inflate(inflater, container, false)
+        if (requireActivity == null) { // to handle error when user enters this page twice
+            requireActivity = requireActivity()
+        }
         mapFunction()
         fillParameters(need)
         getFormFieldsFromBackend()
@@ -90,15 +93,6 @@ class AddNeedFragment(
         }
     }
 
-    private fun validateRecurrence(): Boolean{
-        val validated = if (binding.swRecurrenceFilter.isChecked){
-            validateFields(binding.layRecurrence)
-        } else{
-            true
-        }
-        return validated
-    }
-
 
     /**
      * This function arranges submit operation, if isAdd is true it should be POST to backend, else it should be PUT.
@@ -122,13 +116,6 @@ class AddNeedFragment(
                 binding.btnSubmit.isEnabled = true
             }
         }
-    }
-
-    private fun validation(): Boolean{
-        return (validateFields(binding.laySpecific) &&
-                validateRecurrence() &&
-                validateFields(binding.layOthers) &&
-                validateHardcodedFields())
     }
 
     /**
@@ -175,7 +162,8 @@ class AddNeedFragment(
      * It attaches recurrenceID with needID
      */
     private fun attachRecurrence(recurrenceViewModel: RecurrenceViewModel, recurrenceID: String, needID: String){
-        val attachBody = RecurrenceModel.AttachActivityBody(recurrenceID,needID,"need")
+        val activityType = "need"
+        val attachBody = RecurrenceModel.AttachActivityBody(recurrenceID,needID,activityType)
         recurrenceViewModel.attachRecurrence(attachBody)
         recurrenceViewModel.getAttachedRecurrenceID().observe(requireActivity!!){attachedID ->
             if (attachedID!="-1"){
@@ -298,9 +286,7 @@ class AddNeedFragment(
      * This function arranges initialization view of recurrence layouts
      */
     private fun initRecurrenceView(){
-        if (requireActivity == null) { // to handle error when user enters this page twice
-            requireActivity = requireActivity()
-        }
+
         val recurrenceUnitList: List<String> = resources.getStringArray(R.array.recurrence_unit).toList()
         val unitAdapter = ArrayAdapter<String>(
             requireContext(),
@@ -461,6 +447,22 @@ class AddNeedFragment(
                 typeChanged(selectedType)
             }
         })
+    }
+
+    private fun validateRecurrence(): Boolean{
+        val validated = if (binding.swRecurrenceFilter.isChecked){
+            validateFields(binding.layRecurrence)
+        } else{
+            true
+        }
+        return validated
+    }
+
+    private fun validation(): Boolean{
+        return (validateFields(binding.laySpecific) &&
+                validateRecurrence() &&
+                validateFields(binding.layOthers) &&
+                validateHardcodedFields())
     }
 
     /**
