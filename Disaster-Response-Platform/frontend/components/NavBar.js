@@ -15,6 +15,7 @@ import AddNeedForm from "./AddNeed";
 import AddEventForm from "./AddEvent";
 import AddEmergencyForm from "./AddEmergency";
 import AddTransportAction from "./AddTransportAction";
+import AddMoveAction from "./AddMoveAction";
 
 
 export default function NavBar({ labels }) {
@@ -41,6 +42,11 @@ export default function NavBar({ labels }) {
     isOpen: isEmergencyModalOpen,
     onOpen: onOpenEmergencyModal,
     onOpenChange: onOpenChangeEmergencyModal,
+  } = useDisclosure();
+  const {
+    isOpen: isMoveModalOpen,
+    onOpen: onOpenMoveModal,
+    onOpenChange: onOpenChangeMoveModal,
   } = useDisclosure();
 
 
@@ -111,7 +117,10 @@ export default function NavBar({ labels }) {
                   {labels.activities.report_event}
                 </DropdownItem>
                 <DropdownItem key="aksiyon" onClick={onOpenActionModal}>
-                  {labels.activities.add_action}
+                 Transport Resources
+                </DropdownItem>
+                <DropdownItem key="aksiyon" onClick={onOpenMoveModal}>
+                  Move the Survivors
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -204,6 +213,7 @@ export default function NavBar({ labels }) {
       <AddEventForm onOpenChange={onOpenChangeEventModal} isOpen={isEventModalOpen} labels={labels} />
       <AddEmergencyForm onOpenChange={onOpenChangeEmergencyModal} isOpen={isEmergencyModalOpen} labels={labels} />
       <AddTransportAction onOpenChange={onOpenChangeActionModal} isOpen={isActionModalOpen} labels={labels} />
+      <AddMoveAction onOpenChange={onOpenChangeMoveModal} isOpen={isMoveModalOpen} labels={labels} />
     </Navbar>
   );
 }

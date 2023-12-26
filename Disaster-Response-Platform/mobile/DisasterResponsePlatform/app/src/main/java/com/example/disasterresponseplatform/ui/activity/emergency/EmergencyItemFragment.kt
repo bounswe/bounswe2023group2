@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -63,7 +64,7 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
     }
 
     private fun fillTexts(emergency: EmergencyBody.EmergencyItem){
-        val creatorUsername = emergency.created_by
+        val creatorUsername = emergency.created_by_user
 
         // Check whether it is created by user or guest
         if (!creatorUsername.isNullOrEmpty()) {
@@ -82,11 +83,17 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
             binding.iconUpdate.visibility = View.GONE
             binding.tvLastUpdatedTimeTitle.visibility = View.GONE
             binding.tvLastUpdatedTime.visibility = View.GONE
-
-            binding.tvCreator.text = emergency.creator_name
-            binding.tvUserRole.text = "GUEST"
+            //Hide Creator
+            binding.iconCreator.visibility = View.GONE
+            binding.tvUsernameTitle.visibility = View.GONE
+            binding.tvCreator.visibility = View.GONE
+            //Hide UserRole
+            binding.iconUserRole.visibility = View.GONE
+            binding.tvUserRoleTitle.visibility = View.GONE
+            binding.tvUserRole.visibility = View.GONE
         }
-        binding.tvPhoneNumber.text = emergency.phone_number
+        binding.tvContactName.text = emergency.contact_name
+        binding.tvContactNumber.text = emergency.contact_number
         binding.tvType.text = emergency.type
         annotation.getAnnotations(emergency.type, {annotationText ->
             binding.tvType.setOnLongClickListener {
@@ -105,7 +112,7 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
                 false
             }
         }, {})
-        annotation.getAnnotations(emergency.created_by + "-emergency-" + emergency.type, {
+        annotation.getAnnotations(emergency.created_by_user + "-emergency-" + emergency.type, {
             binding.tvDescription.text = it
         }, {
             binding.tvDescription.text = emergency.description
@@ -149,27 +156,36 @@ class EmergencyItemFragment(private val emergencyViewModel: EmergencyViewModel, 
     private fun arrangeButtons(){
         val token = DiskStorageManager.getKeyValue("token")
         val username = DiskStorageManager.getKeyValue("username").toString() // only creators can edit it
-        if (DiskStorageManager.checkToken() and (username == emergency.created_by)) {
-            binding.btnEdit.setOnClickListener {
-                editEmergency()
-            }
-            binding.btnDelete.setOnClickListener {
-                deleteEmergency()
-            }
+        Log.i("EmergencyGelen","Created by: ${emergency.created_by_user} Username: $username")
+        if (DiskStorageManager.checkToken() ) {
+            binding.UpvoteDownvoteLayout.visibility =  View.VISIBLE
             binding.btnUpvote.setOnClickListener {
                 upvoteEmergency(token)
             }
             binding.btnDownvote.setOnClickListener {
                 downvoteEmergency(token)
             }
+            if ((username == emergency.created_by_user)){
+                binding.btnDelete.visibility = View.VISIBLE
+                binding.btnEdit.visibility = View.VISIBLE
+                binding.btnEdit.setOnClickListener {
+                    editEmergency()
+                }
+                binding.btnDelete.setOnClickListener {
+                    deleteEmergency()
+                }
+            } else{
+                binding.btnDelete.visibility = View.GONE
+                binding.btnEdit.visibility = View.GONE
+            }
         } else {
+            binding.UpvoteDownvoteLayout.visibility = View.GONE
             binding.btnDelete.visibility = View.GONE
             binding.btnEdit.visibility = View.GONE
-            binding.btnSeeProfile.visibility = View.GONE
-            binding.btnNavigate.visibility = View.GONE
         }
+        binding.UpvoteDownvoteLayout.visibility =  View.GONE
         binding.btnSeeProfile.setOnClickListener {
-            addFragment(ProfileFragment(emergency.created_by),"ProfileFragment")
+            addFragment(ProfileFragment(emergency.created_by_user),"ProfileFragment")
         }
         binding.btnNavigate.setOnClickListener {
             navigateToMapFragment()

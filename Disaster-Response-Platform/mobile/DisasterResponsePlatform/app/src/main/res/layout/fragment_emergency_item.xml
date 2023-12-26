@@ -242,12 +242,79 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
             <ImageView
-                android:id="@+id/iconCreator"
+                android:id="@+id/iconContact"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnNavigate"
+                app:srcCompat="@drawable/ic_person"
+                app:tint="@color/icon" />
+
+            <TextView
+                android:id="@+id/tvContactNameTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_contact_name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iconContact"
+                app:layout_constraintStart_toEndOf="@+id/iconContact"
+                app:layout_constraintTop_toTopOf="@+id/iconContact" />
+
+            <TextView
+                android:id="@+id/tvContactName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder_general"
+                android:textSize="16sp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/tvContactNameTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvContactNameTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/iconContactNumber"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iconContact"
+                app:srcCompat="@drawable/phone_icon"
+                app:tint="@color/icon" />
+
+            <TextView
+                android:id="@+id/tvContactNumberTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/act_contact_phone"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iconContactNumber"
+                app:layout_constraintStart_toEndOf="@+id/iconContactNumber"
+                app:layout_constraintTop_toTopOf="@+id/iconContactNumber" />
+
+            <TextView
+                android:id="@+id/tvContactNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder_general"
+                android:textSize="16sp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/tvContactNumberTitle"
+                app:layout_constraintTop_toTopOf="@+id/tvContactNumberTitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+
+            <ImageView
+                android:id="@+id/iconCreator"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iconContactNumber"
                 app:srcCompat="@drawable/ic_person"
                 app:tint="@color/icon" />
 
@@ -275,45 +342,12 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
-                android:id="@+id/iconPhoneNumber"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginTop="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iconCreator"
-                app:srcCompat="@drawable/phone_icon"
-                app:tint="@color/icon" />
-
-            <TextView
-                android:id="@+id/tvPhoneNumberTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/act_phone_number"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/iconPhoneNumber"
-                app:layout_constraintStart_toEndOf="@+id/iconPhoneNumber"
-                app:layout_constraintTop_toTopOf="@+id/iconPhoneNumber" />
-
-            <TextView
-                android:id="@+id/tvPhoneNumber"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/placeholder_general"
-                android:textSize="16sp"
-                android:layout_marginStart="10dp"
-                app:layout_constraintStart_toEndOf="@+id/tvPhoneNumberTitle"
-                app:layout_constraintTop_toTopOf="@+id/tvPhoneNumberTitle"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <ImageView
                 android:id="@+id/iconUserRole"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iconPhoneNumber"
+                app:layout_constraintTop_toBottomOf="@+id/iconCreator"
                 app:srcCompat="@drawable/ic_role"
                 app:tint="@color/icon" />
 
@@ -364,11 +398,11 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/UpvoteDownvoteLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.15"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <!-- rows on column has same width -->
                 <LinearLayout
