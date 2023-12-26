@@ -3,7 +3,7 @@ import React from 'react';
 import { BiDownvote, BiUpvote } from "react-icons/bi";
 import AddActionForm from './AddAction';
 import ActivityModal from './ActivityModal';
-const ListItem = ({ activityType, activity }) => {
+const ListItem = ({ activityType, activity, labels }) => {
   const {
     isOpen: isNeedModalOpen,
     onOpen: onOpenNeedModal,
@@ -91,6 +91,7 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
         </CardFooter>
       </Card>
 } 
+
 {activityType === "emergency" && 
       <Card shadow='none'  isPressable className='border-1 w-3/4 m-auto mb-3' onClick={()=>{
         onOpen()
@@ -134,7 +135,8 @@ const { isOpen, onOpen, onOpenChange } = useDisclosure();
       </Card>
 } 
 
-<ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={activityType} />
+<ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={activityType} labels={labels} />
+
  <AddActionForm onOpenChange={onOpenChangeNeedModal} isOpen={isNeedModalOpen} selected={activity} type={activityType}  />
 
   </>

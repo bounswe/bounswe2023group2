@@ -158,6 +158,8 @@
 		"type": "Type",
 		"subtype": "Subtype",
 		"upvote": "Reliability",
+		"reliable": "Reliable",
+		"unreliable": "Unreliable",
 		"currentQuantity": "Current quantity",
 		"due_date": "Due Date",
 		"description": "Description"

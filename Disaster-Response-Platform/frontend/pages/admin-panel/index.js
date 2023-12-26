@@ -274,13 +274,18 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels}};
     }
 
-    const { data: {user_list: allUsers} } = await api.get('/api/users/', {
+    let { data: {results: allUsersInit} } = await api.get('/api/search/users/.*', {
       headers: {
         'Authorization': `Bearer ${user.accessToken}` 
       }
     });
 
-    allUsersInit = allUsersInit.map((user, index) => ({...user, initialCredible: user.user_role === "CREDIBLE", index: index}));
+    allUsersInit = allUsersInit.map((user, index) => ({...user,
+                                                       initialCredible: user.user_role === "CREDIBLE",
+                                                       index: index,
+                                                       proficiency: (user.proficiency instanceof Array ? user.proficiency?.[0] || {}
+                                                                                                       : user.proficiency)
+                                                     }));
 
     allUsersInit.sort((u1, u2) => u1.username.localeCompare(u2.username))
 

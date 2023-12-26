@@ -15,12 +15,20 @@ export default function AddEmergency({ isOpen, onOpenChange, labels }) {
   async function addEmergency(event, onClose) {
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
+    if (formData.contact_name === "") {
+      delete formData.contact_name;
+    }
+    if (formData.contact_number === "") {
+      delete formData.contact_number;
+    }
+    if (formData.location === "") {
+      formData.location = `${Math.abs(position[0])}${position[0] >= 0 ? "N" : "S"} ${Math.abs(position[1])}${position[1] >= 0 ? "E" : "W"}`;
+    }
 
     const sentData = {
       ...formData,
       x: position[1],
-      y: position[0],
-      location: formData.location || `${Math.abs(position[0])}${position[0] >= 0 ? "N" : "S"} ${Math.abs(position[1])}${position[1] >= 0 ? "E" : "W"}`
+      y: position[0]
     };
 
     const response = await fetch('/api/add-emergency', {
