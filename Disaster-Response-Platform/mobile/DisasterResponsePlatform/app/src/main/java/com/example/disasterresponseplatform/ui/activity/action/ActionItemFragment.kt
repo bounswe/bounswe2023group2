@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,7 +69,18 @@ class ActionItemFragment(private val actionViewModel: ActionViewModel, private v
         binding.etType.text = action.type
         annotation.getAnnotations(action.type, {annotationText ->
             binding.etType.setOnLongClickListener {
-                Toast.makeText(context, "${action.type}: $annotationText", Toast.LENGTH_LONG).show()
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorAction)
+                    tvWord.text = action.type
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
                 false
             }
         }, {})

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,14 +71,36 @@ class NeedItemFragment(private val needViewModel: NeedViewModel, private val nee
         binding.tvType.text = need.type
         annotation.getAnnotations(need.type, {annotationText ->
             binding.tvType.setOnLongClickListener {
-                Toast.makeText(context, "${need.type}: $annotationText", Toast.LENGTH_LONG).show()
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorNeed)
+                    tvWord.text = need.type
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
                 false
             }
         }, {})
         binding.tvSubType.text = need.details["subtype"]
         annotation.getAnnotations(need.details["subtype"] ?: "", {annotationText ->
             binding.tvSubType.setOnLongClickListener {
-                Toast.makeText(context, "${need.details["subtype"]}: $annotationText", Toast.LENGTH_LONG).show()
+                Toast(context).also {
+                    val view = LayoutInflater.from(context).inflate(R.layout.annotation_layout, null)
+                    val background = view.findViewById<LinearLayout>(R.id.annotationBackground)
+                    val tvWord = view.findViewById<TextView>(R.id.tvWord)
+                    val tvAnnotation = view.findViewById<TextView>(R.id.tvAnnotation)
+                    background.background = ContextCompat.getDrawable(requireContext(), R.color.colorNeed)
+                    tvWord.text = need.details["subtype"]
+                    tvAnnotation.text = annotationText
+                    it.setView(view)
+                    it.duration = Toast.LENGTH_LONG
+                    it.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 350)
+                }.show()
                 false
             }
         }, {})
