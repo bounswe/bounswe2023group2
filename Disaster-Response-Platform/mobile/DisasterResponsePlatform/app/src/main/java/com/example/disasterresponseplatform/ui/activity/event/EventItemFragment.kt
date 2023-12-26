@@ -31,6 +31,7 @@ import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
 import com.example.disasterresponseplatform.ui.authentication.UserViewModel
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
 import com.example.disasterresponseplatform.utils.Annotation
+import com.example.disasterresponseplatform.utils.UserRoleUtil
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -126,11 +127,8 @@ class EventItemFragment(private val eventViewModel: EventViewModel, private val 
                 binding.tvNote.text = event.note
             }
         })
-        userViewModel.getUserRole(creatorName)
-        userViewModel.getLiveDataUserRole().observe(requireActivity!!){
-            val userRole = if (it == "null") "AUTHENTICATED" else it
-            binding.tvUserRole.text = userRole
-        }
+        val userRole = UserRoleUtil.getUserRole(creatorName)
+        binding.tvUserRole.text = userRole
         binding.tvAddress.text = "%.3f %.3f".format(event.x, event.y)
         coordinateToAddress(event.x, event.y, object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
