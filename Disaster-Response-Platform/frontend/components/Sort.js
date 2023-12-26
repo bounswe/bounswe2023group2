@@ -29,8 +29,8 @@ export default function Sort({ chosenActivityType, filters, setFilters, filterAc
               defaultValue={[]}
               onValueChange={(e) => { setFilters({ ...filters, sort_by: e }) }}
             >
-             {chosenActivityType === "need" && needSorts.map((type)=>  <Checkbox value={type}>{labels.sort_criteria[type]}</Checkbox>)}  
-              {chosenActivityType === "resource" && resourceSorts.map((type)=>  <Checkbox value={type}>{labels.sort_criteria[type]}</Checkbox>)}
+             {chosenActivityType === "need" && needSorts.map((type)=>  <Checkbox value={type}>{type}</Checkbox>)}  
+              {chosenActivityType === "resource" && resourceSorts.map((type)=>  <Checkbox value={type}>{type}</Checkbox>)}
             </CheckboxGroup>
 
             <RadioGroup

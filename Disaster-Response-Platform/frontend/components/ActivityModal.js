@@ -85,7 +85,7 @@ return (
                         variant="bordered"
                         startContent={!like ? <FaAngleUp className='w-8 h-8' /> : <FaAngleUp className='w-8 h-8' color="green" />}
                     >
-                      {labels.sort_criteria?.reliable}
+                      reliable
                     </Button>
                     <Button
                         className="hover:bg-gray-300"
@@ -93,7 +93,7 @@ return (
                         variant="bordered"
                         startContent={!dislike ? <FaAngleDown className='w-8 h-8' /> : <FaAngleDown className='w-8 h-8' color="red" />}
                     >
-                      {labels.sort_criteria?.unreliable}
+                     unreliable
                     </Button>
                   </div>
                   <Link href={`/user/${activity.created_by}`}>
