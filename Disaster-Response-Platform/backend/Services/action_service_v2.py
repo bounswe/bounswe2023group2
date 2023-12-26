@@ -205,7 +205,6 @@ def get_action(action_id:str) :
                   "needs":1,
                   "resources":1,
                   "end_at":1,
-                  "recurrence":1,
                   }}
     aggregation = [
         {"$match": {"_id": ObjectId(action_id)} },
