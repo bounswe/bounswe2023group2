@@ -166,6 +166,7 @@ export default function MapFilterMenu({
       method: "POST",
       filter: filters,
     });
+    console.log(response)
     // try {
 
     //   let my_filter = new URLSearchParams(filters).toString();
@@ -574,6 +575,7 @@ export default function MapFilterMenu({
           fetchResources();
           fetchNeeds();
           fetchEvents();
+          setFilters({});
         }}
         className="bg-red-200 hover:bg-red-400 text-white font-bold py-2 px-4 rounded w-full"
         // absolute bottom-10 right-0.5"
@@ -583,7 +585,7 @@ export default function MapFilterMenu({
 
       <button
         onClick={() => {
-          download();
+          downloadFile();
         }}
         className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full
            absolute bottom-10 right-0.5"
