@@ -17,6 +17,7 @@ db = MongoDB.getInstance()
 TOKEN = None
 header = None
 report_id = None
+# need_id = None
 
 # header = {"Authorization": f"Bearer {TOKEN}"}
 
@@ -29,31 +30,25 @@ signup_body= {
   "private_account": True
 }
 
-TEST_USERNAME = None
-TEST_EMAIL = None
-TEST_PHONE_NO = None
 
 
 email_login_body= {
     "username_or_email_or_phone": "",
     "password": "a2345678"
 }
+username_data = {}
 report_data = {
-  "description": "string",
-  "type": "user",
-  "details": {
-      "reported_user_id": "abcdefg"
-  }
+  "description": "This is fake need",
+  "report_type": "needs"
 }
-
 updated_report_data = {
-    "description": "new string"
+    "description": "new description"
 }
 
 
 report_data_wrong = {
         "description": "string",
-        "type": "user"
+        "report_type": "needs"
     }
     
     
@@ -77,6 +72,7 @@ def generate_random_phone_number():
 def test_signup():
     username = generate_random_string()
     signup_body['username']  = username
+    username_data['username'] = username
     
     signup_body['email']  = generate_random_email()
     signup_body['phone_number']  = generate_random_phone_number()
@@ -93,6 +89,44 @@ def test_login():
     TOKEN =  response.json()["access_token"]
     header = {"Authorization": f"Bearer {TOKEN}"}
 
+need_data = {
+  "description": "string",
+  "initialQuantity": 8,
+  "quantityUnit": "piece",
+  "urgency": 2,
+  "unsuppliedQuantity": 8,
+  "type": "string",
+  "details": {
+        "disease_name": "asthma",
+        "medicine_name": "inhaler",
+        "age": 20
+            },
+  "open_address": "Celiktepe",
+  "x": 20,
+  "y": 50,
+  "occur_at": "2023-12-29"
+}
+def test_create_need1():
+    
+    global TOKEN
+
+    # if TOKEN is None:
+    #     signup()
+    #     TOKEN = login()
+    token = TOKEN
+        
+
+    response = client.post("/api/needs",
+                           json=need_data,
+                           headers=header)
+
+    assert response.status_code == HTTPStatus.OK
+    need = response.json()["needs"][0]
+    need_id = need["_id"]
+    assert need_id is not None
+    
+    report_data["report_type_id"] = need_id
+    
 
     
 # def setup_test_environment():
@@ -147,7 +181,14 @@ def test_create_report2():
                            headers=header)
 
     assert response.status_code == HTTPStatus.NOT_FOUND
+    # /api/userroles
     
+def test_make_admin():
+    global TOKEN
+    response = client.post(f"/api/userroles/make-admin/?username={username_data['username']}",
+                           headers=header)
+    assert response.status_code == HTTPStatus.CREATED
+    # assert response.json()["message"] == "User role updated"
 
 def test_get_report1():
     response = client.get(f"/api/reports/{report_id}", headers=header)

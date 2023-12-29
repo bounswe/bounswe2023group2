@@ -11,7 +11,7 @@ reports_collection = MongoDB.get_collection('reports')
 def create_report(report: Report) -> str:
     # Manual validation for required fields during creation
     if not all([report.created_by, report.description, 
-                report.report_type, report.report_type_id, report.details]):
+                report.report_type, report.report_type_id]):
         raise ValueError("All fields are mandatory for creation.")
     existing_report = reports_collection.find_one({"created_by": report.created_by, "report_type": report.report_type, "report_type_id": report.report_type_id}) 
     if existing_report:
