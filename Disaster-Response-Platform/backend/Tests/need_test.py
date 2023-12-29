@@ -39,16 +39,22 @@ email_login_body= {
     "password": "a2345678"
 }
 need_data = {
-    "initialQuantity": 7,
-    "urgency": 2,
-    "unsuppliedQuantity": 6,
-    "type": "Medication",
-    "details": {
+  "description": "string",
+  "initialQuantity": 8,
+  "quantityUnit": "piece",
+  "urgency": 2,
+  "unsuppliedQuantity": 8,
+  "type": "string",
+  "details": {
         "disease_name": "asthma",
         "medicine_name": "inhaler",
-        "age": 0
-            }
-    }
+        "age": 20
+            },
+  "open_address": "Celiktepe",
+  "x": 20,
+  "y": 50,
+  "occur_at": "2023-12-29"
+}
 
 updated_need_data = {
     "unsuppliedQuantity": 2,
@@ -173,7 +179,7 @@ def test_get_need1():
 
     
 def test_get_need2():
-    response = client.get(f"/api/needs/222", headers=header)
+    response = client.get(f"/api/needs/658dd9feb53a0ba91e2bbcf9", headers=header)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 def test_get_all_needs():
