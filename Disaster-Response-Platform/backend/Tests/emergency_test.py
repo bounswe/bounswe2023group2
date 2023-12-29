@@ -102,15 +102,6 @@ def test_signup():
     # return user_id
 
 def test_create_emergency1():
-    
-    # global TOKEN, need_id
-
-    # if TOKEN is None:
-    #     signup()
-    #     TOKEN = login()
-    # token = TOKEN
-        
-
     response = client.post("/api/emergencies/anonymous",
                            json=emergency_data_anon,
                            headers=header)
@@ -125,7 +116,6 @@ def test_login():
     global TOKEN, header
     response = client.post("/api/users/login", json=email_login_body)
     assert response.status_code == HTTPStatus.OK
-    print(response.json())
     TOKEN =  response.json()["access_token"]
     header = {"Authorization": f"Bearer {TOKEN}"}
 

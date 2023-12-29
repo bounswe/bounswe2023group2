@@ -51,7 +51,6 @@ def signup_user():
         "is_email_verified": True,
         "private_account": False
     })
-    print(response.text)
     assert response.status_code == 201
     return random_username, random_email
 
@@ -107,8 +106,7 @@ def test_create_resource():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
-    print(response.text)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -116,7 +114,7 @@ def test_create_resource():
 
     # Clean up: Delete the created resource
     resource_id = created_resource["_id"]
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in  [HTTPStatus.OK, HTTPStatus.CREATED]
 
 def test_get_resource():
@@ -138,8 +136,7 @@ def test_get_resource():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
-    print(response.text)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -147,21 +144,21 @@ def test_get_resource():
 
     # Test getting the created resource
     resource_id = created_resource["_id"]
-    response = client.get(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
     resource = response.json()
     assert resource["resources"][0]["_id"] == resource_id
 
     # Clean up: Delete the created resource
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
 def test_get_all_resources():
     setup_test_environment()
 
     # Test getting all resources
-    response = client.get("/api/resource/", headers=valid_headers)
-    print(response.text)
+    response = client.get("/api/resources/", headers=valid_headers)
+
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
     resources = response.json()
     assert isinstance(resources["resources"], list)
@@ -185,7 +182,7 @@ def test_update_resource():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -200,7 +197,7 @@ def test_update_resource():
         }
     }
 
-    response = client.put(f"/api/resource/{resource_id}", json=updated_resource_data, headers=valid_headers)
+    response = client.put(f"/api/resources/{resource_id}", json=updated_resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
     updated_resource = response.json()["resources"][0]
     #ATTENTION commented this out as the api does not return the id for now
@@ -209,7 +206,7 @@ def test_update_resource():
     assert updated_resource["details"]["size"] == "XL"
 
     # Clean up: Delete the created resource
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
 def test_delete_resource():
@@ -231,7 +228,7 @@ def test_delete_resource():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -239,11 +236,11 @@ def test_delete_resource():
 
     # Test deleting the created resource
     resource_id = created_resource["_id"]
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     # Test getting the deleted resource (should return 404)
-    response = client.get(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 def test_set_initial_quantity():
@@ -265,7 +262,7 @@ def test_set_initial_quantity():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -274,17 +271,17 @@ def test_set_initial_quantity():
     resource_id = created_resource["_id"]
     new_initial_quantity = 75
 
-    response = client.put(f"/api/resource/{resource_id}/initial_quantity", json={"quantity": new_initial_quantity}, headers=valid_headers)
+    response = client.put(f"/api/resources/{resource_id}/initial_quantity", json={"quantity": new_initial_quantity}, headers=valid_headers)
     assert response.status_code == HTTPStatus.OK
 
     # Verify the updated initial quantity
-    response = client.get(f"/api/resource/{resource_id}/initial_quantity", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}/initial_quantity", headers=valid_headers)
     assert response.status_code == HTTPStatus.OK
     quantity_data = response.json()
     assert quantity_data["quantity"] == new_initial_quantity
 
     # Clean up: Delete the created resource
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
 def test_set_current_quantity():
@@ -306,7 +303,7 @@ def test_set_current_quantity():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -315,17 +312,17 @@ def test_set_current_quantity():
     resource_id = created_resource["_id"]
     new_current_quantity = 75
 
-    response = client.put(f"/api/resource/{resource_id}/current_quantity", json={"quantity": new_current_quantity}, headers=valid_headers)
+    response = client.put(f"/api/resources/{resource_id}/current_quantity", json={"quantity": new_current_quantity}, headers=valid_headers)
     assert response.status_code == HTTPStatus.OK
 
     # Verify the updated current quantity
-    response = client.get(f"/api/resource/{resource_id}/current_quantity", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}/current_quantity", headers=valid_headers)
     assert response.status_code == HTTPStatus.OK
     quantity_data = response.json()
     assert quantity_data["quantity"] == new_current_quantity
 
     # Clean up: Delete the created resource
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
 def test_set_condition():
@@ -347,7 +344,7 @@ def test_set_condition():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -356,17 +353,17 @@ def test_set_condition():
     resource_id = created_resource["_id"]
     new_condition = "used"
 
-    response = client.put(f"/api/resource/{resource_id}/condition", json={"condition": new_condition}, headers=valid_headers)
+    response = client.put(f"/api/resources/{resource_id}/condition", json={"condition": new_condition}, headers=valid_headers)
     assert response.status_code == HTTPStatus.OK
 
     # Verify the updated condition
-    response = client.get(f"/api/resource/{resource_id}/condition", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}/condition", headers=valid_headers)
     assert response.status_code == HTTPStatus.OK
     condition_data = response.json()
     assert condition_data["condition"] == new_condition
 
     # Clean up: Delete the created resource
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
 def test_get_initial_quantity_succeed():
@@ -388,7 +385,7 @@ def test_get_initial_quantity_succeed():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -397,13 +394,13 @@ def test_get_initial_quantity_succeed():
     resource_id = created_resource["_id"]
 
     # Test getting the initial quantity of the created resource
-    response = client.get(f"/api/resource/{resource_id}/initial_quantity", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}/initial_quantity", headers=valid_headers)
     assert response.status_code == HTTPStatus.OK
     quantity_data = response.json()
     assert "quantity" in quantity_data
 
     # Clean up: Delete the created resource
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
 def test_get_current_quantity_succeed():
@@ -425,7 +422,7 @@ def test_get_current_quantity_succeed():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -434,13 +431,13 @@ def test_get_current_quantity_succeed():
     resource_id = created_resource["_id"]
 
     # Test getting the current quantity of the created resource
-    response = client.get(f"/api/resource/{resource_id}/current_quantity", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}/current_quantity", headers=valid_headers)
     assert response.status_code == HTTPStatus.OK
     quantity_data = response.json()
     assert "quantity" in quantity_data
 
     # Clean up: Delete the created resource
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
 ### SUPPOSED TO FAIL TESTS
@@ -454,14 +451,14 @@ def test_create_resource_missing_fields():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code == HTTPStatus.NOT_FOUND  # Change NOT_FOUND to BAD_REQUEST
 
 def test_get_nonexistent_resource():
     setup_test_environment()
 
     resource_id = "111111111111000000000000"
-    response = client.get(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 def test_update_nonexistent_resource():
@@ -472,14 +469,14 @@ def test_update_nonexistent_resource():
         "currentQuantity": 50
     }
 
-    response = client.put(f"/api/resource/{resource_id}", json=updated_resource_data, headers=valid_headers)
+    response = client.put(f"/api/resources/{resource_id}", json=updated_resource_data, headers=valid_headers)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 def test_delete_nonexistent_resource():
     setup_test_environment()
 
     resource_id = "121212121212000000000000"
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 def test_set_invalid_condition():
@@ -501,7 +498,7 @@ def test_set_invalid_condition():
         "y": 14.00
     }
 
-    response = client.post("/api/resource/", json=resource_data, headers=valid_headers)
+    response = client.post("/api/resources/", json=resource_data, headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
     created_resource = response.json()["resources"][0]
@@ -512,30 +509,30 @@ def test_set_invalid_condition():
         "condition": "invalid_condition"
     }
 
-    response = client.put(f"/api/resource/{resource_id}/condition", json=invalid_condition_data, headers=valid_headers)
+    response = client.put(f"/api/resources/{resource_id}/condition", json=invalid_condition_data, headers=valid_headers)
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
     # Clean up: Delete the created resource
-    response = client.delete(f"/api/resource/{resource_id}", headers=valid_headers)
+    response = client.delete(f"/api/resources/{resource_id}", headers=valid_headers)
     assert response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]
 
 def test_get_initial_quantity_of_nonexistent_resource():
     setup_test_environment()
 
     resource_id = "353535353535000000000000"
-    response = client.get(f"/api/resource/{resource_id}/initial_quantity", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}/initial_quantity", headers=valid_headers)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 def test_get_current_quantity_of_nonexistent_resource():
     setup_test_environment()
 
     resource_id = "000000000000000000000000"
-    response = client.get(f"/api/resource/{resource_id}/current_quantity", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}/current_quantity", headers=valid_headers)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 def test_get_condition_of_nonexistent_resource():
     setup_test_environment()
 
     resource_id = "aaaaaaaaaaaa000000000000"
-    response = client.get(f"/api/resource/{resource_id}/condition", headers=valid_headers)
+    response = client.get(f"/api/resources/{resource_id}/condition", headers=valid_headers)
     assert response.status_code == HTTPStatus.NOT_FOUND

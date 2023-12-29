@@ -85,7 +85,6 @@ def test_login():
     global TOKEN, header
     response = client.post("/api/users/login", json=email_login_body)
     assert response.status_code == HTTPStatus.OK
-    print(response.json())
     TOKEN =  response.json()["access_token"]
     header = {"Authorization": f"Bearer {TOKEN}"}
 
