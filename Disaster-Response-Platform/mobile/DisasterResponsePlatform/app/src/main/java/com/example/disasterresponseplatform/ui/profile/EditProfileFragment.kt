@@ -44,6 +44,7 @@ import com.example.disasterresponseplatform.databinding.ProfileEditSocialMediaBi
 import com.example.disasterresponseplatform.managers.DiskStorageManager
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import com.example.disasterresponseplatform.utils.FileUploadTask
 import com.example.disasterresponseplatform.utils.ImageUploadTask
 import com.google.gson.Gson
@@ -1008,7 +1009,7 @@ class EditProfileFragment(var user: AuthenticatedUser) : Fragment() {
                                     getString(R.string.account_successfully_deleted),
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                DiskStorageManager.removeKey("token")
+                                DiskStorageManager.removeAuthKeys()
                                 replaceFragment(LoginFragment())
 
                             }

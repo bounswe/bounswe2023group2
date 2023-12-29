@@ -45,11 +45,12 @@
 
         <TextView
             android:id="@+id/tvLocation"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="@string/placeholder_coordinate"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iconLocation"
             app:layout_constraintTop_toTopOf="@+id/iconLocation" />
 
@@ -57,11 +58,11 @@
             android:id="@+id/iconDate"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/iconLocation"
-            app:layout_constraintTop_toBottomOf="@+id/iconLocation"
+            app:layout_constraintTop_toBottomOf="@+id/tvLocation"
             app:srcCompat="@drawable/recyc_date_time" />
 
         <TextView
@@ -73,6 +74,26 @@
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/iconDate"
             app:layout_constraintTop_toTopOf="@+id/iconDate" />
+
+        <ImageView
+            android:id="@+id/iconReliability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iconDate"
+            app:srcCompat="@drawable/ic_shield_qm"
+            app:tint="@color/icon" />
+
+        <TextView
+            android:id="@+id/tvReliability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text=""
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/iconReliability"
+            app:layout_constraintTop_toTopOf="@+id/tvDate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

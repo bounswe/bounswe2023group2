@@ -48,7 +48,6 @@ class Resource(BaseModel):
     upvote: int = Field(default=0)
     downvote: int = Field(default=0)
     actions_used: List[ActionHistory]= Field(default=None)
-    
     verified_upvote: str = Field(default = None)
     verified_downvote: str = Field(default = None)
     action_list: List[str]= Field(default=[])
@@ -59,7 +58,7 @@ class Resource(BaseModel):
     def convert_str_to_datetime(cls, value):
         if isinstance(value, str):
             try:
-                return datetime.datetime.strptime(value, '%Y-%m-%d')
+                return datetime.datetime.strptime(value, "%Y-%m-%d")
             except ValueError:
                 raise ValueError("Incorrect date format, should be YYYY-MM-DD")
         return value

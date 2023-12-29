@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import GrayBox from '../GrayBox';
-import { Button, Divider } from "@nextui-org/react";
+import { Button, Divider, Link } from "@nextui-org/react";
 
 export default function MainInfo({ className, info, report, onOpen, contact=true, img, labels, onOpenDelete }) {
 	let {username, first_name, last_name, email, phone_number, user_role, proficiency} = info;
@@ -33,6 +33,12 @@ export default function MainInfo({ className, info, report, onOpen, contact=true
 			</div>
 			{report ? <Button onPress={onOpen} className="mx-auto my-3 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">{labels.admin.report}</Button> : null}
 			{onOpenDelete ? <Button onPress={onOpenDelete} className="mx-auto my-3 block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-200 rounded-lg px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">{labels.profile_pages.delete_account}</Button> : null}
+			{user_role === "ADMIN" ? (
+				<Button type="button" className="mx-auto my-3 block text-black bg-white rounded-lg px-5 py-2.5 text-center">
+					<Link href="/admin-panel"> {labels.admin.admin_page} </Link>
+				</Button>
+			) : null}
+
 		</GrayBox>
 	)
 }

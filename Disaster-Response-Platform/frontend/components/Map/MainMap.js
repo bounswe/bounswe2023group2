@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDisclosure } from "@nextui-org/react";
-// import AddResourceForm from "../AddResourceMap";
+import AddResourceForm from "./AddResourceMap";
 import { useRouter } from "next/router";
 import SidePopup from "./SidePopup";
 import {
@@ -28,7 +28,6 @@ var redIcon = new L.Icon({
   shadowSize: [21, 21],
 });
 
-
 var greenIcon = new L.Icon({
   iconUrl:
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
@@ -40,12 +39,20 @@ var greenIcon = new L.Icon({
   shadowSize: [21, 21],
 });
 
-function LocationMarker({ lat, lng,labels }) {
+var blueIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [21, 21],
+});
+
+function LocationMarker({ lat, lng, labels }) {
   const map = useMap();
-  return (
-    <Marker position={[41.08714, 29.043474]}>
-    </Marker>
-  );
+  return <Marker position={[41.08714, 29.043474]}></Marker>;
 }
 
 export default function Map({
@@ -53,9 +60,19 @@ export default function Map({
   activateClick,
   resourceApiData,
   needApiData,
-  labels
-  
+  eventApiData,
+  labels,
+  setBounds,
+  chosenActivityType
 }) {
+  function MapBounds() {
+    const map = useMapEvents({
+      moveend: () => {
+        setBounds(map.getBounds().toBBoxString()); // Alerts the bounds as a string
+      },
+    });
+    return null; // This component does not render anything
+  }
   const [MarkerArr, setMarkerArr] = useState([]);
 
   useEffect(() => {
@@ -68,6 +85,7 @@ export default function Map({
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [center, setCenter] = useState({ lat: 41.08714, lng: 29.043474 });
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [isAddressSelected, setIsAddressSelected] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState({
     x_coord: "",
     y_coord: "",
@@ -183,33 +201,31 @@ export default function Map({
           <Marker
             position={[selectedPosition.x_coord, selectedPosition.y_coord]}
             icon={redIcon}
-          >
-            
-          </Marker>
+          ></Marker>
         )}
+        <MapBounds />
+        {(chosenActivityType === "resource"||chosenActivityType==="all") && resourceApiData.map((resource, index) => (
+          
+            <Marker
+              key={index}
+              position={[resource.x, resource.y]}
+              icon={greenIcon}
+              eventHandlers={{
+                click: () => {
+                  resource.nre = "Resource";
+                  resource.feedback = 0;
+                  setSelectedMarker(resource);
+                },
+              }}
+            ></Marker>
+          ))}
+        
 
-        {resourceApiData.map((resource, index) => (
-          <Marker
-            key={index}
-            position={[resource.x, resource.y]}
-            icon={redIcon}
-            eventHandlers={{
-              click: () => {
-                resource.nre = "Resource";
-                resource.feedback = 0;
-                setSelectedMarker(resource);
-              },
-            }}
-          >
-           
-          </Marker>
-        ))}
-
-        {needApiData.map((need, index) => (
+        {(chosenActivityType === "need"||chosenActivityType==="all") &&needApiData.map((need, index) => (
           <Marker
             key={index}
             position={[need.x, need.y]}
-            icon={greenIcon}
+            icon={blueIcon}
             eventHandlers={{
               click: () => {
                 need.nre = "Need";
@@ -217,24 +233,50 @@ export default function Map({
                 setSelectedMarker(need);
               },
             }}
-          >
-          </Marker>
+          ></Marker>
         ))}
 
+        {(chosenActivityType === "event"||chosenActivityType==="all") &&eventApiData.map((event, index) => {
+          // Check if both x and y values are defined
+          if (typeof event.x === 'number' && typeof event.y === 'number') {
+            return (
+              <Marker
+                key={index}
+                position={[event.x, event.y]}
+                icon={redIcon}
+                eventHandlers={{
+                  click: () => {
+                    event.nre = "Event";
+                    event.feedback = 0;
+                    setSelectedMarker(event);
+                  },
+                }}
+              ></Marker>
+            );
+          }
+          // Return null for events with undefined x or y values
+          return null;
+        })}
+
+        
+
         {isClickActivated ? <MarkerAdd /> : <></>}
-        {/* <AddResourceForm
+        <AddResourceForm
           onOpenChange={onOpenChange}
           isOpen={isOpen}
+          isAddressSelected={isAddressSelected}
           fetchData={fetchData}
-        /> */}
-        {/* {MarkerArr &&
-          MarkerArr.map(({ type, subType, dueDate, x_coord, y_coord }) => (
-            <Marker position={[x_coord, y_coord]} icon={redIcon}>
-            </Marker>
-          ))} */}
+          x={selectedPosition.x_coord}
+          y={selectedPosition.y_coord}
+          labels={labels}
+        />
+        
       </MapContainer>
-      <SidePopup card={selectedMarker} closePopup={closePopup} labels ={labels} />
-
+      <SidePopup
+        card={selectedMarker}
+        closePopup={closePopup}
+        labels={labels}
+      />
     </div>
   );
 }

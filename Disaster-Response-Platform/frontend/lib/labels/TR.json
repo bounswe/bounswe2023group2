@@ -63,6 +63,8 @@
 		}
 	},
 	"activities": {
+		"add": "Ekle",
+		"all": "Hepsi",
 		"resource": "Kaynak",
 		"need": "İhtiyaç",
 		"action": "Aksiyon",
@@ -94,7 +96,8 @@
 		"short_description": "Kısa Açıklama",
 		"take_action": "Aksiyon al",
 		"recurrence_rate": "Tekrar Sıklığı (gün)",
-		"no_content": "Gösterebileceğimiz bir veri yok."
+		"no_content": "Gösterebileceğimiz bir veri yok.",
+		"urgency": "Aciliyet"
 	},
 	"auth": {
 		"register": "Kayıt ol",
@@ -123,6 +126,7 @@
 	"sort_filter": {
 		"sort": "Sırala",
 		"filter": "Filtrele",
+		"filter_reset": "Filtereleri Kaldır",
 		"filters": "Filtreler",
 		"sort_criterion": "Sıralama kriteri",
 		"sort_direction": "Sıralama yönü",
@@ -142,6 +146,8 @@
 		"type": "Kategori",
 		"subtype": "Alt kategori",
 		"upvote": "Güvenilirlik",
+		"reliable": "Güvenilir",
+		"unreliable": "Güvenilmez",
 		"currentQuantity": "Mevcut miktar",
 		"due_date": "Bitiş Tarihi",
 		"description": "Açıklama"
@@ -194,7 +200,8 @@
 		"auth_status": "Doğrulama statüsü",
 		"remove_activity": "Aktiviteyi kaldır",
 		"is_credible": "Güvenilir",
-		"credibility_set": "Güvenilirlik değiştirildi."
+		"credibility_set": "Güvenilirlik değiştirildi.",
+		"admin_page": "Admin sayfası"
 	},
 	"navbar": {
 		"help_feedback": "Yardım ve Geri Bildirim",
@@ -235,9 +242,10 @@
 		"resource_subtype": "Konserve gıda"
 	},
 	"map": {
+		"download": "Liste Olarak İndir",
 		"choose_scan_center": "Taramak istediğiniz alanın merkezini seçiniz",
 		"choose_location": "Haritada yerinizi işaretleyin",
-		"scan_certain_area": "Belirli bir alanı tara",
+		"scan_certain_area": "Bu alanı tara",
 		"you_are_here": "You are here"
 	},
 	"user_roles": {

@@ -14,6 +14,7 @@ import com.example.disasterresponseplatform.R
 import com.example.disasterresponseplatform.data.models.EmergencyBody
 import com.example.disasterresponseplatform.databinding.EmergencyItemBinding
 import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
+import com.example.disasterresponseplatform.utils.UserRoleUtil
 
 
 class EmergencyAdapter(private val emergencyList: List<EmergencyBody.EmergencyItem>?, private val userRoleViewModel: UserRoleViewModel, private val fragmentActivity: FragmentActivity): RecyclerView.Adapter<EmergencyAdapter.EmergencyViewHolder>() {
@@ -43,19 +44,24 @@ class EmergencyAdapter(private val emergencyList: List<EmergencyBody.EmergencyIt
         hb.tvDate.text = currentEmergency?.created_at.toString()
      //   hb.tvLocation.text = "x: ${String.format("%.2f", currentEmergency?.x).replace(',', '.')}, y: ${String.format("%.2f", currentEmergency?.y).replace(',', '.')}"
         hb.tvLocation.text = currentEmergency?.location.toString()
+        hb.tvReliability.text =  String.format("%.2f", currentEmergency?.reliability)
         // user role
-        val creator = currentEmergency?.created_by
+        val creator = currentEmergency?.created_by_user
         // user role
-        userRoleViewModel.isUserRoleCredible(creator)
-        userRoleViewModel.getLiveDataMessage().observe(fragmentActivity){
-            if (it.username == creator){
-                if (it.is_credible){
-                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
-                } else{
-                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
-                }
-            }
+        hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+        if (creator != null) UserRoleUtil.isCredibleNonBlocking(creator) {
+            if (it) hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
         }
+//        userRoleViewModel.isUserRoleCredible(creator)
+//        userRoleViewModel.getLiveDataMessage().observe(fragmentActivity){
+//            if (it.username == creator){
+//                if (it.is_credible){
+//                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.bordered_button)
+//                } else{
+//                    hb.color.background = AppCompatResources.getDrawable(hb.root.context, R.drawable.borderless_button)
+//                }
+//            }
+//        }
 
         // for make them clickable
         holder.itemView.setOnClickListener {view ->

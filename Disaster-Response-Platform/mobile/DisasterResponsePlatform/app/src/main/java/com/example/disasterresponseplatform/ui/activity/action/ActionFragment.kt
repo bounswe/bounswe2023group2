@@ -28,6 +28,7 @@ import com.example.disasterresponseplatform.data.models.UserBody
 import com.example.disasterresponseplatform.databinding.FragmentActionBinding
 import com.example.disasterresponseplatform.databinding.SortAndFilterBinding
 import com.example.disasterresponseplatform.managers.DiskStorageManager
+import com.example.disasterresponseplatform.managers.DiskStorageManager.checkIsGuest
 import com.example.disasterresponseplatform.managers.NetworkManager
 import com.example.disasterresponseplatform.ui.activity.generalViewModels.UserRoleViewModel
 import com.example.disasterresponseplatform.ui.activity.util.map.ActivityMap
@@ -119,7 +120,7 @@ class ActionFragment(
      * It opens add Action fragment if user is authenticated, else warns the user
      */
     private fun addAction(){
-        if (DiskStorageManager.checkToken()) {
+        if (DiskStorageManager.checkToken() && !checkIsGuest()) {
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addActionFragment = AddActionFragment(actionViewModel,null)
                 addFragment(addActionFragment,"AddActionFragment")
@@ -290,7 +291,7 @@ class ActionFragment(
         val selectedSortBy: String = when (sortByChipGroup.findViewById<Chip>(selectedSortById)?.text) {
             getString(R.string.sf_creation) -> "created_at"
             getString(R.string.sf_last_update) -> "last_updated_at"
-            getString(R.string.sf_reliability) -> "upvote"
+            getString(R.string.sf_reliability) -> "reliability"
             else -> ""
         }
 
@@ -305,7 +306,7 @@ class ActionFragment(
 
         val selectedXCoordinate = filterBinding.etCoordinateX.text.toString()
         val selectedYCoordinate = filterBinding.etCoordinateY.text.toString()
-        val selectedMaxDistance = filterBinding.slDistance.value.toString()
+        val selectedMaxDistance = (filterBinding.slDistance.value/100).toString()
 
         for (chipId in selectedTypeIds) {
             val chip = typesChipGroup.findViewById<Chip>(chipId)

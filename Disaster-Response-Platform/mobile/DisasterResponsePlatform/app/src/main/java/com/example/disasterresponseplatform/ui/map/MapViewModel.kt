@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.example.disasterresponseplatform.data.enums.Endpoint
 import com.example.disasterresponseplatform.data.enums.RequestType
 import com.example.disasterresponseplatform.data.models.ActionBody
+import com.example.disasterresponseplatform.data.models.EmergencyBody
+import com.example.disasterresponseplatform.data.models.EventBody
 import com.example.disasterresponseplatform.data.models.NeedBody
 import com.example.disasterresponseplatform.data.models.ResourceBody
 import com.example.disasterresponseplatform.managers.NetworkManager
@@ -26,7 +28,9 @@ class MapViewModel@Inject constructor() : ViewModel() {
 
     private val liveDataNeedResponse = MutableLiveData<NeedBody.NeedResponse>()
     private val liveDataResourceResponse = MutableLiveData<ResourceBody.ResourceResponse>()
+    private val liveDataEventResponse = MutableLiveData<EventBody.EventResponse>()
     private val liveDataActionResponse = MutableLiveData<ActionBody.ActionResponse>()
+    private val liveDataEmergencyResponse = MutableLiveData<EmergencyBody.EmergencyResponse>()
     private var savedMapState: MapState? = null
 
     fun saveMapState(zoomLevel: Int, center: IGeoPoint) {
@@ -42,6 +46,8 @@ class MapViewModel@Inject constructor() : ViewModel() {
 
     // this is for updating LiveData, it can be observed from where it is called
     fun getLiveDataResourceResponse(): LiveData<ResourceBody.ResourceResponse> = liveDataResourceResponse
+    fun getLiveDataEventResponse(): LiveData<EventBody.EventResponse> = liveDataEventResponse
+    fun getLiveDataEmergencyResponse(): LiveData<EmergencyBody.EmergencyResponse> = liveDataEmergencyResponse
 
     fun getLiveDataActionsResponse(): LiveData<ActionBody.ActionResponse> = liveDataActionResponse
 
@@ -92,7 +98,7 @@ class MapViewModel@Inject constructor() : ViewModel() {
                         val errorBody = response.errorBody()?.string()
                         if (errorBody != null) {
                             var responseCode = response.code()
-                            Log.d("ResponseResourceFail", "Body: $errorBody")
+                            Log.d("ResponseActionFail", "Body: $errorBody")
                         }
                     }
                 }
@@ -220,5 +226,122 @@ class MapViewModel@Inject constructor() : ViewModel() {
             }
         )
 
+    }
+
+    fun sendGetAllEventRequest() {
+        val headers = mapOf(
+            "Content-Type" to "application/json"
+        )
+        networkManager.makeRequest(
+            endpoint = Endpoint.EVENT,
+            requestType = RequestType.GET,
+            headers = headers,
+            callback = object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfoNeed", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfoNeed", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
+                            try {
+                                Log.d("ResponseSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val eventResponse = gson.fromJson(
+                                    rawJson,
+                                    EventBody.EventResponse::class.java
+                                )
+                                if (eventResponse != null) {
+                                    Log.d(
+                                        "EventSuccess",
+                                        "eventResponse: $eventResponse"
+                                    )
+                                    liveDataEventResponse.postValue(eventResponse)
+                                }
+                            } catch (e: IOException) {
+                                // Handle IOException if reading the response body fails
+                                Log.e(
+                                    "ResponseError",
+                                    "Error reading response body: ${e.message}"
+                                )
+                            }
+                        } else {
+                            Log.d("ResponseSuccess", "Body is null")
+                        }
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            var responseCode = response.code()
+                            Log.d("ResponseSuccess", "Body: $errorBody")
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("onFailure", "Happens")
+                }
+            }
+        )
+    }
+    fun sendGetAllEmergenciesRequest() {
+        val headers = mapOf(
+            "Content-Type" to "application/json"
+        )
+        networkManager.makeRequest(
+            endpoint = Endpoint.EMERGENCY,
+            requestType = RequestType.GET,
+            headers = headers,
+            callback = object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    Log.d("ResponseInfoNeed", "Status Code: ${response.code()}")
+                    Log.d("ResponseInfoNeed", "Headers: ${response.headers()}")
+
+                    if (response.isSuccessful) {
+                        val rawJson = response.body()?.string()
+                        if (rawJson != null) {
+                            try {
+                                Log.d("EmergenciesSuccess", "Body: $rawJson")
+                                val gson = Gson()
+                                val emergencyResponse = gson.fromJson(
+                                    rawJson,
+                                    EmergencyBody.EmergencyResponse::class.java
+                                )
+                                if (emergencyResponse != null) {
+                                    Log.d(
+                                        "EmergencySuccess",
+                                        "emergencyResponse: $emergencyResponse"
+                                    )
+                                    liveDataEmergencyResponse.postValue(emergencyResponse)
+                                }
+                            } catch (e: IOException) {
+                                // Handle IOException if reading the response body fails
+                                Log.e(
+                                    "ResponseError",
+                                    "Error reading response body: ${e.message}"
+                                )
+                            }
+                        } else {
+                            Log.d("ResponseSuccess", "Body is null")
+                        }
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody != null) {
+                            var responseCode = response.code()
+                            Log.d("ResponseSuccess", "Body: $errorBody")
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("onFailure", "Happens")
+                }
+            }
+        )
     }
 }

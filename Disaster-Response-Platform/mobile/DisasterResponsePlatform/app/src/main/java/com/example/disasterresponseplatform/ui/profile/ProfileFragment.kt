@@ -81,7 +81,7 @@ class ProfileFragment(var username: String?) : Fragment() {
             if (username == null) { // get self profile info
                 binding.profileCallButton.text = getString(R.string.pr_logout)
                 binding.profileCallButton.setOnClickListener {
-                    DiskStorageManager.removeKey("token")
+                    DiskStorageManager.removeAuthKeys()
                     replaceFragment(LoginFragment())
                 }
                 user = AuthenticatedUser("", "", "", "", "")
@@ -536,7 +536,7 @@ class ProfileFragment(var username: String?) : Fragment() {
 
     private fun fillInformations(user: AuthenticatedUser) {
         profileLevel += 1
-        if (profileLevel < 7) return
+        if (profileLevel < 6) return
         binding.apply {
             // read image from url and set it to profilePhoto
             profileProgressBar.visibility = View.GONE

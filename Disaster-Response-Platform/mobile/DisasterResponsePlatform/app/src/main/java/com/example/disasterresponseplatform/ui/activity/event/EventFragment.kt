@@ -186,7 +186,7 @@ class EventFragment(
     }
 
     private fun addEvent(){
-        if ( DiskStorageManager.checkToken()) {
+        if ( DiskStorageManager.checkToken() && !DiskStorageManager.checkIsGuest()) {
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addEventFragment = AddEventFragment(eventViewModel,null)
                 addFragment(addEventFragment,"AddEventFragment")
@@ -286,7 +286,7 @@ class EventFragment(
         val selectedSortBy: String = when (sortByChipGroup.findViewById<Chip>(selectedSortById)?.text) {
             getString(R.string.sf_creation) -> "created_at"
             getString(R.string.sf_last_update) -> "last_updated_at"
-            getString(R.string.sf_reliability) -> "upvote"
+            getString(R.string.sf_reliability) -> "reliability"
             else -> ""
         }
 
@@ -301,7 +301,7 @@ class EventFragment(
 
         val selectedXCoordinate = filterBinding.etCoordinateX.text.toString()
         val selectedYCoordinate = filterBinding.etCoordinateY.text.toString()
-        val selectedMaxDistance = filterBinding.slDistance.value.toString()
+        val selectedMaxDistance = (filterBinding.slDistance.value/100).toString()
 
         for (chipId in selectedTypeIds) {
             val chip = typesChipGroup.findViewById<Chip>(chipId)

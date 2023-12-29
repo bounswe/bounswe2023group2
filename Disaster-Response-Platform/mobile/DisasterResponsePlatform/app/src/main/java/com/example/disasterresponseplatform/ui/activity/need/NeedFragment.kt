@@ -144,7 +144,7 @@ class NeedFragment(
      * It opens add Need fragment if user is authenticated, else warns the user
      */
     private fun addNeed(){
-        if (DiskStorageManager.checkToken()) {
+        if (DiskStorageManager.checkToken() && !DiskStorageManager.checkIsGuest()) {
             // check whether it is connected to the internet
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addNeedFragment = AddNeedFragment(needViewModel,null)
@@ -398,7 +398,7 @@ class NeedFragment(
         val selectedSortBy: String = when (sortByChipGroup.findViewById<Chip>(selectedSortById)?.text) {
             getString(R.string.sf_creation) -> "created_at"
             getString(R.string.sf_last_update) -> "last_updated_at"
-            getString(R.string.sf_reliability) -> "upvote"
+            getString(R.string.sf_reliability) -> "reliability"
             getString(R.string.sf_urgency) -> "urgency"
             else -> ""
         }
@@ -418,7 +418,7 @@ class NeedFragment(
 
         val selectedXCoordinate = filterBinding.etCoordinateX.text.toString()
         val selectedYCoordinate = filterBinding.etCoordinateY.text.toString()
-        val selectedMaxDistance = filterBinding.slDistance.value.toString()
+        val selectedMaxDistance = (filterBinding.slDistance.value/100).toString()
 
         for (chipId in selectedTypeIds) {
             val chip = typesChipGroup.findViewById<Chip>(chipId)

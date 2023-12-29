@@ -54,9 +54,9 @@ class UserRoleViewModel {
                                     val userResponse = gson.fromJson(rawJson, UserBody.responseBody::class.java)
                                     if (userResponse != null) {
                                         Log.d("ResponseSuccess", "$functionName needResponse: $userResponse")
-                                        val isCredible = userResponse.user_role=="CREDIBLE"
-                                        Log.d("ResponseSuccess","$functionName username: $userName isCredible: $isCredible")
-                                        liveDataMessage.postValue(UserBody.UserMessageModel(userName,isCredible))
+                                        val userRole = userResponse.user_role
+                                        Log.d("ResponseSuccess","$functionName username: $userName userRole: $userRole")
+                                        liveDataMessage.postValue(UserBody.UserMessageModel(userName, userRole))
                                     }
                                 } catch (e: IOException) {
                                     // Handle IOException if reading the response body fails

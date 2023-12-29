@@ -11,8 +11,11 @@ import getLabels from '@/lib/getLabels';
 import addressService from '@/services/addressService';
 import { useEffect, useState } from 'react';
 import recurrenceService from '@/services/recurrenceService';
-
 import AddActionForm from '@/components/AddAction';
+import get from '../api/resource/get';
+import actionService from '@/services/actionService';
+import PerformAction from '@/components/performAction';
+import emergencyService from '@/services/emergencyService';
 export default function deneme() {
   const router = useRouter()
   const [list, setList] = useState([])
@@ -24,7 +27,6 @@ export default function deneme() {
   const { register, reset, handleSubmit, setError, formState: { isSubmitting, errors } } = useForm();
   const getRecurrences = async (data) => {
     const response = await recurrenceService.list();
-    console.log(response)
     if (response.status === 200) {
       setList(response.payload?.recurrences)
       // successful
@@ -54,7 +56,8 @@ export default function deneme() {
   
 
   useEffect(() => {
-    getRecurrences();
+    getRecurrences()
+    getEmergencies()
   }, [])
   const attach = async (data) => {
     const response = await fetch('/api/recurrence/attach', {
@@ -87,6 +90,37 @@ export default function deneme() {
       toast.error('Error')
     }
   }
+  const perform = async (data) => {
+    const response = await fetch('/api/action/perform', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    console.log(response)
+    if (response.status === 200) {
+      // successful
+
+      toast.success('Success')
+      // Usage!
+
+    } else {
+      // unknown error
+      toast.error('Error')
+    }
+  }
+  const getEmergencies = async (data) => {
+    const response = await emergencyService.getAll();
+    console.log(response)
+    if (response.status === 200) {
+      // successful
+
+      toast.success('Success')
+      // Usage!
+
+    } else {
+      // unknown error
+      toast.error('Error')
+    }
+  }
   return <>
     <form onSubmit={handleSubmit(attach)}>
       <Input {...register('activity_id')} />
@@ -100,9 +134,9 @@ export default function deneme() {
       <Button type='submit'>Submit</Button>
 
     </form>
-    <Button onClick={onOpenRecurrenceModal}>Add Recurrence</Button>
+    <Button onClick={onOpenRecurrenceModal}></Button>
+    <PerformAction onOpenChange={onOpenChangeRecurrenceModal} isOpen={isRecurrenceModalOpen}/>
 
-    <AddActionForm onOpenChange={onOpenChangeRecurrenceModal} isOpen={isRecurrenceModalOpen} />
 
   </>
 

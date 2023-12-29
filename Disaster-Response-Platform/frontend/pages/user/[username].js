@@ -97,23 +97,31 @@ export const getServerSideProps = withIronSessionSsr(
       return { props: { unauthorized: true, labels } };
     }
 
-    let self_role;
+    let main_info;
     try {
-    ({ data: { user_role: self_role }} = await api.get(`/api/userroles/role`, {
-      headers: {
-        'Authorization': `Bearer ${self.accessToken}` 
-      }
-    }));
+      ({ data: main_info } = await api.get(`/api/users/${params.username}`, {
+        headers: {
+          'Authorization': `Bearer ${self.accessToken}` 
+        }
+      }));
     } catch (AxiosError) {
       console.log("A token expired");
-      return { props: { unauthorized: true, labels } };
+      return { props: { expired: true, labels } };
     }
 
-    const { data: main_info } = await api.get(`/api/users/${params.username}`, {
-      headers: {
-        'Authorization': `Bearer ${self.accessToken}` 
-      }
-    });
+    let self_info;
+    try {
+      ({ data: self_info } = await api.get('/api/users/me', {
+        headers: {
+          'Authorization': `Bearer ${self.accessToken}` 
+        }
+      }));
+    } catch (AxiosError) {
+      console.log("A token expired");
+      return { props: { expired: true, labels } };
+    }
+
+    const self_role = self_info.user_role;
 
     let optional_info_list = [];
     if (self_role === "ADMIN") {

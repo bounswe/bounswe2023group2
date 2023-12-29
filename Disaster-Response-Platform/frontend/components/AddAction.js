@@ -6,17 +6,15 @@ import {
   ModalBody,
 
 } from "@nextui-org/modal";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Select, SelectItem, select } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { api } from "@/lib/apiUtils";
+
 import { useRouter } from "next/router";
 import actionForm from "./actionForm.json"
-import ListItem from "./ListItem";
 import actionService from "@/services/actionService";
 import ActivitySimple from "./ActivitySimple";
-export default function AddActionForm({ isOpen, onOpenChange, type= 'need', labels, selected}) {
-  
+export default function AddActionForm({ isOpen, onOpenChange, type = 'need', labels, selected }) {
 
   const [form, setForm] = useState([]);
   const { reset, handleSubmit, control, formState: { isSubmitting }, setValue } = useForm();
@@ -35,43 +33,45 @@ export default function AddActionForm({ isOpen, onOpenChange, type= 'need', labe
   useEffect(() => {
     getForm();
     console.log(isOpen)
-    if(isOpen){
+    if (isOpen) {
       getList()
     }
   }, [isOpen])
-  
+
   const getList = async () => {
-    let response 
-    if(type === 'resource'){
-     response = await actionService.needList(selected._id);
+    let response
+    if (type === 'resource') {
+      response = await actionService.needList(selected._id);
     }
-    else{
-    response = await actionService.resourceList(selected._id);
+    else {
+      response = await actionService.resourceList(selected._id);
     }
     if (response.status === 200) {
-      if(type === 'need'){
-      setList(response.payload?.resources)}
-      else{
+      if (type === 'need') {
+        setList(response.payload?.resources)
+      }
+      else {
         setList(response.payload?.needs)
       }
     } else {
-     
+
     }
   }
-  
+
   const can = async (data) => {
     const prepared = {}
     console.log(data)
     Object.keys(data).map((key, index) => {
-      if (data[key] === '' || key === 'target' ) { }
+      if (data[key] === '' || key === 'target') { }
       else {
         prepared[key] = data[key]
-      } })
-    if(type === 'need'){
-    prepared['needs'] = [selected._id]
-    prepared['resources'] = [data['target']]
+      }
+    })
+    if (type === 'need') {
+      prepared['needs'] = [selected._id]
+      prepared['resources'] = [data['target']]
     }
-    else{
+    else {
       prepared['needs'] = [data['target']]
       prepared['resources'] = [selected._id]
     }
@@ -82,9 +82,9 @@ export default function AddActionForm({ isOpen, onOpenChange, type= 'need', labe
     });
     if (response.status === 400) {
       toast.error("An unexpected error occurred while saving, please try again")
-     
+
     } else if (response.ok) {
-  
+
       toast.success("Successfully saved")
 
     } else {
@@ -93,16 +93,16 @@ export default function AddActionForm({ isOpen, onOpenChange, type= 'need', labe
     }
   }
   return <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='text-black' scrollBehavior="inside " size='4xl' >
-  
+
     <ModalContent>
       {(onClose) => (
         <>
           <ModalHeader className="flex">Create Action</ModalHeader>
           <ModalBody>
             <form onSubmit={handleSubmit(can)} action="#"
-              method="POST" className='grid grid-cols-2  mb-6 md:mb-0 gap-4'items-center  >
-              { form.map((res) => {
-               
+              method="POST" className='grid grid-cols-2  mb-6 md:mb-0 gap-4' items-center  >
+              {form.map((res) => {
+
 
 
                 if (res.type === 'select') return <Controller
@@ -143,34 +143,33 @@ export default function AddActionForm({ isOpen, onOpenChange, type= 'need', labe
                   )}
                 />
               })}
-            
 
-             <ActivitySimple activity={selected} activityType={type}/>
+              <ActivitySimple activity={selected} activityType={type} />
               <Controller
-                  name={'target'}
-                  control={control}
-                  selectionMode="multiple"
-                  label={'Kaynak seçiniz'} 
-                  placeholder={'Kaynak seçiniz'}
-                  render={({ field }) => (
-                    <Select
-                      id={'target'} name={'target'}
-                      items={list}
-                      label={'Kaynak seçiniz'} 
-                      placeholder={'Kaynak seçiniz'}
-                  
-                      variant={'bordered'}
-                      
-                      {...field}
-                    >
-                      {(x) => <SelectItem key={x._id} value={x._id} className='text-black'><ActivitySimple activity={x} activityType={type=='need'? 'resource': 'need'}/></SelectItem>}
-                    </Select>
-                  )}
-                />
-               
-                
-                 
-              <Button type='submit'className="bg-action">
+                name={'target'}
+                control={control}
+                selectionMode="multiple"
+                label={'Kaynak seçiniz'}
+                placeholder={'Kaynak seçiniz'}
+                render={({ field }) => (
+                  <Select
+                    id={'target'} name={'target'}
+                    items={list}
+                    label={'Kaynak seçiniz'}
+                    placeholder={'Kaynak seçiniz'}
+
+                    variant={'bordered'}
+
+                    {...field}
+                  >
+                    {(x) => <SelectItem key={x._id} value={x._id} className='text-black'><ActivitySimple activity={x} activityType={type == 'need' ? 'resource' : 'need'} /></SelectItem>}
+                  </Select>
+                )}
+              />
+
+
+
+              <Button type='submit' className="bg-action">
                 {isSubmitting ? 'Loading' : "Submit"}
               </Button>
             </form>

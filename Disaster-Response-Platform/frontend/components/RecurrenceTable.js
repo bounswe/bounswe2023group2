@@ -59,7 +59,7 @@ export default function Recurrence({ chosenActivityType, labels }) {
                 <Sort chosenActivityType={chosenActivityType} filterActivities={filterActivities} setFilters={setFilters} filters={filters} labels={labels} />
             </div>
 
-            <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={chosenActivityType} />
+            <ActivityModal isOpen={isOpen} onOpenChange={onOpenChange} activity={activity} activityType={chosenActivityType} labels={labels} />
 
             <Table
                 isHeaderSticky

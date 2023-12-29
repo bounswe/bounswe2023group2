@@ -117,7 +117,7 @@ class ResourceFragment(
      * If it is created resource should be null, else resource should be the clicked item
      */
     private fun addResource(){
-        if (DiskStorageManager.checkToken()) {
+        if (DiskStorageManager.checkToken() && !DiskStorageManager.checkIsGuest()) {
             if (GeneralUtil.isInternetAvailable(requireContext())){
                 val addResourceFragment = AddResourceFragment(resourceViewModel,null)
                 addFragment(addResourceFragment,"AddResourceFragment")
@@ -307,7 +307,7 @@ class ResourceFragment(
         val selectedSortBy: String = when (sortByChipGroup.findViewById<Chip>(selectedSortById)?.text) {
             getString(R.string.sf_creation) -> "created_at"
             getString(R.string.sf_last_update) -> "last_updated_at"
-            getString(R.string.sf_reliability) -> "upvote"
+            getString(R.string.sf_reliability) -> "reliability"
             else -> ""
         }
 
@@ -326,7 +326,7 @@ class ResourceFragment(
 
         val selectedXCoordinate = filterBinding.etCoordinateX.text.toString()
         val selectedYCoordinate = filterBinding.etCoordinateY.text.toString()
-        val selectedMaxDistance = filterBinding.slDistance.value.toString()
+        val selectedMaxDistance = (filterBinding.slDistance.value/100).toString()
 
         for (chipId in selectedTypeIds) {
             val chip = typesChipGroup.findViewById<Chip>(chipId)

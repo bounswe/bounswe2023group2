@@ -12,6 +12,21 @@ const actionService = {
       return { status:400 , message: 'Error' };
     }
   },
+  getAll: async () => {
+    try {
+      const result = await api.get(`/api/actions/`);
+      if(result.status === 200){
+        return { status:200, payload: result?.data };
+      }
+      if(result.status === 422){
+        return { status:422 , message: 'Request fields error' };
+      }
+      return { status:500 , message: 'Internal' };
+    } catch (error) {
+      return { status:500 , message: 'Frontend error' };
+    }
+  },
+
   needList: async (resource_id) => {
     try {
       const result = await api.get(`/api/actions/need_list/${resource_id}`);
@@ -68,23 +83,39 @@ const actionService = {
       return Promise.reject(error);
     }
   },
-  doAction: async (action_id, accessToken) => {
+  perform: async (action_id,match, accessToken) => {
+    let data
     try {
       
-      const data = await api.put(`api/actions/do/${action_id}`, {"action_id": action_id}, {
+       data = await api.post(`/api/actions/perform_action/${action_id}`, match,{
          headers: { 
           Authorization: `Bearer ${accessToken}`,
          'Content-Type': 'application/json' 
         },
          
       });
+      if(data.status === 200){
+        return { status:200, payload: data?.data };
+      }
+      if(data.status === 422){
+        return { status:422 , message: 'Request fields error' };
+      }
+      return { status:500 , payload: {data: data?.data , message: 'Success'}  };
+    } catch (error) {
+      console.log(error)
+      return { status:400 , message: data?.data.ErrorMessage ?? 'Error' };
+    }
+  },
+  getMatchlist: async (action_id, accessToken) => {
+    try {
+      const data = await api.get(`/api/actions/perform_action/${action_id}`, { headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": 'application/json' } });
       console.log(data)
       return { status:200, payload: {data: data?.data , message: 'Success'} };
     } catch (error) {
       console.log(error)
       return { status:400 , message: 'Error' };
     }
-  },
+  }
 };
 
 export default actionService;

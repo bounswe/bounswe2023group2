@@ -1,0 +1,111 @@
+{
+  "en": [
+    {
+      "name": "title",
+      "label": "Title",
+      "type": "text"
+    },
+    {
+      "name": "description",
+      "label": "Description",
+      "type": "text"
+    },
+    {
+      "name": "type",
+      "label": "Type",
+      "type": "select",
+      "options": [
+        {
+          "key": "transportation",
+          "value": "transportation",
+          "label": "Transportation",
+          "index": 0
+        },
+        {
+          "key": "need_resource",
+          "value": "need_resource",
+          "label": "Connect to Resource",
+          "index": 1
+        },
+    
+        {
+          "key": "Rescue",
+          "value": "Rescue",
+          "label": "Rescue",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "name": "start_at",
+      "label": "Start Date",
+      "type": "date"
+    },
+    {
+      "name": "end_at",
+      "label": "End Date",
+      "type": "date"
+    },
+    {
+      "name": "location",
+      "label": "Location",
+      "type": "text"
+    }
+   
+  ],
+  "tr":[
+    {
+      "name": "title",
+      "label": "Başlık",
+      "type": "text"
+    },
+    {
+      "name": "description",
+      "label": "Açıklama",
+      "type": "text"
+    },
+    {
+      "name": "type",
+      "label": "Tür",
+      "type": "select",
+      "options": [
+        {
+          "key": "transportation",
+          "value": "transportation",
+          "label": "Taşıma",
+          "index": 0
+        },
+        {
+          "key": "need_resource",
+          "value": "need_resource",
+          "label": "Kaynak Bağlantısı",
+          "index": 1
+        },
+    
+        {
+          "key": "Rescue",
+          "value": "Rescue",
+          "label": "Kurtarma",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "name": "start_at",
+      "label": "Başlangıç Tarihi",
+      "type": "date"
+    },
+    {
+      "name": "end_at",
+      "label": "Bitiş Tarihi",
+      "type": "date"
+    },
+    {
+      "name": "location",
+      "label": "Konum",
+      "type": "text"
+    }
+
+  ]
+
+}

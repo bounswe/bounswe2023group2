@@ -22,6 +22,7 @@ import com.example.disasterresponseplatform.ui.activity.userdata.UserDataViewMod
 import com.example.disasterresponseplatform.ui.authentication.LoginFragment
 import com.example.disasterresponseplatform.ui.map.MapFragment
 import com.example.disasterresponseplatform.ui.profile.ProfileFragment
+import com.example.disasterresponseplatform.utils.Annotation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -120,7 +121,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logOutActions() {
-        DiskStorageManager.removeKey("token")
+        DiskStorageManager.removeAuthKeys()
         finish()
         startActivity(intent)
     }

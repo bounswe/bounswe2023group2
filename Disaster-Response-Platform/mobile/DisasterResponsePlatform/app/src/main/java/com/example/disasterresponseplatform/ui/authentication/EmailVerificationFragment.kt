@@ -60,7 +60,8 @@ class EmailVerificationFragment : Fragment() {
         authViewModel.emailVerificationSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 Toast.makeText(context, "Your email address has been successfully verified.", Toast.LENGTH_SHORT).show()
-                parentFragmentManager.popBackStack()
+                requireActivity().finish()
+                startActivity(requireActivity().intent)
             }
         }
 

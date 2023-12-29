@@ -21,6 +21,7 @@ class EventBody {
         val confirmed_by_user: String?,
         val upvote: Int,
         val downvote: Int,
+        val reliability: Double,
         val short_description: String?,
         val note: String?,
         val _id: String
