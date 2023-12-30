@@ -169,7 +169,7 @@ def verify_user(response:Response,user: UserUsername, current_user: UserProfile 
     try:
         verified = authentication_service.verify_user(user.username)
         response.status_code = HTTPStatus.OK
-        return {f'{user.username} is verified'}    
+        return {"message": f'{user.username} is verified'}    
     except ValueError as err:
         err_json = create_json_for_error("Verification error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
@@ -180,7 +180,7 @@ def unverify_user(response:Response,user: UserUsername, current_user: UserProfil
     try:
         unverified = authentication_service.unverify_user(user.username)
         response.status_code = HTTPStatus.OK
-        return {f'{user.username} is unverified'}   
+        return {"message":f'{user.username} is unverified'}   
     except ValueError as err:
         err_json = create_json_for_error("Unverification error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
@@ -191,7 +191,7 @@ def unauthorize_user(response:Response,user: UserUsername, current_user: UserPro
     try:
         unverified = authentication_service.unauthorize_user(user.username)
         response.status_code = HTTPStatus.OK
-        return {f'{user.username} is unauthorized'}   
+        return {"message":f'{user.username} is unauthorized'}   
     except ValueError as err:
         err_json = create_json_for_error("Unauthorization error", str(err))
         response.status_code = HTTPStatus.NOT_FOUND
