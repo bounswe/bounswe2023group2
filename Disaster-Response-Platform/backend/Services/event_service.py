@@ -58,60 +58,60 @@ def get_events(event_id: str = None, types: list = None,
         "note": 1
     }
     sort_order = ASCENDING if order == 'asc' else DESCENDING
-    query = {}
+    query = {"_id":event_id}
 
     if event_id:
-        if ObjectId.is_valid(event_id):
-            query['_id'] = ObjectId(event_id)
-        else:
+        if not (ObjectId.is_valid(event_id)):
             raise ValueError(f"Event id {event_id} is invalid")
+        else:
+            query = {"_id": ObjectId(event_id)}
     else:
         # Apply general filters only when no specific resource ID is provided
-
+        query = {}
         if is_active is not None:
             query['is_active'] = is_active
         if types:
             query['event_type'] = {'$in': types}
-        # Apply the query and sort order to the database call
-        events_cursor = events_collection.find(query, projection).sort(sort_by, sort_order)
-        events_data = list(events_cursor)  # Convert cursor to list
+    # Apply the query and sort order to the database call
+    events_cursor = events_collection.find(query, projection).sort(sort_by, sort_order)
+    events_data = list(events_cursor)  # Convert cursor to list
 
-        # Filter by distance if necessary
-        if x is not None and y is not None and distance_max is not None:
-            events_data = [res for res in events_data if
-                           ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
+    # Filter by distance if necessary
+    if x is not None and y is not None and distance_max is not None:
+        events_data = [res for res in events_data if
+                       ((res['x'] - x) ** 2 + (res['y'] - y) ** 2) ** 0.5 <= distance_max]
 
-        for event in events_data:
-            upvotes = event.get('upvote', 0)
-            downvotes = event.get('downvote', 0)
-            total_votes = upvotes + downvotes
+    for event in events_data:
+        upvotes = event.get('upvote', 0)
+        downvotes = event.get('downvote', 0)
+        total_votes = upvotes + downvotes
 
-            if total_votes > 0:
-                z = 1.96  # 95% confidence interval
-                phat = upvotes / total_votes
-                event['reliability'] = (
-                            phat + z ** 2 / (2 * total_votes) - z * math.sqrt(
-                        (phat * (1 - phat) + z ** 2 / (4 * total_votes)) / total_votes)) / (1 + z ** 2 / total_votes)
-            else:
-                event['reliability'] = 0.5  # Default score for no votes
+        if total_votes > 0:
+            z = 1.96  # 95% confidence interval
+            phat = upvotes / total_votes
+            event['reliability'] = (
+                        phat + z ** 2 / (2 * total_votes) - z * math.sqrt(
+                    (phat * (1 - phat) + z ** 2 / (4 * total_votes)) / total_votes)) / (1 + z ** 2 / total_votes)
+        else:
+            event['reliability'] = 0.5  # Default score for no votes
 
         # Calculate and sort by reliability score if requested
-        if sort_by == 'reliability':
-            events_data.sort(key=lambda x: x['reliability'], reverse=(order == 'desc'))
+    if sort_by == 'reliability':
+        events_data.sort(key=lambda x: x['reliability'], reverse=(order == 'desc'))
 
-        # Formatting datetime fields
-        formatted_events_data = []
-        for event in events_data:
-            if 'created_time' in event:
-                event['created_time'] = event['created_time'].strftime('%Y-%m-%d %H:%M:%S')
-            if 'last_confirmed_time' in event:
-                if event['last_confirmed_time'] is not None:
-                    event['last_confirmed_time'] = event['last_confirmed_time'].strftime('%Y-%m-%d %H:%M:%S')
-            formatted_events_data.append(event)
+    # Formatting datetime fields
+    formatted_events_data = []
+    for event in events_data:
+        if 'created_time' in event:
+            event['created_time'] = event['created_time'].strftime('%Y-%m-%d %H:%M:%S')
+        if 'last_confirmed_time' in event:
+            if event['last_confirmed_time'] is not None:
+                event['last_confirmed_time'] = event['last_confirmed_time'].strftime('%Y-%m-%d %H:%M:%S')
+        formatted_events_data.append(event)
 
-        # Generate the result list
-        result_list = create_json_for_successful_data_fetch(formatted_events_data, "events")
-        return result_list
+    # Generate the result list
+    result_list = create_json_for_successful_data_fetch(formatted_events_data, "events")
+    return result_list
 
 
 # def get_events_X(event_id:str = None) -> list[dict]:

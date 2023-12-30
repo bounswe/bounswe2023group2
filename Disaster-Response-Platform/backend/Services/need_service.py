@@ -31,13 +31,7 @@ def create_need(need: Need) -> str:
         if not ('missing_person_name' in need.details and 'missing_person_location' in need.details):
             raise ValueError("Missing person name and location are required for missing person needs.")
         else:
-            # cursor = needs_collection.find({
-            #     "$and": [
-            #         {"type": {"$regex": "missing person", "$options": "i"}},
-            #         {"details.missing_person_name": {"$regex": need.details['missing_person_name'], "$options": "i"}}
-            #     ]
-            # })
-            existing_need = needs_collection.find_one({"type": "missing person", "details.missing_person_name": {"$regex": need.details['missing_person_name'], "$options": "i"}})   
+            existing_need = needs_collection.find_one({"type": "missing person", "details.missing_person_name": {"$regex": need.details['missing_person_name'], "$options": "i"}})
             if existing_need:
                 raise ValueError("Emergency for this missing person exists " + existing_need["details"]["missing_person_name"])
 
@@ -53,14 +47,12 @@ def create_need(need: Need) -> str:
     validate_quantities(need.initialQuantity, need.unsuppliedQuantity)
 
     insert_result = needs_collection.insert_one(need.dict())
-    print("need added ", insert_result, need.occur_at)
 
     if insert_result.inserted_id:
         result = "{\"needs\":[{\"_id\":" + f"\"{insert_result.inserted_id}\""+"}]}"
         return result
     else:
         raise ValueError("Need could not be created")
-    # return str(result.inserted_id)
 
 
 def get_need_by_id(need_id: str) -> list[Need]:

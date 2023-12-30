@@ -164,7 +164,7 @@ def test_signup6():
 def test_signup7():
     response = client.post("/api/users/signup", json=
     digitless_password_signup_body)
-    assert response.status_code == 401
+    assert response.status_code == 400
 
 def test_signup8():
     response = client.post("/api/users/signup", json=

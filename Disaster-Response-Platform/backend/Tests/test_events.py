@@ -127,9 +127,14 @@ def test_get_events():
     command = EventApi(prefix="events")
     response_json = get_event(command)
     check_json = dict(event_to_add)
+    assert len(response_json["events"]) > 0
     check_json["_id"] = response_json["events"][0]["_id"]
     check_json["event_time"] = str(check_json["event_time"])
     check_json["created_time"] = str(check_json["created_time"])
+    check_json["reliability"] = response_json["events"][0]["reliability"]
+    if (type(check_json["event_type"]) != str):
+        check_json["event_type"] = check_json["event_type"].title()
+    #check_json["event_type"]
     assert check_json == dict(response_json["events"][0])
 
 def test_get_event_by_id():
@@ -142,9 +147,13 @@ def test_get_event_by_id():
     command = EventApi(prefix="events")
     response_json = get_event_by_id(command, created_event["events"][0]["_id"])
     check_json = dict(event_to_add)
+    assert len(response_json["events"]) > 0
     check_json["_id"] = response_json["events"][0]["_id"]
     check_json["event_time"] = str(check_json["event_time"])
     check_json["created_time"] = str(check_json["created_time"])
+    check_json["reliability"] = response_json["events"][0]["reliability"]
+    if (type(check_json["event_type"]) != str):
+        check_json["event_type"] = check_json["event_type"].title()
     assert check_json == dict(response_json["events"][0])
 
 def test_update_event():

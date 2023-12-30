@@ -108,36 +108,13 @@ def test_login():
     global TOKEN, header
     response = client.post("/api/users/login", json=email_login_body)
     assert response.status_code == HTTPStatus.OK
-    print(response.json())
     TOKEN =  response.json()["access_token"]
     header = {"Authorization": f"Bearer {TOKEN}"}
-
-
-    
-# def setup_test_environment():
-    # """Set up test environment by creating a sample need."""
-    # global TOKEN, TEST_USERNAME, TEST_EMAIL
-    # # Signup and login only if the token is not already available
-    # if TOKEN is None:
-    #     signup()
-    #     TOKEN = login()
-    
-    # headers = {
-    #     "Authorization": f"Bearer {TOKEN}"
-    # }
-    
-# def teardown_test_environment():
-#     """Tear down the test environment by deleting the test user."""
-#     if TOKEN is not None:
-#         delete_user()
 
 def test_create_need1():
     
     global TOKEN, need_id
 
-    # if TOKEN is None:
-    #     signup()
-    #     TOKEN = login()
     token = TOKEN
         
 
@@ -152,15 +129,6 @@ def test_create_need1():
     
 
 def test_create_need2():
-    
-    # global TOKEN, need_data_wrong
-
-    # if TOKEN is None:
-    #     signup()
-    #     TOKEN = login()
-    # token = TOKEN
-        
-
     response = client.post("/api/needs",
                            json=need_data_wrong,
                            headers=header)
